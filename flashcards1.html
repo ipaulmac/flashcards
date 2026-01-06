@@ -1,251 +1,162 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALS - Stage 1 Compact</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root {
-            --brand-navy: #002147;
-            --brand-gold: #CFC752;
-            --custom-purple: #561386;
-        }
-        .perspective-1000 { perspective: 1000px; }
-        .preserve-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
-        .flip-card-inner { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .flipped { transform: rotateY(180deg); }
-        
-        body {
-            background-color: var(--custom-purple);
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALS - Stage 1 Compact</title>
+<script src="https://cdn.tailwindcss.com"></script>
 
-        .phrase-front {
-            font-size: 2.4rem;
-            line-height: 1.1;
-            font-weight: 700;
-        }
-        .phrase-back {
-            font-size: 2.75rem;
-            line-height: 1.05;
-            font-weight: 800;
-        }
+<style>
+:root {
+    --brand-navy:#002147;
+    --brand-gold:#CFC752;
+    --custom-purple:#561386;
+}
 
-        .nav-btn {
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        .nav-btn:active {
-            background-color: rgba(0, 0, 0, 0.1);
-            transform: scale(0.9);
-        }
+body{
+    background:var(--custom-purple);
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+    overflow:hidden;
+}
 
-        /* Custom UI Background */
-        .ui-accent-bg { background-color: var(--brand-gold); }
-        .navy-text { color: var(--brand-navy); }
+.perspective-1000{perspective:1000px;}
+.preserve-3d{transform-style:preserve-3d;}
+.backface-hidden{backface-visibility:hidden;}
+.rotate-y-180{transform:rotateY(180deg);}
+.flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.flipped{transform:rotateY(180deg);}
 
-        /* Mobile adjustments */
-        @media only screen and (max-width: 480px) {
-            .phrase-front { font-size: 1.35rem; }
-            .phrase-back { font-size: 1.6rem; }
-            #flashcard { padding: 8px; min-height: 300px; }
-            .absolute.inset-0 { padding: 8px; }
-        }
-    </style>
+.phrase-front{font-size:2.4rem;line-height:1.1;font-weight:700;color:var(--brand-navy);}
+.phrase-back{font-size:2.75rem;line-height:1.05;font-weight:800;}
+
+.nav-btn{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+}
+.nav-btn:active{transform:scale(.9);}
+
+.ui-accent-bg{background:var(--brand-gold);}
+.navy-text{color:var(--brand-navy);}
+
+/* BACK button */
+.back-btn{
+    background:none;
+    border:2px solid #fff;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-size:.9rem;
+}
+.back-btn:active{transform:scale(.95);opacity:.8;}
+
+@media (max-width:480px){
+    .phrase-front{font-size:1.4rem;}
+    .phrase-back{font-size:1.7rem;}
+}
+</style>
 </head>
+
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Header Branding -->
-    <div class="mb-6 text-center">
-        <h1 class="text-white/80 text-[10px] sm:text-xs font-black uppercase tracking-[0.3em]">
-            Accelerated Language Systems
-        </h1>
+<div class="w-full max-w-[420px] perspective-1000">
+<div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
+
+<!-- FRONT -->
+<div class="absolute inset-0 bg-white backface-hidden rounded-3xl flex flex-col justify-between p-5 border">
+    <div class="text-[10px] font-black text-[#561386]/50 uppercase tracking-widest text-right">Stage 1</div>
+    <div class="flex-grow flex items-center justify-center text-center px-2">
+        <p id="front-text" class="phrase-front"></p>
     </div>
 
-    <div class="w-full max-w-sm flex flex-col items-center">
-        <div class="w-full perspective-1000">
-            <!-- Main Card Container -->
-            <div id="flashcard" class="relative w-full h-[350px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
-                
-                <!-- Front (Italian) -->
-                <div class="absolute inset-0 bg-white backface-hidden rounded-3xl flex flex-col items-center justify-between p-5 border border-slate-200">
-                    <div class="w-full flex justify-between items-center">
-                        <img src="https://static.wixstatic.com/media/c11625_0d25b3fc3bb56ca3c126f014ea762160.png" alt="Logo" class="h-6 w-auto object-contain">
-                        <span class="text-[10px] font-black text-[#561386]/50 uppercase tracking-widest">Stage 1</span>
-                    </div>
-                    <div class="flex flex-col items-center w-full text-center flex-grow justify-center px-1">
-                        <p id="front-text" class="phrase-front navy-text"></p>
-                    </div>
-                    <div class="flex flex-col items-center w-full space-y-3 pb-1">
-                        <div class="text-[#800000] text-[11px] font-black uppercase tracking-[0.2em]">Tap / Click to reveal</div>
-                        <div class="flex items-center space-x-4 ui-accent-bg px-3 py-1 rounded-full border border-black/5 shadow-md">
-                            <button onclick="prevCard(event)" class="nav-btn navy-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                            <span id="counter-display" class="text-[11px] font-black navy-text min-w-[45px] text-center">1 / 15</span>
-                            <button onclick="nextCard(event)" class="nav-btn navy-text">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Back (English) -->
-                <div class="absolute inset-0 bg-[#002147] text-white backface-hidden rotate-y-180 rounded-3xl flex flex-col items-center justify-between p-5 border-b-8 border-[#CFC752]">
-                    <div class="w-full flex justify-end">
-                        <div class="text-[10px] font-bold text-white/30 uppercase tracking-widest">Translation</div>
-                    </div>
-                    <div class="w-full text-center flex-grow flex items-center justify-center px-1">
-                        <p id="back-text" class="phrase-back italic text-white"></p>
-                    </div>
-                    <img src="https://static.wixstatic.com/media/c11625_0d25b3fc3bb56ca3c126f014ea762160.png" alt="Logo" class="h-5 w-auto object-contain brightness-0 invert opacity-50">
-                </div>
-            </div>
+    <div class="flex flex-col items-center space-y-2">
+        <div class="text-[#800000] text-[11px] font-black uppercase tracking-[0.2em]">
+            Tap / Click to reveal
         </div>
 
-        <!-- Inline Bright White Action -->
-        <button id="restart-btn" class="mt-8 flex items-center space-x-2 group hover:opacity-80 active:scale-95 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            <span class="font-black text-xs text-white tracking-[0.15em] uppercase">Try again</span>
-        </button>
+        <div class="flex items-center space-x-4 ui-accent-bg px-3 py-1 rounded-full">
+            <button onclick="prevCard(event)" class="nav-btn navy-text">◀</button>
+            <span id="counter-display" class="text-[11px] font-black navy-text">1 / 15</span>
+            <button onclick="nextCard(event)" class="nav-btn navy-text">▶</button>
+        </div>
+    </div>
+</div>
+
+<!-- BACK -->
+<div class="absolute inset-0 bg-[#002147] text-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+    <div class="text-[10px] font-bold text-white/30 uppercase tracking-widest text-right">Translation</div>
+
+    <div class="flex-grow flex items-center justify-center text-center px-2">
+        <p id="back-text" class="phrase-back italic"></p>
     </div>
 
-    <script>
-        const library = [
-            { front: "Viaggiare senza intoppi", back: "To make good time" }, 
-            { front: "Non faresti meglio a richiamare?", back: "Hadn't you better call back?" },
-            { front: "Sono io (Telephone)", back: "Speaking." },
-            { front: "Mi raccomando", back: "Whatever you do..." },
-            { front: "Ci è andata bene!", back: "We were lucky!" },
-            { front: "Darci una mossa", back: "To get going" },
-            { front: "Non trovo il coraggio di", back: "I can't bring myself to..." },
-            { front: "Un giorno sì e un giorno no", back: "Every other day" },
-            { front: "Si è scatenato l'inferno", back: "All hell broke loose" },
-            { front: "Secondo me...", back: "I think..." },
-            { front: "Occuparsi di", back: "To see to" },
-            { front: "A tutti gli effetti", back: "To all intents and purposes" },
-            { front: "A prescindere da", back: "Regardless of" },
-            { front: "Alle prime luci dell'alba", back: "At the crack of dawn" },
-            { front: "Non se ne parla proprio!", back: "Out of the question!" },
-            { front: "Tenere la bocca chiusa", back: "Mum's the word" },
-            { front: "Da ore e ore", back: "For hours on end" },
-            { front: "Rendersi conto di qualcosa", back: "To wake up to" },
-            { front: "È logico", back: "It stands to reason" },
-            { front: "Lasciarsi trasportare", back: "To get carried away" },
-            { front: "Tenere i piedi per terra", back: "To keep one's feet on the ground" },
-            { front: "Implorare", back: "To beg" },
-            { front: "Fermarsi / Finire", back: "To call it a day" },
-            { front: "Essere scaduto", back: "In be over" },
-            { front: "Tutto d'un tratto", back: "All of a sudden" },
-            { front: "Cambiare idea", back: "To change one's mind" },
-            { front: "Sentirsi poco bene", back: "To feel under the weather" },
-            { front: "Essere responsabile / Gestire", back: "To be in charge" },
-            { front: "Evadere / Scoppiare", back: "To break out" },
-            { front: "Rinfrescare / Ripassare", back: "To brush up on" },
-            { front: "Trovare dei difetti / Criticare", back: "To find fault with" },
-            { front: "Avere modo di fare qualcosa", back: "To get to do something" },
-            { front: "Riagganciare (telefono)", back: "To hang up" },
-            { front: "Confondersi", back: "To get mixed up" },
-            { front: "Rimediare / Compensare", back: "To make up for" },
-            { front: "Litigare / Discutere", back: "To fall out" },
-            { front: "Per niente", back: "Not in the least" },
-            { front: "Ogni tanto", back: "Now and then" },
-            { front: "Fare con calma", back: "To take one's time doing" },
-            { front: "Logorarsi / Consumarsi", back: "To wear out" },
-            { front: "Spegnere / Interrompere", back: "To shut off" },
-            { front: "Quando si tratta di", back: "When it comes to" },
-            { front: "Fare attenzione a / Occhio a", back: "Watch out for" },
-            { front: "Ripetutamente", back: "Time and again" },
-            { front: "Finora", back: "So far / Up to now / As of yet" },
-            { front: "Fermarsi brevemente", back: "To stop off" },
-            { front: "Saltare", back: "To skip" },
-            { front: "Guasto / Fuori servizio", back: "Out of order" },
-            { front: "Spegnere (fuoco/sigaretta)", back: "To put out" },
-            { front: "Dispiacersi / Compassione", back: "To feel sorry for" },
-            { front: "Non poter fare a meno di", back: "Can't help (doing)" },
-            { front: "Ridurre / Limitare il consumo", back: "To cut down on" },
-            { front: "Per sempre", back: "For good" },
-            { front: "Avere fretta", back: "To be in a hurry" },
-            { front: "Prendere una decisione", back: "To make up one's mind" },
-            { front: "Avere a che fare con", back: "To have (got) to do with" },
-            { front: "Prendersi un periodo di ferie", back: "To have time off" },
-            { front: "Andare a trovare / Cercare", back: "To look somebody up" },
-            { front: "Farebbe meglio a fare", back: "Had better do" },
-            { front: "Tenere il conto / Monitorare", back: "To keep track of" },
-            { front: "Preferirebbe fare", back: "Would rather do" },
-            { front: "Fallire / Pagare il prezzo alto", back: "To pay the ultimate price" },
-            { front: "Riflettere su / Pensarci bene", back: "To think over" },
-            { front: "Un bel po'", back: "Quite a few" },
-            { front: "Contare su", back: "To rely on / To count on" },
-            { front: "A memoria", back: "By heart" },
-            { front: "Eccellente / Prima qualità", back: "First-rate" },
-            { front: "Purché / A patto che", back: "As long as / Providing" },
-            { front: "Per conto proprio", back: "On one's own" },
-	    { front: "Salire (in auto)", back: "To get in" },
-            { front: "Salire (treno)", back: "To get on" },
-            { front: "Come diavolo!", back: "How the hell!" }
-        ];
+    <!-- BACK BUTTON -->
+    <div class="flex justify-center pb-2">
+        <button id="backBtn" class="back-btn">BACK</button>
+    </div>
+</div>
 
-        let cards = [];
-        let pool = [];
-        let currentIndex = 0;
-        const flashcardElement = document.getElementById('flashcard');
-        const frontText = document.getElementById('front-text');
-        const backText = document.getElementById('back-text');
-        const counterDisplay = document.getElementById('counter-display');
-        const restartBtn = document.getElementById('restart-btn');
+</div>
+</div>
 
-        function startSession() {
-            if (pool.length < 15) {
-                pool = [...library].sort(() => 0.5 - Math.random());
-            }
-            cards = pool.splice(0, 15);
-            currentIndex = 0;
-            updateCard();
-        }
+<script>
+const library = [
+ { front:"Eccellente / Prima qualità", back:"First-rate" },
+ { front:"Purché / A patto che", back:"As long as / Providing" },
+ { front:"Per conto proprio", back:"On one's own" },
+ { front:"Salire (in auto)", back:"To get in" },
+ { front:"Salire (treno)", back:"To get on" },
+ { front:"Come diavolo!", back:"How the hell!" }
+];
 
-        function updateCard() {
-            flashcardElement.classList.remove('flipped');
-            setTimeout(() => {
-                const card = cards[currentIndex];
-                frontText.innerText = card.front;
-                backText.innerText = card.back;
-                counterDisplay.innerText = `${currentIndex + 1} / ${cards.length}`;
-            }, 150);
-        }
+let cards=[], pool=[], currentIndex=0;
 
-        function nextCard(e) {
-            e.stopPropagation();
-            currentIndex = (currentIndex + 1) % cards.length;
-            updateCard();
-        }
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const backBtn   = document.getElementById("backBtn");
 
-        function prevCard(e) {
-            e.stopPropagation();
-            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-            updateCard();
-        }
+function startSession(){
+    if(pool.length < 15){
+        pool=[...library].sort(()=>0.5-Math.random());
+    }
+    cards = pool.splice(0,15);
+    currentIndex=0;
+    updateCard();
+}
 
-        flashcardElement.addEventListener('click', () => flashcardElement.classList.toggle('flipped'));
-        restartBtn.addEventListener('click', startSession);
+function updateCard(){
+    flashcard.classList.remove("flipped");
+    setTimeout(()=>{
+        frontText.innerText = cards[currentIndex].front;
+        backText.innerText  = cards[currentIndex].back;
+        counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+    },150);
+}
 
-        startSession();
-    </script>
+function nextCard(e){
+    e.stopPropagation();
+    currentIndex=(currentIndex+1)%cards.length;
+    updateCard();
+}
+function prevCard(e){
+    e.stopPropagation();
+    currentIndex=(currentIndex-1+cards.length)%cards.length;
+    updateCard();
+}
+
+flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+backBtn.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    flashcard.classList.remove("flipped");
+});
+
+startSession();
+</script>
+
 </body>
 </html>
 
