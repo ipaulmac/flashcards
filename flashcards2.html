@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALS - Stage 2 Compact</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+ --brand-navy:#002147;
+ --brand-gold:#CFC752;
+ --custom-purple:#561386;
+ --counter-blue:#a3d2f2;
+}
+.perspective-1000{perspective:1000px;}
+.preserve-3d{transform-style:preserve-3d;}
+.backface-hidden{backface-visibility:hidden;}
+.rotate-y-180{transform:rotateY(180deg);}
+.flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.flipped{transform:rotateY(180deg);}
+
+body{
+ background:var(--custom-purple);
+ font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+ overflow:hidden;
+}
+
+.phrase-front{font-size:2.4rem;line-height:1.1;font-weight:700;}
+.phrase-back{font-size:2.75rem;line-height:1.05;font-weight:800;}
+
+.nav-btn{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ width:40px;
+ height:40px;
+ border-radius:50%;
+ transition:.2s;
+ color: var(--brand-navy);   /* arrows dark blue */
+ font-weight: 900;
+}
+.nav-btn:active{transform:scale(.9);}
+
+.navy-text{color:var(--brand-navy);}
+#counter-display{
+ background:var(--counter-blue);
+ padding:0 8px;
+ border-radius:8px;
+ color: var(--brand-navy);   /* numbers dark blue */
+ font-weight: 900;
+}
+
+@media(max-width:480px){
+ .phrase-front{font-size:1.3rem;}
+ .phrase-back{font-size:1.6rem;}
+ #flashcard{min-height:350px;}
+}
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+<div class="mb-6 text-center">
+ <h1 class="text-white/80 text-[10px] font-black uppercase tracking-[0.3em]">
+  Accelerated Language Systems
+ </h1>
+</div>
+
+<div class="w-full max-w-sm flex flex-col items-center">
+<div class="w-full perspective-1000">
+
+<div id="flashcard"
+ class="relative w-full h-[400px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
+
+<!-- FRONT – ITALIAN -->
+<div class="absolute inset-0 bg-white backface-hidden rounded-3xl flex flex-col justify-between p-5 border">
+ <div class="w-full flex justify-between items-center">
+  <img src="https://static.wixstatic.com/media/c11625_0d25b3fc3bb56ca3c126f014ea762160.png" class="h-6">
+  <span class="text-[10px] font-black text-[#561386]/50 uppercase tracking-widest">
+   Stage 2
+  </span>
+ </div>
+
+ <div class="flex-grow flex items-center justify-center text-center px-1">
+  <p id="front-text" class="phrase-front navy-text"></p>
+ </div>
+
+ <div class="flex flex-col items-center space-y-3 pb-1">
+  <div class="text-[#800000] text-[11px] font-black uppercase tracking-[0.2em]">
+   Tap / Click to reveal
+  </div>
+
+  <div class="flex items-center space-x-4 px-3 py-1 rounded-full border shadow-md bg-counter-blue">
+   <button onclick="prevCard(event)" class="nav-btn navy-text">‹</button>
+   <span id="counter-display"
+    class="text-[11px] font-black navy-text min-w-[45px] text-center">1 / 15</span>
+   <button onclick="nextCard(event)" class="nav-btn navy-text">›</button>
+  </div>
+ </div>
+</div>
+
+<!-- BACK – ENGLISH -->
+<div class="absolute inset-0 bg-[#002147] text-white backface-hidden rotate-y-180 rounded-3xl
+ flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+
+ <div class="w-full flex justify-end">
+  <button onclick="flashcardElement.classList.remove('flipped'); event.stopPropagation();"
+   class="text-sm font-bold text-white px-3 py-1 border border-white/40 rounded">
+   BACK
+  </button>
+ </div>
+
+ <div class="flex-grow flex items-center justify-center text-center px-1">
+  <p id="back-text" class="phrase-back italic text-white"></p>
+ </div>
+
+ <img src="https://static.wixstatic.com/media/c11625_0d25b3fc3bb56ca3c126f014ea762160.png"
+  class="h-5 brightness-0 invert opacity-50">
+</div>
+
+</div>
+</div>
+
+<button id="restart-btn"
+ class="mt-6 flex items-center space-x-2 hover:opacity-80">
+ <span class="font-black text-xs text-white tracking-[0.15em] uppercase">
+  Try again
+ </span>
+</button>
+
+</div>
+
+<script>
+const library=[
+{front:"Dare per scontato",back:"To take for granted"},
+{front:"Andare in panne / crollare emotivamente",back:"To break down"},
+{front:"Chiaro e netto",back:"Clear cut"},
+{front:"Infatti",back:"As a matter of fact"},
+{front:"Avere voglia di",back:"Fancy doing"},
+{front:"Non vedere l’ora di",back:"To look forward to"},
+{front:"Prendere in giro",back:"To make fun of"},
+{front:"Sottosopra",back:"Inside out"},
+{front:"Compilare",back:"To fill out"},
+{front:"Fuori controllo",back:"Out of hand"},
+{front:"Secondo tutti",back:"By all accounts"},
+{front:"Assomigliare a",back:"To take after"},
+{front:"Iniziare / occupare tempo e spazio / accettare",back:"To take up"},
+{front:"Approfittare di",back:"To take advantage of"},
+{front:"Abbassare / rifiutare",back:"To turn down"},
+{front:"Va da sé",back:"It goes without saying"},
+{front:"A proprio agio",back:"At liberty"},
+{front:"Mettersi di mezzo",back:"To get in one’s way"},
+{front:"Sul punto di",back:"On the brink of"},
+{front:"Distinguere",back:"To tell apart"},
+{front:"Lontano da me",back:"Far be it from me"},
+{front:"Scendere (prezzi)",back:"To come down"},
+{front:"Ospitare / costruire",back:"To put up"},
+{front:"Sopportare",back:"To put up with"},
+{front:"Avvicinarsi",back:"To come up to"},
+{front:"Imbattersi in / dare l’impressione",back:"To come across"},
+{front:"Fare scalo",back:"To stop over"},
+{front:"Rappresentare / tollerare",back:"To stand for"},
+{front:"Redigere",back:"To draw up"},
+{front:"Incontrare per caso",back:"To run into"},
+{front:"Mettersi a fare",back:"To set out to do"},
+{front:"Essere appassionato di",back:"To be into"},
+{front:"Dare sui nervi",back:"To get on one’s nerves"},
+{front:"In anticipo",back:"Ahead of schedule"},
+{front:"Accontentarsi di",back:"To make do with"},
+{front:"Optare per / vendere",back:"To go for"},
+{front:"Per usare un eufemismo",back:"To say the least"},
+{front:"Benedizione sotto mentite spoglie",back:"Blessing in disguise"},
+{front:"Mettere i bastoni tra le ruote",back:"To mess with"},
+{front:"Ripensamenti",back:"Second thoughts"},
+{front:"A due passi",back:"A stone’s throw"},
+{front:"Ultimamente",back:"Of late"},
+{front:"Meglio così",back:"Just as well"},
+{front:"Spietato",back:"Ruthless"},
+{front:"In breve",back:"For short"},
+{front:"Estroverso",back:"Outgoing"},
+{front:"Sospiro di sollievo",back:"Sigh of relief"},
+{front:"Equivalere a",back:"To amount to"},
+{front:"Qual è l’inganno?",back:"What’s the catch?"},
+{front:"Prendila con calma",back:"To take it easy"},
+{front:"Che fine ha fatto...?",back:"What’s become of...?"},
+{front:"Ricevere notizie da",back:"To hear from"},
+{front:"Richiedere / andare a prendere",back:"To call for"},
+{front:"Essere destinato a",back:"To be bound to"},
+{front:"In linea con",back:"In keeping with"},
+{front:"Se tutto va bene",back:"All being well"},
+{front:"Non c’è da stupirsi",back:"No wonder"},
+{front:"Benestante",back:"To be well-off"},
+{front:"Separarsi da",back:"To part ways with"},
+{front:"Avere una possibilità",back:"To stand a chance"},
+{front:"A occhio",back:"At a guess"},
+{front:"Guardare dall’alto in basso",back:"To look down on"},
+{front:"Osservare / considerare",back:"To look on"},
+{front:"Screditare / rivelare",back:"To show up"},
+{front:"In ritardo",back:"Behind schedule"},
+{front:"Da entrambe le parti",back:"On either side of"},
+{front:"Venire a sapere di",back:"To get wind of"},
+{front:"Giorno dopo giorno",back:"Day in and day out"},
+{front:"Risultare / diventare",back:"To turn out"},
+{front:"Tenere a mente",back:"To bear in mind"},
+{front:"Secondo",back:"According to"},
+{front:"Di gran lunga",back:"By far"},
+{front:"Tutt’altro",back:"Far from it"},
+{front:"Ammontare a / riprendersi",back:"To come to"},
+{front:"Rinunciare",back:"To give up"}
+];
+
+let cards=[],pool=[],currentIndex=0;
+const flashcardElement=document.getElementById("flashcard");
+const frontText=document.getElementById("front-text");
+const backText=document.getElementById("back-text");
+const counterDisplay=document.getElementById("counter-display");
+const restartBtn=document.getElementById("restart-btn");
+
+function startSession(){
+ if(pool.length<15) pool=[...library].sort(()=>0.5-Math.random());
+ cards=pool.splice(0,15); currentIndex=0; updateCard();
+}
+function updateCard(){
+ flashcardElement.classList.remove("flipped");
+ setTimeout(()=>{
+  const c=cards[currentIndex];
+  frontText.innerText=c.front;
+  backText.innerText=c.back;
+  counterDisplay.innerText=`${currentIndex+1} / ${cards.length}`;
+ },150);
+}
+function nextCard(e){e.stopPropagation();currentIndex=(currentIndex+1)%cards.length;updateCard();}
+function prevCard(e){e.stopPropagation();currentIndex=(currentIndex-1+cards.length)%cards.length;updateCard();}
+function flipBack(){ flashcardElement.classList.remove('flipped'); }
+
+flashcardElement.addEventListener("click",()=>flashcardElement.classList.toggle("flipped"));
+restartBtn.addEventListener("click",startSession);
+startSession();
+</script>
+
+</body>
+</html>
