@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALS - Lessons 19 & 20 Compact</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+    --brand-navy:#002147;
+    --brand-gold:#CFC752;
+    --custom-purple:#561386;
+}
+
+body{
+    background:var(--custom-purple);
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+    overflow:hidden;
+}
+
+.perspective-1000{perspective:1000px;}
+.preserve-3d{transform-style:preserve-3d;}
+.backface-hidden{backface-visibility:hidden;}
+.rotate-y-180{transform:rotateY(180deg);}
+.flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.flipped{transform:rotateY(180deg);}
+
+.phrase-front{
+    font-size:2.4rem;line-height:1.1;
+    font-weight:700;color:#fff;
+}
+.phrase-back{
+    font-size:2.75rem;line-height:1.05;
+    font-weight:800;color:var(--brand-navy);
+}
+
+.nav-btn{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+}
+.nav-btn:active{transform:scale(.9);}
+
+.back-btn{
+    background:none;
+    border:2px solid #fff;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-size:.9rem;
+}
+
+.restart-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:none;
+    border:2px solid #fff;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-size:.85rem;
+    margin-top:1rem;
+}
+
+.speaker-btn{
+    background:none;
+    border:2px solid var(--brand-navy);
+    color:var(--brand-navy);
+    padding:4px 10px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:.8rem;
+}
+
+@media(max-width:480px){
+    .phrase-front{font-size:1.4rem;}
+    .phrase-back{font-size:1.7rem;}
+}
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+<div class="w-full max-w-[420px] perspective-1000">
+<div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
+
+<!-- FRONT -->
+<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5 border">
+
+    <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
+        Lessons 19 & 20
+    </div>
+
+    <div class="flex-grow flex items-center justify-center text-center px-2">
+        <p id="front-text" class="phrase-front"></p>
+    </div>
+
+    <div class="flex flex-col items-center space-y-2">
+        <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+            Tap / Click to reveal
+        </div>
+
+        <div class="flex items-center space-x-4 bg-white px-3 py-1 rounded-full">
+            <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
+            <span id="counter-display" class="text-[11px] font-black text-[#002147]">
+                1 / 15
+            </span>
+            <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
+        </div>
+    </div>
+</div>
+
+<!-- BACK -->
+<div class="absolute inset-0 bg-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+
+    <div class="text-[10px] font-bold text-[#002147]/30 uppercase tracking-widest text-right">
+        Translation
+    </div>
+
+    <div class="flex-grow flex flex-col items-center justify-center text-center px-2 space-y-3">
+        <p id="back-text" class="phrase-back italic"></p>
+        <button id="speakerBtn" class="speaker-btn">🔊 Listen</button>
+    </div>
+
+    <div class="flex justify-center pb-2">
+        <button id="backBtn" class="back-btn">Tap / Click to go back</button>
+    </div>
+</div>
+
+</div>
+</div>
+
+<button id="restartBtn" class="restart-btn">
+    &#x21bb; Try again
+</button>
+
+<script>
+const library = [
+  {front:"Tutto sommato", back:"All in all"},
+  {front:"Autorizzato", back:"At liberty"},
+  {front:"Ostacolare / Mettersi in mezzo", back:"Be/Get in one’s way"},
+  {front:"Recuperare / Aggiornarsi", back:"Catch up with"},
+  {front:"Giorno dopo giorno", back:"Day in and day out"},
+  {front:"Girare / Andare in giro", back:"Go around"},
+  {front:"Sul punto di / Sull’orlo di", back:"On the brink of / On the verge of"},
+  {front:"Svenire / Perdere i sensi", back:"Pass out"},
+  {front:"Ospitare", back:"Put up"},
+  {front:"Sopportare / Tollerare", back:"Put up with"},
+  {front:"Distinguere", back:"Tell apart / Tell one from another"},
+  {front:"Qual è la fregatura?", back:"What’s the catch?"},
+  {front:"Se tutto va bene / Incrociando le dita", back:"All being well"},
+  {front:"Qual è il problema? / Che hai?", back:"What’s the matter?"},
+  {front:"Sollevare / Accennare", back:"Bring up"},
+  {front:"Crescere", back:"Bring up"},
+  {front:"Di gran lunga", back:"By far"},
+  {front:"Lungi da me", back:"Far be it from me"},
+  {front:"Tutt’altro / Anzi", back:"Far from it"},
+  {front:"Aggiornarsi", back:"Catch up with"},
+  {front:"Sparisci!", back:"Get lost!"},
+  {front:"Rimanere fermo", back:"Hold still"},
+  {front:"Bastare per tutti", back:"Go around"},
+  {front:"Trattenere / Bloccare", back:"Hold up"},
+  {front:"Conoscere di vista", back:"Know by sight"},
+  {front:"Non c’è da stupirsi", back:"No wonder"},
+  {front:"Escludere / Scartare", back:"Rule out"},
+  {front:"A due passi / Vicinissimo", back:"A stone’s throw"},
+  {front:"Rampa di scale", back:"Flight"},
+  {front:"Fare un salto da", back:"Go around"},
+  {front:"In breve", back:"For short"},
+  {front:"Quasi", back:"Nigh on"},
+  {front:"A cavallo di", back:"On either side of"},
+  {front:"Estroverso / Socievole", back:"Outgoing"},
+  {front:"Da solo / Con le proprie forze", back:"Single-handedly"},
+  {front:"Sobrio / Contenuto / Calmo", back:"Subdued"},
+  {front:"Non farsi scrupoli", back:"Think nothing of"},
+  {front:"C’è qualche possibilità di …?", back:"Any chance of (doing)?"},
+  {front:"Far impazzire qualcuno", back:"Drive someone mad"},
+  {front:"Lamentele / Reclami", back:"Grievances"},
+  {front:"Sfocato / Offuscato", back:"Blurred"},
+  {front:"Suonare familiare", back:"Ring a bell"},
+  {front:"Se posso permettermi di dirlo", back:"If you don’t mind me saying so"},
+  {front:"Cosa ti è preso?", back:"What’s got into you?"},
+  {front:"Prima volta in assoluto", back:"First ever time"},
+  {front:"Solo a pensarci!", back:"Just think!"}
+];
+
+let cards=[], pool=[], currentIndex=0;
+
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const backBtn   = document.getElementById("backBtn");
+const restartBtn= document.getElementById("restartBtn");
+const speakerBtn= document.getElementById("speakerBtn");
+
+function startSession(){
+    pool=[...library].sort(()=>0.5-Math.random());
+    cards = pool.slice(0,15);
+    currentIndex=0;
+    updateCard();
+}
+
+function updateCard(){
+    flashcard.classList.remove("flipped");
+    setTimeout(()=>{
+        frontText.innerText = cards[currentIndex].front;
+        backText.innerText  = cards[currentIndex].back;
+        counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+    },150);
+}
+
+function nextCard(e){
+    e.stopPropagation();
+    currentIndex=(currentIndex+1)%cards.length;
+    updateCard();
+}
+function prevCard(e){
+    e.stopPropagation();
+    currentIndex=(currentIndex-1+cards.length)%cards.length;
+    updateCard();
+}
+
+flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+backBtn.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    flashcard.classList.remove("flipped");
+});
+restartBtn.addEventListener("click",startSession);
+
+function getBritishMaleVoice() {
+    const voices = speechSynthesis.getVoices();
+    return voices.find(v =>
+        v.lang === "en-GB" &&
+        /male|daniel|oliver|google uk english male/i.test(v.name)
+    ) || voices.find(v => v.lang === "en-GB") || voices[0];
+}
+
+speakerBtn.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    const utter = new SpeechSynthesisUtterance(cards[currentIndex].back);
+    utter.lang = "en-GB";
+    utter.voice = getBritishMaleVoice();
+    speechSynthesis.speak(utter);
+});
+
+speechSynthesis.onvoiceschanged = () => getBritishMaleVoice();
+
+startSession();
+</script>
+
+</body>
+</html>
