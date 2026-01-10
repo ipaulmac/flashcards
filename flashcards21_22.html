@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALS - Lessons 21 & 22 Compact</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+    --brand-navy:#002147;
+    --brand-gold:#CFC752;
+    --custom-purple:#561386;
+}
+
+body{
+    background:var(--custom-purple);
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+    overflow:hidden;
+}
+
+.perspective-1000{perspective:1000px;}
+.preserve-3d{transform-style:preserve-3d;}
+.backface-hidden{backface-visibility:hidden;}
+.rotate-y-180{transform:rotateY(180deg);}
+.flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.flipped{transform:rotateY(180deg);}
+
+.phrase-front{
+    font-size:2.4rem;line-height:1.1;
+    font-weight:700;color:#fff;
+}
+.phrase-back{
+    font-size:2.75rem;line-height:1.05;
+    font-weight:800;color:var(--brand-navy);
+}
+
+.nav-btn{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+}
+.nav-btn:active{transform:scale(.9);}
+
+.back-btn{
+    background:none;
+    border:2px solid #fff;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-size:.9rem;
+}
+
+.restart-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:none;
+    border:2px solid #fff;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-size:.85rem;
+    margin-top:1rem;
+}
+
+.speaker-btn{
+    background:none;
+    border:2px solid var(--brand-navy);
+    color:var(--brand-navy);
+    padding:4px 10px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:.8rem;
+}
+
+@media(max-width:480px){
+    .phrase-front{font-size:1.4rem;}
+    .phrase-back{font-size:1.7rem;}
+}
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+<div class="w-full max-w-[420px] perspective-1000">
+<div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
+
+<!-- FRONT -->
+<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5 border">
+
+    <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
+        Lessons 21 & 22
+    </div>
+
+    <div class="flex-grow flex items-center justify-center text-center px-2">
+        <p id="front-text" class="phrase-front"></p>
+    </div>
+
+    <div class="flex flex-col items-center space-y-2">
+        <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+            Tap / Click to reveal
+        </div>
+
+        <div class="flex items-center space-x-4 bg-white px-3 py-1 rounded-full">
+            <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
+            <span id="counter-display" class="text-[11px] font-black text-[#002147]">
+                1 / 15
+            </span>
+            <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
+        </div>
+    </div>
+</div>
+
+<!-- BACK -->
+<div class="absolute inset-0 bg-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+
+    <div class="text-[10px] font-bold text-[#002147]/30 uppercase tracking-widest text-right">
+        Translation
+    </div>
+
+    <div class="flex-grow flex flex-col items-center justify-center text-center px-2 space-y-3">
+        <p id="back-text" class="phrase-back italic"></p>
+        <button id="speakerBtn" class="speaker-btn">🔊 Listen</button>
+    </div>
+
+    <div class="flex justify-center pb-2">
+        <button id="backBtn" class="back-btn">Tap / Click to go back</button>
+    </div>
+</div>
+
+</div>
+</div>
+
+<button id="restartBtn" class="restart-btn">
+    &#x21bb; Try again
+</button>
+
+<script>
+const library = [
+  {front:"Stare meglio/peggio di …", back:"Be better off / Be worse off"},
+  {front:"Benestante / Agiato", back:"Be well-off"},
+  {front:"Abbassare (prezzi)", back:"Bring down"},
+  {front:"Scendere / Diminuire", back:"Come down"},
+  {front:"Avvicinarsi", back:"Come up to or Go up to"},
+  {front:"Salire / Aumentare", back:"Go up"},
+  {front:"Consegnare", back:"Hand in"},
+  {front:"Distribuire", back:"Hand out"},
+  {front:"Cedere il potere", back:"Hand over"},
+  {front:"Mantenere i contatti", back:"Keep or Stay in touch"},
+  {front:"In servizio / Fuori servizio", back:"On/Off duty"},
+  {front:"Alzare (prezzi)", back:"Put up"},
+  {front:"Fare un giro di telefonate", back:"Ring around"},
+  {front:"Fare un giro dei negozi", back:"Shop around"},
+  {front:"Cogliere di sorpresa", back:"Take or Catch by surprise"},
+  {front:"Passare a trovare / Fare un salto", back:"Call by or Drop by or Stop by"},
+  {front:"Imbattersi in", back:"Come across"},
+  {front:"Dare l’impressione", back:"Come across"},
+  {front:"Servirebbe / Sarebbe utile", back:"Could do with"},
+  {front:"Disprezzare", back:"Look down on"},
+  {front:"Osservare / Assistere", back:"Look on"},
+  {front:"Separarsi / Dividersi", back:"Part (ways) with"},
+  {front:"Riuscire / Portare a termine", back:"Pull off"},
+  {front:"Avere possibilità", back:"Stand a chance"},
+  {front:"Rappresentare / Stare per", back:"Stand for"},
+  {front:"Tollerare", back:"Stand for"},
+  {front:"Decollare", back:"Take off"},
+  {front:"Imitare / Mimare", back:"Take off"},
+  {front:"Ahimè!", back:"Alas!"},
+  {front:"Avviare (computer)", back:"Boot up"},
+  {front:"Lasciare intendere", back:"To intimate"},
+  {front:"Canile", back:"Kennels"},
+  {front:"Che capita una volta nella vita", back:"Once-in-a-lifetime"},
+  {front:"Situazione difficile", back:"Predicament"},
+  {front:"Raggio", back:"Radius"},
+  {front:"Mettersi a fare", back:"Set about"},
+  {front:"Magari!", back:"If only!"},
+  {front:"Significa molto / Conta moltissimo", back:"It means the world"},
+  {front:"Per il bene di / Per amore di", back:"For the sake of"},
+  {front:"Dimettersi", back:"Resign"},
+  {front:"In reperibilità", back:"On stand-by"},
+  {front:"Figurati!", back:"No trouble at all!"},
+  {front:"Spietato / Senza pietà", back:"Unforgiving"},
+  {front:"Chi l’avrebbe mai detto!", back:"Fancy that!"},
+  {front:"Zero possibilità / Non c'è santo che tenga", back:"Stand a cat in hell’s chance"},
+  {front:"Pericolo / Rischio", back:"Jeopardy"}
+];
+
+let cards=[], pool=[], currentIndex=0;
+
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const backBtn   = document.getElementById("backBtn");
+const restartBtn= document.getElementById("restartBtn");
+const speakerBtn= document.getElementById("speakerBtn");
+
+function startSession(){
+    pool=[...library].sort(()=>0.5-Math.random());
+    cards = pool.slice(0,15);
+    currentIndex=0;
+    updateCard();
+}
+
+function updateCard(){
+    flashcard.classList.remove("flipped");
+    setTimeout(()=>{
+        frontText.innerText = cards[currentIndex].front;
+        backText.innerText  = cards[currentIndex].back;
+        counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+    },150);
+}
+
+function nextCard(e){
+    e.stopPropagation();
+    currentIndex=(currentIndex+1)%cards.length;
+    updateCard();
+}
+function prevCard(e){
+    e.stopPropagation();
+    currentIndex=(currentIndex-1+cards.length)%cards.length;
+    updateCard();
+}
+
+flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+backBtn.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    flashcard.classList.remove("flipped");
+});
+restartBtn.addEventListener("click",startSession);
+
+function getBritishMaleVoice() {
+    const voices = speechSynthesis.getVoices();
+    return voices.find(v =>
+        v.lang === "en-GB" &&
+        /male|daniel|oliver|google uk english male/i.test(v.name)
+    ) || voices.find(v => v.lang === "en-GB") || voices[0];
+}
+
+speakerBtn.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    const utter = new SpeechSynthesisUtterance(cards[currentIndex].back);
+    utter.lang = "en-GB";
+    utter.voice = getBritishMaleVoice();
+    speechSynthesis.speak(utter);
+});
+
+speechSynthesis.onvoiceschanged = () => getBritishMaleVoice();
+
+startSession();
+</script>
+
+</body>
+</html>
