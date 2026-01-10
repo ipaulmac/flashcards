@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALS - Lessons 11 & 12 Compact</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root {
+    --brand-navy:#002147;
+    --brand-gold:#CFC752;
+    --custom-purple:#561386;
+}
+
+body{
+    background:var(--custom-purple);
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+    overflow:hidden;
+}
+
+.perspective-1000{perspective:1000px;}
+.preserve-3d{transform-style:preserve-3d;}
+.backface-hidden{backface-visibility:hidden;}
+.rotate-y-180{transform:rotateY(180deg);}
+.flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.flipped{transform:rotateY(180deg);}
+
+.phrase-front{font-size:2.4rem;line-height:1.1;font-weight:700;color:#fff;}
+.phrase-back{font-size:2.75rem;line-height:1.05;font-weight:800;color:#fff;}
+
+.nav-btn{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+}
+.nav-btn:active{transform:scale(.9);}
+
+.ui-accent-bg{background:var(--brand-gold);}
+.navy-text{color:var(--brand-navy);}
+
+.back-btn{
+    background:none;
+    border:2px solid #fff;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    font-size:.9rem;
+}
+.back-btn:active{transform:scale(.95);opacity:.8;}
+
+.restart-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:none;
+    border:2px solid #fff;
+    color:#fff;
+    padding:6px 14px;
+    border-radius:999px;
+    font-weight:800;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-size:.85rem;
+    margin-top:1rem;
+}
+.restart-btn:active{transform:scale(.95);opacity:.8;}
+
+@media (max-width:480px){
+    .phrase-front{font-size:1.4rem;}
+    .phrase-back{font-size:1.7rem;}
+}
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+<div class="w-full max-w-[420px] perspective-1000">
+<div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
+
+<!-- FRONT (BLUE) -->
+<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5 border">
+    <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">Lessons 11 & 12</div>
+    <div class="flex-grow flex items-center justify-center text-center px-2">
+        <p id="front-text" class="phrase-front"></p>
+    </div>
+
+    <div class="flex flex-col items-center space-y-2">
+        <div class="text-[#CFC752] text-[11px] font-black uppercase tracking-[0.2em]">
+            Tap / Click to reveal
+        </div>
+
+        <div class="flex items-center space-x-4 ui-accent-bg px-3 py-1 rounded-full">
+            <button onclick="prevCard(event)" class="nav-btn navy-text">◀</button>
+            <span id="counter-display" class="text-[11px] font-black navy-text">1 / 15</span>
+            <button onclick="nextCard(event)" class="nav-btn navy-text">▶</button>
+        </div>
+    </div>
+</div>
+
+<!-- BACK (PURPLE) -->
+<div class="absolute inset-0 bg-[#561386] backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+    <div class="text-[10px] font-bold text-white/40 uppercase tracking-widest text-right">Translation</div>
+
+    <div class="flex-grow flex items-center justify-center text-center px-2">
+        <p id="back-text" class="phrase-back italic"></p>
+    </div>
+
+    <div class="flex justify-center pb-2">
+        <button id="backBtn" class="back-btn">Tap / Click to go back</button>
+    </div>
+</div>
+
+</div>
+</div>
+
+<button id="restartBtn" class="restart-btn">
+    &#x21bb; Try again
+</button>
+
+<script>
+const library = [
+  {front:"A proprio agio", back:"At ease"},
+  {front:"Essere / Lasciarsi trasportare", back:"Be / Get carried away"},
+  {front:"Dipende da te", back:"It’s up to you"},
+  {front:"Di tanto in tanto", back:"Every so often / Once in a while"},
+  {front:"Criticare", back:"Find fault with"},
+  {front:"D’ora in poi", back:"From now on"},
+  {front:"A disagio", back:"Ill at ease"},
+  {front:"Tenersi lontano da / Evitare", back:"Keep / Stay away from"},
+  {front:"Tenere traccia di", back:"Keep track of"},
+  {front:"Indagare / Informarsi", back:"Look into"},
+  {front:"Rimediare / Compensare", back:"Make up for"},
+  {front:"Per quanto riguarda", back:"As for / As to"},
+  {front:"Ingrandire", back:"Blow up"},
+  {front:"Esplodere", back:"Blow up"},
+  {front:"Gonfiare", back:"Blow up"},
+  {front:"Scoppiare / Evadere", back:"Break out"},
+  {front:"Sfiancarsi / Esaurirsi", back:"Burn oneself out"},
+  {front:"Non poter fare a meno di", back:"Can’t help"},
+  {front:"Provare pena per / Dispiacersi", back:"Feel sorry for"},
+  {front:"È logico", back:"It stands to reason"},
+  {front:"Fuori moda / Superato / Scaduto", back:"Out of date"},
+  {front:"Aggiornato", back:"Up to date"},
+  {front:"È scoppiato il finimondo", back:"All hell broke loose"},
+  {front:"Purché", back:"As long as"},
+  {front:"Essere all’altezza", back:"Be up to"},
+  {front:"Essere dimesso dall’ospedale", back:"Be discharged"},
+  {front:"Impaziente / Desideroso", back:"Eager"},
+  {front:"Finire per", back:"End up"},
+  {front:"Tutt’altro / Anzi", back:"Far from it"},
+  {front:"A tutti gli effetti", back:"To all intents and purposes"},
+  {front:"Lamentarsi / Piangere forte", back:"Wail"},
+  {front:"Testimoniare / Essere testimone", back:"Witness"},
+  {front:"Non ne ho voglia", back:"I’m not in the mood"},
+  {front:"Portavoce", back:"Spokesperson"},
+  {front:"Autovelox", back:"Speed-traps"},
+  {front:"Lentissimo", back:"Sluggish"},
+  {front:"Ingrandire a dismisura", back:"Blow up out of all proportions"},
+  {front:"Disinnescare / Stemperare", back:"Defuse"},
+  {front:"Fino a nuovo avviso", back:"Until further notice"},
+  {front:"Non si può negare", back:"There is no denying"},
+  {front:"Che programmi hai per oggi?", back:"What are you up to today?"}
+];
+
+let cards=[], pool=[], currentIndex=0;
+
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const backBtn   = document.getElementById("backBtn");
+const restartBtn= document.getElementById("restartBtn");
+
+function startSession(){
+    if(pool.length < 15) pool=[...library].sort(()=>0.5-Math.random());
+    cards = pool.splice(0,15);
+    currentIndex=0;
+    updateCard();
+}
+
+function updateCard(){
+    flashcard.classList.remove("flipped");
+    setTimeout(()=>{
+        frontText.innerText = cards[currentIndex].front;
+        backText.innerText  = cards[currentIndex].back;
+        counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+    },150);
+}
+
+function nextCard(e){
+    e.stopPropagation();
+    currentIndex=(currentIndex+1)%cards.length;
+    updateCard();
+}
+function prevCard(e){
+    e.stopPropagation();
+    currentIndex=(currentIndex-1+cards.length)%cards.length;
+    updateCard();
+}
+
+flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+backBtn.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    flashcard.classList.remove("flipped");
+});
+restartBtn.addEventListener("click",startSession);
+
+startSession();
+</script>
+
+</body>
+</html>
