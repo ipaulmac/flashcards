@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALS - Lessons 3 & 4 Compact</title>
+<title>ALS – Lessons 3 & 4</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 :root{
-    --brand-navy:#002147;
-    --brand-gold:#CFC752;
-    --custom-purple:#561386;
+  --navy:#002147;
+  --gold:#CFC752;
+  --purple:#561386;
 }
 
 body{
-    background:var(--custom-purple);
-    font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-    overflow:hidden;
+  background:var(--purple);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  overflow:hidden;
 }
 
 .perspective-1000{perspective:1000px;}
@@ -26,62 +26,39 @@ body{
 .flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
 .flipped{transform:rotateY(180deg);}
 
-.phrase-front{
-    font-size:2.4rem;line-height:1.1;
-    font-weight:700;color:#fff;
-}
-.phrase-back{
-    font-size:2.75rem;line-height:1.05;
-    font-weight:800;color:var(--brand-navy);
-}
+.front-text{font-size:2.4rem;line-height:1.1;font-weight:800;color:#fff;}
+.back-text{font-size:2.6rem;line-height:1.05;font-weight:800;color:var(--navy);}
 
 .nav-btn{
-    width:40px;height:40px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
 }
 .nav-btn:active{transform:scale(.9);}
 
-.back-btn{
-    background:none;
-    border:2px solid #fff;
-    color:#fff;
-    padding:6px 14px;
-    border-radius:999px;
-    font-weight:800;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    font-size:.9rem;
-}
-
 .restart-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:none;
-    border:2px solid #fff;
-    color:#fff;
-    padding:6px 14px;
-    border-radius:999px;
-    font-weight:800;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    font-size:.85rem;
-    margin-top:1rem;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:2px solid #fff;color:#fff;
+  padding:6px 14px;border-radius:999px;
+  font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;font-size:.85rem;margin-top:1rem;
 }
+.restart-btn:active{transform:scale(.95);opacity:.8;}
 
-.speaker-btn{
-    background:none;
-    border:2px solid var(--brand-navy);
-    color:var(--brand-navy);
-    padding:4px 10px;
-    border-radius:999px;
-    font-weight:700;
-    font-size:.8rem;
+.audio-btn{
+  margin-top:.5rem;
+  padding:6px 14px;
+  border:2px solid var(--navy);
+  border-radius:999px;
+  font-weight:800;
+  font-size:.8rem;
+  letter-spacing:.05em;
+  color:var(--navy);
 }
+.audio-btn:active{transform:scale(.95);opacity:.85;}
 
-@media(max-width:480px){
-    .phrase-front{font-size:1.4rem;}
-    .phrase-back{font-size:1.7rem;}
+@media (max-width:480px){
+  .front-text{font-size:1.4rem;}
+  .back-text{font-size:1.7rem;}
 }
 </style>
 </head>
@@ -92,99 +69,98 @@ body{
 <div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
 
 <!-- FRONT -->
-<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5 border">
+<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5">
+  <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
+    Lessons 3 & 4
+  </div>
 
-    <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
-        Lessons 3 & 4
+  <div class="flex-grow flex items-center justify-center text-center px-2">
+    <p id="front-text" class="front-text"></p>
+  </div>
+
+  <div class="flex flex-col items-center space-y-2">
+    <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+      Tap / Click to reveal
     </div>
 
-    <div class="flex-grow flex items-center justify-center text-center px-2">
-        <p id="front-text" class="phrase-front"></p>
+    <div class="flex items-center space-x-4 bg-white border-2 border-[#CFC752] px-3 py-1 rounded-full">
+      <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
+      <span id="counter-display" class="text-[11px] font-black text-[#002147]">1 / 15</span>
+      <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
     </div>
-
-    <div class="flex flex-col items-center space-y-2">
-        <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
-            Tap / Click to reveal
-        </div>
-
-        <div class="flex items-center space-x-4 bg-white px-3 py-1 rounded-full">
-            <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
-            <span id="counter-display" class="text-[11px] font-black text-[#002147]">
-                1 / 15
-            </span>
-            <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- BACK -->
 <div class="absolute inset-0 bg-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+  <div class="text-[10px] font-bold text-[#002147]/40 uppercase tracking-widest text-right">
+    Translation
+  </div>
 
-    <div class="text-[10px] font-bold text-[#002147]/30 uppercase tracking-widest text-right">
-        Translation
-    </div>
+  <div class="flex-grow flex flex-col items-center justify-center text-center px-2">
+    <p id="back-text" class="back-text italic"></p>
+    <button id="speakBtn" class="audio-btn">🔊 Listen</button>
+  </div>
 
-    <div class="flex-grow flex flex-col items-center justify-center text-center px-2 space-y-3">
-        <p id="back-text" class="phrase-back italic"></p>
-        <button id="speakerBtn" class="speaker-btn">🔊 Listen</button>
+  <div class="flex justify-center pb-2">
+    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#002147] cursor-pointer">
+      Tap / Click to go back
     </div>
-
-    <div class="flex justify-center pb-2">
-        <button id="backBtn" class="back-btn">TAP / CLICK TO GO BACK</button>
-    </div>
+  </div>
 </div>
 
 </div>
 </div>
 
+<!-- RESTART -->
 <button id="restartBtn" class="restart-btn">
-    &#x21bb; Try again
+  &#x21bb; Try again
 </button>
 
 <script>
 const library = [
-  {front:"Tutto il giorno", back:"All day long"},
-  {front:"Andare d’accordo", back:"To get on with / To get along with"},
-  {front:"Continuare a fare qualcosa / Andare avanti con qualcosa", back:"To get on with something"},
-  {front:"Sdraiarsi", back:"To lie down"},
-  {front:"Fare la differenza / Incidere", back:"To make a difference"},
-  {front:"Da solo / Per conto proprio", back:"On one’s own"},
-  {front:"Di proposito", back:"On purpose"},
-  {front:"Scegliere / Selezionare", back:"To pick out"},
-  {front:"Sedersi", back:"To sit down"},
-  {front:"Alzarsi in piedi", back:"To stand up"},
-  {front:"Accomodarsi / Sedersi", back:"To take a seat"},
-  {front:"Fare con calma", back:"To take one’s time doing something"},
-  {front:"Discutere / Parlare di qualcosa", back:"To talk over"},
-  {front:"Almeno", back:"At least"},
-  {front:"Cercare qualcuno (online / sull’elenco)", back:"To look somebody up"},
-  {front:"Cercare qualcosa (sul dizionario)", back:"To look something up"},
-  {front:"Ammirare / Stimare", back:"To look up to"},
-  {front:"Per niente / Figurati", back:"Not at all"},
-  {front:"Per niente / Minimamente", back:"Not in the least"},
-  {front:"Mettere via / Sistemare", back:"To put away"},
-  {front:"Finora", back:"So far / Up to now / As of yet"},
-  {front:"Prendere parte a / Partecipare a", back:"To take part in"},
-  {front:"Avere luogo / Svolgersi", back:"To take place"},
-  {front:"Riflettere su / Ripensare a", back:"To think over"},
-  {front:"Provare (vestiti)", back:"To try on"},
-  {front:"Sperimentare", back:"To try out"},
-  {front:"Implorare / Pregare", back:"To beg"},
-  {front:"Bocciare / Dare un giudizio negativo", back:"To give the thumbs down"},
-  {front:"Nessuna delle due cose", back:"Neither of which"},
+  {front:"Tutto il giorno", back:"All Day Long"},
+  {front:"Andare d’accordo", back:"Get On With / Get Along With"},
+  {front:"Continuare a fare qualcosa / Andare avanti con qualcosa", back:"Get On With Something"},
+  {front:"Sdraiarsi", back:"Lie Down"},
+  {front:"Fare la differenza / Incidere", back:"Make A Difference"},
+  {front:"Da solo / Per conto proprio", back:"On One’s Own"},
+  {front:"Di proposito", back:"On Purpose"},
+  {front:"Scegliere / Selezionare", back:"Pick Out"},
+  {front:"Sedersi", back:"Sit Down"},
+  {front:"Alzarsi in piedi", back:"Stand Up"},
+  {front:"Accomodarsi / Sedersi", back:"Take A Seat"},
+  {front:"Fare con calma", back:"Take One’s Time Doing Something"},
+  {front:"Discutere / Parlare di qualcosa", back:"Talk Over"},
+  {front:"Almeno", back:"At Least"},
+  {front:"Cercare qualcuno (online / sull’elenco)", back:"Look Somebody Up"},
+  {front:"Cercare qualcosa (sul dizionario)", back:"Look Something Up"},
+  {front:"Ammirare / Stimare", back:"Look Up To"},
+  {front:"Per niente / Figurati", back:"Not At All"},
+  {front:"Per niente / Minimamente", back:"Not In The Least"},
+  {front:"Mettere via / Sistemare", back:"Put Away"},
+  {front:"Finora", back:"So Far / Up To Now / As Of Yet"},
+  {front:"Prendere parte a / Partecipare a", back:"Take Part In"},
+  {front:"Avere luogo / Svolgersi", back:"Take Place"},
+  {front:"Riflettere su / Ripensare a", back:"Think Over"},
+  {front:"Provare (vestiti)", back:"Try On"},
+  {front:"Sperimentare", back:"Try Out"},
+  {front:"Implorare / Pregare", back:"Beg"},
+  {front:"Bocciare / Dare un giudizio negativo", back:"Give The Thumbs Down"},
+  {front:"Nessuna delle due cose", back:"Neither Of Which"},
   {front:"Avanti", back:"Onward"},
-  {front:"Quando si tratta di", back:"When it comes to"},
-  {front:"Con preavviso", back:"With notice"},
+  {front:"Quando si tratta di", back:"When It Comes To"},
+  {front:"Con preavviso", back:"With Notice"},
   {front:"Delinquenti", back:"Troublemakers"},
   {front:"Allagato", back:"Flooded"},
-  {front:"Sono mortificato!", back:"I’m really sorry!"},
-  {front:"Giusto per cambiare", back:"Just for once"},
-  {front:"Come mai?", back:"How come?"},
+  {front:"Sono mortificato!", back:"I’m Really Sorry!"},
+  {front:"Giusto per cambiare", back:"Just For Once"},
+  {front:"Come mai?", back:"How Come?"},
   {front:"Diretto / Schietto", back:"Forthright"},
-  {front:"Perché diavolo…?", back:"Why the hell …?"},
-  {front:"A prescindere da", back:"Regardless of"},
-  {front:"Chissà perché?", back:"I wonder why?"},
-  {front:"Spetta a te (fare)", back:"It’s your job to do…"}
+  {front:"Perché diavolo…?", back:"Why The Hell …?"},
+  {front:"A prescindere da", back:"Regardless Of"},
+  {front:"Chissà perché?", back:"I Wonder Why?"},
+  {front:"Spetta a te (fare)", back:"It’s Your Job To Do…"}
 ];
 
 let cards=[], pool=[], currentIndex=0;
@@ -195,60 +171,54 @@ const backText  = document.getElementById("back-text");
 const counter   = document.getElementById("counter-display");
 const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
-const speakerBtn= document.getElementById("speakerBtn");
+const speakBtn  = document.getElementById("speakBtn");
 
 function startSession(){
-    pool=[...library].sort(()=>0.5-Math.random());
-    cards = pool.slice(0,15);
-    currentIndex=0;
-    updateCard();
+  if(pool.length < 15) pool=[...library].sort(()=>0.5-Math.random());
+  cards = pool.splice(0,15);
+  currentIndex=0;
+  updateCard();
 }
 
 function updateCard(){
-    flashcard.classList.remove("flipped");
-    setTimeout(()=>{
-        frontText.innerText = cards[currentIndex].front;
-        backText.innerText  = cards[currentIndex].back;
-        counter.innerText  = `${currentIndex+1} / ${cards.length}`;
-    },150);
+  flashcard.classList.remove("flipped");
+  setTimeout(()=>{
+    frontText.innerText = cards[currentIndex].front;
+    backText.innerText  = cards[currentIndex].back;
+    counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+  },150);
 }
 
 function nextCard(e){
-    e.stopPropagation();
-    currentIndex=(currentIndex+1)%cards.length;
-    updateCard();
+  e.stopPropagation();
+  currentIndex=(currentIndex+1)%cards.length;
+  updateCard();
 }
 function prevCard(e){
-    e.stopPropagation();
-    currentIndex=(currentIndex-1+cards.length)%cards.length;
-    updateCard();
+  e.stopPropagation();
+  currentIndex=(currentIndex-1+cards.length)%cards.length;
+  updateCard();
 }
 
+/* FLIP */
 flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
 backBtn.addEventListener("click",(e)=>{
-    e.stopPropagation();
-    flashcard.classList.remove("flipped");
+  e.stopPropagation();
+  flashcard.classList.remove("flipped");
 });
+
+/* AUDIO – British male voice */
+speakBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  const utter = new SpeechSynthesisUtterance(backText.innerText);
+  utter.lang = "en-GB";
+  const voices = speechSynthesis.getVoices();
+  const ukMale = voices.find(v=>v.lang==="en-GB" && /male/i.test(v.name));
+  if(ukMale) utter.voice = ukMale;
+  speechSynthesis.speak(utter);
+});
+
 restartBtn.addEventListener("click",startSession);
-
-function getBritishMaleVoice() {
-    const voices = speechSynthesis.getVoices();
-    return voices.find(v =>
-        v.lang === "en-GB" &&
-        /male|daniel|oliver|google uk english male/i.test(v.name)
-    ) || voices.find(v => v.lang === "en-GB") || voices[0];
-}
-
-speakerBtn.addEventListener("click",(e)=>{
-    e.stopPropagation();
-    const utter = new SpeechSynthesisUtterance(cards[currentIndex].back);
-    utter.lang = "en-GB";
-    utter.voice = getBritishMaleVoice();
-    speechSynthesis.speak(utter);
-});
-
-speechSynthesis.onvoiceschanged = () => getBritishMaleVoice();
-
 startSession();
 </script>
 
