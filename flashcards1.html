@@ -3,174 +3,435 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALS – Stage 1 Compact</title>
+<title>ALS – Stage One Global</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 :root{
---brand-navy:#002147;
---brand-gold:#CFC752;
---custom-purple:#561386;
+  --navy:#002147;
+  --gold:#CFC752;
+  --purple:#561386;
 }
-
-.perspective-1000{perspective:1000px}
-.preserve-3d{transform-style:preserve-3d}
-.backface-hidden{backface-visibility:hidden}
-.rotate-y-180{transform:rotateY(180deg)}
-.flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1)}
-.flipped{transform:rotateY(180deg)}
 
 body{
-background:var(--custom-purple);
-font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
-overflow-y:auto;
+  background:var(--purple);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  overflow:hidden;
 }
 
-.phrase-front{font-size:2.4rem;line-height:1.1;font-weight:700}
-.phrase-back{font-size:2.75rem;line-height:1.05;font-weight:800}
+.perspective-1000{perspective:1000px;}
+.preserve-3d{transform-style:preserve-3d;}
+.backface-hidden{backface-visibility:hidden;}
+.rotate-y-180{transform:rotateY(180deg);}
+.flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.flipped{transform:rotateY(180deg);}
+
+.front-text{font-size:2.4rem;line-height:1.1;font-weight:800;color:#fff;}
+.back-text{font-size:2.6rem;line-height:1.05;font-weight:800;color:var(--navy);}
 
 .nav-btn{
-display:flex;align-items:center;justify-content:center;
-width:40px;height:40px;border-radius:50%;
-transition:.2s;
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
 }
-.nav-btn:active{background:rgba(0,0,0,.1);transform:scale(.9)}
+.nav-btn:active{transform:scale(.9);}
 
-.ui-accent-bg{background:var(--brand-gold)}
-.navy-text{color:var(--brand-navy)}
-
-.back-btn{
-background:none;border:none;
-font-size:.9rem;font-weight:800;
-letter-spacing:2px;text-transform:uppercase;
-color:#fff;cursor:pointer;
+.restart-btn{
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:2px solid #fff;color:#fff;
+  padding:6px 14px;border-radius:999px;
+  font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;font-size:.85rem;margin-top:1rem;
 }
+.restart-btn:active{transform:scale(.95);opacity:.8;}
 
-@media(max-width:480px){
-.phrase-front{font-size:1.4rem}
-.phrase-back{font-size:1.7rem}
+.audio-btn{
+  margin-top:.5rem;
+  padding:6px 14px;
+  border:2px solid var(--navy);
+  border-radius:999px;
+  font-weight:800;
+  font-size:.8rem;
+  letter-spacing:.05em;
+  color:var(--navy);
+}
+.audio-btn:active{transform:scale(.95);opacity:.85;}
+
+@media (max-width:480px){
+  .front-text{font-size:1.4rem;}
+  .back-text{font-size:1.7rem;}
 }
 </style>
 </head>
 
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-<div class="mb-4 text-center">
-<h1 class="text-white/80 text-[10px] font-black uppercase tracking-[.3em]">
-Accelerated Language Systems
-</h1>
-</div>
-
-<div class="w-full max-w-sm flex flex-col items-center pb-12">
-<div class="w-full perspective-1000">
-
+<div class="w-full max-w-[420px] perspective-1000">
 <div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
 
 <!-- FRONT -->
-<div class="absolute inset-0 bg-white backface-hidden rounded-3xl flex flex-col justify-between p-5 border">
+<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5">
+  <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
+    STAGE ONE – GLOBAL
+  </div>
 
-<div class="w-full flex justify-between items-center">
-<img src="https://static.wixstatic.com/media/c11625_0d25b3fc3bb56ca3c126f014ea762160.png" class="h-6">
-<span class="text-[10px] font-black text-[#561386]/50 uppercase tracking-widest">Stage 1</span>
-</div>
+  <div class="flex-grow flex items-center justify-center text-center px-2">
+    <p id="front-text" class="front-text"></p>
+  </div>
 
-<div class="flex flex-col items-center justify-center text-center flex-grow">
-<p id="front-text" class="phrase-front navy-text"></p>
-</div>
+  <div class="flex flex-col items-center space-y-2">
+    <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+      Tap / Click to reveal
+    </div>
 
-<div class="flex flex-col items-center space-y-3">
-<div class="text-[#800000] text-[11px] font-black uppercase tracking-[.2em]">
-Tap / Click to reveal
-</div>
-
-<div class="flex items-center space-x-4 ui-accent-bg px-3 py-1 rounded-full">
-<button onclick="prevCard(event)" class="nav-btn navy-text">
-‹
-</button>
-<span id="counter-display" class="text-[11px] font-black navy-text">1 / 15</span>
-<button onclick="nextCard(event)" class="nav-btn navy-text">
-›
-</button>
-</div>
-</div>
+    <div class="flex items-center space-x-4 bg-white px-3 py-1 rounded-full">
+      <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
+      <span id="counter-display" class="text-[11px] font-black text-[#002147]">1 / 20</span>
+      <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
+    </div>
+  </div>
 </div>
 
 <!-- BACK -->
-<div class="absolute inset-0 bg-[#002147] text-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+<div class="absolute inset-0 bg-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+  <div class="text-[10px] font-bold text-[#002147]/40 uppercase tracking-widest text-right">
+    Translation
+  </div>
 
-<div class="w-full flex justify-between items-center">
-<span class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Translation</span>
-<button class="back-btn">BACK</button>
+  <div class="flex-grow flex flex-col items-center justify-center text-center px-2">
+    <p id="back-text" class="back-text italic"></p>
+    <button id="speakBtn" class="audio-btn">🔊 Listen</button>
+  </div>
+
+  <div class="flex justify-center pb-2">
+    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#002147] cursor-pointer">
+      Tap / Click to go back
+    </div>
+  </div>
 </div>
 
-<div class="flex-grow flex items-center justify-center text-center">
-<p id="back-text" class="phrase-back italic"></p>
-</div>
-
-<img src="https://static.wixstatic.com/media/c11625_0d25b3fc3bb56ca3c126f014ea762160.png"
-class="h-5 mx-auto opacity-50 invert">
-
-</div>
 </div>
 </div>
 
-<button id="restart-btn"
-class="mt-8 flex items-center space-x-2 hover:opacity-80 active:scale-95 transition-all">
-<span class="font-black text-xs text-white tracking-[.15em] uppercase">Try again</span>
+<!-- RESTART -->
+<button id="restartBtn" class="restart-btn">
+  &#x21bb; Try again
 </button>
-</div>
 
 <script>
-const library=[
-{front:"Viaggiare senza intoppi",back:"To make good time"},
-{front:"Mi raccomando",back:"Whatever you do..."},
-{front:"Ci è andata bene!",back:"We were lucky!"},
-{front:"Darci una mossa",back:"To get going"},
-{front:"Un giorno sì e un giorno no",back:"Every other day"},
-{front:"Secondo me...",back:"I think..."},
-{front:"A tutti gli effetti",back:"To all intents and purposes"},
-{front:"Alle prime luci dell'alba",back:"At the crack of dawn"},
-{front:"Non se ne parla!",back:"Out of the question!"},
-{front:"Da ore e ore",back:"For hours on end"},
-{front:"Tutto d'un tratto",back:"All of a sudden"},
-{front:"Cambiare idea",back:"To change one's mind"},
-{front:"Sentirsi poco bene",back:"To feel under the weather"},
-{front:"Ogni tanto",back:"Now and then"},
-{front:"A memoria",back:"By heart"}
+const library = [
+  {front:"All’inizio", back:"At first"},
+  {front:"Subito", back:"At once / Right away / Straight away"},
+  {front:"Richiamare", back:"Call back"},
+  {front:"Telefonare / Fare uno squillo", back:"Call up"},
+  {front:"Entrare / Salire (in auto)", back:"Get in"},
+  {front:"Scendere (dal treno)", back:"Get off"},
+  {front:"Salire (mezzi pubblici)", back:"Get on"},
+  {front:"Uscire / Scendere dalla macchina", back:"Get out"},
+  {front:"Alzarsi", back:"Get up"},
+  {front:"Fare uno squillo a qualcuno", back:"Give someone a call / Call up"},
+  {front:"Raccogliere / Passare a prendere / Ritirare", back:"Pick up"},
+  {front:"Indossare / Mettersi", back:"Put on"},
+  {front:"Spegnere", back:"Switch off / Turn off / Shut off"},
+  {front:"Accendere", back:"Switch on / Turn on"},
+  {front:"Togliersi", back:"Take off"},
+  {front:"Dall’inizio", back:"All along"},
+  {front:"Dappertutto", back:"All over"},
+  {front:"Va bene", back:"All right"},
+  {front:"Come al solito", back:"As usual"},
+  {front:"Finalmente", back:"At last"},
+  {front:"Vestirsi elegante", back:"Dress up"},
+  {front:"Scoprire / Informarsi", back:"Find out"},
+  {front:"Poco a poco", back:"Little by little"},
+  {front:"Guardare", back:"Look at"},
+  {front:"Cercare", back:"Look for"},
+  {front:"Non importa / Lascia perdere", back:"Never mind"},
+  {front:"Cercare", back:"Search for"},
+  {front:"Passo dopo passo", back:"Step by step"},
+  {front:"Stancare troppo / Sfinire", back:"Tire out / Wear out"},
+  {front:"Compagno di classe", back:"Classmate"},
+  {front:"Nel giro di", back:"In the space of"},
+  {front:"Versare", back:"Pour"},
+  {front:"Saltare", back:"Skip"},
+  {front:"Fornire", back:"Supply"},
+  {front:"Mi raccomando", back:"Whatever you do"},
+  {front:"Sgranchirsi le gambe", back:"Stretch one’s legs"},
+  {front:"Per l’amor del cielo! / Mamma mia!", back:"For heaven’s sake!"},
+  {front:"Un cavolo / Proprio niente", back:"A damned thing"},
+  {front:"Identificare", back:"Put one’s finger on something"},
+  {front:"Volevo solo dire", back:"I just wanted to mention"},
+  {front:"Lascia stare / Non ti preoccupare", back:"Don’t bother / Never mind"},
+  {front:"Qual è il suo problema?!", back:"What’s wrong with him?!"},
+  {front:"Di fila / Consecutivamente", back:"In a row"},
+  {front:"Non posso non essere d’accordo con te", back:"I would have to agree with you"},
+  {front:"Tutto il giorno", back:"All Day Long"},
+  {front:"Andare d’accordo", back:"Get On With / Get Along With"},
+  {front:"Continuare a fare qualcosa / Andare avanti con qualcosa", back:"Get On With Something"},
+  {front:"Sdraiarsi", back:"Lie Down"},
+  {front:"Fare la differenza / Incidere", back:"Make A Difference"},
+  {front:"Da solo / Per conto proprio", back:"On One’s Own"},
+  {front:"Di proposito", back:"On Purpose"},
+  {front:"Scegliere / Selezionare", back:"Pick Out"},
+  {front:"Sedersi", back:"Sit Down"},
+  {front:"Alzarsi in piedi", back:"Stand Up"},
+  {front:"Accomodarsi / Sedersi", back:"Take A Seat"},
+  {front:"Fare con calma", back:"Take One’s Time Doing Something"},
+  {front:"Discutere / Parlare di qualcosa", back:"Talk Over"},
+  {front:"Almeno", back:"At Least"},
+  {front:"Cercare qualcuno (online / sull’elenco)", back:"Look Somebody Up"},
+  {front:"Cercare qualcosa (sul dizionario)", back:"Look Something Up"},
+  {front:"Ammirare / Stimare", back:"Look Up To"},
+  {front:"Per niente / Figurati", back:"Not At All"},
+  {front:"Per niente / Minimamente", back:"Not In The Least"},
+  {front:"Mettere via / Sistemare", back:"Put Away"},
+  {front:"Finora", back:"So Far / Up To Now / As Of Yet"},
+  {front:"Prendere parte a / Partecipare a", back:"Take Part In"},
+  {front:"Avere luogo / Svolgersi", back:"Take Place"},
+  {front:"Riflettere su / Ripensare a", back:"Think Over"},
+  {front:"Provare (vestiti)", back:"Try On"},
+  {front:"Sperimentare", back:"Try Out"},
+  {front:"Implorare / Pregare", back:"Beg"},
+  {front:"Bocciare / Dare un giudizio negativo", back:"Give The Thumbs Down"},
+  {front:"Nessuna delle due cose", back:"Neither Of Which"},
+  {front:"Avanti", back:"Onward"},
+  {front:"Quando si tratta di", back:"When It Comes To"},
+  {front:"Con preavviso", back:"With Notice"},
+  {front:"Delinquenti", back:"Troublemakers"},
+  {front:"Allagato", back:"Flooded"},
+  {front:"Sono mortificato!", back:"I’m Really Sorry!"},
+  {front:"Giusto per cambiare", back:"Just For Once"},
+  {front:"Come mai?", back:"How Come?"},
+  {front:"Diretto / Schietto", back:"Forthright"},
+  {front:"Perché diavolo…?", back:"Why The Hell …?"},
+  {front:"A prescindere da", back:"Regardless Of"},
+  {front:"Chissà perché?", back:"I Wonder Why?"},
+  {front:"Spetta a te (fare)", back:"It’s Your Job To Do…"},
+  {front:"Annullare", back:"Call off"},
+  {front:"Prendere il raffreddore", back:"Catch a cold"},
+  {front:"Cambiare idea", back:"Change one’s mind"},
+  {front:"Per sempre", back:"For good"},
+  {front:"Per ora", back:"For the time being"},
+  {front:"Tornare (a casa)", back:"Get back (home)"},
+  {front:"Riprendersi / Superare", back:"Get over"},
+  {front:"Di corsa", back:"In a hurry / In a rush"},
+  {front:"Fare attenzione a", back:"Look out for / Watch out for"},
+  {front:"Decidersi", back:"Make up one’s mind"},
+  {front:"Rimandare", back:"Put off"},
+  {front:"Stringere la mano", back:"Shake hands"},
+  {front:"Tutto d’un tratto", back:"All at once / All of a sudden"},
+  {front:"Controllare / Rivedere", back:"Check over / Go over / Look over"},
+  {front:"Contare su", back:"Count on / Rely on / Depend on"},
+  {front:"Cavarsela", back:"Get by"},
+  {front:"Avere l’occasione di fare", back:"Get to do something"},
+  {front:"Continuare / Succedere / Accendersi", back:"Go on"},
+  {front:"Riattaccare (il telefono)", back:"Hang up"},
+  {front:"Chiedere un permesso", back:"Have / Take (time) off"},
+  {front:"Fuori servizio", back:"Out of order"},
+  {front:"Spegnere", back:"Put out"},
+  {front:"Non sentirsi bene", back:"Feel under the weather"},
+  {front:"Entrare in possesso", back:"Come into possession"},
+  {front:"Mi gira la testa", back:"I feel dizzy"},
+  {front:"Fuori campo", back:"Out of range"},
+  {front:"Venire a mancare / Morire", back:"Pass away"},
+  {front:"Tramandare", back:"Pass down"},
+  {front:"Fermarsi (con l’auto)", back:"Pull up"},
+  {front:"Pernottare", back:"Stay overnight"},
+  {front:"Fermarsi brevemente", back:"Stop off"},
+  {front:"Buche (sull’asfalto)", back:"Pot-holes"},
+  {front:"Spericolato / Avventato", back:"Reckless"},
+  {front:"Altrettanto (facile) quanto", back:"Just as (easy) as"},
+  {front:"Liberarsi di / Scrollarsi di dosso", back:"Shake off"},
+  {front:"Peggiorare", back:"Go downhill"},
+  {front:"Testardo / Ostinato", back:"Stubborn"},
+  {front:"Sei riuscito a (fare)?", back:"Any luck (doing)?"},
+  {front:"Neanche per sogno / Assolutamente no", back:"No way"},
+  {front:"Riunione del consiglio di amministrazione", back:"Board-meeting"},
+  {front:"Per fortuna", back:"Thankfully"},
+  {front:"Di scorta / In più", back:"Spare"},
+  {front:"Dare un passaggio", back:"Give a lift"},
+  {front:"Come mai…?", back:"Why is it that …?"},
+  {front:"Nella foga del momento", back:"In the heat of the moment"},
+  {front:"Sopraffatto", back:"Overwhelmed"},
+  {front:"Legalmente vincolante", back:"Legally-binding"},
+  {front:"Di lunga data", back:"Long-standing"},
+  {front:"Fare gli straordinari", back:"Work over-time"},
+  {front:"Essere sveglio / Essere in piedi", back:"Be up"},
+  {front:"Finire / Fermarsi", back:"Call it a day"},
+  {front:"Capire / Calcolare", back:"Figure out"},
+  {front:"Migliorare", back:"Get better"},
+  {front:"Peggiorare", back:"Get worse"},
+  {front:"Farebbe meglio a…", back:"Had better do"},
+  {front:"In tempo", back:"In time"},
+  {front:"Fare pace", back:"Make up"},
+  {front:"Far presente / Sottolineare / Indicare", back:"Point out"},
+  {front:"Preferirebbe fare", back:"Would rather do"},
+  {front:"Puntuale / In orario", back:"On time"},
+  {front:"In tempo", back:"In time"},
+  {front:"Litigare / Rompere i rapporti", back:"Fall out"},
+  {front:"Stare per fare", back:"Be about to do"},
+  {front:"Ripassare / Rinfrescare", back:"Brush up on"},
+  {front:"Innamorarsi di", back:"Fall in love with"},
+  {front:"Spegnersi / Uscire / Frequentarsi", back:"Go out"},
+  {front:"Avere a che fare con", back:"Have (got) to do with"},
+  {front:"A stomaco vuoto", back:"On an empty stomach"},
+  {front:"Non se ne parla proprio", back:"Out of the question"},
+  {front:"Più volte", back:"Over and over again / Time and again"},
+  {front:"Prestare attenzione a", back:"Pay attention to"},
+  {front:"Fare a turno", back:"Take turns"},
+  {front:"Buttare via", back:"Throw away"},
+  {front:"Consumare / Logorare", back:"Wear out"},
+  {front:"Trovare il coraggio di fare", back:"Bring oneself to do"},
+  {front:"Per giorni interi", back:"Days on end"},
+  {front:"Mettersi in moto / Darsi da fare", back:"Get going"},
+  {front:"Lasciarsi", back:"Split up"},
+  {front:"Ma stai scherzando!", back:"You must be joking!"},
+  {front:"Municipio", back:"Town Hall"},
+  {front:"Tamponare", back:"Run into the back of"},
+  {front:"Molta strada da fare", back:"A long way to go"},
+  {front:"Tenere la bocca chiusa", back:"Mum’s the word!"},
+  {front:"Portato / Dotato", back:"Gifted"},
+  {front:"Di lunga durata", back:"Long-lasting"},
+  {front:"Ti è andato bene", back:"You were lucky"},
+  {front:"Andare d’accordo alla grande", back:"Get on or Get along, like a house on fire!"},
+  {front:"A memoria", back:"By heart"},
+  {front:"Provenire", back:"Come from"},
+  {front:"A giorni alterni", back:"Every other day"},
+  {front:"Di prim’ordine / Eccellente", back:"First-rate"},
+  {front:"Confondersi", back:"Get mixed up"},
+  {front:"Sbarazzarsi / Eliminare", back:"Get rid of"},
+  {front:"Stare bene con / Abbinarsi a", back:"Go with / Match"},
+  {front:"Assicurarsi", back:"Make certain / Make sure"},
+  {front:"Viaggiare senza intoppi", back:"Make good time"},
+  {front:"Capire (con difficoltà)", back:"Make out"},
+  {front:"Ogni tanto", back:"Now and again / Now and then"},
+  {front:"Occuparsi di / Provvedere a", back:"See to"},
+  {front:"Avanti e indietro", back:"Back and forth"},
+  {front:"Essere responsabile", back:"Be in charge"},
+  {front:"Essere abituato a fare", back:"Be used to doing"},
+  {front:"Ridurre (spese)", back:"Cut back on"},
+  {front:"Ridurre (consumo)", back:"Cut down on"},
+  {front:"Mettersi in contatto", back:"Get in touch"},
+  {front:"Abituarsi a fare", back:"Get used to doing"},
+  {front:"Divertirsi / Passarsela bene", back:"Have a (good) time"},
+  {front:"In pochissimo tempo", back:"In no time"},
+  {front:"Un bel po’ di", back:"Quite a few"},
+  {front:"Essere solito fare", back:"Used to do"},
+  {front:"Svegliarsi", back:"Wake up"},
+  {front:"Rendersi conto di", back:"Wake up to"},
+  {front:"All’inizio", back:"At the outset"},
+  {front:"Cifra / Numero", back:"Figure"},
+  {front:"Non avere altra scelta che", back:"No alternative but"},
+  {front:"Pagare il prezzo più alto / Fallire", back:"Pay the ultimate price"},
+  {front:"Spiacevole / Inaspettato", back:"Untoward"},
+  {front:"Non è da me", back:"It’s unlike me"},
+  {front:"Travolgente / Schiacciante", back:"Overwhelming"},
+  {front:"Sono io (al telefono)", back:"Speaking"},
+  {front:"Mi sono reso ridicolo!", back:"I made a fool of myself!"},
+  {front:"Ingenuo", back:"Naïve"},
+  {front:"Alle prime luci dell’alba", back:"At the crack of dawn"},
+  {front:"Ciò nonostante", back:"Nonetheless"},
+  {front:"Al chiuso", back:"Indoors"},
+  {front:"A proprio agio", back:"At ease"},
+  {front:"Essere / Lasciarsi trasportare", back:"Be / Get carried away"},
+  {front:"Dipende da te", back:"It’s up to you"},
+  {front:"Di tanto in tanto", back:"Every so often / Once in a while"},
+  {front:"Criticare", back:"Find fault with"},
+  {front:"D’ora in poi", back:"From now on"},
+  {front:"A disagio", back:"Ill at ease"},
+  {front:"Tenersi lontano da / Evitare", back:"Keep / Stay away from"},
+  {front:"Tenere traccia di", back:"Keep track of"},
+  {front:"Indagare / Informarsi", back:"Look into"},
+  {front:"Rimediare / Compensare", back:"Make up for"},
+  {front:"Per quanto riguarda", back:"As for / As to"},
+  {front:"Ingrandire", back:"Blow up"},
+  {front:"Esplodere", back:"Blow up"},
+  {front:"Gonfiare", back:"Blow up"},
+  {front:"Scoppiare / Evadere", back:"Break out"},
+  {front:"Sfiancarsi / Esaurirsi", back:"Burn oneself out"},
+  {front:"Non poter fare a meno di", back:"Can’t help"},
+  {front:"Provare pena per / Dispiacersi", back:"Feel sorry for"},
+  {front:"È logico", back:"It stands to reason"},
+  {front:"Fuori moda / Superato / Scaduto", back:"Out of date"},
+  {front:"Aggiornato", back:"Up to date"},
+  {front:"È scoppiato il finimondo", back:"All hell broke loose"},
+  {front:"Purché", back:"As long as"},
+  {front:"Essere all’altezza", back:"Be up to"},
+  {front:"Essere dimesso dall’ospedale", back:"Be discharged"},
+  {front:"Impaziente / Desideroso", back:"Eager"},
+  {front:"Finire per", back:"End up"},
+  {front:"Tutt’altro / Anzi", back:"Far from it"},
+  {front:"A tutti gli effetti", back:"To all intents and purposes"},
+  {front:"Lamentarsi / Piangere forte", back:"Wail"},
+  {front:"Testimoniare / Essere testimone", back:"Witness"},
+  {front:"Non ne ho voglia", back:"I’m not in the mood"},
+  {front:"Portavoce", back:"Spokesperson"},
+  {front:"Autovelox", back:"Speed-traps"},
+  {front:"Lentissimo", back:"Sluggish"},
+  {front:"Ingrandire a dismisura", back:"Blow up out of all proportions"},
+  {front:"Disinnescare / Stemperare", back:"Defuse"},
+  {front:"Fino a nuovo avviso", back:"Until further notice"},
+  {front:"Non si può negare", back:"There is no denying"},
+  {front:"Che programmi hai per oggi?", back:"What are you up to today?"}
+
 ];
 
-let cards=[],pool=[],currentIndex=0;
-const flashcard=document.getElementById("flashcard");
-const frontText=document.getElementById("front-text");
-const backText=document.getElementById("back-text");
-const counter=document.getElementById("counter-display");
-const restartBtn=document.getElementById("restart-btn");
+let cards=[], pool=[], currentIndex=0;
+
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const backBtn   = document.getElementById("backBtn");
+const restartBtn= document.getElementById("restartBtn");
+const speakBtn  = document.getElementById("speakBtn");
 
 function startSession(){
-if(pool.length<15) pool=[...library].sort(()=>0.5-Math.random());
-cards=pool.splice(0,15);
-currentIndex=0;
-updateCard();
+  if(pool.length < 30) pool=[...library].sort(()=>0.5-Math.random());
+  cards = pool.splice(0,30);
+  currentIndex=0;
+  updateCard();
 }
 
-function updateCard(){
-flashcard.classList.remove("flipped");
-setTimeout(()=>{
-frontText.innerText=cards[currentIndex].front;
-backText.innerText=cards[currentIndex].back;
-counter.innerText=`${currentIndex+1} / ${cards.length}`;
-},150);
+function updateCard(){ 
+  flashcard.classList.remove("flipped");
+  setTimeout(()=>{
+    frontText.innerText = cards[currentIndex].front;
+    backText.innerText  = cards[currentIndex].back;
+    counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+  },150);
 }
 
-function nextCard(e){e.stopPropagation();currentIndex=(currentIndex+1)%cards.length;updateCard();}
-function prevCard(e){e.stopPropagation();currentIndex=(currentIndex-1+cards.length)%cards.length;updateCard();}
+function nextCard(e){
+  e.stopPropagation();
+  currentIndex=(currentIndex+1)%cards.length;
+  updateCard();
+}
+function prevCard(e){
+  e.stopPropagation();
+  currentIndex=(currentIndex-1+cards.length)%cards.length;
+  updateCard();
+}
 
+/* FLIP */
 flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
-restartBtn.addEventListener("click",startSession);
+backBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  flashcard.classList.remove("flipped");
+});
 
+/* AUDIO – British male voice */
+speakBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  const utter = new SpeechSynthesisUtterance(backText.innerText);
+  utter.lang = "en-GB";
+  const voices = speechSynthesis.getVoices();
+  const ukMale = voices.find(v=>v.lang==="en-GB" && /male/i.test(v.name));
+  if(ukMale) utter.voice = ukMale;
+  speechSynthesis.speak(utter);
+});
+
+restartBtn.addEventListener("click",startSession);
 startSession();
 </script>
 
 </body>
 </html>
-
