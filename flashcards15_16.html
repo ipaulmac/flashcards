@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALS - Lessons 15 & 16 Compact</title>
+<title>ALS – Lessons 15 & 16</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 :root{
-    --brand-navy:#002147;
-    --brand-gold:#CFC752;
-    --custom-purple:#561386;
+  --navy:#002147;
+  --gold:#CFC752;
+  --purple:#561386;
 }
 
 body{
-    background:var(--custom-purple);
-    font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-    overflow:hidden;
+  background:var(--purple);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  overflow:hidden;
 }
 
 .perspective-1000{perspective:1000px;}
@@ -26,62 +26,39 @@ body{
 .flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
 .flipped{transform:rotateY(180deg);}
 
-.phrase-front{
-    font-size:2.4rem;line-height:1.1;
-    font-weight:700;color:#fff;
-}
-.phrase-back{
-    font-size:2.75rem;line-height:1.05;
-    font-weight:800;color:var(--brand-navy);
-}
+.front-text{font-size:2.4rem;line-height:1.1;font-weight:800;color:#fff;}
+.back-text{font-size:2.6rem;line-height:1.05;font-weight:800;color:var(--navy);}
 
 .nav-btn{
-    width:40px;height:40px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
 }
 .nav-btn:active{transform:scale(.9);}
 
-.back-btn{
-    background:none;
-    border:2px solid #fff;
-    color:#fff;
-    padding:6px 14px;
-    border-radius:999px;
-    font-weight:800;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    font-size:.9rem;
-}
-
 .restart-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:none;
-    border:2px solid #fff;
-    color:#fff;
-    padding:6px 14px;
-    border-radius:999px;
-    font-weight:800;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    font-size:.85rem;
-    margin-top:1rem;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:2px solid #fff;color:#fff;
+  padding:6px 14px;border-radius:999px;
+  font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;font-size:.85rem;margin-top:1rem;
 }
+.restart-btn:active{transform:scale(.95);opacity:.8;}
 
-.speaker-btn{
-    background:none;
-    border:2px solid var(--brand-navy);
-    color:var(--brand-navy);
-    padding:4px 10px;
-    border-radius:999px;
-    font-weight:700;
-    font-size:.8rem;
+.audio-btn{
+  margin-top:.5rem;
+  padding:6px 14px;
+  border:2px solid var(--navy);
+  border-radius:999px;
+  font-weight:800;
+  font-size:.8rem;
+  letter-spacing:.05em;
+  color:var(--navy);
 }
+.audio-btn:active{transform:scale(.95);opacity:.85;}
 
-@media(max-width:480px){
-    .phrase-front{font-size:1.4rem;}
-    .phrase-back{font-size:1.7rem;}
+@media (max-width:480px){
+  .front-text{font-size:1.4rem;}
+  .back-text{font-size:1.7rem;}
 }
 </style>
 </head>
@@ -92,53 +69,52 @@ body{
 <div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
 
 <!-- FRONT -->
-<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5 border">
+<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5">
+  <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
+    Lessons 15 & 16
+  </div>
 
-    <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
-        Lessons 15 & 16
+  <div class="flex-grow flex items-center justify-center text-center px-2">
+    <p id="front-text" class="front-text"></p>
+  </div>
+
+  <div class="flex flex-col items-center space-y-2">
+    <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+      Tap / Click to reveal
     </div>
 
-    <div class="flex-grow flex items-center justify-center text-center px-2">
-        <p id="front-text" class="phrase-front"></p>
+    <div class="flex items-center space-x-4 bg-white px-3 py-1 rounded-full">
+      <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
+      <span id="counter-display" class="text-[11px] font-black text-[#002147]">1 / 15</span>
+      <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
     </div>
-
-    <div class="flex flex-col items-center space-y-2">
-        <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
-            Tap / Click to reveal
-        </div>
-
-        <div class="flex items-center space-x-4 bg-white px-3 py-1 rounded-full">
-            <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
-            <span id="counter-display" class="text-[11px] font-black text-[#002147]">
-                1 / 15
-            </span>
-            <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- BACK -->
 <div class="absolute inset-0 bg-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
+  <div class="text-[10px] font-bold text-[#002147]/40 uppercase tracking-widest text-right">
+    Translation
+  </div>
 
-    <div class="text-[10px] font-bold text-[#002147]/30 uppercase tracking-widest text-right">
-        Translation
-    </div>
+  <div class="flex-grow flex flex-col items-center justify-center text-center px-2">
+    <p id="back-text" class="back-text italic"></p>
+    <button id="speakBtn" class="audio-btn">🔊 Listen</button>
+  </div>
 
-    <div class="flex-grow flex flex-col items-center justify-center text-center px-2 space-y-3">
-        <p id="back-text" class="phrase-back italic"></p>
-        <button id="speakerBtn" class="speaker-btn">🔊 Listen</button>
+  <div class="flex justify-center pb-2">
+    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#002147] cursor-pointer">
+      Tap / Click to go back
     </div>
-
-    <div class="flex justify-center pb-2">
-        <button id="backBtn" class="back-btn">Tap / Click to go back</button>
-    </div>
+  </div>
 </div>
 
 </div>
 </div>
 
+<!-- RESTART -->
 <button id="restartBtn" class="restart-btn">
-    &#x21bb; Try again
+  &#x21bb; Try again
 </button>
 
 <script>
@@ -194,11 +170,15 @@ const library = [
   {front:"Il più delle volte", back:"More often than not"},
   {front:"Febbre da fieno", back:"Hay fever"},
   {front:"Salire alle stelle", back:"Go through the roof!"},
-  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count one’s chickens before they hatch"},
+  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch"},
   {front:"Occuparsi dei fatti propri / Non immischiarsi", back:"Mind one’s own business"}
 ];
 
-let cards=[], pool=[], currentIndex=0;
+let currentIndex = 0;
+let cards = [];
+let recentlyShown = []; // tracks recently shown cards
+const sessionSize = 15; // number of cards per session
+const recentLimit = 15; // how many cards to avoid repeating
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -206,62 +186,68 @@ const backText  = document.getElementById("back-text");
 const counter   = document.getElementById("counter-display");
 const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
-const speakerBtn= document.getElementById("speakerBtn");
+const speakBtn  = document.getElementById("speakBtn");
 
-function startSession(){
-    pool=[...library].sort(()=>0.5-Math.random());
-    cards = pool.slice(0,15);
-    currentIndex=0;
-    updateCard();
+// Pick a random card avoiding recently shown
+function pickNextCard() {
+  const candidates = library.filter(c => !recentlyShown.includes(c));
+  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
+  const choice = candidates[Math.floor(Math.random() * candidates.length)];
+  recentlyShown.push(choice);
+  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
+  return choice;
 }
 
+// Start a session
+function startSession() {
+  cards = [];
+  for(let i=0; i<sessionSize; i++){
+    cards.push(pickNextCard());
+  }
+  currentIndex = 0;
+  updateCard();
+}
+
+// Update the displayed card
 function updateCard(){
-    flashcard.classList.remove("flipped");
-    setTimeout(()=>{
-        frontText.innerText = cards[currentIndex].front;
-        backText.innerText  = cards[currentIndex].back;
-        counter.innerText  = `${currentIndex+1} / ${cards.length}`;
-    },150);
+  flashcard.classList.remove("flipped");
+  setTimeout(()=>{
+    frontText.innerText = cards[currentIndex].front;
+    backText.innerText  = cards[currentIndex].back;
+    counter.innerText   = `${currentIndex+1} / ${cards.length}`;
+  },150);
 }
 
 function nextCard(e){
-    e.stopPropagation();
-    currentIndex=(currentIndex+1)%cards.length;
-    updateCard();
+  e.stopPropagation();
+  currentIndex = (currentIndex + 1) % cards.length;
+  updateCard();
 }
+
 function prevCard(e){
-    e.stopPropagation();
-    currentIndex=(currentIndex-1+cards.length)%cards.length;
-    updateCard();
+  e.stopPropagation();
+  currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+  updateCard();
 }
 
-flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+/* FLIP */
+flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
 backBtn.addEventListener("click",(e)=>{
-    e.stopPropagation();
-    flashcard.classList.remove("flipped");
+  e.stopPropagation();
+  flashcard.classList.remove("flipped");
 });
+
+/* AUDIO – British male voice */
+speakBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  const utter = new SpeechSynthesisUtterance(backText.innerText);
+  utter.lang = "en-GB";
+  const voices = speechSynthesis.getVoices();
+  const ukMale = voices.find(v=>v.lang==="en-GB" && /male/i.test(v.name));
+  if(ukMale) utter.voice = ukMale;
+  speechSynthesis.speak(utter);
+});
+
 restartBtn.addEventListener("click",startSession);
-
-function getBritishMaleVoice() {
-    const voices = speechSynthesis.getVoices();
-    return voices.find(v =>
-        v.lang === "en-GB" &&
-        /male|daniel|oliver|google uk english male/i.test(v.name)
-    ) || voices.find(v => v.lang === "en-GB") || voices[0];
-}
-
-speakerBtn.addEventListener("click",(e)=>{
-    e.stopPropagation();
-    const utter = new SpeechSynthesisUtterance(cards[currentIndex].back);
-    utter.lang = "en-GB";
-    utter.voice = getBritishMaleVoice();
-    speechSynthesis.speak(utter);
-});
-
-speechSynthesis.onvoiceschanged = () => getBritishMaleVoice();
-
 startSession();
 </script>
-
-</body>
-</html>
