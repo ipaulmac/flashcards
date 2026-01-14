@@ -83,7 +83,7 @@ body{
       Tap / Click to reveal
     </div>
 
-    <div class="flex items-center space-x-4 bg-white border-2 border-[#CFC752] px-3 py-1 rounded-full">
+    <div class="flex items-center space-x-4 bg-white px-3 py-1 rounded-full">
       <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
       <span id="counter-display" class="text-[11px] font-black text-[#002147]">1 / 15</span>
       <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
@@ -163,7 +163,11 @@ const library = [
 {front:"Spetta a te (fare)", back:"It’s your job to do…"}
 ];
 
-let cards=[], pool=[], currentIndex=0;
+let currentIndex = 0;
+let cards = [];
+let recentlyShown = []; // tracks recently shown cards
+const sessionSize = 15; // number of cards per session
+const recentLimit = 15; // how many cards to avoid repeating
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -173,35 +177,50 @@ const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
 const speakBtn  = document.getElementById("speakBtn");
 
-function startSession(){
-  if(pool.length < 15) pool=[...library].sort(()=>0.5-Math.random());
-  cards = pool.splice(0,15);
-  currentIndex=0;
+// Pick a random card avoiding recently shown
+function pickNextCard() {
+  const candidates = library.filter(c => !recentlyShown.includes(c));
+  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
+  const choice = candidates[Math.floor(Math.random() * candidates.length)];
+  recentlyShown.push(choice);
+  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
+  return choice;
+}
+
+// Start a session
+function startSession() {
+  cards = [];
+  for(let i=0; i<sessionSize; i++){
+    cards.push(pickNextCard());
+  }
+  currentIndex = 0;
   updateCard();
 }
 
+// Update the displayed card
 function updateCard(){
   flashcard.classList.remove("flipped");
   setTimeout(()=>{
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
-    counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+    counter.innerText   = `${currentIndex+1} / ${cards.length}`;
   },150);
 }
 
 function nextCard(e){
   e.stopPropagation();
-  currentIndex=(currentIndex+1)%cards.length;
+  currentIndex = (currentIndex + 1) % cards.length;
   updateCard();
 }
+
 function prevCard(e){
   e.stopPropagation();
-  currentIndex=(currentIndex-1+cards.length)%cards.length;
+  currentIndex = (currentIndex - 1 + cards.length) % cards.length;
   updateCard();
 }
 
 /* FLIP */
-flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
 backBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
@@ -221,6 +240,3 @@ speakBtn.addEventListener("click",(e)=>{
 restartBtn.addEventListener("click",startSession);
 startSession();
 </script>
-
-</body>
-</html>
