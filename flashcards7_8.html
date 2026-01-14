@@ -135,7 +135,7 @@ const library = [
   {front:"Stare per fare", back:"Be about to do"},
   {front:"Ripassare / Rinfrescare", back:"Brush up on"},
   {front:"Innamorarsi di", back:"Fall in love with"},
-  {front:"Spegnersi", back:"Go out"},
+  {front:"Spegnersi (fuoco)", back:"Go out"},
   {front:"Uscire", back:"Go out"},
   {front:"Frequentarsi", back:"Go out"},
   {front:"Avere a che fare con", back:"Have to do with"},
@@ -161,7 +161,11 @@ const library = [
   {front:"Andare d’accordo alla grande", back:"Get on, or Get along, like a house on fire!"}
 ];
 
-let cards=[], pool=[], currentIndex=0;
+let currentIndex = 0;
+let cards = [];
+let recentlyShown = []; // tracks recently shown cards
+const sessionSize = 15; // number of cards per session
+const recentLimit = 15; // how many cards to avoid repeating
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -171,39 +175,56 @@ const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
 const speakBtn  = document.getElementById("speakBtn");
 
-function startSession(){
-  if(pool.length < 15) pool=[...library].sort(()=>0.5-Math.random());
-  cards = pool.splice(0,15);
-  currentIndex=0;
+// Pick a random card avoiding recently shown
+function pickNextCard() {
+  const candidates = library.filter(c => !recentlyShown.includes(c));
+  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
+  const choice = candidates[Math.floor(Math.random() * candidates.length)];
+  recentlyShown.push(choice);
+  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
+  return choice;
+}
+
+// Start a session
+function startSession() {
+  cards = [];
+  for(let i=0; i<sessionSize; i++){
+    cards.push(pickNextCard());
+  }
+  currentIndex = 0;
   updateCard();
 }
 
+// Update the displayed card
 function updateCard(){
   flashcard.classList.remove("flipped");
   setTimeout(()=>{
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
-    counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+    counter.innerText   = `${currentIndex+1} / ${cards.length}`;
   },150);
 }
 
 function nextCard(e){
   e.stopPropagation();
-  currentIndex=(currentIndex+1)%cards.length;
-  updateCard();
-}
-function prevCard(e){
-  e.stopPropagation();
-  currentIndex=(currentIndex-1+cards.length)%cards.length;
+  currentIndex = (currentIndex + 1) % cards.length;
   updateCard();
 }
 
-flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+function prevCard(e){
+  e.stopPropagation();
+  currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+  updateCard();
+}
+
+/* FLIP */
+flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
 backBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
 });
 
+/* AUDIO – British male voice */
 speakBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   const utter = new SpeechSynthesisUtterance(backText.innerText);
@@ -217,6 +238,3 @@ speakBtn.addEventListener("click",(e)=>{
 restartBtn.addEventListener("click",startSession);
 startSession();
 </script>
-
-</body>
-</html>
