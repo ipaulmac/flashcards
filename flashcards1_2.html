@@ -120,53 +120,57 @@ body{
 <script>
 const library = [
  {front:"All’inizio", back:"At first"},
-{front:"Subito", back:"At once / Right away / Straight away"},
-{front:"Richiamare", back:"Call back"},
-{front:"Telefonare / Fare uno squillo", back:"Call up"},
-{front:"Entrare / Salire (in auto)", back:"Get in"},
-{front:"Scendere (dal treno)", back:"Get off"},
-{front:"Salire (mezzi pubblici)", back:"Get on"},
-{front:"Uscire / Scendere dalla macchina", back:"Get out"},
-{front:"Alzarsi", back:"Get up"},
-{front:"Fare uno squillo a qualcuno", back:"Give someone a call / Call up"},
-{front:"Raccogliere (da terra)", back:"Pick up"},
-{front:"Passare a prendere", back:"Pick up"},
-{front:"Ritirare (un pacco)", back:"Pick up"},
-{front:"Indossare / Mettersi", back:"Put on"},
-{front:"Spegnere", back:"Switch off / Turn off / Shut off"},
-{front:"Accendere", back:"Switch on / Turn on"},
-{front:"Togliersi", back:"Take off"},
-{front:"Dall’inizio", back:"All along"},
-{front:"Dappertutto", back:"All over"},
-{front:"Va bene", back:"All right"},
-{front:"Come al solito", back:"As usual"},
-{front:"Finalmente", back:"At last"},
-{front:"Vestirsi elegante", back:"Dress up"},
-{front:"Scoprire / Informarsi", back:"Find out"},
-{front:"Poco a poco", back:"Little by little / Step by step"},
-{front:"Guardare", back:"Look at"},
-{front:"Cercare", back:"Look for, or, Search for"},
-{front:"Non importa / Lascia perdere", back:"Never mind / Don't bother"},
-{front:"Passo dopo passo", back:"Step by step / Little by little"},
-{front:"Stancare troppo / Sfinire", back:"Tire out / Wear out"},
-{front:"Compagno di classe", back:"Classmate"},
-{front:"Nel giro di", back:"In the space of"},
-{front:"Versare", back:"Pour"},
-{front:"Saltare", back:"Skip"},
-{front:"Fornire", back:"Supply"},
-{front:"Mi raccomando", back:"Whatever you do"},
-{front:"Sgranchirsi le gambe", back:"Stretch one’s legs"},
-{front:"Per l’amor del cielo! / Mamma mia!", back:"For heaven’s sake!"},
-{front:"Un cavolo / Proprio niente", back:"A damned thing"},
-{front:"Identificare", back:"Put one’s finger on something"},
-{front:"Volevo solo dire", back:"I just wanted to mention"},
-{front:"Lascia stare / Non ti preoccupare", back:"Don’t bother / Never mind"},
-{front:"Qual è il suo problema?!", back:"What’s wrong with him?!"},
-{front:"Di fila / Consecutivamente", back:"In a row"},
-{front:"Non posso non essere d’accordo con te", back:"I would have to agree with you"}
+ {front:"Subito", back:"At once / Right away / Straight away"},
+ {front:"Richiamare", back:"Call back"},
+ {front:"Telefonare / Fare uno squillo", back:"Call up"},
+ {front:"Entrare / Salire (in auto)", back:"Get in"},
+ {front:"Scendere (dal treno)", back:"Get off"},
+ {front:"Salire (mezzi pubblici)", back:"Get on"},
+ {front:"Uscire / Scendere dalla macchina", back:"Get out"},
+ {front:"Alzarsi", back:"Get up"},
+ {front:"Fare uno squillo a qualcuno", back:"Give someone a call / Call up"},
+ {front:"Raccogliere (da terra)", back:"Pick up"},
+ {front:"Passare a prendere", back:"Pick up"},
+ {front:"Ritirare (un pacco)", back:"Pick up"},
+ {front:"Indossare / Mettersi", back:"Put on"},
+ {front:"Spegnere", back:"Switch off / Turn off / Shut off"},
+ {front:"Accendere", back:"Switch on / Turn on"},
+ {front:"Togliersi", back:"Take off"},
+ {front:"Dall’inizio", back:"All along"},
+ {front:"Dappertutto", back:"All over"},
+ {front:"Va bene", back:"All right"},
+ {front:"Come al solito", back:"As usual"},
+ {front:"Finalmente", back:"At last"},
+ {front:"Vestirsi elegante", back:"Dress up"},
+ {front:"Scoprire / Informarsi", back:"Find out"},
+ {front:"Poco a poco", back:"Little by little / Step by step"},
+ {front:"Guardare", back:"Look at"},
+ {front:"Cercare", back:"Look for, or, Search for"},
+ {front:"Non importa / Lascia perdere", back:"Never mind / Don't bother"},
+ {front:"Passo dopo passo", back:"Step by step / Little by little"},
+ {front:"Stancare troppo / Sfinire", back:"Tire out / Wear out"},
+ {front:"Compagno di classe", back:"Classmate"},
+ {front:"Nel giro di", back:"In the space of"},
+ {front:"Versare", back:"Pour"},
+ {front:"Saltare", back:"Skip"},
+ {front:"Fornire", back:"Supply"},
+ {front:"Mi raccomando", back:"Whatever you do"},
+ {front:"Sgranchirsi le gambe", back:"Stretch one’s legs"},
+ {front:"Per l’amor del cielo! / Mamma mia!", back:"For heaven’s sake!"},
+ {front:"Un cavolo / Proprio niente", back:"A damned thing"},
+ {front:"Identificare", back:"Put one’s finger on something"},
+ {front:"Volevo solo dire", back:"I just wanted to mention"},
+ {front:"Lascia stare / Non ti preoccupare", back:"Don’t bother / Never mind"},
+ {front:"Qual è il suo problema?!", back:"What’s wrong with him?!"},
+ {front:"Di fila / Consecutivamente", back:"In a row"},
+ {front:"Non posso non essere d’accordo con te", back:"I would have to agree with you"}
 ];
 
-let cards=[], pool=[], currentIndex=0;
+let currentIndex = 0;
+let cards = [];
+let recentlyShown = []; // tracks recently shown cards
+const sessionSize = 15; // number of cards per session
+const recentLimit = 15; // how many cards to avoid repeating
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -176,35 +180,50 @@ const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
 const speakBtn  = document.getElementById("speakBtn");
 
-function startSession(){
-  if(pool.length < 15) pool=[...library].sort(()=>0.5-Math.random());
-  cards = pool.splice(0,15);
-  currentIndex=0;
+// Pick a random card avoiding recently shown
+function pickNextCard() {
+  const candidates = library.filter(c => !recentlyShown.includes(c));
+  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
+  const choice = candidates[Math.floor(Math.random() * candidates.length)];
+  recentlyShown.push(choice);
+  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
+  return choice;
+}
+
+// Start a session
+function startSession() {
+  cards = [];
+  for(let i=0; i<sessionSize; i++){
+    cards.push(pickNextCard());
+  }
+  currentIndex = 0;
   updateCard();
 }
 
+// Update the displayed card
 function updateCard(){
   flashcard.classList.remove("flipped");
   setTimeout(()=>{
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
-    counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+    counter.innerText   = `${currentIndex+1} / ${cards.length}`;
   },150);
 }
 
 function nextCard(e){
   e.stopPropagation();
-  currentIndex=(currentIndex+1)%cards.length;
+  currentIndex = (currentIndex + 1) % cards.length;
   updateCard();
 }
+
 function prevCard(e){
   e.stopPropagation();
-  currentIndex=(currentIndex-1+cards.length)%cards.length;
+  currentIndex = (currentIndex - 1 + cards.length) % cards.length;
   updateCard();
 }
 
 /* FLIP */
-flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
 backBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
@@ -224,6 +243,3 @@ speakBtn.addEventListener("click",(e)=>{
 restartBtn.addEventListener("click",startSession);
 startSession();
 </script>
-
-</body>
-</html>
