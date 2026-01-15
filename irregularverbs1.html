@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Irregular Verbs – Flashcards</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0E065C;
+  display:flex;
+  justify-content:center;
+}
+
+.wrapper{
+  width:100%;
+  max-width:900px;
+  padding:30px;
+  box-sizing:border-box;
+}
+
+.set-buttons{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.set-buttons button{
+  margin:0 6px;
+  padding:8px 14px;
+  font-size:14px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  background:#8C0327;
+  color:white;
+}
+
+.card-container{
+  display:flex;
+  justify-content:center;
+}
+
+.card{
+  width:600px;
+  min-height:514px;
+  background:#FFF8E7;
+  border-radius:14px;
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+  box-sizing:border-box;
+  cursor:pointer;
+}
+
+#front-text{
+  color:#8C0327;
+  font-size:32px;
+  font-weight:bold;
+  text-transform:uppercase;
+}
+
+#back-text{
+  color:#0E065C;
+  font-size:30px;
+  font-weight:bold;
+}
+
+#listenBtn{
+  margin-top:18px;
+  padding:6px 10px;
+  font-size:12px;
+  border:none;
+  border-radius:6px;
+  background:#D6CB38;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div class="set-buttons">
+    <button onclick="loadSet(1)">SET 1</button>
+    <button onclick="loadSet(2)">SET 2</button>
+  </div>
+
+  <div class="card-container">
+    <div class="card" onclick="flipCard()">
+      <div id="card-content">
+        <div id="front-text"></div>
+        <div id="back-text" style="display:none;"></div>
+        <button id="listenBtn" style="display:none;" onclick="speak(event)">Listen</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const sets = {
+
+  1: [
+    ["AFFONDARE","sink – sank – sunk"],
+    ["ANDARE A CAVALLO","ride – rode – ridden"],
+    ["SVEGLIARE / SVEGLIARSI","wake – woke – woken"],
+    ["PAGARE","pay – paid – paid"],
+    ["ALLEVARE","breed – bred – bred"],
+    ["SCOMMETTERE","bet – bet – bet"],
+    ["PUNGERE","sting – stung – stung"],
+    ["CADERE","fall – fell – fallen"],
+    ["VENDERE","sell – sold – sold"],
+    ["FILARE / GIRARE","spin – spun – spun"],
+    ["SCIVOLARE","slide – slid – slid"],
+    ["DIVENTARE","become – became – become"],
+    ["PIEGARE","bend – bent – bent"],
+    ["SENTIRE / UDIRE","hear – heard – heard"],
+    ["MOSTRARE","show – showed – shown"],
+    ["SAPERE / CONOSCERE","know – knew – known"]
+  ],
+
+  2: [
+    ["NUTRIRE","feed – fed – fed"],
+    ["CUCIRE","sew – sewed – sewn / sewed"],
+    ["NUOTARE","swim – swam – swum"],
+    ["COMBATTERE","fight – fought – fought"],
+    ["PORTARE","bring – brought – brought"],
+    ["COSTRUIRE","build – built – built"],
+    ["TESSERE","weave – wove / weaved – woven / weaved"],
+    ["SCAVARE","dig – dug – dug"],
+    ["LANCIARE","throw – threw – thrown"],
+    ["METTERE","set – set – set"],
+    ["VEDERE","see – saw – seen"],
+    ["MORDERE","bite – bit – bitten"],
+    ["TRATTARE","deal – dealt – dealt"],
+    ["SVIARE / INGANNARE","mislead – misled – misled"],
+    ["SPLENDERE","shine – shone – shone"],
+    ["ESSERE","be – was / were – been"]
+  ]
+};
+
+let currentSet = 1;
+let index = 0;
+let showingFront = true;
+
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const listenBtn = document.getElementById("listenBtn");
+
+function loadSet(n){
+  currentSet = n;
+  index = 0;
+  showingFront = true;
+  showCard();
+}
+
+function showCard(){
+  const card = sets[currentSet][index];
+  frontText.textContent = card[0];
+  backText.textContent  = card[1];
+
+  frontText.style.display = "block";
+  backText.style.display  = "none";
+  listenBtn.style.display= "none";
+}
+
+function flipCard(){
+  if(showingFront){
+    frontText.style.display = "none";
+    backText.style.display  = "block";
+    listenBtn.style.display= "inline-block";
+  }else{
+    index++;
+    if(index >= sets[currentSet].length) index = 0;
+    showCard();
+  }
+  showingFront = !showingFront;
+}
+
+function speak(e){
+  e.stopPropagation();
+  const msg = new SpeechSynthesisUtterance(backText.textContent);
+  msg.lang = "en-GB";
+  speechSynthesis.speak(msg);
+}
+
+loadSet(1);
+</script>
+</body>
+</html>
