@@ -71,7 +71,7 @@ body{
 <!-- FRONT -->
 <div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5">
   <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
-    STAGE TWO – GLOBAL
+    STAGE TWO GLOBAL
   </div>
 
   <div class="flex-grow flex items-center justify-center text-center px-2">
@@ -85,7 +85,7 @@ body{
 
     <div class="flex items-center space-x-4 bg-white px-3 py-1 rounded-full">
       <button onclick="prevCard(event)" class="nav-btn text-[#002147]">◀</button>
-      <span id="counter-display" class="text-[11px] font-black text-[#002147]">1 / 20</span>
+      <span id="counter-display" class="text-[11px] font-black text-[#002147]">1 / 15</span>
       <button onclick="nextCard(event)" class="nav-btn text-[#002147]">▶</button>
     </div>
   </div>
@@ -123,9 +123,12 @@ const library = [
   {front:"Richiedere / Esigere", back:"Call for"},
   {front:"Passare da / Dare la parola", back:"Call on"},
   {front:"Ovvio / Inequivocabile", back:"Clear cut"},
-  {front:"Riprendere i sensi", back:"Come to"},
+  {front:"Riprendere i sensi / Rinvenire", back:"Come to"},
   {front:"Cancellare / Barrare", back:"Cross out"},
-  {front:"Smettere / Arrendersi", back:"Give up"},
+  {front:"Smettere", back:"Give up"},
+  {front:"Va detto", back:"It has to be said"},
+  {front:"Arrendersi", back:"Give up"},
+  {front:"Rinunciare", back:"Give up"},
   {front:"Indossare", back:"Have on"},
   {front:"Chiarire", back:"Make clear"},
   {front:"Dare per scontato", back:"Take for granted"},
@@ -134,12 +137,16 @@ const library = [
   {front:"A dire il vero / In realtà", back:"As a matter of fact"},
   {front:"Non vedere l’ora di", back:"Can’t wait / Look forward to"},
   {front:"Avverarsi", back:"Come true"},
+  {front:"Innocuo", back:"Harmless"},
+  {front:"Vizio", back:"Vice"},
   {front:"Mangiare a casa", back:"Eat in"},
   {front:"Mangiare fuori", back:"Eat out"},
-  {front:"Avere voglia di fare", back:"Fancy doing / Feel like doing"},
-  {front:"Sentire (qualcuno)", back:"Hear from"},
+  {front:"Gioco d'azzardo", back:"Gambling"},
+  {front:"Va detto", back:"It has to be said"},
+  {front:"Avere voglia di fare", back:"Fancy doing, or, Feel like doing"},
+  {front:"Sentire (qualcuno)", back:"Hear from (someone)"},
   {front:"Sentire parlare di", back:"Hear of"},
-  {front:"Offro io", back:"It’s on me"},
+  {front:"Offriamo noi", back:"It’s on us"},
   {front:"Tenere d’occhio", back:"Keep an eye on"},
   {front:"Prendersi cura di", back:"Look after"},
   {front:"Prendere in giro", back:"Make fun of"},
@@ -151,15 +158,15 @@ const library = [
   {front:"Accensione", back:"Ignition"},
   {front:"Attaccare bottone / Avviare", back:"Strike up"},
   {front:"A dir poco", back:"To say the least"},
-  {front:"I perché e i percome", back:"Whys and wherefores"},
+  {front:"I perché e i percome", back:"The whys and wherefores"},
   {front:"Al contrario", back:"Back to front"},
   {front:"Aggiornare qualcuno", back:"Fill someone in"},
   {front:"Sostituire qualcuno", back:"Fill in for someone"},
-  {front:"Compilare / Riempire moduli", back:"Fill out / Fill in"},
+  {front:"Compilare / Riempire moduli", back:"Fill out, or Fill in"},
   {front:"A lungo termine", back:"In the long run"},
   {front:"In contatto", back:"In touch"},
   {front:"Alla rovescia", back:"Inside out"},
-  {front:"Conoscere come le proprie tasche", back:"Know inside out or back to front"},
+  {front:"Conoscere come le proprie tasche", back:"Know inside out or, back to front"},
   {front:"Non importa come", back:"No matter how"},
   {front:"Fuori contatto / Fuori dal giro", back:"Out of touch"},
   {front:"Nel verso giusto", back:"Right way round"},
@@ -172,11 +179,12 @@ const library = [
   {front:"Tenere a mente / Ricordarsi", back:"Bear in mind"},
   {front:"A mano", back:"By hand"},
   {front:"Interrompere / Isolato", back:"Cut off"},
-  {front:"Eliminare / Ritagliare", back:"Cut out"},
+  {front:"Eliminare", back:"Cut out"},
+  {front:"Ritagliare", back:"Cut out"},
   {front:"Spegnersi (motore)", back:"Cut out"},
   {front:"Per una volta", back:"For once"},
-  {front:"Tenere in mente / Considerare", back:"Have / Keep in mind"},
-  {front:"Sfruttare al meglio", back:"Make the best / most of"},
+  {front:"Tenere in mente / Considerare", back:"Have, or Keep in mind"},
+  {front:"Sfruttare al meglio", back:"Make the best of, or, Make the most of"},
   {front:"Da una parte", back:"On one hand"},
   {front:"Dall’altra parte", back:"On the other hand"},
   {front:"Andare fuori controllo", back:"Get out of hand"},
@@ -191,18 +199,18 @@ const library = [
   {front:"Ripensamenti / Dubbi", back:"Second thoughts"},
   {front:"Partire / Mettersi in viaggio", back:"Set off"},
   {front:"Restare fermo / Non muoversi", back:"Stay put"},
-  {front:"Essere solito fare", back:"Be wont to"},
+  {front:"Essere solito fare", back:"Be wont to do"},
   {front:"Avere il cuore puntato su / Essere decisi", back:"Have one’s heart set on"},
   {front:"Tutto inutile", back:"To no avail"},
-  {front:"Una passeggiata / Facilissimo", back:"Piece of cake!"},
+  {front:"Una passeggiata! / Facilissimo!", back:"Piece of cake!"},
   {front:"Clausole / Testo piccolo", back:"Small print"},
   {front:"Meno male", back:"Just as well"},
   {front:"Essere indecisi / Essere combattuti", back:"Be in two minds"},
   {front:"Il punto è / Il fatto è", back:"The thing is"},
   {front:"Il più delle volte", back:"More often than not"},
   {front:"Febbre da fieno", back:"Hay fever"},
-  {front:"Salire alle stelle", back:"Go through the roof!"},
-  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count one’s chickens before they hatch"},
+  {front:"Salire alle stelle", back:"Go through the roof"},
+  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch"},
   {front:"Occuparsi dei fatti propri / Non immischiarsi", back:"Mind one’s own business"},
   {front:"Soprattutto", back:"Above all"},
   {front:"Che fine ha fatto …?", back:"What’s become of …?"},
@@ -213,9 +221,9 @@ const library = [
   {front:"Complessivamente", back:"Overall"},
   {front:"Prendila con calma", back:"Take it easy"},
   {front:"Rifiutare", back:"Turn down"},
-  {front:"Arrivare / Presentarsi", back:"Turn up"},
-  {front:"Alzare / Aumentare il volume", back:"Turn up"},
-  {front:"Abbassare il volume", back:"Turn down"},
+  {front:"Arrivare / Presentarsi", back:"Turn up, or, Show up"},
+  {front:"Alzare / Aumentare (il volume)", back:"Turn up"},
+  {front:"Abbassare (il volume)", back:"Turn down"},
   {front:"Secondo lui", back:"According to him"},
   {front:"In fondo", back:"At heart"},
   {front:"Destinato a / Scontato", back:"Bound to"},
@@ -242,7 +250,7 @@ const library = [
   {front:"Sospirare di sollievo", back:"Sigh of relief"},
   {front:"Andarsene velocemente", back:"Speed away"},
   {front:"Pila / Mucchio", back:"Stack"},
-  {front:"Severo", back:"Stern"},
+  {front:"Severo (espressione)", back:"Stern"},
   {front:"Ondata / Picco", back:"Surge"},
   {front:"Sterzare / Svoltare / Fare zig-zag", back:"Swerve"},
   {front:"Emozione forte", back:"Thrill"},
@@ -257,17 +265,17 @@ const library = [
   {front:"Siccome siamo fortunati", back:"Knowing our luck"},
   {front:"Costa nulla (fare) …", back:"There’s no harm (doing)"},
   {front:"Diamoci da fare!", back:"Let’s get cracking!"},
-  {front:"Col cavolo / ma quando mai!", back:"Like hell!"},
+  {front:"Col cavolo! / Ma quando mai!", back:"Like hell!"},
   {front:"Licenziarsi / Lasciare il lavoro", back:"Quit one’s job"},
   {front:"Una boccata d’aria fresca", back:"A breath of fresh air"},
   {front:"Inosservato", back:"Unnoticed"},
   {front:"Tutto sommato", back:"All in all"},
   {front:"Autorizzato", back:"At liberty"},
-  {front:"Ostacolare / Mettersi in mezzo", back:"Be/Get in one’s way"},
-  {front:"Recuperare / Aggiornarsi", back:"Catch up with"},
+  {front:"Ostacolare / Mettersi in mezzo", back:"Be, or Get, in one’s way"},
+  {front:"Recuperare (distanza)", back:"Catch up with"},
   {front:"Giorno dopo giorno", back:"Day in and day out"},
   {front:"Girare / Andare in giro", back:"Go around"},
-  {front:"Sul punto di / Sull’orlo di", back:"On the brink of / On the verge of"},
+  {front:"Sul punto di / Sull’orlo di", back:"On the brink of, or, On the verge of"},
   {front:"Svenire / Perdere i sensi", back:"Pass out"},
   {front:"Ospitare", back:"Put up"},
   {front:"Sopportare / Tollerare", back:"Put up with"},
@@ -292,7 +300,7 @@ const library = [
   {front:"Rampa di scale", back:"Flight"},
   {front:"Fare un salto da", back:"Go around"},
   {front:"In breve", back:"For short"},
-  {front:"Quasi", back:"Nigh on"},
+  {front:"Quasi (Ex10)", back:"Nigh on"},
   {front:"A cavallo di", back:"On either side of"},
   {front:"Estroverso / Socievole", back:"Outgoing"},
   {front:"Da solo / Con le proprie forze", back:"Single-handedly"},
@@ -311,18 +319,18 @@ const library = [
   {front:"Benestante / Agiato", back:"Be well-off"},
   {front:"Abbassare (prezzi)", back:"Bring down"},
   {front:"Scendere / Diminuire", back:"Come down"},
-  {front:"Avvicinarsi", back:"Come up to or Go up to"},
-  {front:"Salire / Aumentare", back:"Go up"},
+  {front:"Avvicinarsi", back:"Come up to, or, Go up to"},
+  {front:"Salire / Aumentare (prezzi)", back:"Go up"},
   {front:"Consegnare", back:"Hand in"},
   {front:"Distribuire", back:"Hand out"},
   {front:"Cedere il potere", back:"Hand over"},
   {front:"Mantenere i contatti", back:"Keep or Stay in touch"},
-  {front:"In servizio / Fuori servizio", back:"On/Off duty"},
+  {front:"In servizio / Fuori servizio", back:"On duty / Off duty"},
   {front:"Alzare (prezzi)", back:"Put up"},
   {front:"Fare un giro di telefonate", back:"Ring around"},
   {front:"Fare un giro dei negozi", back:"Shop around"},
-  {front:"Cogliere di sorpresa", back:"Take or Catch by surprise"},
-  {front:"Passare a trovare / Fare un salto", back:"Call by or Drop by or Stop by"},
+  {front:"Cogliere di sorpresa", back:"Take, or Catch, by surprise"},
+  {front:"Passare a trovare / Fare un salto", back:"Call by, or Drop by, or Stop by"},
   {front:"Imbattersi in", back:"Come across"},
   {front:"Dare l’impressione", back:"Come across"},
   {front:"Servirebbe / Sarebbe utile", back:"Could do with"},
@@ -365,7 +373,7 @@ const library = [
   {front:"Nei tempi previsti", back:"On schedule"},
   {front:"Criticare / Sminuire", back:"Put down"},
   {front:"Sopprimere", back:"Put down"},
-  {front:"Presentarsi / Arrivare", back:"Show up"},
+  {front:"Presentarsi / Arrivare", back:"Show up, or, Turn up"},
   {front:"Mettere in imbarazzo", back:"Show up"},
   {front:"Restare a casa", back:"Stay in"},
   {front:"Restare fuori", back:"Stay out"},
@@ -388,31 +396,34 @@ const library = [
   {front:"Venire a sapere / Scoprire", back:"Get wind of"},
   {front:"Adescare / Attirare", back:"Lure"},
   {front:"Appena scoperto / Nuovo di zecca", back:"New-found"},
-  {front:"Mettere fine a / Sancire la fine", back:"Put paid"},
+  {front:"Nuovo di zecca", back:"Brand-new"},
+  {front:"Mettere fine a / Sancire la fine", back:"Put paid to"},
   {front:"Scrupoli / Rimorsi", back:"Qualms"},
   {front:"Spietato / Senza scrupoli", back:"Ruthless"},
   {front:"All’insaputa di", back:"Unbeknown"},
-  {front:"Dove si trovi", back:"Whereabouts"},
+  {front:"Dove si trova", back:"Whereabouts"},
   {front:"Stormo", back:"Flock"},
   {front:"Branco", back:"Herd"},
   {front:"Zampa posteriore", back:"Hind leg"},
   {front:"Dimissioni", back:"Resignation"},
   {front:"Asta", back:"Auction"},
   {front:"Punto e basta!", back:"That’s that!"},
-  {front:"La vera entità", back:"The true extent"},
-  {front:"Per l’ennesima volta", back:"The umpteenth time"},
+  {front:"La vera entità di", back:"The true extent of"},
+  {front:"Per l’ennesima volta", back:"For the umpteenth time"},
   {front:"Darsi una mossa", back:"Get a move on"},
   {front:"Su per giù", back:"Give or take"},
-  {front:"Essere permaloso", back:"To be touchy"},
+  {front:"Essere permaloso", back:"Be touchy"},
   {front:"Commissioni", back:"Errands"},
   {front:"Proteste pubbliche", back:"Public outcry"},
   {front:"Preoccuparsi / Angosciarsi", back:"Fret"},
   {front:"Violazione del contratto", back:"Breach of contract"}
-
-
 ];
 
-let cards=[], pool=[], currentIndex=0;
+let currentIndex = 0;
+let cards = [];
+let recentlyShown = []; // tracks recently shown cards
+const sessionSize = 30; // number of cards per session
+const recentLimit = 30; // how many cards to avoid repeating
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -422,35 +433,50 @@ const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
 const speakBtn  = document.getElementById("speakBtn");
 
-function startSession(){
-  if(pool.length < 30) pool=[...library].sort(()=>0.5-Math.random());
-  cards = pool.splice(0,30);
-  currentIndex=0;
+// Pick a random card avoiding recently shown
+function pickNextCard() {
+  const candidates = library.filter(c => !recentlyShown.includes(c));
+  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
+  const choice = candidates[Math.floor(Math.random() * candidates.length)];
+  recentlyShown.push(choice);
+  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
+  return choice;
+}
+
+// Start a session
+function startSession() {
+  cards = [];
+  for(let i=0; i<sessionSize; i++){
+    cards.push(pickNextCard());
+  }
+  currentIndex = 0;
   updateCard();
 }
 
-function updateCard(){ 
+// Update the displayed card
+function updateCard(){
   flashcard.classList.remove("flipped");
   setTimeout(()=>{
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
-    counter.innerText  = `${currentIndex+1} / ${cards.length}`;
+    counter.innerText   = `${currentIndex+1} / ${cards.length}`;
   },150);
 }
 
 function nextCard(e){
   e.stopPropagation();
-  currentIndex=(currentIndex+1)%cards.length;
+  currentIndex = (currentIndex + 1) % cards.length;
   updateCard();
 }
+
 function prevCard(e){
   e.stopPropagation();
-  currentIndex=(currentIndex-1+cards.length)%cards.length;
+  currentIndex = (currentIndex - 1 + cards.length) % cards.length;
   updateCard();
 }
 
 /* FLIP */
-flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
 backBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
@@ -470,6 +496,3 @@ speakBtn.addEventListener("click",(e)=>{
 restartBtn.addEventListener("click",startSession);
 startSession();
 </script>
-
-</body>
-</html>
