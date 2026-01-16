@@ -2,193 +2,230 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Irregular Verbs – Flashcards</title>
+<title>Irregular Verbs – Sets</title>
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
+:root{
+  --bg-blue:#0E065C;
+  --card-cream:#F7F2E7;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+  --listen:#D6CB38;
+  --border-red:#8C0327;
+}
+
 body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:#0E065C;
+  background:var(--bg-blue);
+  font-family:system-ui,Segoe UI,Arial;
   display:flex;
-  justify-content:center;
-}
-
-.wrapper{
-  width:100%;
-  max-width:900px;
-  padding:30px;
-  box-sizing:border-box;
-}
-
-.set-buttons{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.set-buttons button{
-  margin:0 6px;
-  padding:8px 14px;
-  font-size:14px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  background:#8C0327;
-  color:white;
-}
-
-.card-container{
-  display:flex;
-  justify-content:center;
-}
-
-.card{
-  width:600px;
-  min-height:514px;
-  background:#FFF8E7;
-  border-radius:14px;
-  box-shadow:0 6px 16px rgba(0,0,0,0.25);
-  display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
+  min-height:100vh;
+  padding:1rem;
+  gap:1rem;
+}
+
+.perspective{perspective:1000px;}
+.card-inner{transition:.5s;transform-style:preserve-3d;position:relative;width:500px;height:320px;cursor:pointer;}
+.flipped{transform:rotateY(180deg);}
+.face{backface-visibility:hidden;position:absolute;inset:0;}
+.back{transform:rotateY(180deg);}
+
+.it-text{
+  color:var(--it-red);
+  font-weight:900;
+  letter-spacing:.08em;
+  font-size:2.6rem;
   text-align:center;
-  padding:30px;
-  box-sizing:border-box;
-  cursor:pointer;
+}
+.en-text{
+  color:var(--en-blue);
+  font-weight:800;
+  letter-spacing:.08em;
+  font-size:2.6rem;
+  text-align:center;
 }
 
-#front-text{
-  color:#8C0327;
-  font-size:32px;
-  font-weight:bold;
-  text-transform:uppercase;
-}
-
-#back-text{
-  color:#0E065C;
-  font-size:30px;
-  font-weight:bold;
-}
-
-#listenBtn{
-  margin-top:18px;
-  padding:6px 10px;
-  font-size:12px;
+.listen-btn{
+  background:none;
+  color:var(--it-red);
+  padding:0;
   border:none;
-  border-radius:6px;
-  background:#D6CB38;
-  cursor:pointer;
+  font-weight:900;
+  font-size:.9rem;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:0.5rem;
+}
+
+.nav-btn{
+  font-size:1.2rem;
+  color:var(--en-blue);
+  font-weight:800;
+}
+.set-btn{
+  background:var(--card-cream);
+  color:var(--en-blue);
+  font-weight:800;
+  padding:0.25rem 1rem;
+  border-radius:999px;
 }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
 
-  <div class="set-buttons">
-    <button onclick="loadSet(1)">SET 1</button>
-    <button onclick="loadSet(2)">SET 2</button>
-  </div>
+<!-- SET BUTTONS -->
+<div class="flex gap-2">
+  <button onclick="loadSet(1)" class="set-btn">SET 1</button>
+  <button onclick="loadSet(2)" class="set-btn">SET 2</button>
+</div>
 
-  <div class="card-container">
-    <div class="card" onclick="flipCard()">
-      <div id="card-content">
-        <div id="front-text"></div>
-        <div id="back-text" style="display:none;"></div>
-        <button id="listenBtn" style="display:none;" onclick="speak(event)">Listen</button>
+<div class="perspective">
+<div id="flashcard" class="card-inner">
+
+  <!-- FRONT -->
+  <div class="face rounded-3xl p-5 border-4 border-[var(--border-red)] bg-[var(--card-cream)] flex flex-col justify-between">
+
+    <!-- TITLE / SET LABEL -->
+    <div class="text-[11px] font-black uppercase tracking-widest text-right text-[var(--en-blue)]">
+      SET <span id="set-label">1</span>
+    </div>
+
+    <!-- ITALIAN TEXT -->
+    <div class="flex-grow flex items-center justify-center px-3">
+      <p id="front-text" class="it-text"></p>
+    </div>
+
+    <!-- BOTTOM CONTROLS -->
+    <div class="flex flex-col items-center space-y-2">
+      <div class="text-[12px] font-black uppercase tracking-[0.25em] text-[var(--en-blue)]">
+        TAP TO REVEAL
+      </div>
+      <div class="flex items-center space-x-4 bg-[var(--card-cream)] px-4 py-1 rounded-full border-2 border-[var(--en-blue)]">
+        <button onclick="prevCard(event)" class="nav-btn">◀</button>
+        <span id="counter-display" class="font-black">1 / 16</span>
+        <button onclick="nextCard(event)" class="nav-btn">▶</button>
       </div>
     </div>
   </div>
 
+  <!-- BACK -->
+  <div class="face back rounded-3xl p-5 border-4 border-[var(--border-red)] bg-[var(--card-cream)] flex flex-col justify-between">
+
+    <div class="text-right text-[12px] font-black text-[var(--en-blue)]">← TAP TO GO BACK</div>
+
+    <div class="flex-grow flex flex-col items-center justify-center gap-3 px-3 text-center">
+      <div id="back-text" class="en-text"></div>
+      <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+    </div>
+
+  </div>
+
+</div>
 </div>
 
 <script>
+/* ---------------- DATA ---------------- */
+
 const sets = {
-
-  1: [
-    ["AFFONDARE","sink – sank – sunk"],
-    ["ANDARE A CAVALLO","ride – rode – ridden"],
-    ["SVEGLIARE / SVEGLIARSI","wake – woke – woken"],
-    ["PAGARE","pay – paid – paid"],
-    ["ALLEVARE","breed – bred – bred"],
-    ["SCOMMETTERE","bet – bet – bet"],
-    ["PUNGERE","sting – stung – stung"],
-    ["CADERE","fall – fell – fallen"],
-    ["VENDERE","sell – sold – sold"],
-    ["FILARE / GIRARE","spin – spun – spun"],
-    ["SCIVOLARE","slide – slid – slid"],
-    ["DIVENTARE","become – became – become"],
-    ["PIEGARE","bend – bent – bent"],
-    ["SENTIRE / UDIRE","hear – heard – heard"],
-    ["MOSTRARE","show – showed – shown"],
-    ["SAPERE / CONOSCERE","know – knew – known"]
-  ],
-
-  2: [
-    ["NUTRIRE","feed – fed – fed"],
-    ["CUCIRE","sew – sewed – sewn / sewed"],
-    ["NUOTARE","swim – swam – swum"],
-    ["COMBATTERE","fight – fought – fought"],
-    ["PORTARE","bring – brought – brought"],
-    ["COSTRUIRE","build – built – built"],
-    ["TESSERE","weave – wove / weaved – woven / weaved"],
-    ["SCAVARE","dig – dug – dug"],
-    ["LANCIARE","throw – threw – thrown"],
-    ["METTERE","set – set – set"],
-    ["VEDERE","see – saw – seen"],
-    ["MORDERE","bite – bit – bitten"],
-    ["TRATTARE","deal – dealt – dealt"],
-    ["SVIARE / INGANNARE","mislead – misled – misled"],
-    ["SPLENDERE","shine – shone – shone"],
-    ["ESSERE","be – was / were – been"]
-  ]
+1: [
+ {it:"AFFONDARE", en:"SINK – SANK – SUNK"},
+ {it:"ANDARE A CAVALLO", en:"RIDE – RODE – RIDDEN"},
+ {it:"SVEGLIARE / SVEGLIARSI", en:"WAKE – WOKE – WOKEN"},
+ {it:"PAGARE", en:"PAY – PAID – PAID"},
+ {it:"ALLEVARE", en:"BREED – BRED – BRED"},
+ {it:"SCOMMETTERE", en:"BET – BET – BET"},
+ {it:"PUNGERE", en:"STING – STUNG – STUNG"},
+ {it:"CADERE", en:"FALL – FELL – FALLEN"},
+ {it:"VENDERE", en:"SELL – SOLD – SOLD"},
+ {it:"FILARE / GIRARE", en:"SPIN – SPUN – SPUN"},
+ {it:"SCIVOLARE", en:"SLIDE – SLID – SLID"},
+ {it:"DIVENTARE", en:"BECOME – BECAME – BECOME"},
+ {it:"PIEGARE", en:"BEND – BENT – BENT"},
+ {it:"SENTIRE / UDIRE", en:"HEAR – HEARD – HEARD"},
+ {it:"MOSTRARE", en:"SHOW – SHOWED – SHOWN"},
+ {it:"SAPERE / CONOSCERE", en:"KNOW – KNEW – KNOWN"}
+],
+2: [
+ {it:"NUTRIRE", en:"FEED – FED – FED"},
+ {it:"CUCIRE", en:"SEW – SEWED – SEWN/SEWED"},
+ {it:"NUOTARE", en:"SWIM – SWAM – SWUM"},
+ {it:"COMBATTERE", en:"FIGHT – FOUGHT – FOUGHT"},
+ {it:"PORTARE", en:"BRING – BROUGHT – BROUGHT"},
+ {it:"COSTRUIRE", en:"BUILD – BUILT – BUILT"},
+ {it:"TESSERE", en:"WEAVE – WOVE/WEAVED – WOVEN/WEAVED"},
+ {it:"SCAVARE", en:"DIG – DUG – DUG"},
+ {it:"LANCIARE", en:"THROW – THREW – THROWN"},
+ {it:"METTERE", en:"SET – SET – SET"},
+ {it:"VEDERE", en:"SEE – SAW – SEEN"},
+ {it:"MORDERE", en:"BITE – BIT – BITTEN"},
+ {it:"TRATTARE", en:"DEAL – DEALT – DEALT"},
+ {it:"SVIARE / INGANNARE", en:"MISLEAD – MISLED – MISLED"},
+ {it:"SPLENDERE", en:"SHINE – SHONE – SHONE"},
+ {it:"ESSERE", en:"BE – WAS/WERE – BEEN"}
+]
 };
 
-let currentSet = 1;
-let index = 0;
-let showingFront = true;
+/* ---------------- LOGIC ---------------- */
 
+let currentSet = 1;
+let cards = sets[1];
+let index = 0;
+
+const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
 const backText  = document.getElementById("back-text");
-const listenBtn = document.getElementById("listenBtn");
+const counterDisplay = document.getElementById("counter-display");
+const setLabel = document.getElementById("set-label");
+const speakBtn  = document.getElementById("speakBtn");
 
 function loadSet(n){
   currentSet = n;
+  cards = sets[n];
   index = 0;
-  showingFront = true;
-  showCard();
+  setLabel.innerText = n;
+  updateCard();
 }
 
-function showCard(){
-  const card = sets[currentSet][index];
-  frontText.textContent = card[0];
-  backText.textContent  = card[1];
-
-  frontText.style.display = "block";
-  backText.style.display  = "none";
-  listenBtn.style.display= "none";
+function updateCard() {
+  flashcard.classList.remove("flipped");
+  setTimeout(() => {
+    frontText.innerText = cards[index].it.toUpperCase();
+    backText.innerText  = cards[index].en.toUpperCase();
+    counterDisplay.innerText = `${index + 1} / ${cards.length}`;
+  }, 150);
 }
 
-function flipCard(){
-  if(showingFront){
-    frontText.style.display = "none";
-    backText.style.display  = "block";
-    listenBtn.style.display= "inline-block";
-  }else{
-    index++;
-    if(index >= sets[currentSet].length) index = 0;
-    showCard();
-  }
-  showingFront = !showingFront;
-}
-
-function speak(e){
+function nextCard(e){
   e.stopPropagation();
-  const msg = new SpeechSynthesisUtterance(backText.textContent);
-  msg.lang = "en-GB";
-  speechSynthesis.speak(msg);
+  index = (index+1) % cards.length;
+  updateCard();
 }
 
-loadSet(1);
+function prevCard(e){
+  e.stopPropagation();
+  index = (index-1+cards.length) % cards.length;
+  updateCard();
+}
+
+/* flip */
+flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+
+/* audio */
+speakBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  const u = new SpeechSynthesisUtterance(backText.innerText);
+  u.lang = "en-GB";
+  speechSynthesis.speak(u);
+});
+
+/* init */
+updateCard();
 </script>
+
 </body>
 </html>
