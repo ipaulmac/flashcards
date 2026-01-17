@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Irregular Verbs – Flashcards</title>
+<title>Irregular Verbs – Sets</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
 <style>
 :root{
   --bg-blue:#061247;
@@ -14,320 +13,316 @@
   --border-red:#8C0327;
 }
 
-body{background:var(--bg-blue);font-family:system-ui;}
+body{
+  background:var(--bg-blue);
+  font-family:system-ui,Segoe UI,Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:2rem;
+  gap:1rem;
+}
 
 .perspective{perspective:1000px;}
-.card-inner{transition:.5s;transform-style:preserve-3d;}
+.card-inner{transition:.5s;transform-style:preserve-3d;width:500px;height:300px;position:relative;cursor:pointer;}
 .flipped{transform:rotateY(180deg);}
-.face{backface-visibility:hidden;}
+.face{backface-visibility:hidden;position:absolute;inset:0;}
 .back{transform:rotateY(180deg);}
-
-.it-text{color:var(--it-red);font-weight:900;letter-spacing:.08em;text-align:center;text-transform:uppercase;}
-.en-text{color:var(--en-blue);font-weight:800;letter-spacing:.08em;text-align:center;text-transform:uppercase;}
-
-.set-btn{background:var(--card-cream);color:var(--en-blue);font-weight:700;padding:.5rem 1rem;border-radius:999px;margin:2px;}
-.selected-set{background:var(--en-blue)!important;color:white!important;}
-
-.nav-btn{font-size:1.2rem;font-weight:bold;color:var(--en-blue);}
-.listen-btn{background:none;color:#8C0327;font-weight:900;font-size:.9rem;cursor:pointer;}
+.it-text{color:var(--it-red);font-weight:900;letter-spacing:.08em;text-transform:uppercase;}
+.en-text{color:var(--en-blue);font-weight:800;letter-spacing:.08em;text-transform:uppercase;text-align:center;}
+.listen-btn{background:none;color:var(--it-red);padding:0;border:none;font-weight:900;font-size:.8rem;display:flex;align-items:center;gap:6px;}
+.nav-btn{text-lg;font-weight:900;}
 </style>
 </head>
+<body>
 
-<body class="min-h-screen flex flex-col items-center justify-center gap-4 p-4">
+<!-- SET BUTTONS -->
+<div class="grid grid-cols-6 gap-2 justify-center mb-4">
+  <!-- Row 1 -->
+  <button onclick="loadSet(1)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 1</button>
+  <button onclick="loadSet(2)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 2</button>
+  <button onclick="loadSet(3)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 3</button>
+  <button onclick="loadSet(4)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 4</button>
+  <button onclick="loadSet(5)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 5</button>
+  <button onclick="loadSet(6)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 6</button>
 
-<!-- SET BUTTONS 2 ROWS -->
-<div id="setButtons" class="flex flex-wrap justify-center gap-2 mb-4 max-w-[520px]">
-  <button class="set-btn" onclick="loadSet(1,this)">SET 1</button>
-  <button class="set-btn" onclick="loadSet(2,this)">SET 2</button>
-  <button class="set-btn" onclick="loadSet(3,this)">SET 3</button>
-  <button class="set-btn" onclick="loadSet(4,this)">SET 4</button>
-  <button class="set-btn" onclick="loadSet(5,this)">SET 5</button>
-  <button class="set-btn" onclick="loadSet(6,this)">SET 6</button>
-  <button class="set-btn" onclick="loadSet(7,this)">SET 7</button>
-  <button class="set-btn" onclick="loadSet(8,this)">SET 8</button>
-  <button class="set-btn" onclick="loadSet(9,this)">SET 9</button>
-  <button class="set-btn" onclick="loadSet(10,this)">SET 10</button>
-  <button class="set-btn" onclick="loadSet(11,this)">SET 11</button>
+  <!-- Row 2 (starts under SET 1) -->
+  <button onclick="loadSet(7)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 7</button>
+  <button onclick="loadSet(8)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 8</button>
+  <button onclick="loadSet(9)"  class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 9</button>
+  <button onclick="loadSet(10)" class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 10</button>
+  <button onclick="loadSet(11)" class="set-btn px-4 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 11</button>
 </div>
 
-<div class="perspective">
-<div id="flashcard" class="card-inner relative w-[500px] h-[300px] cursor-pointer border-4 border-[var(--border-red)] rounded-3xl">
+<!-- FLASHCARD CONTAINER -->
+<div class="perspective mt-4">
+  <div id="flashcard" class="card-inner">
 
-<!-- FRONT -->
-<div class="face absolute inset-0 bg-[var(--card-cream)] rounded-3xl flex flex-col justify-between p-5 border-4 border-[var(--border-red)]">
-  <div id="front-text" class="it-text text-4xl flex-grow flex items-center justify-center"></div>
-  <div class="flex flex-col items-center gap-2">
-    <div class="text-xs font-black tracking-widest text-[var(--en-blue)]">TAP TO REVEAL →</div>
-    <div class="flex items-center gap-4 px-4 py-1 rounded-full border-2 border-[var(--en-blue)]">
-      <button onclick="prevCard(event)" class="nav-btn">◀</button>
-      <span id="counter">1 / 16</span>
-      <button onclick="nextCard(event)" class="nav-btn">▶</button>
+    <!-- FRONT -->
+    <div class="face bg-[#F7F2E7] border-4 border-[#8C0327] rounded-3xl flex flex-col justify-between p-5">
+      <div class="text-[11px] font-black text-[#0E065C]/70 uppercase tracking-widest text-right" id="set-label">SET 1</div>
+      <div class="flex-grow flex items-center justify-center px-3">
+        <p id="front-text" class="text-[2rem] it-text"></p>
+      </div>
+      <div class="flex flex-col items-center space-y-3">
+        <div class="text-[#0E065C] text-[12px] font-black uppercase tracking-[0.25em]">TAP TO REVEAL </div>
+        <div class="flex items-center space-x-4 bg-white px-4 py-1 rounded-full border-2 border-[#0E065C]">
+          <button onclick="prevCard(event)" class="nav-btn text-[#0E065C]">◀</button>
+          <span id="counter-display" class="text-[12px] font-black text-[#0E065C]">1 / 16</span>
+          <button onclick="nextCard(event)" class="nav-btn text-[#0E065C]">▶</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- BACK -->
-<div class="face back absolute inset-0 bg-[var(--card-cream)] border-4 border-[var(--border-red)] rounded-3xl p-5 flex flex-col justify-between">
-  <div class="text-right text-xs font-black tracking-widest text-[var(--en-blue)]">← TAP TO GO BACK</div>
-  <div class="flex-grow flex flex-col items-center justify-center gap-4">
-    <div id="back-text" class="en-text text-3xl"></div>
-    <button id="speakBtn" class="listen-btn">🔊 LISTEN</button>
-  </div>
-</div>
+    <!-- BACK -->
+    <div class="face back bg-[#F7F2E7] border-4 border-[#8C0327] rounded-3xl p-5 flex flex-col justify-between">
+      <div class="text-[#8C0327] text-xs font-bold text-right">← TAP TO GO BACK</div>
+      <div class="flex-grow flex flex-col items-center justify-center gap-3 text-center">
+        <div id="back-text" class="en-text text-3xl"></div>
+        <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+      </div>
+    </div>
 
-</div>
+  </div>
 </div>
 
 <script>
-/* ---------------- DATA ---------------- */
+
+// ---------- SETS DATA ----------
 const sets = {
-1:[
-{it:"AFFONDARE",en:"SINK – SANK – SUNK"},
-{it:"ANDARE A CAVALLO",en:"RIDE – RODE – RIDDEN"},
-{it:"SVEGLIARE",en:"WAKE – WOKE – WOKEN"},
-{it:"PAGARE",en:"PAY – PAID – PAID"},
-{it:"ALLEVARE",en:"BREED – BRED – BRED"},
-{it:"SCOMMETTERE",en:"BET – BET – BET"},
-{it:"PUNGERE",en:"STING – STUNG – STUNG"},
-{it:"CADERE",en:"FALL – FELL – FALLEN"},
-{it:"VENDERE",en:"SELL – SOLD – SOLD"},
-{it:"GIRARE",en:"SPIN – SPUN – SPUN"},
-{it:"SCIVOLARE",en:"SLIDE – SLID – SLID"},
-{it:"DIVENTARE",en:"BECOME – BECAME – BECOME"},
-{it:"PIEGARE",en:"BEND – BENT – BENT"},
-{it:"SENTIRE",en:"HEAR – HEARD – HEARD"},
-{it:"MOSTRARE",en:"SHOW – SHOWED – SHOWN"},
-{it:"SAPERE",en:"KNOW – KNEW – KNOWN"}
+
+1: [
+ {it:"ANDARE IN BICI",en:"RIDE – RODE – RIDDEN"},
+ {it:"SVEGLIARSI",en:"WAKE UP – WOKE UP – WOKEN UP"},
+ {it:"PAGARE",en:"PAY – PAID – PAID"},
+ {it:"ALLEVARE",en:"BREED – BRED – BRED"},
+ {it:"SCOMMETTERE",en:"BET – BET – BET"},
+ {it:"PUNGERE",en:"STING – STUNG – STUNG"},
+ {it:"CADERE",en:"FALL – FELL – FALLEN"},
+ {it:"SENTIRE",en:"HEAR – HEARD – HEARD", speak:["hear","herd","herd"]},
+ {it:"SAPERE",en:"KNOW – KNEW – KNOWN",speak:["no","new","knowen"]},
+ {it:"DIVENTARE",en:"BECOME – BECAME – BECOME"},
+ {it:"PIEGARE",en:"BEND – BENT – BENT"}
 ],
 
-2:[
-{it:"NUTRIRE",en:"FEED – FED – FED"},
-{it:"CUCIRE",en:"SEW – SEWED – SEWN/SEWED"},
-{it:"NUOTARE",en:"SWIM – SWAM – SWUM"},
-{it:"COMBATTERE",en:"FIGHT – FOUGHT – FOUGHT"},
-{it:"PORTARE",en:"BRING – BROUGHT – BROUGHT"},
-{it:"COSTRUIRE",en:"BUILD – BUILT – BUILT"},
-{it:"TESSERE",en:"WEAVE – WOVE/WEAVED – WOVEN/WEAVED"},
-{it:"SCAVARE",en:"DIG – DUG – DUG"},
-{it:"LANCIARE",en:"THROW – THREW – THROWN"},
-{it:"METTERE",en:"SET – SET – SET"},
-{it:"VEDERE",en:"SEE – SAW – SEEN"},
-{it:"MORDERE",en:"BITE – BIT – BITTEN"},
-{it:"TRATTARE",en:"DEAL – DEALT – DEALT"},
-{it:"INGANNARE",en:"MISLEAD – MISLED – MISLED"},
-{it:"SPLENDERE",en:"SHINE – SHONE – SHONE"},
-{it:"ESSERE",en:"BE – WAS/WERE – BEEN"}
+2: [
+ {it:"CUCIRE",en:"SEW – SEWED – SEWN",speak:["so","soad","sowen"]},
+ {it:"NUOTARE",en:"SWIM – SWAM – SWUM"},
+ {it:"COMBATTERE",en:"FIGHT – FOUGHT – FOUGHT"},
+ {it:"PORTARE (QUI)",en:"BRING – BROUGHT – BROUGHT"},
+ {it:"COSTRUIRE",en:"BUILD – BUILT – BUILT"},
+ {it:"INTRECCIARE",en:"WEAVE – WOVE – WOVEN"},
+ {it:"SCAVARE",en:"DIG – DUG – DUG"},
+ {it:"LANCIARE",en:"THROW – THREW – THROWN"},
+ {it:"IMPOSTARE",en:"SET – SET – SET"},
+ {it:"VEDERE",en:"SEE – SAW – SEEN"},
+ {it:"TRATTARE",en:"DEAL – DEALT – DEALT", speak:["deal","delt","delt"]}
 ],
 
-3:[
-{it:"CHIUDERE",en:"SHUT – SHUT – SHUT"},
-{it:"STRAPPARE",en:"TEAR – TORE – TORN"},
-{it:"SPAZZARE",en:"SWEEP – SWEPT – SWEPT"},
-{it:"DIRE",en:"SAY – SAID – SAID"},
-{it:"AGGRAPPARSI",en:"CLING – CLUNG – CLUNG"},
-{it:"RITIRARSI",en:"WITHDRAW – WITHDREW – WITHDRAWN"},
-{it:"SVEGLIARSI",en:"AWAKE – AWOKE – AWOKEN"},
-{it:"PRENDERE",en:"TAKE – TOOK – TAKEN"},
-{it:"INSEGNARE",en:"TEACH – TAUGHT – TAUGHT"},
-{it:"ALZARSI",en:"RISE – ROSE – RISEN"},
-{it:"SCOPPIARE",en:"BURST – BURST – BURST"},
-{it:"LEGGERE",en:"READ – READ – READ"},
-{it:"PIANGERE",en:"WEEP – WEPT – WEPT"},
-{it:"SOGNARE",en:"DREAM – DREAMT/DREAMED – DREAMT/DREAMED"},
-{it:"SEGARE",en:"SAW – SAWED – SAWN/SAWED"},
-{it:"SOFFIARE",en:"BLOW – BLEW – BLOWN"}
+3: [
+ {it:"CHIUDERE",en:"SHUT – SHUT – SHUT"},
+ {it:"STRAPPARE",en:"TEAR – TORE – TORN"},
+ {it:"SPAZZARE",en:"SWEEP – SWEPT – SWEPT"},
+ {it:"DIRE",en:"SAY – SAID – SAID", speak:["say","sed","sed"]},
+ {it:"AGGRAPPARSI",en:"CLING – CLUNG – CLUNG"},
+ {it:"RITIRARSI",en:"WITHDRAW – WITHDREW – WITHDRAWN"},
+ {it:"UCCIDERE",en:"SLAY – SLEW – SLAIN"},
+ {it:"PRENDERE",en:"TAKE – TOOK – TAKEN"},
+ {it:"INSEGNARE",en:"TEACH – TAUGHT – TAUGHT"},
+ {it:"SORGERE",en:"RISE – ROSE – RISEN"},
+ {it:"LEGGERE",en:"READ – READ – READ", speak:["reed","red","red"]},
+ {it:"PIANGERE",en:"WEEP – WEPT – WEPT"}
 ],
 
-4:[
-{it:"GALleggiare",en:"RIDE – RODE – RIDDEN"},
-{it:"INGANNARE",en:"MISLEAD – MISLED – MISLED"},
-{it:"RITIRARSI",en:"WITHDRAW – WITHDREW – WITHDRAWN"},
-{it:"CRESCERE OLTRE",en:"OUTGROW – OUTGREW – OUTGROWN"},
-{it:"NUTRIRE",en:"FEED – FED – FED"},
-{it:"NASCONDERE",en:"HIDE – HID – HIDDEN"},
-{it:"SPARGERE",en:"SPREAD – SPREAD – SPREAD"},
-{it:"BERE",en:"DRINK – DRANK – DRUNK"},
-{it:"LASCIARE",en:"LEAVE – LEFT – LEFT"},
-{it:"FUGGIRE",en:"FLEE – FLED – FLED"},
-{it:"TESSERE",en:"WEAVE – WOVE – WOVEN"},
-{it:"SEMINARE",en:"SOW – SOWED – SOWN"},
-{it:"RACCONTARE",en:"TELL – TOLD – TOLD"},
-{it:"SPLENDERE",en:"SHINE – SHONE – SHONE"},
-{it:"CONGELARE",en:"FREEZE – FROZE – FROZEN"},
-{it:"CRESCERE",en:"GROW – GREW – GROWN"}
+4: [
+ {it:"CRESCERE TROPPO",en:"OUTGROW – OUTGREW – OUTGROWN"},
+ {it:"NASCONDERE",en:"HIDE – HID – HIDDEN"},
+ {it:"SPALMARE",en:"SPREAD – SPREAD – SPREAD"},
+ {it:"BERE",en:"DRINK – DRANK – DRUNK"},
+ {it:"LASCIARE",en:"LEAVE – LEFT – LEFT"},
+ {it:"FUGGIRE",en:"FLEE – FLED – FLED"},
+ {it:"SEMINARE",en:"SOW – SOWED – SOWN",speak:["so","sowed","sowen"]},
+ {it:"RACCONTARE",en:"TELL – TOLD – TOLD"},
+ {it:"CONGELARE",en:"FREEZE – FROZE – FROZEN"},
+ {it:"CRESCERE",en:"GROW – GREW – GROWN"},
+ {it:"VENIRE",en:"COME – CAME – COME"},
+ {it:"CORRERE",en:"RUN – RAN – RUN"}
 ],
 
-5:[
-{it:"VERSARE",en:"SHED – SHED – SHED"},
-{it:"DIMOSTRARE",en:"PROVE – PROVED – PROVEN"},
-{it:"VENIRE",en:"COME – CAME – COME"},
-{it:"CORRERE",en:"RUN – RAN – RUN"},
-{it:"VEDERE",en:"SEE – SAW – SEEN"},
-{it:"FERIRE",en:"HURT – HURT – HURT"},
-{it:"COLPIRE",en:"STRIKE – STRUCK – STRUCK"},
-{it:"ROVESCIARE",en:"SPILL – SPILT/SPILLED – SPILT/SPILLED"},
-{it:"OFFRIRE",en:"BID – BID – BID"},
-{it:"INGINOCCHIARSI",en:"KNEEL – KNELT – KNELT"},
-{it:"ANDARE",en:"GO – WENT – GONE"},
-{it:"PARLARE",en:"SPEAK – SPOKE – SPOKEN"},
-{it:"ROVINARE",en:"SPOIL – SPOILT – SPOILT"},
-{it:"SBARAZZARSI",en:"RID – RID – RID"},
-{it:"LEGARE",en:"BIND – BOUND – BOUND"},
-{it:"BATTERE",en:"BEAT – BEAT – BEATEN"}
+5: [
+ {it:"OFFRIRE (ASTA)",en:"BID – BID – BID"},
+ {it:"INGINOCCHIARSI",en:"KNEEL – KNELT – KNELT"},
+ {it:"ANDARE",en:"GO – WENT – GONE"},
+ {it:"PARLARE",en:"SPEAK – SPOKE – SPOKEN"},
+ {it:"ROVINARE",en:"SPOIL – SPOILT – SPOILT"},
+ {it:"SBARAZZARSI",en:"RID – RID – RID"},
+ {it:"LEGARE",en:"BIND – BOUND – BOUND"},
+ {it:"BATTERE",en:"BEAT – BEAT – BEATEN"},
+ {it:"VINCERE",en:"WIN – WON – WON"},
+ {it:"IMPLORARE",en:"PLEAD – PLED – PLED"},
+ {it:"ACCELERARE",en:"SPEED – SPED – SPED"},
+ {it:"CERCARE (CONSIGLI)",en:"SEEK – SOUGHT – SOUGHT"}
 ],
 
-6:[
-{it:"GIRARE",en:"SPIN – SPUN – SPUN"},
-{it:"SVEGLIARSI",en:"AWAKE – AWOKE – AWOKEN"},
-{it:"SVEGLIARE",en:"WAKE – WOKE – WOKEN"},
-{it:"VINCERE",en:"WIN – WON – WON"},
-{it:"LANCIARE",en:"FLING – FLUNG – FLUNG"},
-{it:"IMPLORARE",en:"PLEAD – PLED – PLED"},
-{it:"ACCELERARE",en:"SPEED – SPED – SPED"},
-{it:"CERCARE",en:"SEEK – SOUGHT – SOUGHT"},
-{it:"DIMORARE",en:"DWELL – DWELT – DWELT"},
-{it:"SPARARE",en:"SHOOT – SHOT – SHOT"},
-{it:"STRISCIARE",en:"CREEP – CREPT – CREPT"},
-{it:"SCOPPIARE",en:"BURST – BURST – BURST"},
-{it:"PERDERE",en:"LOSE – LOST – LOST"},
-{it:"STARE IN PIEDI",en:"STAND – STOOD – STOOD"},
-{it:"SANGUINARE",en:"BLEED – BLED – BLED"},
-{it:"SORPASSARE",en:"OVERTAKE – OVERTOOK – OVERTAKEN"}
+6: [
+ {it:"PERDERE",en:"LOSE – LOST – LOST"},
+ {it:"STARE IN PIEDI",en:"STAND – STOOD – STOOD"},
+ {it:"SANGUINARE",en:"BLEED – BLED – BLED"},
+ {it:"SORPASSARE",en:"OVERTAKE – OVERTOOK – OVERTAKEN"},
+ {it:"METTERE",en:"PUT – PUT – PUT"},
+ {it:"SCATTARE",en:"SPRING – SPRANG – SPRUNG"},
+ {it:"TENERE",en:"KEEP – KEPT – KEPT"},
+ {it:"SCRIVERE",en:"WRITE – WROTE – WRITTEN"},
+ {it:"DARE",en:"GIVE – GAVE – GIVEN"},
+ {it:"DORMIRE",en:"SLEEP – SLEPT – SLEPT"},
+ {it:"INIZIARE",en:"BEGIN – BEGAN – BEGUN"},
+ {it:"CATTURARE",en:"CATCH – CAUGHT – CAUGHT"}
 ],
 
-7:[
-{it:"METTERE",en:"PUT – PUT – PUT"},
-{it:"SCATTARE",en:"SPRING – SPRANG – SPRUNG"},
-{it:"TENERE",en:"KEEP – KEPT – KEPT"},
-{it:"PIANGERE",en:"WEEP – WEPT – WEPT"},
-{it:"SCRIVERE",en:"WRITE – WROTE – WRITTEN"},
-{it:"DARE",en:"GIVE – GAVE – GIVEN"},
-{it:"AFFONDARE",en:"SINK – SANK – SUNK"},
-{it:"SENTIRE",en:"HEAR – HEARD – HEARD"},
-{it:"FISSARE",en:"SET – SET – SET"},
-{it:"DORMIRE",en:"SLEEP – SLEPT – SLEPT"},
-{it:"SOPPORTARE",en:"BEAR – BORE – BORNE"},
-{it:"INIZIARE",en:"BEGIN – BEGAN – BEGUN"},
-{it:"INSEGNARE",en:"TEACH – TAUGHT – TAUGHT"},
-{it:"CATTURARE",en:"CATCH – CAUGHT – CAUGHT"},
-{it:"TAGLIARE",en:"MOW – MOWED – MOWN"},
-{it:"SOFFIARE",en:"BLOW – BLEW – BLOWN"}
+7: [
+ {it:"RINUNCIARE",en:"FORSAKE – FORSOOK – FORSAKEN"},
+ {it:"PREVEDERE (METEO)",en:"FORECAST – FORECAST – FORECAST"},
+ {it:"SPENDERE",en:"SPEND – SPENT – SPENT"},
+ {it:"CONDURRE",en:"LEAD – LED – LED", speak:["leed","led","led"]},
+ {it:"GIURARE",en:"SWEAR – SWORE – SWORN"},
+ {it:"STRIZZARE",en:"WRING – WRUNG – WRUNG"},
+ {it:"ACCADERE",en:"BEFALL – BEFELL – BEFALLEN"},
+ {it:"TRASMETTERE",en:"BROADCAST – BROADCAST – BROADCAST"},
+ {it:"INCLINARSI",en:"LEAN – LEANT – LEANT", speak:["lean","lent","lent"]},
+ {it:"BRUCIARE",en:"BURN – BURNT – BURNT"},
+ {it:"MANDARE",en:"SEND – SENT – SENT"},
+ {it:"PRESTARE",en:"LEND – LENT – LENT"}
 ],
 
-8:[
-{it:"CADERE",en:"FALL – FELL – FALLEN"},
-{it:"APPENDERE",en:"SLING – SLUNG – SLUNG"},
-{it:"RINUNCIARE",en:"FORSAKE – FORSOOK – FORSAKEN"},
-{it:"PREVEDERE",en:"FORECAST – FORECAST – FORECAST"},
-{it:"SPENDERE",en:"SPEND – SPENT – SPENT"},
-{it:"OTTENERE",en:"GET – GOT – GOTTEN"},
-{it:"CONDURRE",en:"BRING – BROUGHT – BROUGHT"},
-{it:"GIURARE",en:"SWEAR – SWORE – SWORN"},
-{it:"TORCERE",en:"WRING – WRUNG – WRUNG"},
-{it:"ACCADERE",en:"BEFALL – BEFELL – BEFALLEN"},
-{it:"BRUCIARE",en:"BURN – BURNT – BURNT"},
-{it:"PUNGERE",en:"STING – STUNG – STUNG"},
-{it:"AGGRAPPARSI",en:"CLING – CLUNG – CLUNG"},
-{it:"TRASMETTERE",en:"BROADCAST – BROADCAST – BROADCAST"},
-{it:"MANDARE",en:"SEND – SENT – SENT"},
-{it:"PRESTARE",en:"LEND – LENT – LENT"}
+8: [
+ {it:"DONDOLARE",en:"SWING – SWUNG – SWUNG"},
+ {it:"COMPRENDERE",en:"UNDERSTAND – UNDERSTOOD – UNDERSTOOD"},
+ {it:"SEDERSI",en:"SIT – SAT – SAT"},
+ {it:"INCONTRARE",en:"MEET – MET – MET"},
+ {it:"RISPETTARE (REGOLE)",en:"ABIDE BY – ABODE BY – ABODE BY"},
+ {it:"SMETTERE",en:"QUIT – QUIT – QUIT"},
+ {it:"SUPERARE",en:"OVERCOME – OVERCAME – OVERCOME"},
+ {it:"AVERE",en:"HAVE – HAD – HAD"},
+ {it:"INCOLLARE",en:"STICK – STUCK – STUCK"},
+ {it:"APPENDERE",en:"HANG – HUNG – HUNG"},
+ {it:"ROMPERE",en:"BREAK – BROKE – BROKEN"},
+ {it:"PENSARE",en:"THINK – THOUGHT – THOUGHT"}
 ],
 
-9:[
-{it:"OSCILLARE",en:"SWING – SWUNG – SWUNG"},
-{it:"COMPRENDERE",en:"UNDERSTAND – UNDERSTOOD – UNDERSTOOD"},
-{it:"SEDERSI",en:"SIT – SAT – SAT"},
-{it:"INCONTRARE",en:"MEET – MET – MET"},
-{it:"RIMANERE",en:"ABIDE – ABODE – ABODE"},
-{it:"SMETTERE",en:"QUIT – QUIT – QUIT"},
-{it:"SUPERARE",en:"OVERCOME – OVERCAME – OVERCOME"},
-{it:"AVERE",en:"HAVE – HAD – HAD"},
-{it:"OSSERVARE",en:"BEHOLD – BEHELD – BEHELD"},
-{it:"INCLINARSI",en:"LEAN – LEANT – LEANT"},
-{it:"CHIUDERE",en:"SHUT – SHUT – SHUT"},
-{it:"ATTACCARE",en:"STICK – STUCK – STUCK"},
-{it:"APPENDERE",en:"HANG – HUNG – HUNG"},
-{it:"MANGIARE",en:"EAT – ATE – EATEN"},
-{it:"RUBARE",en:"STEAL – STOLE – STOLEN"},
-{it:"TRATTARE",en:"DEAL – DEALT – DEALT"}
+9: [
+ {it:"FARE",en:"DO – DID – DONE"},
+ {it:"SPINGERE (FORTE)",en:"THRUST – THRUST – THRUST"},
+ {it:"SOTTOPORSI",en:"UNDERGO – UNDERWENT – UNDERGONE"},
+ {it:"PUZZARE",en:"STINK – STANK – STUNK"},
+ {it:"COLPIRE",en:"STRIKE – STRUCK – STRUCK"},
+ {it:"DISEGNARE",en:"DRAW – DREW – DRAWN"},
+ {it:"AVVOLGERE",en:"WIND – WOUND – WOUND", speak:["wined","wound","wound"]},
+ {it:"IMPARARE",en:"LEARN – LEARNT – LEARNT", speak:["lurn","lurnt","lurnt"]},
+ {it:"ORIGLIARE",en:"OVERHEAR – OVERHEARD – OVERHEARD"}
 ],
 
-10:[
-{it:"SAPERE",en:"KNOW – KNEW – KNOWN"},
-{it:"ROMPERE",en:"BREAK – BROKE – BROKEN"},
-{it:"PENSARE",en:"THINK – THOUGHT – THOUGHT"},
-{it:"IMPICCARE",en:"HANG – HANGED – HANGED"},
-{it:"FARE",en:"DO – DID – DONE"},
-{it:"SEGARE",en:"SAW – SAWED – SAWN"},
-{it:"SPINGERE",en:"THRUST – THRUST – THRUST"},
-{it:"AFFRONTARE",en:"UNDERGO – UNDERWENT – UNDERGONE"},
-{it:"PUZZARE",en:"STINK – STANK – STUNK"},
-{it:"COSTRUIRE",en:"BUILD – BUILT – BUILT"},
-{it:"DISEGNARE",en:"DRAW – DREW – DRAWN"},
-{it:"AVVOLGERE",en:"WIND – WOUND – WOUND"},
-{it:"TAGLIARE",en:"CUT – CUT – CUT"},
-{it:"NUOTARE",en:"SWIM – SWAM – SWUM"},
-{it:"ALLEVARE",en:"BREED – BRED – BRED"}
+10: [
+ {it:"NUTRIRE",en:"FEED – FED – FED"},
+ {it:"SEGARE",en:"SAW – SAWED – SAWN"},
+ {it:"SOFFIARE",en:"BLOW – BLEW – BLOWN"},
+ {it:"SOGNARE",en:"DREAM – DREAMT – DREAMT", speak:["dream","dremt","dremt"]},
+ {it:"FERIRE",en:"HURT – HURT – HURT"},
+ {it:"SALTARE (IN AVANTI)",en:"LEAP – LEAPT – LEAPT"},
+ {it:"CAMMINARE (PASSI GRANDI) ",en:"STRIDE – STRODE – STRIDDEN"},
+ {it:"SIGNIFICARE",en:"MEAN – MEANT – MEANT", speak:["mean","ment","ment"]},
+ {it:"SUONARE",en:"RING – RANG – RUNG"},
+ {it:"FARE (PRODURRE)",en:"MAKE – MADE – MADE"},
+ {it:"ACCENDERE",en:"LIGHT – LIT – LIT"}
 ],
 
-11:[
-{it:"LEGGERE",en:"READ – READ – READ"},
-{it:"IMPARARE",en:"LEARN – LEARNT – LEARNT"},
-{it:"SPAZZARE",en:"SWEEP – SWEPT – SWEPT"},
-{it:"ORIGLIARE",en:"OVERHEAR – OVERHEARD – OVERHEARD"},
-{it:"COMANDARE",en:"BID – BADE – BIDDEN"},
-{it:"BALZARE",en:"LEAP – LEAPT – LEAPT"},
-{it:"CAMMINARE A GRANDI PASSI",en:"STRIDE – STRODE – STRIDDEN"},
-{it:"SIGNIFICARE",en:"MEAN – MEANT – MEANT"},
-{it:"SUONARE",en:"RING – RANG – RUNG"},
-{it:"PAGARE",en:"PAY – PAID – PAID"},
-{it:"CREARE",en:"MAKE – MADE – MADE"},
-{it:"ACCENDERE / ILLUMINARE",en:"LIGHT – LIT/LIGHTED – LIT/LIGHTED"}
+11: [
+ {it:"AFFONDARE",en:"SINK – SANK – SUNK"},
+ {it:"SPLENDERE",en:"SHINE – SHONE – SHONE"},
+ {it:"INGANNARE",en:"MISLEAD – MISLED – MISLED"},
+ {it:"MORDERE",en:"BITE – BIT – BITTEN"},
+ {it:"SCIVOLARE",en:"SLIDE – SLID – SLID"},
+ {it:"GIRARE",en:"SPIN – SPUN – SPUN"},
+ {it:"VENDERE",en:"SELL – SOLD – SOLD"},
+ {it:"MOSTRARE",en:"SHOW – SHOWED – SHOWN",speak:["show","showed","showen"]},
+ {it:"OSSERVARE",en:"BEHOLD – BEHELD – BEHELD"},
+ {it:"MANGIARE",en:"EAT – ATE – EATEN"},
+ {it:"RUBARE",en:"STEAL – STOLE – STOLEN"}
 ]
+
 };
 
-let currentSet = sets[1];
+// ---------- FLASHCARD LOGIC ----------
+let currentSet = 1;
+let cards = sets[currentSet];
 let index = 0;
 
-const card = document.getElementById("flashcard");
-const front = document.getElementById("front-text");
-const back = document.getElementById("back-text");
-const counter = document.getElementById("counter");
-const speakBtn = document.getElementById("speakBtn");
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const speakBtn  = document.getElementById("speakBtn");
 
-/* FLIP */
-card.addEventListener("click",()=>card.classList.toggle("flipped"));
+// Highlight selected SET button
+function highlightButton(n){
+  document.querySelectorAll('.set-btn').forEach((btn,i)=>{
+    btn.style.backgroundColor = (i+1 === n) ? "#061247" : "#fff"; // dark blue
+    btn.style.color = (i+1 === n) ? "#fff" : "#0E065C";
+  });
+}
 
-/* AUDIO */
+// Load a set
+function loadSet(n){
+  currentSet = n;
+  cards = sets[n];
+  index = 0;
+  updateCard();
+  highlightButton(n);
+}
+
+// Update flashcard
+function updateCard(){
+  flashcard.classList.remove("flipped");
+  setTimeout(()=>{
+    frontText.innerText = cards[index].it;
+    backText.innerText  = cards[index].en;
+    counter.innerText = `${index+1} / ${cards.length}`;
+    document.getElementById("set-label").innerText = `SET ${currentSet}`;
+  },150);
+}
+
+// Navigate cards
+function nextCard(e){
+  e.stopPropagation();
+  index = (index+1) % cards.length;
+  updateCard();
+}
+function prevCard(e){
+  e.stopPropagation();
+  index = (index-1+cards.length) % cards.length;
+  updateCard();
+}
+
+// Flip card
+flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+
+// Audio with custom pronunciation support
 speakBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  const utter = new SpeechSynthesisUtterance(back.textContent);
+
+  // Use speak array if defined, otherwise fall back to backText
+  const textToSpeak = cards[index].speak 
+    ? cards[index].speak.join(", ") 
+    : cards[index].en;
+
+  const utter = new SpeechSynthesisUtterance(textToSpeak);
   utter.lang = "en-GB";
   speechSynthesis.cancel();
   speechSynthesis.speak(utter);
 });
 
-/* NAVIGATION */
-function updateCard(){
-  front.textContent = currentSet[index].it;
-  back.textContent  = currentSet[index].en;
-  counter.textContent = `${index+1} / ${currentSet.length}`;
-}
-function nextCard(e){e.stopPropagation();index=(index+1)%currentSet.length;updateCard();}
-function prevCard(e){e.stopPropagation();index=(index-1+currentSet.length)%currentSet.length;updateCard();}
-
-/* LOAD SET & SELECTED BUTTON */
-function loadSet(n,btn){
-  currentSet = sets[n];
-  index = 0;
-  updateCard();
-  card.classList.remove("flipped");
-  document.querySelectorAll(".set-btn").forEach(b=>b.classList.remove("selected-set"));
-  btn.classList.add("selected-set");
-}
-
-/* INIT */
-loadSet(1,document.querySelector(".set-btn"));
+// Initialize first set
+loadSet(1);
 </script>
 
 </body>
