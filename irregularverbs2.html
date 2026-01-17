@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Irregular Verbs – Mobile Friendly</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{
+  --bg-blue:#061247;
+  --card-cream:#F7F2E7;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+  --border-red:#8C0327;
+}
+body{
+  background:var(--bg-blue);
+  font-family:system-ui,Segoe UI,Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem;
+  gap:1rem;
+}
+.perspective{perspective:1000px;}
+.card-inner{
+  transition:.4s;
+  transform-style:preserve-3d;
+  width:90vw;
+  max-width:400px;
+  height:55vw;
+  max-height:250px;
+  position:relative;
+  cursor:pointer;
+}
+.flipped{transform:rotateY(180deg);}
+.face{backface-visibility:hidden;position:absolute;inset:0;border-radius:1rem;}
+.back{transform:rotateY(180deg);}
+.it-text{color:var(--it-red);font-weight:800;text-transform:uppercase;text-align:center;font-size:1.2rem;}
+.en-text{color:var(--en-blue);font-weight:700;text-transform:uppercase;text-align:center;font-size:1rem;}
+.listen-btn{background:none;color:var(--it-red);border:none;font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:5px;}
+.nav-btn{text-lg;font-weight:700;}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0.5rem;
+}
+@media (max-width:480px){
+  .grid{grid-template-columns:repeat(2,1fr);}
+  .it-text{font-size:1rem;}
+  .en-text{font-size:.9rem;}
+  .card-inner{height:60vw;}
+}
+</style>
+</head>
+<body>
+
+<!-- SET BUTTONS -->
+<div class="grid mb-4">
+  <button onclick="loadSet(1)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 1</button>
+  <button onclick="loadSet(2)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 2</button>
+  <button onclick="loadSet(3)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 3</button>
+  <button onclick="loadSet(4)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 4</button>
+  <button onclick="loadSet(5)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 5</button>
+  <button onclick="loadSet(6)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 6</button>
+  <button onclick="loadSet(7)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 7</button>
+  <button onclick="loadSet(8)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 8</button>
+  <button onclick="loadSet(9)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 9</button>
+  <button onclick="loadSet(10)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 10</button>
+  <button onclick="loadSet(11)" class="set-btn px-3 py-1 rounded-full bg-white text-[#0E065C] font-bold">SET 11</button>
+</div>
+
+<!-- FLASHCARD -->
+<div class="perspective mt-4">
+  <div id="flashcard" class="card-inner">
+    <div class="face bg-[#F7F2E7] border-4 border-[#8C0327] flex flex-col justify-center items-center p-3">
+      <div id="front-text" class="it-text"></div>
+    </div>
+    <div class="face back bg-[#F7F2E7] border-4 border-[#8C0327] p-3 flex flex-col justify-center items-center">
+      <div id="back-text" class="en-text mb-2"></div>
+      <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-between w-11/12 max-w-md mt-2">
+  <button onclick="prevCard(event)" class="nav-btn text-white">◀</button>
+  <span id="counter-display" class="text-white font-bold">1 / 16</span>
+  <button onclick="nextCard(event)" class="nav-btn text-white">▶</button>
+</div>
+
+<script>
+// ---------- FULL SETS DATA ----------
+const sets = {
+1: [
+ {it:"ANDARE IN BICI",en:"RIDE – RODE – RIDDEN"},
+ {it:"SVEGLIARSI",en:"WAKE UP – WOKE UP – WOKEN UP"},
+ {it:"PAGARE",en:"PAY – PAID – PAID"},
+ {it:"ALLEVARE",en:"BREED – BRED – BRED"},
+ {it:"SCOMMETTERE",en:"BET – BET – BET"},
+ {it:"PUNGERE",en:"STING – STUNG – STUNG"},
+ {it:"CADERE",en:"FALL – FELL – FALLEN"},
+ {it:"SENTIRE",en:"HEAR – HEARD – HEARD", speak:["hear","herd","herd"]},
+ {it:"SAPERE",en:"KNOW – KNEW – KNOWN",speak:["no","new","knowen"]},
+ {it:"DIVENTARE",en:"BECOME – BECAME – BECOME"},
+ {it:"PIEGARE",en:"BEND – BENT – BENT"}
+],
+2: [
+ {it:"CUCIRE",en:"SEW – SEWED – SEWN",speak:["so","soad","sowen"]},
+ {it:"NUOTARE",en:"SWIM – SWAM – SWUM"},
+ {it:"COMBATTERE",en:"FIGHT – FOUGHT – FOUGHT"},
+ {it:"PORTARE (QUI)",en:"BRING – BROUGHT – BROUGHT"},
+ {it:"COSTRUIRE",en:"BUILD – BUILT – BUILT"},
+ {it:"INTRECCIARE",en:"WEAVE – WOVE – WOVEN"},
+ {it:"SCAVARE",en:"DIG – DUG – DUG"},
+ {it:"LANCIARE",en:"THROW – THREW – THROWN"},
+ {it:"IMPOSTARE",en:"SET – SET – SET"},
+ {it:"VEDERE",en:"SEE – SAW – SEEN"},
+ {it:"TRATTARE",en:"DEAL – DEALT – DEALT", speak:["deal","delt","delt"]}
+],
+3: [
+ {it:"CHIUDERE",en:"SHUT – SHUT – SHUT"},
+ {it:"STRAPPARE",en:"TEAR – TORE – TORN"},
+ {it:"SPAZZARE",en:"SWEEP – SWEPT – SWEPT"},
+ {it:"DIRE",en:"SAY – SAID – SAID", speak:["say","sed","sed"]},
+ {it:"AGGRAPPARSI",en:"CLING – CLUNG – CLUNG"},
+ {it:"RITIRARSI",en:"WITHDRAW – WITHDREW – WITHDRAWN"},
+ {it:"UCCIDERE",en:"SLAY – SLEW – SLAIN"},
+ {it:"PRENDERE",en:"TAKE – TOOK – TAKEN"},
+ {it:"INSEGNARE",en:"TEACH – TAUGHT – TAUGHT"},
+ {it:"SORGERE",en:"RISE – ROSE – RISEN"},
+ {it:"LEGGERE",en:"READ – READ – READ", speak:["reed","red","red"]},
+ {it:"PIANGERE",en:"WEEP – WEPT – WEPT"}
+],
+4: [
+ {it:"CRESCERE TROPPO",en:"OUTGROW – OUTGREW – OUTGROWN"},
+ {it:"NASCONDERE",en:"HIDE – HID – HIDDEN"},
+ {it:"SPALMARE",en:"SPREAD – SPREAD – SPREAD"},
+ {it:"BERE",en:"DRINK – DRANK – DRUNK"},
+ {it:"LASCIARE",en:"LEAVE – LEFT – LEFT"},
+ {it:"FUGGIRE",en:"FLEE – FLED – FLED"},
+ {it:"SEMINARE",en:"SOW – SOWED – SOWN",speak:["so","sowed","sowen"]},
+ {it:"RACCONTARE",en:"TELL – TOLD – TOLD"},
+ {it:"CONGELARE",en:"FREEZE – FROZE – FROZEN"},
+ {it:"CRESCERE",en:"GROW – GREW – GROWN"},
+ {it:"VENIRE",en:"COME – CAME – COME"},
+ {it:"CORRERE",en:"RUN – RAN – RUN"}
+],
+5: [
+ {it:"OFFRIRE (ASTA)",en:"BID – BID – BID"},
+ {it:"INGINOCCHIARSI",en:"KNEEL – KNELT – KNELT"},
+ {it:"ANDARE",en:"GO – WENT – GONE"},
+ {it:"PARLARE",en:"SPEAK – SPOKE – SPOKEN"},
+ {it:"ROVINARE",en:"SPOIL – SPOILT – SPOILT"},
+ {it:"SBARAZZARSI",en:"RID – RID – RID"},
+ {it:"LEGARE",en:"BIND – BOUND – BOUND"},
+ {it:"BATTERE",en:"BEAT – BEAT – BEATEN"},
+ {it:"VINCERE",en:"WIN – WON – WON"},
+ {it:"IMPLORARE",en:"PLEAD – PLED – PLED"},
+ {it:"ACCELERARE",en:"SPEED – SPED – SPED"},
+ {it:"CERCARE (CONSIGLI)",en:"SEEK – SOUGHT – SOUGHT"}
+],
+6: [
+ {it:"PERDERE",en:"LOSE – LOST – LOST"},
+ {it:"STARE IN PIEDI",en:"STAND – STOOD – STOOD"},
+ {it:"SANGUINARE",en:"BLEED – BLED – BLED"},
+ {it:"SORPASSARE",en:"OVERTAKE – OVERTOOK – OVERTAKEN"},
+ {it:"METTERE",en:"PUT – PUT – PUT"},
+ {it:"SCATTARE",en:"SPRING – SPRANG – SPRUNG"},
+ {it:"TENERE",en:"KEEP – KEPT – KEPT"},
+ {it:"SCRIVERE",en:"WRITE – WROTE – WRITTEN"},
+ {it:"DARE",en:"GIVE – GAVE – GIVEN"},
+ {it:"DORMIRE",en:"SLEEP – SLEPT – SLEPT"},
+ {it:"INIZIARE",en:"BEGIN – BEGAN – BEGUN"},
+ {it:"CATTURARE",en:"CATCH – CAUGHT – CAUGHT"}
+],
+7: [
+ {it:"RINUNCIARE",en:"FORSAKE – FORSOOK – FORSAKEN"},
+ {it:"PREVEDERE (METEO)",en:"FORECAST – FORECAST – FORECAST"},
+ {it:"SPENDERE",en:"SPEND – SPENT – SPENT"},
+ {it:"CONDURRE",en:"LEAD – LED – LED", speak:["leed","led","led"]},
+ {it:"GIURARE",en:"SWEAR – SWORE – SWORN"},
+ {it:"STRIZZARE",en:"WRING – WRUNG – WRUNG"},
+ {it:"ACCADERE",en:"BEFALL – BEFELL – BEFALLEN"},
+ {it:"TRASMETTERE",en:"BROADCAST – BROADCAST – BROADCAST"},
+ {it:"INCLINARSI",en:"LEAN – LEANT – LEANT", speak:["lean","lent","lent"]},
+ {it:"BRUCIARE",en:"BURN – BURNT – BURNT"},
+ {it:"MANDARE",en:"SEND – SENT – SENT"},
+ {it:"PRESTARE",en:"LEND – LENT – LENT"}
+],
+8: [
+ {it:"DONDOLARE",en:"SWING – SWUNG – SWUNG"},
+ {it:"COMPRENDERE",en:"UNDERSTAND – UNDERSTOOD – UNDERSTOOD"},
+ {it:"SEDERSI",en:"SIT – SAT – SAT"},
+ {it:"INCONTRARE",en:"MEET – MET – MET"},
+ {it:"RISPETTARE (REGOLE)",en:"ABIDE BY – ABODE BY – ABODE BY"},
+ {it:"SMETTERE",en:"QUIT – QUIT – QUIT"},
+ {it:"SUPERARE",en:"OVERCOME – OVERCAME – OVERCOME"},
+ {it:"AVERE",en:"HAVE – HAD – HAD"},
+ {it:"INCOLLARE",en:"STICK – STUCK – STUCK"},
+ {it:"APPENDERE",en:"HANG – HUNG – HUNG"},
+ {it:"ROMPERE",en:"BREAK – BROKE – BROKEN"},
+ {it:"PENSARE",en:"THINK – THOUGHT – THOUGHT"}
+],
+9: [
+ {it:"FARE",en:"DO – DID – DONE"},
+ {it:"SPINGERE (FORTE)",en:"THRUST – THRUST – THRUST"},
+ {it:"SOTTOPORSI",en:"UNDERGO – UNDERWENT – UNDERGONE"},
+ {it:"PUZZARE",en:"STINK – STANK – STUNK"},
+ {it:"COLPIRE",en:"STRIKE – STRUCK – STRUCK"},
+ {it:"DISEGNARE",en:"DRAW – DREW – DRAWN"},
+ {it:"AVVOLGERE",en:"WIND – WOUND – WOUND", speak:["wined","wound","wound"]},
+ {it:"IMPARARE",en:"LEARN – LEARNT – LEARNT", speak:["lurn","lurnt","lurnt"]},
+ {it:"ORIGLIARE",en:"OVERHEAR – OVERHEARD – OVERHEARD"}
+],
+10: [
+ {it:"NUTRIRE",en:"FEED – FED – FED"},
+ {it:"SEGARE",en:"SAW – SAWED – SAWN"},
+ {it:"SOFFIARE",en:"BLOW – BLEW – BLOWN"},
+ {it:"SOGNARE",en:"DREAM – DREAMT – DREAMT", speak:["dream","dremt","dremt"]},
+ {it:"FERIRE",en:"HURT – HURT – HURT"},
+ {it:"SALTARE (IN AVANTI)",en:"LEAP – LEAPT – LEAPT"},
+ {it:"CAMMINARE (PASSI GRANDI) ",en:"STRIDE – STRODE – STRIDDEN"},
+ {it:"SIGNIFICARE",en:"MEAN – MEANT – MEANT", speak:["mean","ment","ment"]},
+ {it:"SUONARE",en:"RING – RANG – RUNG"},
+ {it:"FARE (PRODURRE)",en:"MAKE – MADE – MADE"},
+ {it:"ACCENDERE",en:"LIGHT – LIT – LIT"}
+],
+11: [
+ {it:"AFFONDARE",en:"SINK – SANK – SUNK"},
+ {it:"SPLENDERE",en:"SHINE – SHONE – SHONE"},
+ {it:"INGANNARE",en:"MISLEAD – MISLED – MISLED"},
+ {it:"MORDERE",en:"BITE – BIT – BITTEN"},
+ {it:"SCIVOLARE",en:"SLIDE – SLID – SLID"},
+ {it:"GIRARE",en:"SPIN – SPUN – SPUN"},
+ {it:"VENDERE",en:"SELL – SOLD – SOLD"},
+ {it:"MOSTRARE",en:"SHOW – SHOWED – SHOWN",speak:["show","showed","sh owen"]},
+ {it:"OSSERVARE",en:"BEHOLD – BEHELD – BEHELD"},
+ {it:"MANGIARE",en:"EAT – ATE – EATEN"},
+ {it:"RUBARE",en:"STEAL – STOLE – STOLEN"}
+]
+};
+
+// ---------- FLASHCARD LOGIC ----------
+let currentSet = 1;
+let cards = sets[currentSet];
+let index = 0;
+
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const speakBtn  = document.getElementById("speakBtn");
+
+function loadSet(n){
+  currentSet = n;
+  cards = sets[n];
+  index = 0;
+  updateCard();
+  highlightButton(n);
+}
+
+function highlightButton(n){
+  document.querySelectorAll('.set-btn').forEach((btn,i)=>{
+    btn.style.backgroundColor = (i+1 === n) ? "#061247" : "#fff";
+    btn.style.color = (i+1 === n) ? "#fff" : "#0E065C";
+  });
+}
+
+function updateCard(){
+  flashcard.classList.remove("flipped");
+  setTimeout(()=>{
+    frontText.innerText = cards[index].it;
+    backText.innerText  = cards[index].en;
+    counter.innerText = `${index+1} / ${cards.length}`;
+  },150);
+}
+
+function nextCard(e){
+  e.stopPropagation();
+  index = (index+1) % cards.length;
+  updateCard();
+}
+
+function prevCard(e){
+  e.stopPropagation();
+  index = (index-1+cards.length) % cards.length;
+  updateCard();
+}
+
+flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+
+speakBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const textToSpeak = cards[index].speak ? cards[index].speak.join(", ") : cards[index].en;
+  const utter = new SpeechSynthesisUtterance(textToSpeak);
+  utter.lang = "en-GB";
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
+});
+
+loadSet(1);
+</script>
+</body>
+</html>
