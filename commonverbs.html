@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Common Verbs – Mobile Flashcards</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+  --bg-blue:#061247;
+  --card-cream:#F7F2E7;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+  --border-red:#8C0327;
+}
+
+body{
+  background:var(--bg-blue);
+  font-family:system-ui, Segoe UI, Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem;
+}
+
+/* CARD */
+.perspective{perspective:1000px;}
+.card-inner{
+  width:90vw;
+  max-width:380px;
+  height:55vw;
+  max-height:240px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:.4s;
+  cursor:pointer;
+}
+.flipped{transform:rotateY(180deg);}
+.face{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border-radius:1rem;
+}
+.back{transform:rotateY(180deg);}
+
+.corner-hint{
+  position:absolute;
+  top:.4rem;
+  right:.6rem;
+  font-size:.6rem;
+  font-weight:800;
+  color:#061247;
+}
+
+.it-text{
+  color:var(--it-red);
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.1rem;
+}
+.en-text{
+  color:var(--en-blue);
+  font-weight:700;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1rem;
+  white-space:pre-line;
+}
+
+.listen-btn{
+  background:none;
+  border:none;
+  color:var(--it-red);
+  font-weight:700;
+  font-size:.9rem;
+}
+
+/* NAV */
+.nav-btn{
+  font-size:1.4rem;
+  font-weight:700;
+  color:white;
+}
+
+/* SET BUTTONS */
+.set-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.4rem;
+  max-width:380px;
+  width:100%;
+}
+
+.set-btn{
+  padding:.35rem 0;
+  font-size:.75rem;
+  font-weight:800;
+  border-radius:999px;
+  background:white;
+  color:#0E065C;
+}
+.set-btn.active{
+  background:#8C0327;
+  color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h1 class="text-white font-extrabold mb-2">COMMON VERBS</h1>
+
+<div class="perspective">
+  <div id="flashcard" class="card-inner">
+
+    <!-- FRONT -->
+    <div class="face bg-[#F7F2E7] border-4 border-[#8C0327] flex items-center justify-center p-4">
+      <div class="corner-hint">TAP TO REVEAL</div>
+      <div id="front-text" class="it-text"></div>
+    </div>
+
+    <!-- BACK -->
+    <div class="face back bg-[#F7F2E7] border-4 border-[#8C0327] flex flex-col items-center justify-center gap-3 p-4">
+      <div class="corner-hint">TAP TO RETURN</div>
+      <div id="back-text" class="en-text"></div>
+      <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px] mt-1">
+  <button onclick="prevCard(event)" class="nav-btn">◀</button>
+  <span id="counter-display" class="text-white font-bold text-sm">1 / 1</span>
+  <button onclick="nextCard(event)" class="nav-btn">▶</button>
+</div>
+
+<div class="set-grid mt-2">
+  <button class="set-btn" onclick="loadSet(1)">SET 1</button>
+  <button class="set-btn" onclick="loadSet(2)">SET 2</button>
+  <button class="set-btn" onclick="loadSet(3)">SET 3</button>
+  <button class="set-btn" onclick="loadSet(4)">SET 4</button>
+  <button class="set-btn" onclick="loadSet(5)">SET 5</button>
+  <button class="set-btn" onclick="loadSet(6)">SET 6</button>
+</div>
+
+<script>
+const sets = {
+1:[
+ {it:"ANDARE",en:"GO – WENT – GONE",speak:["go","went","gone"]},
+ {it:"VENIRE",en:"COME – CAME – COME",speak:["come","came","come"]},
+ {it:"CAMMINARE / ANDARE A PIEDI",en:"WALK",speak:["walk"]},
+ {it:"CORRERE",en:"RUN – RAN – RUN",speak:["run","ran","run"]},
+ {it:"ENTRARE",en:"ENTER",speak:["enter"]},
+ {it:"USCIRE",en:"GO OUT – WENT OUT – GONE OUT",speak:["go out","went out","gone out"]},
+ {it:"ARRIVARE",en:"ARRIVE",speak:["arrive"]},
+ {it:"PARTIRE",en:"LEAVE – LEFT – LEFT",speak:["leave","left","left"]},
+ {it:"RIMANERE / RESTARE",en:"STAY / REMAIN",speak:["stay","remain"]},
+ {it:"GIRARE",en:"TURN",speak:["turn"]},
+ {it:"FERMARSI",en:"STOP",speak:["stop"]},
+ {it:"CADERE",en:"FALL – FELL – FALLEN",speak:["fall","fell","fallen"]},
+ {it:"PORTARE (QUI)",en:"BRING – BROUGHT – BROUGHT",speak:["bring","brought","brought"]},
+ {it:"PORTARE (LÌ)",en:"TAKE – TOOK – TAKEN",speak:["take","took","taken"]},
+ {it:"SEGUIRE",en:"FOLLOW",speak:["follow"]},
+ {it:"INCONTRARE",en:"MEET – MET – MET",speak:["meet","met","met"]}
+],
+
+2:[
+ {it:"FARE",en:"DO – DID – DONE\nMAKE – MADE – MADE",speak:["do","did","done","make","made","made"]},
+ {it:"DIRE (QUALCOSA)",en:"SAY – SAID – SAID",speak:["say","sed","sed"]},
+ {it:"DIRE (A QUALCUNO)",en:"TELL – TOLD – TOLD",speak:["tell","told","told"]},
+ {it:"PARLARE",en:"SPEAK – SPOKE – SPOKEN",speak:["speak","spoke","spoken"]},
+ {it:"CHIEDERE",en:"ASK",speak:["ask"]},
+ {it:"RISPONDERE",en:"ANSWER",speak:["answer"]},
+ {it:"CHIAMARE",en:"CALL",speak:["call"]},
+ {it:"USARE",en:"USE",speak:["use"]},
+ {it:"TROVARE",en:"FIND – FOUND – FOUND",speak:["find","found","found"]},
+ {it:"PERDERE",en:"LOSE – LOST – LOST",speak:["lose","lost","lost"]},
+ {it:"TENERE",en:"KEEP – KEPT – KEPT",speak:["keep","kept","kept"]},
+ {it:"PRENDERE (DA)",en:"TAKE FROM – TOOK – TAKEN",speak:["take from","took","taken"]},
+ {it:"DARE",en:"GIVE – GAVE – GIVEN",speak:["give","gave","given"]},
+ {it:"RICEVERE",en:"RECEIVE",speak:["receive"]},
+ {it:"AIUTARE",en:"HELP",speak:["help"]}
+],
+
+3:[
+ {it:"VIVERE / ABITARE",en:"LIVE",speak:["live"]},
+ {it:"MANGIARE",en:"EAT – ATE – EATEN",speak:["eat","ate","eaten"]},
+ {it:"BERE",en:"DRINK – DRANK – DRUNK",speak:["drink","drank","drunk"]},
+ {it:"DORMIRE",en:"SLEEP – SLEPT – SLEPT",speak:["sleep","slept","slept"]},
+ {it:"SVEGLIARSI",en:"WAKE UP – WOKE UP – WOKEN UP",speak:["wake up","woke up","woken up"]},
+ {it:"SEDERSI",en:"SIT – SAT – SAT",speak:["sit","sat","sat"]},
+ {it:"ALZARSI IN PIEDI",en:"STAND UP – STOOD UP – STOOD UP",speak:["stand up","stood up","stood up"]},
+ {it:"GUARDARE",en:"LOOK",speak:["look"]},
+ {it:"VEDERE",en:"SEE – SAW – SEEN",speak:["see","saw","seen"]},
+ {it:"ASCOLTARE (LA MUSICA)",en:"LISTEN TO (MUSIC)",speak:["listen to music"]},
+ {it:"SENTIRE",en:"HEAR – HEARD – HEARD",speak:["hear","herd","herd"]},
+ {it:"PENSARE",en:"THINK – THOUGHT – THOUGHT",speak:["think","thought","thought"]},
+ {it:"SAPERE / CONOSCERE",en:"KNOW – KNEW – KNOWN",speak:["no","new","knowen"]},
+ {it:"CAPIRE",en:"UNDERSTAND – UNDERSTOOD – UNDERSTOOD",speak:["understand","understood","understood"]},
+ {it:"RICORDARE",en:"REMEMBER",speak:["remember"]},
+ {it:"IMPARARE",en:"LEARN – LEARNT – LEARNT",speak:["lurn","lurnt","lurnt"]}
+],
+
+4:[
+ {it:"INIZIARE (REGOLARE)",en:"START",speak:["start"]},
+ {it:"INIZIARE (IRREGOLARE)",en:"BEGIN – BEGAN – BEGUN",speak:["begin","began","begun"]},
+ {it:"CONTINUARE",en:"CONTINUE",speak:["continue"]},
+ {it:"CAMBIARE",en:"CHANGE",speak:["change"]},
+ {it:"SCEGLIERE",en:"CHOOSE – CHOSE – CHOSEN",speak:["choose","chose","chosen"]},
+ {it:"DECIDERE",en:"DECIDE",speak:["decide"]},
+ {it:"PROVARE",en:"TRY",speak:["try"]},
+ {it:"RIUSCIRE",en:"BE ABLE TO – WAS ABLE TO – BEEN ABLE TO",speak:["be able two","was able two","been able two"]},
+ {it:"FALLIRE",en:"FAIL",speak:["fail"]},
+ {it:"MIGLIORARE",en:"IMPROVE",speak:["improve"]},
+ {it:"AUMENTARE",en:"INCREASE",speak:["increase"]},
+ {it:"VINCERE",en:"WIN – WON – WON",speak:["win","won","won"]},
+ {it:"CONTROLLARE",en:"CHECK",speak:["check"]},
+ {it:"PERMETTERE",en:"ALLOW",speak:["allow"]},
+ {it:"SPIEGARE",en:"EXPLAIN",speak:["explain"]},
+ {it:"SIGNIFICARE",en:"MEAN – MEANT – MEANT",speak:["mean","ment","ment"]}
+],
+
+5:[
+ {it:"VOLERE",en:"WANT TO",speak:["want to"]},
+ {it:"AVER BISOGNO DI",en:"NEED",speak:["need"]},
+ {it:"PREFERIRE",en:"PREFER",speak:["prefer"]},
+ {it:"PIACERE",en:"LIKE",speak:["like"]},
+ {it:"SPERARE",en:"HOPE",speak:["hope"]},
+ {it:"CREDERE",en:"BELIEVE",speak:["believe"]},
+ {it:"ASPETTARE",en:"WAIT FOR",speak:["wait for"]},
+ {it:"CERCARE QUALCOSA",en:"LOOK FOR\nSEARCH FOR",speak:["look for","search for"]},
+ {it:"SCOPRIRE",en:"DISCOVER",speak:["discover"]},
+ {it:"COMPRARE",en:"BUY – BOUGHT – BOUGHT",speak:["buy","bought","bought"]},
+ {it:"PAGARE",en:"PAY – PAID – PAID",speak:["pay","paid","paid"]},
+ {it:"VENDERE",en:"SELL – SOLD – SOLD",speak:["sell","sold","sold"]},
+ {it:"SPENDERE",en:"SPEND – SPENT – SPENT",speak:["spend","spent","spent"]},
+ {it:"RISPARMIARE",en:"SAVE",speak:["save"]},
+ {it:"GUADAGNARE",en:"EARN",speak:["earn"]},
+ {it:"PERDERE (TRENO)",en:"MISS",speak:["miss"]}
+],
+
+6:[
+ {it:"APRIRE",en:"OPEN",speak:["open"]},
+ {it:"CHIUDERE",en:"CLOSE",speak:["close"]},
+ {it:"COSTRUIRE",en:"BUILD – BUILT – BUILT",speak:["build","built","built"]},
+ {it:"ROMPERE",en:"BREAK – BROKE – BROKEN",speak:["break","broke","broken"]},
+ {it:"AGGIUSTARE / RIPARARE",en:"REPAIR",speak:["repair"]},
+ {it:"MUOVERE",en:"MOVE",speak:["move"]},
+ {it:"SMETTERE (DI FARE)",en:"STOP DOING",speak:["stop doing"]},
+ {it:"GUIDARE",en:"DRIVE – DROVE – DRIVEN",speak:["drive","drove","driven"]},
+ {it:"VIAGGIARE",en:"TRAVEL",speak:["travel"]},
+ {it:"CUCINARE",en:"COOK",speak:["cook"]},
+ {it:"PULIRE",en:"CLEAN",speak:["clean"]},
+ {it:"LAVORARE",en:"WORK",speak:["work"]},
+ {it:"FUNZIONARE",en:"WORK",speak:["work"]}
+]
+};
+
+let currentSet=1, cards=[], index=0;
+const flashcard=document.getElementById("flashcard");
+const frontText=document.getElementById("front-text");
+const backText=document.getElementById("back-text");
+const counter=document.getElementById("counter-display");
+const speakBtn=document.getElementById("speakBtn");
+
+function loadSet(n){
+ currentSet=n; cards=sets[n]; index=0;
+ updateCard(); highlightSet(n);
+}
+function highlightSet(n){
+ document.querySelectorAll('.set-btn').forEach((b,i)=>{
+  b.classList.toggle('active',i+1===n);
+ });
+}
+function updateCard(){
+ flashcard.classList.remove("flipped");
+ setTimeout(()=>{
+  frontText.innerText=cards[index].it;
+  backText.innerText=cards[index].en;
+  counter.innerText=`${index+1} / ${cards.length}`;
+ },120);
+}
+function nextCard(e){e.stopPropagation(); index=(index+1)%cards.length; updateCard();}
+function prevCard(e){e.stopPropagation(); index=(index-1+cards.length)%cards.length; updateCard();}
+flashcard.onclick=()=>flashcard.classList.toggle("flipped");
+
+speakBtn.onclick=e=>{
+ e.stopPropagation();
+ const t = cards[index].speak.join(", ");
+ const u=new SpeechSynthesisUtterance(t);
+ u.lang="en-GB";
+ speechSynthesis.cancel();
+ speechSynthesis.speak(u);
+};
+
+loadSet(1);
+</script>
+
+</body>
+</html>
