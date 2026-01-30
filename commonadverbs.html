@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Common Adjectives – Mobile Flashcards</title>
+<title>Common Adverbs – Mobile Flashcards</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -110,7 +110,7 @@ body{
 
 <body>
 
-<h1 class="text-white font-extrabold mb-2">COMMON ADJECTIVES</h1>
+<h1 class="text-white font-extrabold mb-2">COMMON ADVERBS</h1>
 
 <div class="perspective">
   <div id="flashcard" class="card-inner">
@@ -143,7 +143,6 @@ body{
   <button class="set-btn" onclick="loadSet(3)">SET 3</button>
   <button class="set-btn" onclick="loadSet(4)">SET 4</button>
   <button class="set-btn" onclick="loadSet(5)">SET 5</button>
-  <button class="set-btn" onclick="loadSet(6)">SET 6</button>
 </div>
 
 <script>
@@ -160,10 +159,11 @@ const sets = {
     {it:"QUALCHE VOLTA", en:"SOMETIMES", speak:["sometimes"]},
     {it:"MAI (Negativo)", en:"NEVER", speak:["never"]},
     {it:"GIÀ", en:"ALREADY", speak:["already"]},
-    {it:"ANCORA", en:"STILL", speak:["still"]}
-  ],
+    {it:"ANCORA", en:"STILL", speak:["still"]},
+    {it:"TUTTAVIA / PERÒ", en:"HOWEVER", speak:["however"]}
+],
 
-  2: [
+2: [
     {it:"(NON) ANCORA", en:"YET", speak:["yet"]},
     {it:"PRESTO / FRA POCO", en:"SOON", speak:["soon"]},
     {it:"TARDI", en:"LATE", speak:["late"]},
@@ -174,10 +174,12 @@ const sets = {
     {it:"LENTAMENTE", en:"SLOWLY", speak:["slowly"]},
     {it:"DURAMENTE / SODO", en:"HARD", speak:["hard"]},
     {it:"FACILMENTE", en:"EASILY", speak:["easily"]},
-    {it:"ATTENTAMENTE", en:"CAREFULLY", speak:["carefully"]}
-  ],
+    {it:"ATTENTAMENTE", en:"CAREFULLY", speak:["carefully"]},
+    {it:"QUINDI / PERCIO'", en:"THEREFORE", speak:["therefore"]},
+    {it:"PRIMA / PRECEDENTEMENTE", en:"EARLIER", speak:["earlier"]}
+],
 
-  3: [
+3: [
     {it:"MOLTO / TANTO", en:"A LOT", speak:["a lot"]},
     {it:"TROPPO", en:"TOO MUCH", speak:["too much"]},
     {it:"COSÌ / QUINDI", en:"THEREFORE", speak:["therefore"]},
@@ -188,10 +190,13 @@ const sets = {
     {it:"DI QUI", en:"HERE", speak:["here"]},
     {it:"DI LÀ", en:"THERE", speak:["there"]},
     {it:"OVUNQUE / DAPPERTUTTO", en:"EVERYWHERE", speak:["everywhere"]},
-    {it:"DA QUALCHE PARTE", en:"SOMEWHERE", speak:["somewhere"]}
-  ],
+    {it:"DA QUALCHE PARTE", en:"SOMEWHERE", speak:["somewhere"]},
+    {it:"PIÙ", en:"MORE", speak:["more"]},
+    {it:"DI NUOVO", en:"AGAIN", speak:["again"]},
+    {it:"PIÙ TARDI / DOPO", en:"LATER", speak:["later"]}
+],
 
-  4: [
+4: [
     {it:"IN QUALSIASI LUOGO / DOVUNQUE", en:"ANYWHERE", speak:["anywhere"]},
     {it:"DENTRO / ALL’INTERNO", en:"INSIDE", speak:["inside"]},
     {it:"FUORI / ALL’ESTERNO", en:"OUTSIDE", speak:["outside"]},
@@ -200,42 +205,30 @@ const sets = {
     {it:"SOLO / SOLTANTO", en:"ONLY", speak:["only"]},
     {it:"ANCHE", en:"ALSO", speak:["also"]},
     {it:"PERSINO / ANCHE", en:"EVEN", speak:["even"]},
-    {it:"SOPRATTUTTO / SPECIALMENTE", en:"ESPECIALLY", speak:["especially"]},
+    {it:"IN REALTA'", en:"ACTUALLY", speak:["actually"]},
     {it:"ESATTAMENTE", en:"EXACTLY", speak:["exactly"]},
-    {it:"DAVVERO / VERAMENTE", en:"REALLY", speak:["really"]}
-  ],
+    {it:"DAVVERO / VERAMENTE", en:"REALLY", speak:["really"]},
+    {it:"INTORNO / IN GIRO", en:"AROUND", speak:["around"]},
+    {it:"IN AVANTI", en:"FORWARDS", speak:["forwards"]},
+    {it:"INDIETRO", en:"BACKWARDS", speak:["backwards"]}
+],
 
-  5: [
-    {it:"IN REALTÀ / EFFETTIVAMENTE", en:"ACTUALLY", speak:["actually"]},
-    {it:"QUALSIASI COSA", en:"ANYTHING", speak:["anything"]},
+5: [
     {it:"PROBABILMENTE", en:"PROBABLY", speak:["probably"]},
     {it:"FORSE", en:"MAYBE / PERHAPS", speak:["maybe","perhaps"]},
     {it:"CHIARAMENTE", en:"CLEARLY", speak:["clearly"]},
     {it:"SERIAMENTE / SUL SERIO", en:"SERIOUSLY", speak:["seriously"]},
     {it:"INSIEME", en:"TOGETHER", speak:["together"]},
     {it:"A PARTE", en:"APART", speak:["apart"]},
-    {it:"INTORNO / IN GIRO", en:"AROUND", speak:["around"]},
-    {it:"TUTTI / OGNUNO", en:"EVERYONE", speak:["everyone"]},
-    {it:"TUTTO /OGNI COSA", en:"EVERYTHING", speak:["everything"]}
-  ],
-
-  6: [
-    {it:"QUALCUNO", en:"SOMEONE", speak:["someone"]},
-    {it:"CHIUNQUE", en:"ANYONE", speak:["anyone"]},
-    {it:"QUALCOSA", en:"SOMETHING", speak:["something"]},
-    {it:"NIENTE / NULLA", en:"NOTHING", speak:["nothing"]},
-    {it:"NESSUNO", en:"NO ONE", speak:["no one"]},
-    {it:"NESSUN LUOGO / DA NESSUNA PARTE", en:"NOWHERE", speak:["nowhere"]},
-    {it:"UNA VOLTA", en:"ONCE", speak:["once"]},
-    {it:"DUE VOLTE", en:"TWICE", speak:["twice"]},
+    {it:"VERSO L’ALTO", en:"UP", speak:["up"]},
+    {it:"VERSO IL BASSO", en:"DOWN", speak:["down"]},
     {it:"FINALMENTE / INFINE", en:"FINALLY", speak:["finally"]},
-    {it:"TUTTAVIA / PERÒ", en:"HOWEVER", speak:["however"]},
-    {it:"QUINDI / PERCIO'", en:"THEREFORE", speak:["therefore"]},
-    {it:"INVECE", en:"INSTEAD", speak:["instead"]},
-    {it:"ALTRIMENTI", en:"OTHERWISE", speak:["otherwise"]}
-  ]
-};
+    {it:"PIÙ TARDI", en:"LATER", speak:["later"]},
+    {it:"VOLENTIERI", en:"WILLINGLY", speak:["willingly"]},
+    {it:"A MALA PENA", en:"HARDLY", speak:["hardly"]}
+]
 
+};
 
 let currentSet=1, cards=[], index=0;
 const flashcard=document.getElementById("flashcard");
