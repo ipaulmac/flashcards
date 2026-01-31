@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verbs and Adverbs – Mobile Flashcards</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+  --bg-blue:#061247;
+  --card-cream:#F7F2E7;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+  --border-red:#8C0327;
+}
+
+body{
+  background:var(--bg-blue);
+  font-family:system-ui, Segoe UI, Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem;
+}
+
+/* CARD */
+.perspective{perspective:1000px;}
+.card-inner{
+  width:90vw;
+  max-width:380px;
+  height:55vw;
+  max-height:240px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:.4s;
+  cursor:pointer;
+}
+.flipped{transform:rotateY(180deg);}
+.face{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border-radius:1rem;
+}
+.back{transform:rotateY(180deg);}
+
+.corner-hint{
+  position:absolute;
+  top:.4rem;
+  right:.6rem;
+  font-size:.6rem;
+  font-weight:800;
+  color:#061247;
+}
+
+.it-text{
+  color:var(--it-red);
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.1rem;
+}
+.en-text{
+  color:var(--en-blue);
+  font-weight:700;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1rem;
+  white-space:pre-line;
+}
+
+.listen-btn{
+  background:none;
+  border:none;
+  color:var(--it-red);
+  font-weight:700;
+  font-size:.9rem;
+}
+
+/* NAV */
+.nav-btn{
+  font-size:1.4rem;
+  font-weight:700;
+  color:white;
+}
+
+/* SET BUTTONS */
+.set-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.4rem;
+  max-width:380px;
+  width:100%;
+}
+
+.set-btn{
+  padding:.35rem 0;
+  font-size:.75rem;
+  font-weight:800;
+  border-radius:999px;
+  background:white;
+  color:#0E065C;
+}
+.set-btn.active{
+  background:#8C0327;
+  color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h1 class="text-white font-extrabold mb-2">VERBS & ADVERBS</h1>
+
+<div class="perspective">
+  <div id="flashcard" class="card-inner">
+
+    <!-- FRONT -->
+    <div class="face bg-[#F7F2E7] border-4 border-[#8C0327] flex items-center justify-center p-4">
+      <div class="corner-hint">TAP TO REVEAL</div>
+      <div id="front-text" class="it-text"></div>
+    </div>
+
+    <!-- BACK -->
+    <div class="face back bg-[#F7F2E7] border-4 border-[#8C0327] flex flex-col items-center justify-center gap-3 p-4">
+      <div class="corner-hint">TAP TO RETURN</div>
+      <div id="back-text" class="en-text"></div>
+      <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px] mt-1">
+  <button onclick="prevCard(event)" class="nav-btn">◀</button>
+  <span id="counter-display" class="text-white font-bold text-sm">1 / 1</span>
+  <button onclick="nextCard(event)" class="nav-btn">▶</button>
+</div>
+
+<div class="set-grid mt-2">
+  <button class="set-btn" onclick="loadSet(1)">SET 1</button>
+  <button class="set-btn" onclick="loadSet(2)">SET 2</button>
+  <button class="set-btn" onclick="loadSet(3)">SET 3</button>
+  <button class="set-btn" onclick="loadSet(4)">SET 4</button>
+</div>
+
+<script>
+const sets = {
+
+  // SET 1 (1–15)
+  1: [
+    {it:"LUI LAVORA SEMPRE LA DOMENICA", en:"HE ALWAYS WORKS ON SUNDAYS", speak:["HE ALWAYS WORKS ON SUNDAYS"]},
+    {it:"MIO INSEGNANTE NON PARLA MAI IN MODO CHIARO", en:"MY TEACHER NEVER SPEAKS CLEARLY", speak:["MY TEACHER NEVER SPEAKS CLEARLY"]},
+    {it:"LEI ARRIVA PRESTO LA MATTINA", en:"SHE ARRIVES EARLY IN THE MORNING", speak:["SHE ARRIVES EARLY IN THE MORNING"]},
+    {it:"VIVIAMO INSIEME", en:"WE LIVE TOGETHER", speak:["WE LIVE TOGETHER"]},
+    {it:"LORO RISPONDONO SUBITO SEMPRE", en:"THEY ALWAYS ANSWER IMMEDIATELY", speak:["THEY ALWAYS ANSWER IMMEDIATELY"]},
+    {it:"IO STUDIO ATTENTAMENTE", en:"I STUDY CAREFULLY", speak:["I STUDY CAREFULLY"]},
+    {it:"ESSO SI MUOVE LENTAMENTE", en:"IT MOVES SLOWLY", speak:["IT MOVES SLOWLY"]},
+    {it:"IO CAPISCO FACILMENTE", en:"I UNDERSTAND EASILY", speak:["I UNDERSTAND EASILY"]},
+    {it:"QUALCHE VOLTA, NOI ABBIAMO BISOGNO DI CONTROLLARLO", en:"SOMETIMES, WE NEED TO CHECK IT", speak:["SOMETIMES, WE NEED TO CHECK IT"]},
+    {it:"ASPETTIAMO DA QUALCHE PARTE!", en:"LET’S WAIT SOMEWHERE!", speak:["LET’S WAIT SOMEWHERE!"]},
+    {it:"LUI LAVORA SODO", en:"HE WORKS HARD", speak:["HE WORKS HARD"]},
+    {it:"IO PARLO SEMPRE SUL SERIO", en:"I ALWAYS SPEAK SERIOUSLY", speak:["I ALWAYS SPEAK SERIOUSLY"]},
+    {it:"ESSO FUNZIONA BENE", en:"IT WORKS WELL", speak:["IT WORKS WELL"]},
+    {it:"A QUANTO PARE, IERI NON HO MANGIATO ABBASTANZA", en:"APPARENTLY, I DIDN’T EAT ENOUGH YESTERDAY", speak:["APPARENTLY, I DIDN’T EAT ENOUGH YESTERDAY"]},
+    {it:"LEI GUIDA VELOCEMENTE", en:"SHE DRIVES FAST", speak:["SHE DRIVES FAST"]}
+  ],
+
+  // SET 2 (16–30)
+  2: [
+    {it:"ACCADA RARAMENTE", en:"IT RARELY HAPPENS", speak:["IT RARELY HAPPENS"]},
+    {it:"TU DEVI PROVARE DI NUOVO", en:"YOU HAVE TO TRY AGAIN", speak:["you have to try again"]},
+    {it:"DOBBIAMO RIMANERE DENTRO", en:"WE HAVE TO STAY INSIDE", speak:["WE HAVE TO STAY INSIDE"]},
+    {it:"LORO NON ESCONO FUORI MAI QUANDO PIOVE", en:"THEY NEVER GO OUTSIDE WHEN IT RAINS", speak:["THEY NEVER GO OUTSIDE WHEN IT RAINS"]},
+    {it:"È TARDI; DOBBIAMO TORNARE INDIETRO", en:"IT’S LATE; WE HAVE TO GO BACK", speak:["IT’S LATE; WE HAVE TO GO BACK"]},
+    {it:"RESTA QUI!", en:"STAY HERE!", speak:["STAY HERE!"]},
+    {it:"POSSO LASCIARE TUTTO QUI?", en:"CAN I LEAVE EVERYTHING HERE?", speak:["CAN I LEAVE EVERYTHING HERE?"]},
+    {it:"LUI NON GUARDA MAI INTORNO", en:"HE NEVER LOOKS AROUND", speak:["HE NEVER LOOKS AROUND"]},
+    {it:"ANDIAMO AVANTI!", en:"LET’S GO FORWARDS!", speak:["LET’S GO FORWARDS!"]},
+    {it:"SI MUOVE AVANTI E INDIETRO", en:"IT MOVES FORWARDS AND BACKWARDS", speak:["IT MOVES FORWARDS AND BACKWARDS"]},
+    {it:"LUI HA REAGITO MALE", en:"HE REACTED BADLY", speak:["HE REACTED BADLY"]},
+    {it:"SUONA MEGLIO QUANDO LO DICI ALL’INDIETRO", en:"IT SOUNDS BETTER WHEN YOU SAY IT BACKWARDS", speak:["IT SOUNDS BETTER WHEN YOU SAY IT BACKWARDS"]},
+    {it:"FINALMENTE, LORO CAPISCONO", en:"THEY FINALLY UNDERSTAND", speak:["THEY FINALLY UNDERSTAND"]},
+    {it:"LUI BEVE POCO", en:"HE DRINKS LITTLE", speak:["HE DRINKS LITTLE"]},
+    {it:"LUI PARLA TROPPO", en:"HE SPEAKS TOO MUCH", speak:["HE SPEAKS TOO MUCH"]}
+  ],
+
+  // SET 3 (31–45)
+  3: [
+    {it:"IO DORMO MALE", en:"I SLEEP BADLY", speak:["I SLEEP BADLY"]},
+    {it:"LEI STUDIA MOLTO", en:"SHE STUDIES A LOT", speak:["she studies a lot"]},
+    {it:"LORO VIVONO LONTANO DA QUI", en:"THEY LIVE A LONG WAY FROM HERE", speak:["THEY LIVE A LONG WAY FROM HERE"]},
+    {it:"IO NON VOGLIO ARRIVARE TARDI", en:"I DON’T WANT TO ARRIVE LATE", speak:["I DON’T WANT TO ARRIVE LATE"]},
+    {it:"PERCHÉ RISPONDI SEMPRE CON ‘FORSE’?", en:"WHY DO YOU ALWAYS ANSWER WITH ‘MAYBE’?", speak:["WHY DO YOU ALWAYS ANSWER WITH ‘MAYBE’?"]},
+    {it:"PER FORTUNA, LEI MI ASCOLTA ATTENTAMENTE", en:"FORTUNATELY, SHE LISTENS TO ME CAREFULLY", speak:["FORTUNATELY, SHE LISTENS TO ME CAREFULLY"]},
+    {it:"HANNO VINTO TANTO MA NON ABBASTANZA", en:"THEY WON A LOT BUT NOT ENOUGH", speak:["THEY WON A LOT, BUT NOT ENOUGH"]},
+    {it:"LUI SI È ALZATO IN PIEDI RAPIDAMENTE", en:"HE STOOD UP QUICKLY", speak:["HE STOOD UP QUICKLY"]},
+    {it:"POSSO CAMBIARLO FACILMENTE", en:"I CAN CHANGE IT EASILY", speak:["I CAN CHANGE IT EASILY"]},
+    {it:"LUI SI COMPORTA SERIAMENTE AL LAVORO", en:"HE BEHAVES SERIOUSLY AT WORK", speak:["HE BEHAVES SERIOUSLY AT WORK"]},
+    {it:"LEI NON SBAGLA MAI", en:"SHE NEVER MAKES A MISTAKE", speak:["She never makes a mistake"]},
+    {it:"CREDO CHE SIA VICINO", en:"I BELIEVE IT IS NEAR", speak:["I BELIEVE IT IS NEAR,"]},
+    {it:"CI VEDIAMO SPESSO", en:"WE SEE EACH OTHER OFTEN", speak:["WE SEE EACH OTHER OFTEN"]},
+    {it:"ALL’IMPROVVISO, HA COMINCIATO A PIOVERE", en:"IT SUDDENLY BEGAN TO RAIN", speak:["IT SUDDENLY BEGAN TO RAIN"]},
+    {it:"FUNZIONA DAVVERO", en:"IT REALLY WORKS", speak:["IT REALLY WORKS"]}
+  ],
+
+  // SET 4 (46–60)
+  4: [
+    {it:"HO QUASI FINITO", en:"I ALMOST FINISHED", speak:["I ALMOST FINISHED"]},
+    {it:"VIVIAMO SEMPLICEMENTE", en:"WE LIVE SIMPLY", speak:["WE LIVE SIMPLY"]},
+    {it:"LUI CI CREDE ANCORA", en:"HE STILL BELIEVES IT", speak:["HE STILL BELIEVES IT"]},
+    {it:"PREFERISCONO RESTARE FUORI", en:"THEY PREFER TO STAY OUTSIDE", speak:["THEY PREFER TO STAY OUTSIDE"]},
+    {it:"SI SEPARANO FACILMENTE", en:"THEY SEPARATE EASILY", speak:["they seperate easily"]},
+    {it:"MI AIUTA VOLENTIERI", en:"HE HELPS ME WILLINGLY", speak:["HE HELPS ME WILLINGLY"]},
+    {it:"LEI CHIEDE SEMPRE EDUCATAMENTE", en:"SHE ALWAYS ASKS POLITELY", speak:["SHE ALWAYS ASKS POLITELY"]},
+    {it:"SPERIAMO DI COMPRARLO DOMANI", en:"WE HOPE TO BUY IT TOMORROW", speak:["WE HOPE TO BUY IT TOMORROW"]},
+    {it:"CERCHIAMO SEMPRE DI TORNARE PRESTO", en:"WE ALWAYS TRY TO RETURN EARLY", speak:["WE ALWAYS TRY TO RETURN EARLY"]},
+    {it:"SIGNIFICA TANTO", en:"IT MEANS A LOT", speak:["it means a lot"]},
+    {it:"IN REALTÀ, NON LO SO", en:"ACTUALLY, I DON’T KNOW", speak:["ACTUALLY, I DON’T KNOW"]},
+    {it:"HO PAGATO TROPPO", en:"I PAID TOO MUCH", speak:["I PAID TOO MUCH"]},
+    {it:"SUCCEDE DAPPERTUTTO", en:"IT HAPPENS EVERYWHERE", speak:["IT HAPPENS EVERYWHERE"]},
+    {it:"PROBABILMENTE, HAI RAGIONE", en:"YOU ARE PROBABLY RIGHT", speak:["YOU ARE PROBABLY RIGHT"]},
+    {it:"DI SOLITO, LUI PENSA COME ME", en:"HE USUALLY THINKS LIKE ME", speak:["he usually thinks like me."]}
+  ]
+
+};
+
+
+let currentSet=1, cards=[], index=0;
+const flashcard=document.getElementById("flashcard");
+const frontText=document.getElementById("front-text");
+const backText=document.getElementById("back-text");
+const counter=document.getElementById("counter-display");
+const speakBtn=document.getElementById("speakBtn");
+
+function loadSet(n){
+ currentSet=n; cards=sets[n]; index=0;
+ updateCard(); highlightSet(n);
+}
+function highlightSet(n){
+ document.querySelectorAll('.set-btn').forEach((b,i)=>b.classList.toggle('active',i+1===n));
+}
+function updateCard(){
+ flashcard.classList.remove("flipped");
+ if(!cards.length){
+   frontText.innerText="—";
+   backText.innerText="—";
+   counter.innerText="0 / 0";
+   return;
+ }
+ setTimeout(()=>{
+   frontText.innerText=cards[index].it;
+   backText.innerText=cards[index].en;
+   counter.innerText=`${index+1} / ${cards.length}`;
+ },120);
+}
+function nextCard(e){e.stopPropagation(); if(!cards.length) return; index=(index+1)%cards.length; updateCard();}
+function prevCard(e){e.stopPropagation(); if(!cards.length) return; index=(index-1+cards.length)%cards.length; updateCard();}
+flashcard.onclick=()=>flashcard.classList.toggle("flipped");
+
+speakBtn.onclick=e=>{
+ e.stopPropagation();
+ if(!cards.length) return;
+ const t = cards[index].speak.join(", ");
+ const u=new SpeechSynthesisUtterance(t);
+ u.lang="en-GB";
+ speechSynthesis.cancel();
+ speechSynthesis.speak(u);
+};
+
+loadSet(1);
+</script>
+
+</body>
+</html>
