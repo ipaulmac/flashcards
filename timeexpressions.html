@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flashcards – TIME/DAYS/MONTHS/YEARS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+  background:#061247;
+  font-family:system-ui, Segoe UI, Arial;
+  margin:0;
+  padding:0;
+}
+.card{
+  perspective:1000px;
+  width:24rem;
+  height:16rem;
+  position:relative;
+}
+.card-inner{
+  width:100%;
+  height:100%;
+  transform-style:preserve-3d;
+  transition:.6s;
+}
+.card.flipped .card-inner{transform:rotateY(180deg);}
+.card-face{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border-radius:1rem;
+  background:#F7F2E7;
+  border:4px solid #8C0327;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:1rem;
+}
+.card-back{transform:rotateY(180deg);}
+.corner-hint{
+  position:absolute;
+  top:.5rem;
+  right:.5rem;
+  font-size:.65rem;
+  font-weight:800;
+  color:#0E065C;
+}
+.it-text{
+  color:#8C0327;
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.25rem;
+}
+.en-text-main,.en-text-alt{
+  color:#0E065C;
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.05rem;
+}
+#speakBtn{
+  background:#0E065C;
+  color:#FFD700;
+  font-weight:bold;
+  border-radius:.375rem;
+  padding:.25rem .75rem;
+  font-size:.9rem;
+}
+.nav-buttons{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  width:24rem;
+  margin-top:.5rem;
+}
+.nav-btn{
+  background:#8C0327;
+  color:white;
+  border-radius:.5rem;
+  padding:.25rem .75rem;
+}
+.set-buttons{
+  display:flex;
+  gap:.5rem;
+  margin-top:.5rem;
+}
+.set-btn{
+  padding:.25rem .75rem;
+  font-weight:800;
+  border-radius:999px;
+  background:white;
+  color:#0E065C;
+  font-size:.75rem;
+}
+.set-btn.active{
+  background:#8C0327;
+  color:white;
+}
+</style>
+</head>
+
+<body class="flex flex-col items-center pt-4">
+
+<h1 class="text-white font-extrabold tracking-wide mb-2">
+  EXPRESSIONS OF TIME
+</h1>
+
+<div class="card">
+  <div id="flashcard" class="card-inner">
+
+    <!-- FRONT -->
+    <div class="card-face">
+      <div class="corner-hint">TAP TO REVEAL</div>
+      <div id="frontContent"></div>
+    </div>
+
+    <!-- BACK -->
+    <div class="card-face card-back">
+      <div class="corner-hint">TAP TO RETURN</div>
+      <div id="backMain" class="en-text-main"></div>
+      <button id="speakBtn">🔊 LISTEN</button>
+      <div id="backAlt" class="en-text-alt"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="nav-buttons">
+  <button id="prev" class="nav-btn">◀</button>
+  <div id="counter" class="text-white font-bold"></div>
+  <button id="next" class="nav-btn">▶</button>
+</div>
+
+<div class="set-buttons">
+  <button class="set-btn active" onclick="loadSet('TIME')">TIME</button>
+  <button class="set-btn" onclick="loadSet('DAYS')">DAYS</button>
+  <button class="set-btn" onclick="loadSet('MONTHS')">MONTHS</button>
+  <button class="set-btn" onclick="loadSet('YEARS')">YEARS</button>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+const TIME = [
+  {h:11,m:0,l:"11.00",main:"IT’S ELEVEN O’CLOCK (IN THE MORNING)",alt:"",speak:"It’s eleven o’clock in the morning."},
+  {h:16,m:30,l:"16.30",main:"IT’S HALF PAST FOUR (IN THE AFTERNOON)",alt:"IT’S FOUR THIRTY",speak:"It’s half past four in the afternoon, or, it’s four thirty."},
+    {h:21,m:10,l:"21.10", main:"IT’S TEN PAST NINE (IN THE EVENING)", alt:"IT’S NINE TEN", speak:"It’s ten past nine in the evening, or, it’s nine ten."},
+    {h:7,m:40,l:"07.40", main:"IT’S TWENTY TO EIGHT (IN THE MORNING)", alt:"IT’S SEVEN FORTY", speak:"It’s twenty to eight in the morning, or, it’s seven forty."},
+    {h:12,m:50,l:"12.50", main:"IT’S TEN TO ONE", alt:"IT’S TWELVE FIFTY", speak:"It’s ten to one, or, it’s twelve fifty."},
+    {h:22,m:37,l:"22.37", main:"IT’S TWENTY THREE MINUTES TO ELEVEN (IN THE EVENING)", alt:"IT’S TEN THIRTY-SEVEN", speak:"It’s twenty-three minutes to eleven in the evening, or, it’s ten thirty-seven."},
+    {h:12,m:0,l:"12.00 / 24.00", main:"IT’S MIDDAY", alt:"IT’S MIDNIGHT", speak:"It’s midday, or, it’s midnight."},
+    {h:13,m:7,l:"13.07", main:"IT’S SEVEN MINUTES PAST ONE (IN THE AFTERNOON)", alt:"", speak:"It’s seven minutes past one in the afternoon."},
+    {h:6,m:52,l:"06.52", main:"IT’S EIGHT MINUTES TO SEVEN (IN THE MORNING)", alt:"IT’S SIX FIFTY TWO", speak:"It’s eight minutes to seven in the morning, or, it’s six fifty two."},
+    {h:14,m:15,l:"14.15", main:"IT’S A QUARTER PAST TWO (IN THE AFTERNOON)", alt:"IT’S TWO FIFTEEN", speak:"It’s a quarter past two in the afternoon, or, it’s two fifteen."},
+    {h:17,m:45,l:"17.45", main:"IT’S A QUARTER TO SIX (IN THE EVENING)", alt:"IT’S FIVE FORTY FIVE", speak:"It’s a quarter to six in the evening, or, it’s five forty five."},
+    {h:8,m:35,l:"08.35", main:"IT’S TWENTY-FIVE TO NINE (IN THE MORNING)", alt:"IT’S EIGHT THIRTY FIVE", speak:"It’s twenty-five to nine in the morning, or, it’s eight thirty five."},
+    {h:15,m:20,l:"15.20", main:"IT’S TWENTY PAST THREE (IN THE AFTERNOON)", alt:"IT’S THREE TWENTY", speak:"It’s twenty past three in the afternoon, or, it’s three twenty."},
+    {h:10,m:25,l:"10.25", main:"IT’S TWENTY-FIVE PAST TEN (IN THE MORNING)", alt:"IT’S TEN TWENTY FIVE", speak:"It’s twenty-five past ten in the morning, or, it’s ten twenty five."},
+    {h:11,m:55,l:"11.55", main:"IT’S FIVE MINUTES TO MIDDAY", alt:"IT’S ELEVEN FIFTY FIVE", speak:"It’s five minutes to midday, or, it’s eleven fifty five."}
+];
+
+const DAYS = [
+ {front:"CI SONO SETTE GIORNI IN UNA SETTIMANA", back:"THERE ARE SEVEN DAYS IN A WEEK", speak:"there are seven days, in a week"},
+    {front:"È GIÀ LUNEDÌ!", back:"IT’S MONDAY ALREADY!", speak:"it’s monday already"},
+    {front:"CI ANDRÒ IL PROSSIMO MARTEDÌ", back:"I WILL GO THERE NEXT TUESDAY", speak:"i will go there, next tuesday"},
+    {front:"È SUCCESSO LO SCORSO MERCOLEDÌ", back:"IT HAPPENED LAST WEDNESDAY", speak:"it happened, last wednesday"},
+    {front:"VIENE SOLO IL GIOVEDÌ", back:"HE ONLY COMES ON THURSDAYS", speak:"he only comes, on thursdays"},
+    {front:"VENERDÌ FINIRÒ ALLE 16:30", back:"I WILL FINISH AT 4.30 ON FRIDAY", speak:"i will finish at four thirty, on friday"},
+    {front:"SARANNO VIA IL PROSSIMO SABATO", back:"THEY WILL BE AWAY NEXT SATURDAY", speak:"they will be away, next saturday"},
+    {front:"LA PROSSIMA PARTITA SARÀ DOMENICA PROSSIMA", back:"THE NEXT MATCH WILL BE NEXT SUNDAY", speak:"the next match will be, next sunday"},
+    {front:"LAVORA DA LUNEDÌ A GIOVEDÌ", back:"HE WORKS MONDAYS TO THURSDAYS", speak:"he works, mondays to thursdays"},
+    {front:"SARÀ QUI MARTEDÌ POMERIGGIO", back:"HE WILL BE HERE TUESDAY AFTERNOON", speak:"he will be here, tuesday afternoon"},
+    {front:"HO UNA RIUNIONE ALLE 10:00 MERCOLEDÌ MATTINA", back:"I HAVE A MEETING AT 10.00 WEDNESDAY MORNING", speak:"i have a meeting, at ten o’clock, on wednesday morning"},
+    {front:"VERRANNO VENERDÌ SERA", back:"THEY ARE COMING FRIDAY EVENING", speak:"they are coming, friday evening"},
+    {front:"È USCITA LO SCORSO SABATO SERA", back:"SHE WENT OUT LAST SATURDAY NIGHT", speak:"she went out, last saturday night"},
+    {front:"CHE GIORNO È OGGI? – GIOVEDÌ", back:"WHAT DAY IS IT TODAY? – THURSDAY", speak:"what day is it today? thursday"},
+    {front:"MENO MALE CHE È VENERDÌ!", back:"THANK GOD IT’S FRIDAY!", speak:"thank god it’s friday"},
+    {front:"È CHIUSO IL LUNEDÌ", back:"IT’S CLOSED ON MONDAYS", speak:"it’s closed, on mondays"}
+];
+
+const MONTHS = [
+  {front:"UN ANNO È COMPOSTO DI DODICI MESI", back:"THERE ARE TWELVE MONTHS IN A YEAR", speak:"there are twelve months, in a year"},
+  {front:"GENNAIO HA 31 GIORNI", back:"JANUARY HAS THIRTY-ONE DAYS", speak:"january has, thirty-one days"},
+  {front:"FEBBRAIO HA 28 GIORNI", back:"FEBRUARY HAS TWENTY-EIGHT DAYS", speak:"february has, twenty-eight days"},
+  {front:"PASQUA VIENE O A MARZO O AD APRILE", back:"EASTER IS EITHER IN MARCH OR IN APRIL", speak:"easter is, either in march, or in april"},
+  {front:"IL MIO COMPLEANNO È A MAGGIO", back:"MY BIRTHDAY IS IN MAY", speak:"my birthday is in may"},
+  {front:"L’ESTATE INIZIA A GIUGNO", back:"SUMMER BEGINS IN JUNE", speak:"summer begins in june"},
+  {front:"VADO IN VACANZA A LUGLIO", back:"I GO ON HOLIDAY IN JULY", speak:"i go on holiday in july"},
+  {front:"AD AGOSTO FA MOLTO CALDO", back:"THE WEATHER IS VERY HOT IN AUGUST", speak:"the weather is very hot in august"},
+  {front:"L’AUTUNNO INIZIA IN OTTOBRE", back:"AUTUMN BEGINS IN OCTOBER", speak:"autumn begins in october"},
+  {front:"A NOVEMBRE PIOVE MOLTO", back:"IT RAINS A LOT IN NOVEMBER", speak:"it rains a lot in november"},
+  {front:"NATALE È IL VENTICINQUE DICEMBRE", back:"CHRISTMAS IS ON THE TWENTY-FIFTH OF DECEMBER (DECEMBER 25TH)", speak:"christmas, is on the twenty-fifth of december, or december the twenty-fifth"},
+  {front:"OGGI È IL PRIMO GIUGNO", back:"TODAY IS THE FIRST OF JUNE (JUNE 1ST)", speak:"today is, the first of june, or june the first"},
+  {front:"IERI ERA IL TRENTUNO MAGGIO", back:"YESTERDAY WAS THE THIRTY-FIRST OF MAY (MAY 31ST)", speak:"yesterday was, the thirty-first of may, or may the thirty-first"},
+  {front:"DOMANI SARÀ IL DUE GIUGNO", back:"TOMORROW WILL BE THE SECOND OF JUNE (JUNE 2ND)", speak:"tomorrow will be, the second of june, or, june the second"},
+  {front:"DOPODOMANI SARÀ IL TRE GIUGNO", back:"THE DAY AFTER TOMORROW WILL BE THE THIRD OF JUNE (JUNE 3RD)", speak:"the day after tomorrow will be, the third of june, or june the third"}
+];
+
+const YEARS = [
+  {front:"UN ANNO HA 365 O 366 GIORNI", back:"A YEAR HAS EITHER 365 OR 366 DAYS", speak:"a year has, either three hundred and sixty-five, or three hundred and sixty-six days"},
+  {front:"L’ANNO BISESTILE SI VERIFICA OGNI QUATTRO ANNI", back:"A LEAP YEAR HAPPENS EVERY FOUR YEARS", speak:"a leap year happens, every four years"},
+  {front:"IN UN ANNO BISESTILE FEBBRAIO HA 29 GIORNI", back:"IN A LEAP YEAR, FEBRUARY HAS 29 DAYS", speak:"in a leap year, february has twenty-nine days"},
+  {front:"SONO NATO NEL 1978", back:"I WAS BORN IN 1978", speak:"i was born, in nineteen seventy-eight"},
+  {front:"MIA MOGLIE È NATA NEL 1981", back:"MY WIFE WAS BORN IN 1981", speak:"my wife was born, in nineteen eighty-one"},
+  {front:"MIA FIGLIA È NATA NEL 2002", back:"MY DAUGHTER WAS BORN IN 2002", speak:"my daughter was born, in two thousand and two"},
+  {front:"MIO FIGLIO È NATO ANCHE NEL PRIMO DECENNIO DI QUESTO SECOLO", back:"MY SON WAS ALSO BORN IN THE FIRST DECADE OF THIS CENTURY", speak:"my son was also born, in the first decade, of this century"},
+  {front:"I MIEI GENITORI SI SONO SPOSATI NEL 1967", back:"MY PARENTS GOT MARRIED IN 1967", speak:"my parents got married, in nineteen sixty-seven"},
+  {front:"MIO NIPOTE HA INIZIATO L’UNIVERSITÀ NEL 2018", back:"MY NEPHEW STARTED UNIVERSITY IN 2018", speak:"my nephew started university, in twenty eighteen"},
+  {front:"MIA NIPOTE SI È LAUREATA NEL 2022", back:"MY NIECE GRADUATED IN 2022", speak:"my niece graduated, in twenty twenty-two"},
+  {front:"AMO LA MUSICA DEGLI ANNI 80", back:"I LOVE THE MUSIC OF THE 80s", speak:"i love the music of the eighties"},
+  {front:"ODIO LA MODA DEGLI ANNI 90", back:"I HATE THE FASHION OF THE 90s", speak:"i hate the fashion of the nineties"},
+  {front:"OGGI È IL 30 APRILE 2025", back:"TODAY IS THE 30TH OF APRIL 2025", speak:"today, is the thirtieth of april, twenty twenty-five"},
+  {front:"DOMANI SARÀ IL PRIMO MAGGIO 2025", back:"TOMORROW WILL BE THE FIRST OF MAY 2025", speak:"tomorrow, will be the first of may, twenty twenty-five"},
+  {front:"LA PRIMA GUERRA MONDIALE È INIZIATA NEL 1914 ED È FINITA NEL 1918", back:"THE FIRST WORLD WAR BEGAN IN 1914 AND ENDED IN 1918", speak:"the first world war began, in nineteen fourteen and ended, in nineteen eighteen"}
+];
+
+/* ---------- STATE ---------- */
+
+let currentSet="TIME", cards=TIME, index=0;
+const flashcard=document.querySelector(".card");
+const front=document.getElementById("frontContent");
+const backMain=document.getElementById("backMain");
+const backAlt=document.getElementById("backAlt");
+const counter=document.getElementById("counter");
+const speakBtn=document.getElementById("speakBtn");
+
+/* ---------- RENDER ---------- */
+
+function clockSVG(h,m,label){
+  const ha=(h%12)*30+m*.5, ma=m*6;
+  const nums=[...Array(12)].map((_,i)=>{
+    const n=i+1,a=(n-3)*30*Math.PI/180;
+    return `<text x="${100+Math.cos(a)*70}" y="${100+Math.sin(a)*70}" text-anchor="middle" dominant-baseline="middle" font-size="16" font-weight="800" fill="#0E065C">${n}</text>`;
+  }).join("");
+  return `
+  <svg viewBox="0 0 200 200" class="mx-auto w-36 h-36">
+    <circle cx="100" cy="100" r="90" fill="#F7F2E7" stroke="#8C0327" stroke-width="6"/>
+    ${nums}
+    <line x1="100" y1="100" x2="100" y2="55" stroke="#0E065C" stroke-width="6" transform="rotate(${ha} 100 100)"/>
+    <line x1="100" y1="100" x2="100" y2="40" stroke="#0E065C" stroke-width="4" transform="rotate(${ma} 100 100)"/>
+    <circle cx="100" cy="100" r="4" fill="#0E065C"/>
+  </svg>
+  <div class="it-text mt-2">${label}</div>`;
+}
+
+function render(){
+  flashcard.classList.remove("flipped");
+  const c=cards[index];
+  if(currentSet==="TIME"){
+    front.innerHTML=clockSVG(c.h,c.m,c.l);
+    backMain.innerText=c.main;
+    backAlt.innerText=c.alt||"";
+  }else{
+    front.innerHTML=`<div class="it-text">${c.front}</div>`;
+    backMain.innerText=c.back;
+    backAlt.innerText="";
+  }
+  counter.innerText=`${index+1} / ${cards.length}`;
+}
+
+/* ---------- CONTROLS ---------- */
+
+flashcard.onclick=()=>flashcard.classList.toggle("flipped");
+
+next.onclick=()=>{index=(index+1)%cards.length; render();}
+prev.onclick=()=>{index=(index-1+cards.length)%cards.length; render();}
+
+speakBtn.onclick=e=>{
+  e.stopPropagation();
+  const u=new SpeechSynthesisUtterance(cards[index].speak);
+  u.lang="en-GB";
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+};
+
+function loadSet(name){
+  currentSet=name;
+  cards=(name==="TIME")?TIME:(name==="DAYS")?DAYS:(name==="MONTHS")?MONTHS:YEARS;
+  index=0;
+  document.querySelectorAll('.set-btn').forEach(b=>b.classList.toggle('active',b.innerText===name));
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
