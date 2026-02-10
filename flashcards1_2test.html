@@ -173,7 +173,7 @@ const library = [
  {front:"Scoprire / Informarsi", back:"Find out", speak:["find out"]},
  {front:"Poco a poco", back:"Little by little / Step by step", speak:["little by little","step by step"]},
  {front:"Guardare", back:"Look at", speak:["look at"]},
- {front:"Cercare", back:"Look for, or, Search for", speak:["look for","search for"]},
+ {front:"Cercare", back:"Look for / Search for", speak:["look for","search for"]},
  {front:"Non importa / Lascia perdere", back:"Never mind / Don't bother", speak:["never mind","don't bother"]},
  {front:"Passo dopo passo", back:"Step by step / Little by little", speak:["step by step","little by little"]},
  {front:"Stancare troppo / Sfinire", back:"Tire out / Wear out", speak:["tire out","wear out"]},
@@ -194,11 +194,12 @@ const library = [
  {front:"Non posso non essere d’accordo con te", back:"I would have to agree with you", speak:["i would have to agree with you"]}
 ];
 
+
 let currentIndex = 0;
 let cards = [];
-let recentlyShown = []; // tracks recently shown cards
+let recentlyShown = []; // tracks recently shown cards across sessions
 const sessionSize = 15; // number of cards per session
-const recentLimit = 15; // how many cards to avoid repeating
+const recentLimit = 30;  // how many cards to avoid repeating across sessions
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -215,28 +216,35 @@ speechSynthesis.onvoiceschanged = () => {
   voices = speechSynthesis.getVoices();
 };
 
-// Pick a random card avoiding recently shown
-function pickNextCard() {
-  const candidates = library.filter(c => !recentlyShown.includes(c));
-  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
-  const choice = candidates[Math.floor(Math.random() * candidates.length)];
-  recentlyShown.push(choice);
-  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
-  return choice;
+// Fisher–Yates shuffle
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 // Start a session
 function startSession() {
-  cards = [];
-  for(let i = 0; i < sessionSize; i++){
-    cards.push(pickNextCard());
+  // Filter out recently shown cards
+  const available = library.filter(c => !recentlyShown.includes(c));
+  const shuffled = shuffleArray(available.length ? [...available] : [...library]);
+  
+  cards = shuffled.slice(0, sessionSize);
+
+  // Update recentlyShown to track minimal repetition across sessions
+  recentlyShown.push(...cards);
+  if (recentlyShown.length > recentLimit) {
+    recentlyShown.splice(0, recentlyShown.length - recentLimit);
   }
+
   currentIndex = 0;
   updateCard();
 }
 
 // Update the displayed card
-function updateCard(){
+function updateCard() {
   flashcard.classList.remove("flipped");
   setTimeout(() => {
     frontText.innerText = cards[currentIndex].front;
@@ -261,7 +269,7 @@ function prevCard(e){
 
 /* FLIP */
 flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
-backBtn.addEventListener("click",(e)=>{
+backBtn.addEventListener("click", (e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
 });
@@ -277,7 +285,7 @@ speakBtn.addEventListener("click", (e) => {
 
   let i = 0;
 
-  function speakNext(){
+  function speakNext() {
     if (i >= currentSpeakArray.length) return;
 
     const utter = new SpeechSynthesisUtterance(currentSpeakArray[i]);
@@ -291,7 +299,7 @@ speakBtn.addEventListener("click", (e) => {
         orUtter.lang = "en-GB";
         if (ukMale) orUtter.voice = ukMale;
 
-        orUtter.onend = () => setTimeout(speakNext, 200);
+        orUtter.onend = () => setTimeout(speakNext, 60); // short, natural pause
         speechSynthesis.speak(orUtter);
       }
     };
@@ -302,7 +310,7 @@ speakBtn.addEventListener("click", (e) => {
   speakNext();
 });
 
-// Restart session
+// Restart session (Try Again)
 restartBtn.addEventListener("click", startSession);
 
 // Start first session on page load
