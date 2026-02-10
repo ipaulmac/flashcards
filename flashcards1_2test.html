@@ -30,8 +30,13 @@ body{
 .back-text{font-size:2.6rem;line-height:1.05;font-weight:800;color:var(--navy);}
 
 .nav-btn{
-  width:40px;height:40px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
+  width:50px;   /* increased from 40px */
+  height:50px;  /* increased from 40px */
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.2rem; /* optional: makes the arrow symbol inside bigger */
 }
 .nav-btn:active{transform:scale(.9);}
 
@@ -57,8 +62,11 @@ body{
 .audio-btn:active{transform:scale(.95);opacity:.85;}
 
 @media (max-width:480px){
-  .front-text{font-size:1.6rem;}
-  .back-text{font-size:1.7rem;}
+  .nav-btn{
+    width:40px;
+    height:40px;
+    font-size:1rem;
+  }
 }
 </style>
 </head>
