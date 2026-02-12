@@ -14,7 +14,7 @@
 }
 
 body{
-  background:var(--purple);
+  background:var(--navy);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
   overflow:hidden;
 }
@@ -26,21 +26,42 @@ body{
 .flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
 .flipped{transform:rotateY(180deg);}
 
-.front-text{font-size:2.4rem;line-height:1.1;font-weight:800;color:#fff;}
-.back-text{font-size:2.6rem;line-height:1.05;font-weight:800;color:var(--navy);}
+.front-text, .back-text {
+  font-size: 2.4rem;   /* natural size on desktop */
+  line-height: 1.2;    /* gives a little breathing room */
+  font-weight: 800;
+}
+
+.back-text {
+  color: var(--navy);  /* keeps back text readable */
+  line-height: 1.2;    /* match front for balance */
+}
 
 .nav-btn{
-  width:40px;height:40px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.2rem;
 }
 .nav-btn:active{transform:scale(.9);}
 
 .restart-btn{
-  display:flex;align-items:center;justify-content:center;
-  background:none;border:2px solid #fff;color:#fff;
-  padding:6px 14px;border-radius:999px;
-  font-weight:800;letter-spacing:1.5px;
-  text-transform:uppercase;font-size:.85rem;margin-top:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:none;
+  border:2px solid #fff;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:999px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  font-size:.85rem;
+  margin-top:1rem;
 }
 .restart-btn:active{transform:scale(.95);opacity:.8;}
 
@@ -57,8 +78,15 @@ body{
 .audio-btn:active{transform:scale(.95);opacity:.85;}
 
 @media (max-width:480px){
-  .front-text{font-size:1.4rem;}
-  .back-text{font-size:1.7rem;}
+  .front-text, .back-text{
+    font-size:1.5rem;  /* mobile: readable but not too small */
+    line-height:1.3;   /* add a little breathing room on small screens */
+  }
+  .nav-btn{
+    width:40px;        /* slightly smaller on mobile */
+    height:40px;
+    font-size:1rem;
+  }
 }
 </style>
 </head>
@@ -69,8 +97,8 @@ body{
 <div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
 
 <!-- FRONT -->
-<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5">
-  <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
+<div class="absolute inset-0 bg-white backface-hidden rounded-3xl flex flex-col justify-between p-5">
+  <div class="text-[10px] font-black text-[#8B0000]/50 uppercase tracking-widest text-right">
     Lessons 15 & 16
   </div>
 
@@ -79,7 +107,7 @@ body{
   </div>
 
   <div class="flex flex-col items-center space-y-2">
-    <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+    <div class="text-[#8B0000] text-[11px] font-black uppercase tracking-[0.2em]">
       Tap / Click to reveal
     </div>
 
@@ -93,17 +121,17 @@ body{
 
 <!-- BACK -->
 <div class="absolute inset-0 bg-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
-  <div class="text-[10px] font-bold text-[#002147]/40 uppercase tracking-widest text-right">
+  <div class="text-[10px] font-bold text-[#8B0000]/40 uppercase tracking-widest text-right">
     Translation
   </div>
 
   <div class="flex-grow flex flex-col items-center justify-center text-center px-2">
-    <p id="back-text" class="back-text italic"></p>
+    <p id="back-text" class="back-text"></p>
     <button id="speakBtn" class="audio-btn">🔊 Listen</button>
   </div>
 
   <div class="flex justify-center pb-2">
-    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#002147] cursor-pointer">
+    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#8B0000] cursor-pointer">
       Tap / Click to go back
     </div>
   </div>
@@ -119,66 +147,67 @@ body{
 
 <script>
 const library = [
-  {front:"Al contrario", back:"Back to front"},
-  {front:"Aggiornare qualcuno", back:"Fill someone in"},
-  {front:"Sostituire qualcuno", back:"Fill in for someone"},
-  {front:"Compilare / Riempire moduli", back:"Fill out, or, Fill in"},
-  {front:"A lungo termine", back:"In the long run"},
-  {front:"In contatto", back:"In touch"},
-  {front:"Alla rovescia", back:"Inside out"},
-  {front:"Conoscere come le proprie tasche", back:"Know inside out, or, back to front"},
-  {front:"Non importa come", back:"No matter how"},
-  {front:"Fuori contatto / Fuori dal giro", back:"Out of touch"},
-  {front:"Nel verso giusto", back:"Right way round"},
-  {front:"Nel verso corretto / Dritto", back:"Right way up"},
-  {front:"Approfittare di", back:"Take advantage of"},
-  {front:"Assomigliare a / Seguire le orme", back:"Take after"},
-  {front:"Iniziare (un passatempo)", back:"Take up"},
-  {front:"Sottosopra / Capovolto", back:"Upside down"},
-  {front:"A portata di mano", back:"At hand"},
-  {front:"Tenere a mente / Ricordarsi", back:"Bear in mind"},
-  {front:"A mano", back:"By hand"},
-  {front:"Interrompere / Isolato", back:"Cut off"},
-  {front:"Eliminare", back:"Cut out"},
-  {front:"Ritagliare", back:"Cut out"},
-  {front:"Spegnersi (motore)", back:"Cut out"},
-  {front:"Per una volta", back:"For once"},
-  {front:"Tenere in mente / Considerare", back:"Have, or Keep, in mind"},
-  {front:"Sfruttare al meglio", back:"Make the best, or the most, of"},
-  {front:"Da una parte", back:"On one hand"},
-  {front:"Dall’altra parte", back:"On the other hand"},
-  {front:"Andare fuori controllo / Sfuggire di mano", back:"Get out of hand"},
-  {front:"Vedere le cose allo stesso modo", back:"See eye to eye"},
-  {front:"Vigilia / Giorno prima", back:"Eve"},
-  {front:"Sapere benissimo", back:"Know full well"},
-  {front:"Accendere (una sigaretta)", back:"Light up"},
-  {front:"Mettere i bastoni tra le ruote / Scherzare con", back:"Mess with"},
-  {front:"Non si può tornare indietro", back:"There's no going back"},
-  {front:"Ultimamente / Di recente", back:"Of late"},
-  {front:"Stranezze / Peculiarità", back:"Quirks"},
-  {front:"Ripensamenti / Dubbi", back:"Second thoughts"},
-  {front:"Partire / Mettersi in viaggio", back:"Set off"},
-  {front:"Restare fermo / Non muoversi", back:"Stay put"},
-  {front:"Essere solito fare", back:"Be wont to do"},
-  {front:"Avere il cuore puntato su / Essere decisi", back:"Have one’s heart set on"},
-  {front:"Tutto inutile", back:"To no avail"},
-  {front:"Una passeggiata / Facilissimo", back:"Piece of cake!"},
-  {front:"Clausole / Testo piccolo", back:"Small print"},
-  {front:"Meno male", back:"Just as well"},
-  {front:"Essere indecisi / Essere combattuti", back:"Be in two minds"},
-  {front:"Il punto è / Il fatto è", back:"The thing is"},
-  {front:"Il più delle volte", back:"More often than not"},
-  {front:"Febbre da fieno", back:"Hay fever"},
-  {front:"Salire alle stelle", back:"Go through the roof!"},
-  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch"},
-  {front:"Occuparsi dei fatti propri / Non immischiarsi", back:"Mind one’s own business"}
+  {front:"Al contrario", back:"Back to front", speak:["Back to front"]},
+  {front:"Aggiornare qualcuno", back:"Fill someone in", speak:["Fill someone in"]},
+  {front:"Sostituire qualcuno", back:"Fill in for someone", speak:["Fill in for someone"]},
+  {front:"Compilare / Riempire moduli", back:"Fill out / Fill in", speak:["Fill out","Fill in"]},
+  {front:"A lungo termine", back:"In the long run", speak:["In the long run"]},
+  {front:"In contatto", back:"In touch", speak:["In touch"]},
+  {front:"Alla rovescia", back:"Inside out", speak:["Inside out"]},
+  {front:"Conoscere come le proprie tasche", back:"Know inside out / Know back to front", speak:["Know inside out","Know Back to front"]},
+  {front:"Non importa come", back:"No matter how", speak:["No matter how"]},
+  {front:"Fuori contatto / Fuori dal giro", back:"Out of touch", speak:["Out of touch"]},
+  {front:"Nel verso giusto", back:"Right way round", speak:["Right way round"]},
+  {front:"Nel verso corretto / Dritto", back:"Right way up", speak:["Right way up"]},
+  {front:"Approfittare di", back:"Take advantage of", speak:["Take advantage of"]},
+  {front:"Assomigliare a / Seguire le orme", back:"Take after", speak:["Take after"]},
+  {front:"Iniziare (un passatempo)", back:"Take up", speak:["Take up"]},
+  {front:"Sottosopra / Capovolto", back:"Upside down", speak:["Upside down"]},
+  {front:"A portata di mano", back:"At hand", speak:["At hand"]},
+  {front:"Tenere a mente / Ricordarsi", back:"Bear in mind", speak:["Bear in mind"]},
+  {front:"A mano", back:"By hand", speak:["By hand"]},
+  {front:"Interrompere", back:"Cut off", speak:["Cut off"]},
+  {front:"Isolato", back:"Cut off", speak:["Cut off"]},
+  {front:"Eliminare", back:"Cut out", speak:["Cut out"]},
+  {front:"Ritagliare", back:"Cut out", speak:["Cut out"]},
+  {front:"Spegnersi (motore)", back:"Cut out", speak:["Cut out"]},
+  {front:"Per una volta", back:"For once", speak:["For once"]},
+  {front:"Tenere in mente / Considerare", back:"Have in mind / Keep in mind", speak:["Have in mind","Keep in mind"]},
+  {front:"Sfruttare al meglio", back:"Make the best of / Make the most of", speak:["Make the best of","Make the most of"]},
+  {front:"Da una parte", back:"On one hand", speak:["On one hand"]},
+  {front:"Dall’altra parte", back:"On the other hand", speak:["On the other hand"]},
+  {front:"Andare fuori controllo / Sfuggire di mano", back:"Get out of hand", speak:["Get out of hand"]},
+  {front:"Vedere le cose allo stesso modo", back:"See eye to eye", speak:["See eye to eye"]},
+  {front:"Vigilia / Giorno prima", back:"Eve", speak:["Eve"]},
+  {front:"Sapere benissimo", back:"Know full well", speak:["Know full well"]},
+  {front:"Accendere (una sigaretta)", back:"Light up", speak:["Light up"]},
+  {front:"Mettere i bastoni tra le ruote / Scherzare con", back:"Mess with", speak:["Mess with"]},
+  {front:"Non si può tornare indietro", back:"There's no going back", speak:["There's no going back"]},
+  {front:"Ultimamente / Di recente", back:"Of late", speak:["Of late"]},
+  {front:"Stranezze / Peculiarità", back:"Quirks", speak:["Quirks"]},
+  {front:"Ripensamenti / Dubbi", back:"Second thoughts", speak:["Second thoughts"]},
+  {front:"Partire / Mettersi in viaggio", back:"Set off", speak:["Set off"]},
+  {front:"Restare fermo / Non muoversi", back:"Stay put", speak:["Stay put"]},
+  {front:"Essere solito fare", back:"Be wont to do", speak:["Be wont to do"]},
+  {front:"Avere il cuore puntato su / Essere decisi", back:"Have one’s heart set on", speak:["Have one's heart set on"]},
+  {front:"Tutto inutile", back:"All to no avail", speak:["All to no avail"]},
+  {front:"Una passeggiata! / Facilissimo!", back:"Piece of cake!", speak:["Piece of cake!"]},
+  {front:"Clausole / Testo piccolo", back:"Small print", speak:["Small print"]},
+  {front:"Meno male", back:"Just as well", speak:["Just as well"]},
+  {front:"Essere indecisi / Essere combattuti", back:"Be in two minds", speak:["Be in two minds"]},
+  {front:"Il punto è / Il fatto è", back:"The thing is", speak:["The thing is"]},
+  {front:"Il più delle volte", back:"More often than not", speak:["More often than not"]},
+  {front:"Febbre da fieno", back:"Hay fever", speak:["Hay fever"]},
+  {front:"Salire alle stelle", back:"Go through the roof!", speak:["Go through the roof"]},
+  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch", speak:["Don't count your chickens before they hatch"]},
+  {front:"Occuparsi dei fatti propri / Non immischiarsi", back:"Mind one’s own business", speak:["Mind one's own business"]}
 ];
 
 let currentIndex = 0;
 let cards = [];
-let recentlyShown = []; // tracks recently shown cards
+let recentlyShown = []; // tracks recently shown cards across sessions
 const sessionSize = 15; // number of cards per session
-const recentLimit = 15; // how many cards to avoid repeating
+const recentLimit = 30;  // how many cards to avoid repeating across sessions
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -188,36 +217,52 @@ const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
 const speakBtn  = document.getElementById("speakBtn");
 
-// Pick a random card avoiding recently shown
-function pickNextCard() {
-  const candidates = library.filter(c => !recentlyShown.includes(c));
-  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
-  const choice = candidates[Math.floor(Math.random() * candidates.length)];
-  recentlyShown.push(choice);
-  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
-  return choice;
+// --- Speech voices setup ---
+let voices = [];
+let currentSpeakArray = [];
+speechSynthesis.onvoiceschanged = () => {
+  voices = speechSynthesis.getVoices();
+};
+
+// Fisher–Yates shuffle
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 // Start a session
 function startSession() {
-  cards = [];
-  for(let i=0; i<sessionSize; i++){
-    cards.push(pickNextCard());
+  // Filter out recently shown cards
+  const available = library.filter(c => !recentlyShown.includes(c));
+  const shuffled = shuffleArray(available.length ? [...available] : [...library]);
+  
+  cards = shuffled.slice(0, sessionSize);
+
+  // Update recentlyShown to track minimal repetition across sessions
+  recentlyShown.push(...cards);
+  if (recentlyShown.length > recentLimit) {
+    recentlyShown.splice(0, recentlyShown.length - recentLimit);
   }
+
   currentIndex = 0;
   updateCard();
 }
 
 // Update the displayed card
-function updateCard(){
+function updateCard() {
   flashcard.classList.remove("flipped");
-  setTimeout(()=>{
+  setTimeout(() => {
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
+    currentSpeakArray   = cards[currentIndex].speak || [];
     counter.innerText   = `${currentIndex+1} / ${cards.length}`;
-  },150);
+  }, 150);
 }
 
+// Navigation buttons
 function nextCard(e){
   e.stopPropagation();
   currentIndex = (currentIndex + 1) % cards.length;
@@ -232,22 +277,50 @@ function prevCard(e){
 
 /* FLIP */
 flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
-backBtn.addEventListener("click",(e)=>{
+backBtn.addEventListener("click", (e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
 });
 
-/* AUDIO – British male voice */
-speakBtn.addEventListener("click",(e)=>{
+/* AUDIO – British male voice with “or” between alternatives */
+speakBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  const utter = new SpeechSynthesisUtterance(backText.innerText);
-  utter.lang = "en-GB";
-  const voices = speechSynthesis.getVoices();
-  const ukMale = voices.find(v=>v.lang==="en-GB" && /male/i.test(v.name));
-  if(ukMale) utter.voice = ukMale;
-  speechSynthesis.speak(utter);
+  if (!currentSpeakArray.length) return;
+
+  speechSynthesis.cancel();
+
+  const ukMale = voices.find(v => v.lang === "en-GB" && /male/i.test(v.name)) || voices.find(v => v.lang === "en-GB");
+
+  let i = 0;
+
+  function speakNext() {
+    if (i >= currentSpeakArray.length) return;
+
+    const utter = new SpeechSynthesisUtterance(currentSpeakArray[i]);
+    utter.lang = "en-GB";
+    if (ukMale) utter.voice = ukMale;
+
+    utter.onend = () => {
+      i++;
+      if (i < currentSpeakArray.length) {
+        const orUtter = new SpeechSynthesisUtterance("or");
+        orUtter.lang = "en-GB";
+        if (ukMale) orUtter.voice = ukMale;
+
+        orUtter.onend = () => setTimeout(speakNext, 60); // short, natural pause
+        speechSynthesis.speak(orUtter);
+      }
+    };
+
+    speechSynthesis.speak(utter);
+  }
+
+  speakNext();
 });
 
-restartBtn.addEventListener("click",startSession);
+// Restart session (Try Again)
+restartBtn.addEventListener("click", startSession);
+
+// Start first session on page load
 startSession();
 </script>
