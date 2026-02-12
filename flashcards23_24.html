@@ -14,7 +14,7 @@
 }
 
 body{
-  background:var(--purple);
+  background:var(--navy);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
   overflow:hidden;
 }
@@ -26,21 +26,42 @@ body{
 .flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
 .flipped{transform:rotateY(180deg);}
 
-.front-text{font-size:2.4rem;line-height:1.1;font-weight:800;color:#fff;}
-.back-text{font-size:2.6rem;line-height:1.05;font-weight:800;color:var(--navy);}
+.front-text, .back-text {
+  font-size: 2.4rem;   /* natural size on desktop */
+  line-height: 1.2;    /* gives a little breathing room */
+  font-weight: 800;
+}
+
+.back-text {
+  color: var(--navy);  /* keeps back text readable */
+  line-height: 1.2;    /* match front for balance */
+}
 
 .nav-btn{
-  width:40px;height:40px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.2rem;
 }
 .nav-btn:active{transform:scale(.9);}
 
 .restart-btn{
-  display:flex;align-items:center;justify-content:center;
-  background:none;border:2px solid #fff;color:#fff;
-  padding:6px 14px;border-radius:999px;
-  font-weight:800;letter-spacing:1.5px;
-  text-transform:uppercase;font-size:.85rem;margin-top:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:none;
+  border:2px solid #fff;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:999px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  font-size:.85rem;
+  margin-top:1rem;
 }
 .restart-btn:active{transform:scale(.95);opacity:.8;}
 
@@ -57,8 +78,15 @@ body{
 .audio-btn:active{transform:scale(.95);opacity:.85;}
 
 @media (max-width:480px){
-  .front-text{font-size:1.4rem;}
-  .back-text{font-size:1.7rem;}
+  .front-text, .back-text{
+    font-size:1.5rem;  /* mobile: readable but not too small */
+    line-height:1.3;   /* add a little breathing room on small screens */
+  }
+  .nav-btn{
+    width:40px;        /* slightly smaller on mobile */
+    height:40px;
+    font-size:1rem;
+  }
 }
 </style>
 </head>
@@ -69,8 +97,8 @@ body{
 <div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
 
 <!-- FRONT -->
-<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5">
-  <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
+<div class="absolute inset-0 bg-white backface-hidden rounded-3xl flex flex-col justify-between p-5">
+  <div class="text-[10px] font-black text-[#8B0000]/50 uppercase tracking-widest text-right">
     Lessons 23 & 24
   </div>
 
@@ -79,7 +107,7 @@ body{
   </div>
 
   <div class="flex flex-col items-center space-y-2">
-    <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+    <div class="text-[#8B0000] text-[11px] font-black uppercase tracking-[0.2em]">
       Tap / Click to reveal
     </div>
 
@@ -93,17 +121,17 @@ body{
 
 <!-- BACK -->
 <div class="absolute inset-0 bg-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
-  <div class="text-[10px] font-bold text-[#002147]/40 uppercase tracking-widest text-right">
+  <div class="text-[10px] font-bold text-[#8B0000]/40 uppercase tracking-widest text-right">
     Translation
   </div>
 
   <div class="flex-grow flex flex-col items-center justify-center text-center px-2">
-    <p id="back-text" class="back-text italic"></p>
+    <p id="back-text" class="back-text"></p>
     <button id="speakBtn" class="audio-btn">🔊 Listen</button>
   </div>
 
   <div class="flex justify-center pb-2">
-    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#002147] cursor-pointer">
+    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#8B0000] cursor-pointer">
       Tap / Click to go back
     </div>
   </div>
@@ -112,6 +140,7 @@ body{
 </div>
 </div>
 
+
 <!-- RESTART -->
 <button id="restartBtn" class="restart-btn">
   &#x21bb; Try again
@@ -119,68 +148,68 @@ body{
 
 <script>
 const library = [
-  {front:"In anticipo sulla tabella di marcia", back:"Ahead of schedule"},
-  {front:"Ad occhio e croce", back:"At a guess"},
-  {front:"Essere stimolato", back:"Be into"},
-  {front:"In ritardo sulla tabella di marcia", back:"Behind schedule"},
-  {front:"Per un soffio / Rischio scampato", back:"Close call"},
-  {front:"Dare sui nervi", back:"Get on one’s nerves"},
-  {front:"Partorire / Dare origine", back:"Give birth to"},
-  {front:"Essere in vendita / Optare", back:"Go for"},
-  {front:"Accontentarsi di / Farsi bastare", back:"Make do with"},
-  {front:"Nei tempi previsti", back:"On schedule"},
-  {front:"Criticare / Sminuire", back:"Put down"},
-  {front:"Sopprimere", back:"Put down"},
-  {front:"Presentarsi / Arrivare", back:"Show up"},
-  {front:"Mettere in imbarazzo", back:"Show up"},
-  {front:"Restare a casa", back:"Stay in"},
-  {front:"Restare fuori", back:"Stay out"},
-  {front:"Restare in piedi", back:"Stay up"},
-  {front:"Equivalere a", back:"Amount to"},
-  {front:"A lungo", back:"At length"},
-  {front:"Svolgere / Eseguire", back:"Carry out"},
-  {front:"Tirare su di morale", back:"Cheer up"},
-  {front:"Redigere / Stilare", back:"Draw up"},
-  {front:"Ritirarsi da / Abbandonare", back:"Drop out of"},
-  {front:"Avere senso", back:"Make sense"},
-  {front:"In contrasto con / Non in linea con", back:"Out of keeping with"},
-  {front:"Non essere da qualcuno", back:"Out of keeping with"},
-  {front:"Imbattersi in / Incappare in", back:"Run into"},
-  {front:"Partire / Mettersi in viaggio", back:"Set out"},
-  {front:"Proporsi di / Mettersi a", back:"Set out to"},
-  {front:"Esca", back:"Bait"},
-  {front:"A sangue freddo", back:"Cold-blooded"},
-  {front:"Senza cuore", back:"Cold-hearted"},
-  {front:"Venire a sapere / Scoprire", back:"Get wind of"},
-  {front:"Adescare / Attirare", back:"Lure"},
-  {front:"Appena scoperto / Nuovo di zecca", back:"New-found"},
-  {front:"Mettere fine a / Sancire la fine", back:"Put paid to"},
-  {front:"Scrupoli / Rimorsi", back:"Qualms"},
-  {front:"Spietato / Senza scrupoli", back:"Ruthless"},
-  {front:"All’insaputa di", back:"Unbeknown to"},
-  {front:"Dove si trova", back:"Whereabouts"},
-  {front:"Stormo", back:"Flock"},
-  {front:"Branco", back:"Herd"},
-  {front:"Zampa posteriore", back:"Hind leg"},
-  {front:"Dimissioni", back:"Resignation"},
-  {front:"Asta", back:"Auction"},
-  {front:"Punto e basta!", back:"That’s that!"},
-  {front:"La vera entità", back:"The true extent"},
-  {front:"Per l’ennesima volta", back:"The umpteenth time"},
-  {front:"Darsi una mossa", back:"Get a move on"},
-  {front:"Su per giù", back:"Give or take"},
-  {front:"Essere permaloso", back:"To be touchy"},
-  {front:"Commissioni", back:"Errands"},
-  {front:"Proteste pubbliche", back:"Public outcry"},
-  {front:"Preoccuparsi / Angosciarsi", back:"Fret about"},
-  {front:"Violazione del contratto", back:"Breach of contract"}
+  {front:"In anticipo sulla tabella di marcia", back:"Ahead of schedule", speak:["Ahead of schedule"]},
+  {front:"Ad occhio e croce", back:"At a guess", speak:["At a guess"]},
+  {front:"Essere stimolato", back:"Be into", speak:["Be into"]},
+  {front:"In ritardo sulla tabella di marcia", back:"Behind schedule", speak:["Behind schedule"]},
+  {front:"Per un soffio / Rischio scampato", back:"Close call", speak:["Close call"]},
+  {front:"Dare sui nervi", back:"Get on one’s nerves", speak:["Get on one's nerves"]},
+  {front:"Partorire / Dare origine", back:"Give birth to", speak:["Give birth to"]},
+  {front:"Essere in vendita / Optare", back:"Go for", speak:["Go for"]},
+  {front:"Accontentarsi di / Farsi bastare", back:"Make do with", speak:["Make do with"]},
+  {front:"Nei tempi previsti", back:"On schedule", speak:["On schedule"]},
+  {front:"Criticare / Sminuire", back:"Put down", speak:["Put down"]},
+  {front:"Sopprimere", back:"Put down", speak:["Put down"]},
+  {front:"Presentarsi / Arrivare", back:"Show up", speak:["Show up"]},
+  {front:"Mettere in imbarazzo", back:"Show up", speak:["Show up"]},
+  {front:"Restare a casa", back:"Stay in", speak:["Stay in"]},
+  {front:"Restare fuori", back:"Stay out", speak:["Stay out"]},
+  {front:"Restare in piedi", back:"Stay up", speak:["Stay up"]},
+  {front:"Equivalere a", back:"Amount to", speak:["Amount to"]},
+  {front:"A lungo", back:"At length", speak:["At length"]},
+  {front:"Svolgere / Eseguire", back:"Carry out", speak:["Carry out"]},
+  {front:"Tirare su di morale", back:"Cheer up", speak:["Cheer up"]},
+  {front:"Redigere / Stilare", back:"Draw up", speak:["Draw up"]},
+  {front:"Ritirarsi da / Abbandonare", back:"Drop out of", speak:["Drop out of"]},
+  {front:"Avere senso", back:"Make sense", speak:["Make sense"]},
+  {front:"In contrasto con / Non in linea con", back:"Out of keeping with", speak:["Out of keeping with"]},
+  {front:"Non essere da qualcuno / Incoerente", back:"Out of keeping with", speak:["Out of keeping with"]},
+  {front:"Imbattersi in / Incappare in", back:"Run into", speak:["Run into"]},
+  {front:"Partire / Mettersi in viaggio", back:"Set out", speak:["Set out"]},
+  {front:"Proporsi di / Mettersi a", back:"Set out to", speak:["Set out to"]},
+  {front:"Esca", back:"Bait", speak:["Bait"]},
+  {front:"A sangue freddo", back:"Cold-blooded", speak:["Cold-blooded"]},
+  {front:"Senza cuore", back:"Cold-hearted", speak:["Cold-hearted"]},
+  {front:"Venire a sapere / Scoprire", back:"Get wind of", speak:["Get wind of"]},
+  {front:"Adescare / Attirare", back:"Lure", speak:["Lure"]},
+  {front:"Scoperto da poco", back:"New-found", speak:["New-found"]},
+  {front:"Mettere fine a / Sancire la fine", back:"Put paid to", speak:["Put paid to"]},
+  {front:"Scrupoli / Rimorsi", back:"Qualms", speak:["Qualms"]},
+  {front:"Spietato / Senza scrupoli", back:"Ruthless", speak:["Ruthless"]},
+  {front:"All’insaputa di", back:"Unbeknown to", speak:["Unbeknown to"]},
+  {front:"Dove si trova", back:"Whereabouts", speak:["Whereabouts"]},
+  {front:"Stormo", back:"Flock", speak:["Flock"]},
+  {front:"Branco", back:"Herd", speak:["Herd"]},
+  {front:"Zampa posteriore", back:"Hind leg", speak:["Hind leg"]},
+  {front:"Dimissioni", back:"Resignation", speak:["Resignation"]},
+  {front:"Asta", back:"Auction", speak:["Auction"]},
+  {front:"Punto e basta!", back:"That’s that!", speak:["That's that!"]},
+  {front:"La vera entità", back:"The true extent", speak:["The true extent"]},
+  {front:"Per l’ennesima volta", back:"For the umpteenth time", speak:["For the umpteenth time"]},
+  {front:"Darsi una mossa", back:"Get a move on", speak:["Get a move on"]},
+  {front:"Su per giù", back:"Give or take", speak:["Give or take"]},
+  {front:"Essere permaloso", back:"To be touchy", speak:["To be touchy"]},
+  {front:"Commissioni", back:"Errands", speak:["Errands"]},
+  {front:"Proteste pubbliche", back:"Public outcry", speak:["Public outcry"]},
+  {front:"Preoccuparsi / Angosciarsi", back:"Fret about", speak:["Fret about"]},
+  {front:"Violazione del contratto", back:"Breach of contract", speak:["Breach of contract"]}
 ];
 
 let currentIndex = 0;
 let cards = [];
-let recentlyShown = []; // tracks recently shown cards
+let recentlyShown = []; // tracks recently shown cards across sessions
 const sessionSize = 15; // number of cards per session
-const recentLimit = 15; // how many cards to avoid repeating
+const recentLimit = 30;  // how many cards to avoid repeating across sessions
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -190,36 +219,52 @@ const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
 const speakBtn  = document.getElementById("speakBtn");
 
-// Pick a random card avoiding recently shown
-function pickNextCard() {
-  const candidates = library.filter(c => !recentlyShown.includes(c));
-  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
-  const choice = candidates[Math.floor(Math.random() * candidates.length)];
-  recentlyShown.push(choice);
-  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
-  return choice;
+// --- Speech voices setup ---
+let voices = [];
+let currentSpeakArray = [];
+speechSynthesis.onvoiceschanged = () => {
+  voices = speechSynthesis.getVoices();
+};
+
+// Fisher–Yates shuffle
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 // Start a session
 function startSession() {
-  cards = [];
-  for(let i=0; i<sessionSize; i++){
-    cards.push(pickNextCard());
+  // Filter out recently shown cards
+  const available = library.filter(c => !recentlyShown.includes(c));
+  const shuffled = shuffleArray(available.length ? [...available] : [...library]);
+  
+  cards = shuffled.slice(0, sessionSize);
+
+  // Update recentlyShown to track minimal repetition across sessions
+  recentlyShown.push(...cards);
+  if (recentlyShown.length > recentLimit) {
+    recentlyShown.splice(0, recentlyShown.length - recentLimit);
   }
+
   currentIndex = 0;
   updateCard();
 }
 
 // Update the displayed card
-function updateCard(){
+function updateCard() {
   flashcard.classList.remove("flipped");
-  setTimeout(()=>{
+  setTimeout(() => {
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
+    currentSpeakArray   = cards[currentIndex].speak || [];
     counter.innerText   = `${currentIndex+1} / ${cards.length}`;
-  },150);
+  }, 150);
 }
 
+// Navigation buttons
 function nextCard(e){
   e.stopPropagation();
   currentIndex = (currentIndex + 1) % cards.length;
@@ -234,22 +279,50 @@ function prevCard(e){
 
 /* FLIP */
 flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
-backBtn.addEventListener("click",(e)=>{
+backBtn.addEventListener("click", (e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
 });
 
-/* AUDIO – British male voice */
-speakBtn.addEventListener("click",(e)=>{
+/* AUDIO – British male voice with “or” between alternatives */
+speakBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  const utter = new SpeechSynthesisUtterance(backText.innerText);
-  utter.lang = "en-GB";
-  const voices = speechSynthesis.getVoices();
-  const ukMale = voices.find(v=>v.lang==="en-GB" && /male/i.test(v.name));
-  if(ukMale) utter.voice = ukMale;
-  speechSynthesis.speak(utter);
+  if (!currentSpeakArray.length) return;
+
+  speechSynthesis.cancel();
+
+  const ukMale = voices.find(v => v.lang === "en-GB" && /male/i.test(v.name)) || voices.find(v => v.lang === "en-GB");
+
+  let i = 0;
+
+  function speakNext() {
+    if (i >= currentSpeakArray.length) return;
+
+    const utter = new SpeechSynthesisUtterance(currentSpeakArray[i]);
+    utter.lang = "en-GB";
+    if (ukMale) utter.voice = ukMale;
+
+    utter.onend = () => {
+      i++;
+      if (i < currentSpeakArray.length) {
+        const orUtter = new SpeechSynthesisUtterance("or");
+        orUtter.lang = "en-GB";
+        if (ukMale) orUtter.voice = ukMale;
+
+        orUtter.onend = () => setTimeout(speakNext, 60); // short, natural pause
+        speechSynthesis.speak(orUtter);
+      }
+    };
+
+    speechSynthesis.speak(utter);
+  }
+
+  speakNext();
 });
 
-restartBtn.addEventListener("click",startSession);
+// Restart session (Try Again)
+restartBtn.addEventListener("click", startSession);
+
+// Start first session on page load
 startSession();
 </script>
