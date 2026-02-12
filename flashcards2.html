@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALS – Stage Two Global</title>
+<title>ALS – Stage Two - Global</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -14,7 +14,7 @@
 }
 
 body{
-  background:var(--purple);
+  background:var(--navy);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
   overflow:hidden;
 }
@@ -26,21 +26,42 @@ body{
 .flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
 .flipped{transform:rotateY(180deg);}
 
-.front-text{font-size:2.4rem;line-height:1.1;font-weight:800;color:#fff;}
-.back-text{font-size:2.6rem;line-height:1.05;font-weight:800;color:var(--navy);}
+.front-text, .back-text {
+  font-size: 2.4rem;   /* natural size on desktop */
+  line-height: 1.2;    /* gives a little breathing room */
+  font-weight: 800;
+}
+
+.back-text {
+  color: var(--navy);  /* keeps back text readable */
+  line-height: 1.2;    /* match front for balance */
+}
 
 .nav-btn{
-  width:40px;height:40px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.2rem;
 }
 .nav-btn:active{transform:scale(.9);}
 
 .restart-btn{
-  display:flex;align-items:center;justify-content:center;
-  background:none;border:2px solid #fff;color:#fff;
-  padding:6px 14px;border-radius:999px;
-  font-weight:800;letter-spacing:1.5px;
-  text-transform:uppercase;font-size:.85rem;margin-top:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:none;
+  border:2px solid #fff;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:999px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  font-size:.85rem;
+  margin-top:1rem;
 }
 .restart-btn:active{transform:scale(.95);opacity:.8;}
 
@@ -57,8 +78,15 @@ body{
 .audio-btn:active{transform:scale(.95);opacity:.85;}
 
 @media (max-width:480px){
-  .front-text{font-size:1.4rem;}
-  .back-text{font-size:1.7rem;}
+  .front-text, .back-text{
+    font-size:1.5rem;  /* mobile: readable but not too small */
+    line-height:1.3;   /* add a little breathing room on small screens */
+  }
+  .nav-btn{
+    width:40px;        /* slightly smaller on mobile */
+    height:40px;
+    font-size:1rem;
+  }
 }
 </style>
 </head>
@@ -69,9 +97,9 @@ body{
 <div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
 
 <!-- FRONT -->
-<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5">
-  <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
-    STAGE TWO GLOBAL
+<div class="absolute inset-0 bg-white backface-hidden rounded-3xl flex flex-col justify-between p-5">
+  <div class="text-[10px] font-black text-[#8B0000]/50 uppercase tracking-widest text-right">
+    Stage Two - Global
   </div>
 
   <div class="flex-grow flex items-center justify-center text-center px-2">
@@ -79,7 +107,7 @@ body{
   </div>
 
   <div class="flex flex-col items-center space-y-2">
-    <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+    <div class="text-[#8B0000] text-[11px] font-black uppercase tracking-[0.2em]">
       Tap / Click to reveal
     </div>
 
@@ -93,17 +121,17 @@ body{
 
 <!-- BACK -->
 <div class="absolute inset-0 bg-white backface-hidden rotate-y-180 rounded-3xl flex flex-col justify-between p-5 border-b-8 border-[#CFC752]">
-  <div class="text-[10px] font-bold text-[#002147]/40 uppercase tracking-widest text-right">
+  <div class="text-[10px] font-bold text-[#8B0000]/40 uppercase tracking-widest text-right">
     Translation
   </div>
 
   <div class="flex-grow flex flex-col items-center justify-center text-center px-2">
-    <p id="back-text" class="back-text italic"></p>
+    <p id="back-text" class="back-text"></p>
     <button id="speakBtn" class="audio-btn">🔊 Listen</button>
   </div>
 
   <div class="flex justify-center pb-2">
-    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#002147] cursor-pointer">
+    <div id="backBtn" class="text-[11px] font-black uppercase tracking-[0.2em] text-[#8B0000] cursor-pointer">
       Tap / Click to go back
     </div>
   </div>
@@ -117,313 +145,314 @@ body{
   &#x21bb; Try again
 </button>
 
+
 <script>
 const library = [
-  {front:"Guastarsi / Crollare", back:"Break down"},
-  {front:"Richiedere / Esigere", back:"Call for"},
-  {front:"Passare da / Dare la parola", back:"Call on"},
-  {front:"Ovvio / Inequivocabile", back:"Clear cut"},
-  {front:"Riprendere i sensi / Rinvenire", back:"Come to"},
-  {front:"Cancellare / Barrare", back:"Cross out"},
-  {front:"Smettere", back:"Give up"},
-  {front:"Va detto", back:"It has to be said"},
-  {front:"Arrendersi", back:"Give up"},
-  {front:"Rinunciare", back:"Give up"},
-  {front:"Indossare", back:"Have on"},
-  {front:"Chiarire", back:"Make clear"},
-  {front:"Dare per scontato", back:"Take for granted"},
-  {front:"Tenere in considerazione", back:"Take into account"},
-  {front:"Rivelarsi / Andare a finire / Diventare", back:"Turn out"},
-  {front:"A dire il vero / In realtà", back:"As a matter of fact"},
-  {front:"Non vedere l’ora di", back:"Can’t wait / Look forward to"},
-  {front:"Avverarsi", back:"Come true"},
-  {front:"Innocuo", back:"Harmless"},
-  {front:"Vizio", back:"Vice"},
-  {front:"Mangiare a casa", back:"Eat in"},
-  {front:"Mangiare fuori", back:"Eat out"},
-  {front:"Gioco d'azzardo", back:"Gambling"},
-  {front:"Va detto", back:"It has to be said"},
-  {front:"Avere voglia di fare", back:"Fancy doing, or, Feel like doing"},
-  {front:"Sentire (qualcuno)", back:"Hear from (someone)"},
-  {front:"Sentire parlare di", back:"Hear of"},
-  {front:"Offriamo noi", back:"It’s on us"},
-  {front:"Tenere d’occhio", back:"Keep an eye on"},
-  {front:"Prendersi cura di", back:"Look after"},
-  {front:"Prendere in giro", back:"Make fun of"},
-  {front:"Una volta per tutte", back:"Once and for all"},
-  {front:"Una benedizione sotto mentite spoglie", back:"Blessing in disguise"},
-  {front:"Stordito", back:"Dazed"},
-  {front:"Premere un interruttore", back:"Flick a switch"},
-  {front:"Avvicinarsi (all’età/ora)", back:"Get on for"},
-  {front:"Accensione", back:"Ignition"},
-  {front:"Attaccare bottone / Avviare", back:"Strike up"},
-  {front:"A dir poco", back:"To say the least"},
-  {front:"I perché e i percome", back:"The whys and wherefores"},
-  {front:"Al contrario", back:"Back to front"},
-  {front:"Aggiornare qualcuno", back:"Fill someone in"},
-  {front:"Sostituire qualcuno", back:"Fill in for someone"},
-  {front:"Compilare / Riempire moduli", back:"Fill out, or Fill in"},
-  {front:"A lungo termine", back:"In the long run"},
-  {front:"In contatto", back:"In touch"},
-  {front:"Alla rovescia", back:"Inside out"},
-  {front:"Conoscere come le proprie tasche", back:"Know inside out or, back to front"},
-  {front:"Non importa come", back:"No matter how"},
-  {front:"Fuori contatto / Fuori dal giro", back:"Out of touch"},
-  {front:"Nel verso giusto", back:"Right way round"},
-  {front:"Nel verso corretto / Dritto", back:"Right way up"},
-  {front:"Approfittare di", back:"Take advantage of"},
-  {front:"Assomigliare a / Seguire le orme", back:"Take after"},
-  {front:"Iniziare (un passatempo)", back:"Take up"},
-  {front:"Sottosopra / Capovolto", back:"Upside down"},
-  {front:"A portata di mano", back:"At hand"},
-  {front:"Tenere a mente / Ricordarsi", back:"Bear in mind"},
-  {front:"A mano", back:"By hand"},
-  {front:"Interrompere / Isolato", back:"Cut off"},
-  {front:"Eliminare", back:"Cut out"},
-  {front:"Ritagliare", back:"Cut out"},
-  {front:"Spegnersi (motore)", back:"Cut out"},
-  {front:"Per una volta", back:"For once"},
-  {front:"Tenere in mente / Considerare", back:"Have, or Keep in mind"},
-  {front:"Sfruttare al meglio", back:"Make the best of, or, Make the most of"},
-  {front:"Da una parte", back:"On one hand"},
-  {front:"Dall’altra parte", back:"On the other hand"},
-  {front:"Andare fuori controllo", back:"Get out of hand"},
-  {front:"Vedere le cose allo stesso modo", back:"See eye to eye"},
-  {front:"Vigilia / Giorno prima", back:"Eve"},
-  {front:"Sapere benissimo", back:"Know full well"},
-  {front:"Accendere (una sigaretta)", back:"Light up"},
-  {front:"Mettere i bastoni tra le ruote / Scherzare con", back:"Mess with"},
-  {front:"Non si può tornare indietro", back:"There's no going back"},
-  {front:"Ultimamente / Di recente", back:"Of late"},
-  {front:"Stranezze / Peculiarità", back:"Quirks"},
-  {front:"Ripensamenti / Dubbi", back:"Second thoughts"},
-  {front:"Partire / Mettersi in viaggio", back:"Set off"},
-  {front:"Restare fermo / Non muoversi", back:"Stay put"},
-  {front:"Essere solito fare", back:"Be wont to do"},
-  {front:"Avere il cuore puntato su / Essere decisi", back:"Have one’s heart set on"},
-  {front:"Tutto inutile", back:"To no avail"},
-  {front:"Una passeggiata! / Facilissimo!", back:"Piece of cake!"},
-  {front:"Clausole / Testo piccolo", back:"Small print"},
-  {front:"Meno male", back:"Just as well"},
-  {front:"Essere indecisi / Essere combattuti", back:"Be in two minds"},
-  {front:"Il punto è / Il fatto è", back:"The thing is"},
-  {front:"Il più delle volte", back:"More often than not"},
-  {front:"Febbre da fieno", back:"Hay fever"},
-  {front:"Salire alle stelle", back:"Go through the roof"},
-  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch"},
-  {front:"Occuparsi dei fatti propri / Non immischiarsi", back:"Mind one’s own business"},
-  {front:"Soprattutto", back:"Above all"},
-  {front:"Che fine ha fatto …?", back:"What’s become of …?"},
-  {front:"A detta di tutti", back:"By all accounts"},
-  {front:"Per un pelo", back:"In the nick of time"},
-  {front:"Va da sé / È inutile dire", back:"It goes without saying"},
-  {front:"Tenersi al passo con / Stare al passo", back:"Keep up with"},
-  {front:"Complessivamente", back:"Overall"},
-  {front:"Prendila con calma", back:"Take it easy"},
-  {front:"Rifiutare", back:"Turn down"},
-  {front:"Arrivare / Presentarsi", back:"Turn up, or, Show up"},
-  {front:"Alzare / Aumentare (il volume)", back:"Turn up"},
-  {front:"Abbassare (il volume)", back:"Turn down"},
-  {front:"Secondo lui", back:"According to him"},
-  {front:"In fondo", back:"At heart"},
-  {front:"Destinato a / Scontato", back:"Bound to"},
-  {front:"Fare a meno di", back:"Do without"},
-  {front:"Con certezza", back:"For certain / For sure"},
-  {front:"Fare a meno", back:"Go without"},
-  {front:"In linea con / In armonia con", back:"In keeping with"},
-  {front:"Finire / Esaurire", back:"Run out of"},
-  {front:"Scarseggiare / Avere poco di", back:"Run short of"},
-  {front:"Svignarsela / Sgusciare via", back:"Slip away"},
-  {front:"Entrare un attimo", back:"Slip in"},
-  {front:"Sfilarsi", back:"Slip off"},
-  {front:"Infilarsi", back:"Slip on"},
-  {front:"Uscire un attimo", back:"Slip out"},
-  {front:"Prendere per", back:"Take for"},
-  {front:"Sarà anche vero ma …", back:"That’s all very well but …"},
-  {front:"Vicolo / Stradina", back:"Alley"},
-  {front:"Brivido", back:"Chill"},
-  {front:"Venire alla luce / Emergere", back:"Come to light"},
-  {front:"Spacciato", back:"Doomed"},
-  {front:"Sospirare / Ansimi di sorpresa", back:"Gasp"},
-  {front:"Bottino / Saccheggio", back:"Loot"},
-  {front:"Forzare una serratura", back:"Pick a lock"},
-  {front:"Sospirare di sollievo", back:"Sigh of relief"},
-  {front:"Andarsene velocemente", back:"Speed away"},
-  {front:"Pila / Mucchio", back:"Stack"},
-  {front:"Severo (espressione)", back:"Stern"},
-  {front:"Ondata / Picco", back:"Surge"},
-  {front:"Sterzare / Svoltare / Fare zig-zag", back:"Swerve"},
-  {front:"Emozione forte", back:"Thrill"},
-  {front:"Fermo nelle mie convinzioni", back:"Firm in my belief"},
-  {front:"Per quanto mi sforzi", back:"For the life of me"},
-  {front:"Ero convinto", back:"I could have sworn"},
-  {front:"Per citarne solo alcuni", back:"To name but a few"},
-  {front:"Per i miei gusti", back:"For my liking"},
-  {front:"Ricominciare da zero", back:"Start from scratch"},
-  {front:"Giorno e notte", back:"Around the clock"},
-  {front:"Fuggire con / Scappare con", back:"Run off with"},
-  {front:"Siccome siamo fortunati", back:"Knowing our luck"},
-  {front:"Costa nulla (fare) …", back:"There’s no harm (doing)"},
-  {front:"Diamoci da fare!", back:"Let’s get cracking!"},
-  {front:"Col cavolo! / Ma quando mai!", back:"Like hell!"},
-  {front:"Licenziarsi / Lasciare il lavoro", back:"Quit one’s job"},
-  {front:"Una boccata d’aria fresca", back:"A breath of fresh air"},
-  {front:"Inosservato", back:"Unnoticed"},
-  {front:"Tutto sommato", back:"All in all"},
-  {front:"Autorizzato", back:"At liberty"},
-  {front:"Ostacolare / Mettersi in mezzo", back:"Be, or Get, in one’s way"},
-  {front:"Recuperare (distanza)", back:"Catch up with"},
-  {front:"Giorno dopo giorno", back:"Day in and day out"},
-  {front:"Girare / Andare in giro", back:"Go around"},
-  {front:"Sul punto di / Sull’orlo di", back:"On the brink of, or, On the verge of"},
-  {front:"Svenire / Perdere i sensi", back:"Pass out"},
-  {front:"Ospitare", back:"Put up"},
-  {front:"Sopportare / Tollerare", back:"Put up with"},
-  {front:"Distinguere", back:"Tell apart / Tell one from another"},
-  {front:"Qual è la fregatura?", back:"What’s the catch?"},
-  {front:"Se tutto va bene / Incrociando le dita", back:"All being well"},
-  {front:"Qual è il problema? / Che hai?", back:"What’s the matter?"},
-  {front:"Sollevare / Accennare", back:"Bring up"},
-  {front:"Crescere", back:"Bring up"},
-  {front:"Di gran lunga", back:"By far"},
-  {front:"Lungi da me", back:"Far be it from me"},
-  {front:"Tutt’altro / Anzi", back:"Far from it"},
-  {front:"Aggiornarsi", back:"Catch up with"},
-  {front:"Sparisci!", back:"Get lost!"},
-  {front:"Rimanere fermo", back:"Hold still"},
-  {front:"Bastare per tutti", back:"Go around"},
-  {front:"Trattenere / Bloccare", back:"Hold up"},
-  {front:"Conoscere di vista", back:"Know by sight"},
-  {front:"Non c’è da stupirsi", back:"No wonder"},
-  {front:"Escludere / Scartare", back:"Rule out"},
-  {front:"A due passi / Vicinissimo", back:"A stone’s throw"},
-  {front:"Rampa di scale", back:"Flight"},
-  {front:"Fare un salto da", back:"Go around"},
-  {front:"In breve", back:"For short"},
-  {front:"Quasi (Ex10)", back:"Nigh on"},
-  {front:"A cavallo di", back:"On either side of"},
-  {front:"Estroverso / Socievole", back:"Outgoing"},
-  {front:"Da solo / Con le proprie forze", back:"Single-handedly"},
-  {front:"Sobrio / Contenuto / Calmo", back:"Subdued"},
-  {front:"Non farsi scrupoli", back:"Think nothing of"},
-  {front:"C’è qualche possibilità di …?", back:"Any chance of (doing)?"},
-  {front:"Far impazzire qualcuno", back:"Drive someone mad"},
-  {front:"Lamentele / Reclami", back:"Grievances"},
-  {front:"Sfocato / Offuscato", back:"Blurred"},
-  {front:"Suonare familiare", back:"Ring a bell"},
-  {front:"Se posso permettermi di dirlo", back:"If you don’t mind me saying so"},
-  {front:"Cosa ti è preso?", back:"What’s got into you?"},
-  {front:"Prima volta in assoluto", back:"First ever time"},
-  {front:"Solo a pensarci!", back:"Just think!"},
-  {front:"Stare meglio/peggio di …", back:"Be better off / Be worse off"},
-  {front:"Benestante / Agiato", back:"Be well-off"},
-  {front:"Abbassare (prezzi)", back:"Bring down"},
-  {front:"Scendere / Diminuire", back:"Come down"},
-  {front:"Avvicinarsi", back:"Come up to, or, Go up to"},
-  {front:"Salire / Aumentare (prezzi)", back:"Go up"},
-  {front:"Consegnare", back:"Hand in"},
-  {front:"Distribuire", back:"Hand out"},
-  {front:"Cedere il potere", back:"Hand over"},
-  {front:"Mantenere i contatti", back:"Keep or Stay in touch"},
-  {front:"In servizio / Fuori servizio", back:"On duty / Off duty"},
-  {front:"Alzare (prezzi)", back:"Put up"},
-  {front:"Fare un giro di telefonate", back:"Ring around"},
-  {front:"Fare un giro dei negozi", back:"Shop around"},
-  {front:"Cogliere di sorpresa", back:"Take, or Catch, by surprise"},
-  {front:"Passare a trovare / Fare un salto", back:"Call by, or Drop by, or Stop by"},
-  {front:"Imbattersi in", back:"Come across"},
-  {front:"Dare l’impressione", back:"Come across"},
-  {front:"Servirebbe / Sarebbe utile", back:"Could do with"},
-  {front:"Disprezzare", back:"Look down on"},
-  {front:"Osservare / Assistere", back:"Look on"},
-  {front:"Separarsi / Dividersi", back:"Part (ways) with"},
-  {front:"Riuscire / Portare a termine", back:"Pull off"},
-  {front:"Avere possibilità", back:"Stand a chance"},
-  {front:"Rappresentare / Stare per", back:"Stand for"},
-  {front:"Tollerare", back:"Stand for"},
-  {front:"Decollare", back:"Take off"},
-  {front:"Imitare / Mimare", back:"Take off"},
-  {front:"Ahimè!", back:"Alas!"},
-  {front:"Avviare (computer)", back:"Boot up"},
-  {front:"Lasciare intendere", back:"To intimate"},
-  {front:"Canile", back:"Kennels"},
-  {front:"Che capita una volta nella vita", back:"Once-in-a-lifetime"},
-  {front:"Situazione difficile", back:"Predicament"},
-  {front:"Raggio", back:"Radius"},
-  {front:"Mettersi a fare", back:"Set about"},
-  {front:"Magari!", back:"If only!"},
-  {front:"Significa molto / Conta moltissimo", back:"It means the world"},
-  {front:"Per il bene di / Per amore di", back:"For the sake of"},
-  {front:"Dimettersi", back:"Resign"},
-  {front:"In reperibilità", back:"On stand-by"},
-  {front:"Figurati!", back:"No trouble at all!"},
-  {front:"Spietato / Senza pietà", back:"Unforgiving"},
-  {front:"Chi l’avrebbe mai detto!", back:"Fancy that!"},
-  {front:"Zero possibilità / Non c'è santo che tenga", back:"Stand a cat in hell’s chance"},
-  {front:"Pericolo / Rischio", back:"Jeopardy"},
-  {front:"In anticipo sulla tabella di marcia", back:"Ahead of schedule"},
-  {front:"Ad occhio e croce", back:"At a guess"},
-  {front:"Essere stimolato", back:"Be into"},
-  {front:"In ritardo sulla tabella di marcia", back:"Behind schedule"},
-  {front:"Per un soffio / Rischio scampato", back:"Close call"},
-  {front:"Dare sui nervi", back:"Get on one’s nerves"},
-  {front:"Partorire / Dare origine", back:"Give birth to"},
-  {front:"Essere in vendita / Optare", back:"Go for"},
-  {front:"Accontentarsi di / Farsi bastare", back:"Make do with"},
-  {front:"Nei tempi previsti", back:"On schedule"},
-  {front:"Criticare / Sminuire", back:"Put down"},
-  {front:"Sopprimere", back:"Put down"},
-  {front:"Presentarsi / Arrivare", back:"Show up, or, Turn up"},
-  {front:"Mettere in imbarazzo", back:"Show up"},
-  {front:"Restare a casa", back:"Stay in"},
-  {front:"Restare fuori", back:"Stay out"},
-  {front:"Restare in piedi", back:"Stay up"},
-  {front:"Equivalere a", back:"Amount to"},
-  {front:"A lungo", back:"At length"},
-  {front:"Svolgere / Eseguire", back:"Carry out"},
-  {front:"Tirare su di morale", back:"Cheer up"},
-  {front:"Redigere / Stilare", back:"Draw up"},
-  {front:"Ritirarsi da / Abbandonare", back:"Drop out of"},
-  {front:"Avere senso", back:"Make sense"},
-  {front:"In contrasto con / Non in linea con", back:"Out of keeping with"},
-  {front:"Non essere da qualcuno", back:"Out of keeping with"},
-  {front:"Imbattersi in / Incappare in", back:"Run into"},
-  {front:"Partire / Mettersi in viaggio", back:"Set out"},
-  {front:"Proporsi di / Mettersi a", back:"Set out to"},
-  {front:"Esca", back:"Bait"},
-  {front:"A sangue freddo", back:"Cold-blooded"},
-  {front:"Senza cuore", back:"Cold-hearted"},
-  {front:"Venire a sapere / Scoprire", back:"Get wind of"},
-  {front:"Adescare / Attirare", back:"Lure"},
-  {front:"Appena scoperto / Nuovo di zecca", back:"New-found"},
-  {front:"Nuovo di zecca", back:"Brand-new"},
-  {front:"Mettere fine a / Sancire la fine", back:"Put paid to"},
-  {front:"Scrupoli / Rimorsi", back:"Qualms"},
-  {front:"Spietato / Senza scrupoli", back:"Ruthless"},
-  {front:"All’insaputa di", back:"Unbeknown"},
-  {front:"Dove si trova", back:"Whereabouts"},
-  {front:"Stormo", back:"Flock"},
-  {front:"Branco", back:"Herd"},
-  {front:"Zampa posteriore", back:"Hind leg"},
-  {front:"Dimissioni", back:"Resignation"},
-  {front:"Asta", back:"Auction"},
-  {front:"Punto e basta!", back:"That’s that!"},
-  {front:"La vera entità di", back:"The true extent of"},
-  {front:"Per l’ennesima volta", back:"For the umpteenth time"},
-  {front:"Darsi una mossa", back:"Get a move on"},
-  {front:"Su per giù", back:"Give or take"},
-  {front:"Essere permaloso", back:"Be touchy"},
-  {front:"Commissioni", back:"Errands"},
-  {front:"Proteste pubbliche", back:"Public outcry"},
-  {front:"Preoccuparsi / Angosciarsi", back:"Fret"},
-  {front:"Violazione del contratto", back:"Breach of contract"}
+  { front:"Guastarsi / Crollare", back:"Break down", speak:["Break down"] },
+  { front:"Richiedere / Esigere", back:"Call for", speak:["Call for"] },
+  { front:"Passare da / Dare la parola", back:"Call on", speak:["Call on"] },
+  { front:"Ovvio / Inequivocabile", back:"Clear cut", speak:["Clear cut"] },
+  { front:"Riprendere i sensi / Rinvenire", back:"Come to", speak:["Come to"] },
+  { front:"Cancellare / Barrare", back:"Cross out", speak:["Cross out"] },
+
+  { front:"Smettere", back:"Give up", speak:["Give up"] },
+  { front:"Arrendersi", back:"Give up", speak:["Give up"] },
+  { front:"Rinunciare", back:"Give up", speak:["Give up"] },
+
+  { front:"Indossare", back:"Have on", speak:["Have on"] },
+  { front:"Chiarire", back:"Make clear", speak:["Make clear"] },
+  { front:"Dare per scontato", back:"Take for granted", speak:["Take for granted"] },
+  { front:"Tenere in considerazione", back:"Take into account", speak:["Take into account"] },
+  { front:"Rivelarsi / Andare a finire / Diventare", back:"Turn out", speak:["Turn out"] },
+
+  { front:"A dire il vero / In realtà", back:"As a matter of fact", speak:["As a matter of fact"] },
+
+  { front:"Non vedere l’ora di fare", back:"Can’t wait to do / Look forward to doing", speak:["Can't wait to do", "Look forward to doing"] },
+
+  { front:"Avverarsi", back:"Come true", speak:["Come true"] },
+  { front:"Mangiare a casa", back:"Eat in", speak:["Eat in"] },
+  { front:"Mangiare fuori", back:"Eat out", speak:["Eat out"] },
+
+  { front:"Avere voglia di (fare)", back:"Fancy doing / Feel like doing", speak:["Fancy doing", "Feel like doing"] },
+
+  { front:"Sentire (qualcuno)", back:"Hear from", speak:["Hear from"] },
+  { front:"Sentire parlare di", back:"Hear of", speak:["Hear of"] },
+  { front:"Offro io", back:"It’s on me", speak:["It's on me"] },
+  { front:"Tenere d’occhio", back:"Keep an eye on", speak:["Keep an eye on"] },
+  { front:"Prendersi cura di", back:"Look after", speak:["Look after"] },
+  { front:"Prendere in giro", back:"Make fun of", speak:["Make fun of"] },
+  { front:"Una volta per tutte", back:"Once and for all", speak:["Once and for all"] },
+  { front:"Non tutto il male vien per nuocere", back:"A blessing in disguise", speak:["A blessing in disguise"] },
+
+  { front:"Stordito", back:"Dazed", speak:["Dazed"] },
+  { front:"Premere un interruttore", back:"Flick a switch", speak:["Flick a switch"] },
+  { front:"Avvicinarsi (all’età/ora)", back:"Get on for", speak:["Get on for"] },
+  { front:"Accensione", back:"Ignition", speak:["Ignition"] },
+  { front:"Attaccare bottone / Avviare", back:"Strike up", speak:["Strike up"] },
+  { front:"A dir poco", back:"To say the least", speak:["To say the least"] },
+  { front:"I perché e i percome", back:"The whys and wherefores", speak:["The whys and wherefores"] },
+ {front:"Al contrario", back:"Back to front", speak:["Back to front"]},
+  {front:"Aggiornare qualcuno", back:"Fill someone in", speak:["Fill someone in"]},
+  {front:"Sostituire qualcuno", back:"Fill in for someone", speak:["Fill in for someone"]},
+  {front:"Compilare / Riempire moduli", back:"Fill out / Fill in", speak:["Fill out","Fill in"]},
+  {front:"A lungo termine", back:"In the long run", speak:["In the long run"]},
+  {front:"In contatto", back:"In touch", speak:["In touch"]},
+  {front:"Alla rovescia", back:"Inside out", speak:["Inside out"]},
+  {front:"Conoscere come le proprie tasche", back:"Know inside out / Know back to front", speak:["Know inside out","Know Back to front"]},
+  {front:"Non importa come", back:"No matter how", speak:["No matter how"]},
+  {front:"Fuori contatto / Fuori dal giro", back:"Out of touch", speak:["Out of touch"]},
+  {front:"Nel verso giusto", back:"Right way round", speak:["Right way round"]},
+  {front:"Nel verso corretto / Dritto", back:"Right way up", speak:["Right way up"]},
+  {front:"Approfittare di", back:"Take advantage of", speak:["Take advantage of"]},
+  {front:"Assomigliare a / Seguire le orme", back:"Take after", speak:["Take after"]},
+  {front:"Iniziare (un passatempo)", back:"Take up", speak:["Take up"]},
+  {front:"Sottosopra / Capovolto", back:"Upside down", speak:["Upside down"]},
+  {front:"A portata di mano", back:"At hand", speak:["At hand"]},
+  {front:"Tenere a mente / Ricordarsi", back:"Bear in mind", speak:["Bear in mind"]},
+  {front:"A mano", back:"By hand", speak:["By hand"]},
+  {front:"Interrompere", back:"Cut off", speak:["Cut off"]},
+  {front:"Isolato", back:"Cut off", speak:["Cut off"]},
+  {front:"Eliminare", back:"Cut out", speak:["Cut out"]},
+  {front:"Ritagliare", back:"Cut out", speak:["Cut out"]},
+  {front:"Spegnersi (motore)", back:"Cut out", speak:["Cut out"]},
+  {front:"Per una volta", back:"For once", speak:["For once"]},
+  {front:"Tenere in mente / Considerare", back:"Have in mind / Keep in mind", speak:["Have in mind","Keep in mind"]},
+  {front:"Sfruttare al meglio", back:"Make the best of / Make the most of", speak:["Make the best of","Make the most of"]},
+  {front:"Da una parte", back:"On one hand", speak:["On one hand"]},
+  {front:"Dall’altra parte", back:"On the other hand", speak:["On the other hand"]},
+  {front:"Andare fuori controllo / Sfuggire di mano", back:"Get out of hand", speak:["Get out of hand"]},
+  {front:"Vedere le cose allo stesso modo", back:"See eye to eye", speak:["See eye to eye"]},
+  {front:"Vigilia / Giorno prima", back:"Eve", speak:["Eve"]},
+  {front:"Sapere benissimo", back:"Know full well", speak:["Know full well"]},
+  {front:"Accendere (una sigaretta)", back:"Light up", speak:["Light up"]},
+  {front:"Mettere i bastoni tra le ruote / Scherzare con", back:"Mess with", speak:["Mess with"]},
+  {front:"Non si può tornare indietro", back:"There's no going back", speak:["There's no going back"]},
+  {front:"Ultimamente / Di recente", back:"Of late", speak:["Of late"]},
+  {front:"Stranezze / Peculiarità", back:"Quirks", speak:["Quirks"]},
+  {front:"Ripensamenti / Dubbi", back:"Second thoughts", speak:["Second thoughts"]},
+  {front:"Partire / Mettersi in viaggio", back:"Set off", speak:["Set off"]},
+  {front:"Restare fermo / Non muoversi", back:"Stay put", speak:["Stay put"]},
+  {front:"Essere solito fare", back:"Be wont to do", speak:["Be wont to do"]},
+  {front:"Avere il cuore puntato su / Essere decisi", back:"Have one’s heart set on", speak:["Have one's heart set on"]},
+  {front:"Tutto inutile", back:"All to no avail", speak:["All to no avail"]},
+  {front:"Una passeggiata! / Facilissimo!", back:"Piece of cake!", speak:["Piece of cake!"]},
+  {front:"Clausole / Testo piccolo", back:"Small print", speak:["Small print"]},
+  {front:"Meno male", back:"Just as well", speak:["Just as well"]},
+  {front:"Essere indecisi / Essere combattuti", back:"Be in two minds", speak:["Be in two minds"]},
+  {front:"Il punto è / Il fatto è", back:"The thing is", speak:["The thing is"]},
+  {front:"Il più delle volte", back:"More often than not", speak:["More often than not"]},
+  {front:"Febbre da fieno", back:"Hay fever", speak:["Hay fever"]},
+  {front:"Salire alle stelle", back:"Go through the roof!", speak:["Go through the roof"]},
+  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch", speak:["Don't count your chickens before they hatch"]},
+  {front:"Occuparsi dei fatti propri / Non immischiarsi", back:"Mind one’s own business", speak:["Mind one's own business"]},
+{front:"Soprattutto", back:"Above all", speak:["Above all"]},
+  {front:"Che fine ha fatto …?", back:"What’s become of …?", speak:["What's become of?"]},
+  {front:"A detta di tutti", back:"By all accounts", speak:["By all accounts"]},
+  {front:"Per un pelo", back:"In the nick of time", speak:["In the nick of time"]},
+  {front:"Va da sé / È inutile dire", back:"It goes without saying", speak:["It goes without saying"]},
+  {front:"Tenersi al passo con / Stare al passo", back:"Keep up with", speak:["Keep up with"]},
+  {front:"Con certezza", back:"For certain / For sure", speak:["For certain", "For sure"]},
+  {front:"Fare a meno di", back:"Do without / Go without", speak:["Do without", "Go without"]},
+  {front:"In linea con / In armonia con", back:"In keeping with", speak:["In keeping with"]},
+  {front:"Finire / Esaurire", back:"Run out of", speak:["Run out of"]},
+  {front:"Scarseggiare / Avere poco di", back:"Run short of", speak:["Run short of"]},
+  {front:"Svignarsela / Sgusciare via", back:"Slip away", speak:["Slip away"]},
+  {front:"Entrare un attimo", back:"Slip in", speak:["Slip in"]},
+  {front:"Sfilarsi", back:"Slip off", speak:["Slip off"]},
+  {front:"Infilarsi", back:"Slip on", speak:["Slip on"]},
+  {front:"Uscire un attimo", back:"Slip out", speak:["Slip out"]},
+  {front:"Prendere per", back:"Take for", speak:["Take for"]},
+  {front:"Sarà anche vero ma …", back:"That’s all very well but …", speak:["That's all very well but …"]},
+  {front:"Vicolo / Stradina", back:"Alley", speak:["Alley"]},
+  {front:"Venire alla luce / Emergere", back:"Come to light", speak:["Come to light"]},
+  {front:"Spacciato", back:"Doomed", speak:["Doomed"]},
+  {front:"Sospirare / Ansimi di sorpresa", back:"Gasp", speak:["Gasp"]},
+  {front:"Bottino / Saccheggio", back:"Loot", speak:["Loot"]},
+  {front:"Forzare una serratura", back:"Pick a lock", speak:["Pick a lock"]},
+  {front:"Sospirare di sollievo", back:"Sigh of relief", speak:["Sigh of relief"]},
+  {front:"Andarsene velocemente", back:"Speed away", speak:["Speed away"]},
+  {front:"Pila / Mucchio", back:"Stack", speak:["Stack"]},
+  {front:"Severo", back:"Stern", speak:["Stern"]},
+  {front:"Ondata / Picco", back:"Surge", speak:["Surge"]},
+  {front:"Sterzare / Fare zig-zag", back:"Swerve", speak:["Swerve"]},
+  {front:"Emozione forte / Brivido", back:"Thrill", speak:["Thrill"]},
+  {front:"Fermo nelle mie convinzioni", back:"Firm in my belief", speak:["Firm in my belief"]},
+  {front:"Per quanto mi sforzi", back:"For the life of me", speak:["For the life of me"]},
+  {front:"Ero convinto", back:"I could have sworn", speak:["I could have sworn"]},
+  {front:"Per citarne solo alcuni", back:"To name but a few", speak:["To name but a few"]},
+  {front:"Per i miei gusti", back:"For my liking", speak:["For my liking"]},
+  {front:"Ricominciare da zero", back:"Start from scratch", speak:["Start from scratch"]},
+  {front:"Giorno e notte", back:"Around the clock", speak:["Around the clock"]},
+  {front:"Fuggire con / Scappare con", back:"Run off with", speak:["Run off with"]},
+  {front:"Siccome siamo fortunati", back:"Knowing our luck", speak:["Knowing our luck"]},
+  {front:"Costa nulla (fare)", back:"There’s no harm (doing)", speak:["There's no harm doing"]},
+  {front:"Diamoci da fare!", back:"Let’s get cracking!", speak:["Let's get cracking!"]},
+  {front:"Col cavolo / ma quando mai!", back:"Like hell!", speak:["Like hell!"]},
+  {front:"Licenziarsi / Lasciare il lavoro", back:"Quit one’s job", speak:["Quit one's job"]},
+  {front:"Una boccata d’aria fresca", back:"A breath of fresh air", speak:["A breath of fresh air"]},
+  {front:"Inosservato", back:"Unnoticed", speak:["Unnoticed"]},
+{front:"Tutto sommato", back:"All in all", speak:["All in all"]},
+  {front:"Autorizzato", back:"At liberty", speak:["At liberty"]},
+  {front:"Ostacolare / Mettersi in mezzo", back:"Be / Get in one’s way", speak:["Be in one’s way", "Get in one’s way"]},
+  {front:"Recuperare (distanza)", back:"Catch up with", speak:["Catch up with"]},
+  {front:"Giorno dopo giorno", back:"Day in and day out", speak:["Day in and day out"]},
+  {front:"Girare / Andare in giro", back:"Go around", speak:["Go around"]},
+  {front:"Sul punto di / Sull’orlo di", back:"On the brink of / On the verge of", speak:["On the brink of", "On the verge of"]},
+  {front:"Svenire / Perdere i sensi", back:"Pass out", speak:["Pass out"]},
+  {front:"Ospitare", back:"Put up", speak:["Put up"]},
+  {front:"Costruire", back:"Put up", speak:["Put up"]},
+  {front:"Sopportare / Tollerare", back:"Put up with", speak:["Put up with"]},
+  {front:"Distinguere", back:"Tell apart / Tell one from another", speak:["Tell apart", "Tell one from another"]},
+  {front:"Qual è la fregatura?", back:"What’s the catch?", speak:["What's the catch?"]},
+  {front:"Se tutto va bene / Incrociando le dita", back:"All being well", speak:["All being well"]},
+  {front:"Qual è il problema? / Che hai?", back:"What’s the matter?", speak:["What's the matter?"]},
+  {front:"Sollevare / Accennare", back:"Bring up", speak:["Bring up"]},
+  {front:"Crescere", back:"Bring up", speak:["Bring up"]},
+  {front:"Di gran lunga", back:"By far", speak:["By far"]},
+  {front:"Lungi da me", back:"Far be it from me", speak:["Far be it from me"]},
+  {front:"Tutt’altro! / Anzi!", back:"Far from it!", speak:["Far from it!"]},
+  {front:"Aggiornarsi", back:"Catch up with", speak:["Catch up with"]},
+  {front:"Sparisci!", back:"Get lost!", speak:["Get lost!"]},
+  {front:"Rimanere fermo", back:"Hold still", speak:["Hold still"]},
+  {front:"Bastare per tutti", back:"Go around", speak:["Go around"]},
+  {front:"Trattenere / Bloccare", back:"Hold up", speak:["Hold up"]},
+  {front:"Conoscere di vista", back:"Know by sight", speak:["Know by sight"]},
+  {front:"Non c’è da stupirsi", back:"No wonder", speak:["No wonder"]},
+  {front:"Escludere / Scartare", back:"Rule out", speak:["Rule out"]},
+  {front:"A due passi / Vicinissimo", back:"A stone’s throw", speak:["A stone’s throw"]},
+  {front:"Rampa di scale", back:"Flight of stairs", speak:["Flight of stairs"]},
+  {front:"Fare un salto da", back:"Go around", speak:["Go around"]},
+  {front:"In breve", back:"For short", speak:["For short"]},
+  {front:"Quasi", back:"Nigh on", speak:["Nigh on"]},
+  {front:"Va detto", back:"It has to be said", speak:["It has to be said"]},
+  {front:"In tutto", back:"All up", speak:["All up"]},
+  {front:"A cavallo di", back:"On either side of", speak:["On either side of"]},
+  {front:"Estroverso / Socievole", back:"Outgoing", speak:["Outgoing"]},
+  {front:"Da solo / Con le proprie forze", back:"Single-handedly", speak:["Single-handedly"]},
+  {front:"Sobrio / Contenuto / Calmo", back:"Subdued", speak:["Subdued"]},
+  {front:"Non farsi scrupoli", back:"Think nothing of", speak:["Think nothing of"]},
+  {front:"C’è qualche possibilità di (fare)?", back:"Any chance of (doing)?", speak:["Any chance of doing?"]},
+  {front:"Far impazzire qualcuno", back:"Drive someone mad", speak:["Drive someone mad"]},
+  {front:"Lamentele / Reclami", back:"Grievances", speak:["Grievances"]},
+  {front:"Sfocato / Offuscato", back:"Blurred", speak:["Blurred"]},
+  {front:"Suonare familiare", back:"Ring a bell", speak:["Ring a bell"]},
+  {front:"Se posso permettermi di dirlo", back:"If you don’t mind me saying so", speak:["If you don't mind me saying so"]},
+  {front:"Cosa ti è preso?", back:"What’s got into you?", speak:["What's got into you?"]},
+  {front:"Prima volta in assoluto", back:"First ever time", speak:["First ever time"]},
+  {front:"Solo a pensarci!/ Ma pensa!", back:"Just think!", speak:["Just think!"]},
+{front:"Stare meglio/peggio di …", back:"Be better off / Be worse off", speak:["Be better off", "Be worse off"]},
+  {front:"Benestante / Agiato", back:"Be well-off", speak:["Be well-off"]},
+  {front:"Abbassare (prezzi)", back:"Bring down", speak:["Bring down"]},
+  {front:"Scendere / Diminuire", back:"Come down", speak:["Come down"]},
+  {front:"Avvicinarsi", back:"Come up to / Go up to", speak:["Come up to", "Go up to"]},
+  {front:"Salire / Aumentare", back:"Go up", speak:["Go up"]},
+  {front:"Consegnare", back:"Hand in", speak:["Hand in"]},
+  {front:"Distribuire", back:"Hand out", speak:["Hand out"]},
+  {front:"Cedere il potere", back:"Hand over", speak:["Hand over"]},
+  {front:"Mantenere i contatti", back:"Keep in touch / Stay in touch", speak:["Keep in touch", "Stay in touch"]},
+  {front:"In servizio / Fuori servizio", back:"On duty / Off duty", speak:["On duty", "Off duty"]},
+  {front:"Alzare (prezzi)", back:"Put up", speak:["Put up"]},
+  {front:"Fare un giro di telefonate", back:"Ring around", speak:["Ring around"]},
+  {front:"Fare un giro dei negozi", back:"Shop around", speak:["Shop around"]},
+  {front:"Cogliere di sorpresa", back:"Take by surprise / Catch by surprise", speak:["Take by surprise", "Catch by surprise"]},
+  {front:"Passare a trovare / Fare un salto", back:"Call by / Drop by / Stop by", speak:["Call by", "Drop by", "Stop by"]},
+  {front:"Imbattersi in", back:"Come across", speak:["Come across"]},
+  {front:"Dare l’impressione", back:"Come across", speak:["Come across"]},
+  {front:"Servirebbe / Sarebbe utile", back:"Could do with", speak:["Could do with"]},
+  {front:"Disprezzare", back:"Look down on", speak:["Look down on"]},
+  {front:"Osservare / Assistere", back:"Look on", speak:["Look on"]},
+  {front:"Separarsi / Dividersi", back:"Part ways with", speak:["Part ways with"]},
+  {front:"Riuscire / Portare a termine", back:"Pull off", speak:["Pull off"]},
+  {front:"Avere possibilità", back:"Stand a chance", speak:["Stand a chance"]},
+  {front:"Rappresentare / Stare per", back:"Stand for", speak:["Stand for"]},
+  {front:"Tollerare", back:"Stand for", speak:["Stand for"]},
+  {front:"Decollare", back:"Take off", speak:["Take off"]},
+  {front:"Imitare / Mimare", back:"Take off", speak:["Take off"]},
+  {front:"Ahimè!", back:"Alas!", speak:["Alas!"]},
+  {front:"Avviare (computer)", back:"Boot up", speak:["Boot up"]},
+  {front:"Lasciare intendere", back:"To intimate", speak:["To intimate"]},
+  {front:"Canile", back:"Kennels", speak:["Kennels"]},
+  {front:"Che capita una volta nella vita", back:"Once-in-a-lifetime", speak:["Once in a lifetime"]},
+  {front:"Situazione difficile", back:"Predicament", speak:["Predicament"]},
+  {front:"Raggio", back:"Radius", speak:["Radius"]},
+  {front:"Vizio", back:"Vice", speak:["Vice"]},
+  {front:"Innocuo", back:"Harmless", speak:["Harmless"]},
+  {front:"Gioco d'azzardo", back:"Gambling", speak:["Gambling"]},
+  {front:"Mettersi a fare", back:"Set about", speak:["Set about"]},
+  {front:"Magari!", back:"If only!", speak:["If only!"]},
+  {front:"Significa molto / Conta moltissimo", back:"It means the world", speak:["It means the world"]},
+  {front:"Per il bene di / Per amore di", back:"For the sake of", speak:["For the sake of"]},
+  {front:"Dimettersi", back:"Resign", speak:["Resign"]},
+  {front:"In reperibilità", back:"On stand-by", speak:["On stand by"]},
+  {front:"Figurati!", back:"No trouble at all!", speak:["No trouble at all!"]},
+  {front:"Spietato / Senza pietà", back:"Unforgiving", speak:["Unforgiving"]},
+  {front:"Chi l’avrebbe mai detto!", back:"Fancy that!", speak:["Fancy that!"]},
+  {front:"Zero possibilità / Non c'è santo che tenga", back:"Not a cat in hell’s chance", speak:["Not a cat in hell's chance"]},
+  {front:"Pericolo / Rischio", back:"Jeopardy", speak:["Jeopardy"]},
+{front:"In anticipo sulla tabella di marcia", back:"Ahead of schedule", speak:["Ahead of schedule"]},
+  {front:"Ad occhio e croce", back:"At a guess", speak:["At a guess"]},
+  {front:"Essere stimolato", back:"Be into", speak:["Be into"]},
+  {front:"In ritardo sulla tabella di marcia", back:"Behind schedule", speak:["Behind schedule"]},
+  {front:"Per un soffio / Rischio scampato", back:"Close call", speak:["Close call"]},
+  {front:"Dare sui nervi", back:"Get on one’s nerves", speak:["Get on one's nerves"]},
+  {front:"Partorire / Dare origine", back:"Give birth to", speak:["Give birth to"]},
+  {front:"Essere in vendita / Optare", back:"Go for", speak:["Go for"]},
+  {front:"Accontentarsi di / Farsi bastare", back:"Make do with", speak:["Make do with"]},
+  {front:"Nei tempi previsti", back:"On schedule", speak:["On schedule"]},
+  {front:"Criticare / Sminuire", back:"Put down", speak:["Put down"]},
+  {front:"Sopprimere", back:"Put down", speak:["Put down"]},
+  {front:"Presentarsi / Arrivare", back:"Show up", speak:["Show up"]},
+  {front:"Mettere in imbarazzo", back:"Show up", speak:["Show up"]},
+  {front:"Restare a casa", back:"Stay in", speak:["Stay in"]},
+  {front:"Restare fuori", back:"Stay out", speak:["Stay out"]},
+  {front:"Restare in piedi", back:"Stay up", speak:["Stay up"]},
+  {front:"Equivalere a", back:"Amount to", speak:["Amount to"]},
+  {front:"A lungo", back:"At length", speak:["At length"]},
+  {front:"Svolgere / Eseguire", back:"Carry out", speak:["Carry out"]},
+  {front:"Tirare su di morale", back:"Cheer up", speak:["Cheer up"]},
+  {front:"Redigere / Stilare", back:"Draw up", speak:["Draw up"]},
+  {front:"Ritirarsi da / Abbandonare", back:"Drop out of", speak:["Drop out of"]},
+  {front:"Avere senso", back:"Make sense", speak:["Make sense"]},
+  {front:"In contrasto con / Non in linea con", back:"Out of keeping with", speak:["Out of keeping with"]},
+  {front:"Non essere da qualcuno / Incoerente", back:"Out of keeping with", speak:["Out of keeping with"]},
+  {front:"Imbattersi in / Incappare in", back:"Run into", speak:["Run into"]},
+  {front:"Partire / Mettersi in viaggio", back:"Set out", speak:["Set out"]},
+  {front:"Proporsi di / Mettersi a", back:"Set out to", speak:["Set out to"]},
+  {front:"Esca", back:"Bait", speak:["Bait"]},
+  {front:"A sangue freddo", back:"Cold-blooded", speak:["Cold-blooded"]},
+  {front:"Senza cuore", back:"Cold-hearted", speak:["Cold-hearted"]},
+  {front:"Venire a sapere / Scoprire", back:"Get wind of", speak:["Get wind of"]},
+  {front:"Adescare / Attirare", back:"Lure", speak:["Lure"]},
+  {front:"Scoperto da poco", back:"New-found", speak:["New-found"]},
+  {front:"Mettere fine a / Sancire la fine", back:"Put paid to", speak:["Put paid to"]},
+  {front:"Scrupoli / Rimorsi", back:"Qualms", speak:["Qualms"]},
+  {front:"Spietato / Senza scrupoli", back:"Ruthless", speak:["Ruthless"]},
+  {front:"All’insaputa di", back:"Unbeknown to", speak:["Unbeknown to"]},
+  {front:"Dove si trova", back:"Whereabouts", speak:["Whereabouts"]},
+  {front:"Stormo", back:"Flock", speak:["Flock"]},
+  {front:"Branco", back:"Herd", speak:["Herd"]},
+  {front:"Zampa posteriore", back:"Hind leg", speak:["Hind leg"]},
+  {front:"Dimissioni", back:"Resignation", speak:["Resignation"]},
+  {front:"Asta", back:"Auction", speak:["Auction"]},
+  {front:"Punto e basta!", back:"That’s that!", speak:["That's that!"]},
+  {front:"La vera entità", back:"The true extent", speak:["The true extent"]},
+  {front:"Per l’ennesima volta", back:"For the umpteenth time", speak:["For the umpteenth time"]},
+  {front:"Darsi una mossa", back:"Get a move on", speak:["Get a move on"]},
+  {front:"Su per giù", back:"Give or take", speak:["Give or take"]},
+  {front:"Essere permaloso", back:"To be touchy", speak:["To be touchy"]},
+  {front:"Commissioni", back:"Errands", speak:["Errands"]},
+  {front:"Proteste pubbliche", back:"Public outcry", speak:["Public outcry"]},
+  {front:"Preoccuparsi / Angosciarsi", back:"Fret about", speak:["Fret about"]},
+  {front:"Violazione del contratto", back:"Breach of contract", speak:["Breach of contract"]}
 ];
 
+
+  
 let currentIndex = 0;
 let cards = [];
-let recentlyShown = []; // tracks recently shown cards
+let recentlyShown = []; // tracks recently shown cards across sessions
 const sessionSize = 30; // number of cards per session
-const recentLimit = 30; // how many cards to avoid repeating
+const recentLimit = 60;  // how many cards to avoid repeating across sessions
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -433,36 +462,52 @@ const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
 const speakBtn  = document.getElementById("speakBtn");
 
-// Pick a random card avoiding recently shown
-function pickNextCard() {
-  const candidates = library.filter(c => !recentlyShown.includes(c));
-  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
-  const choice = candidates[Math.floor(Math.random() * candidates.length)];
-  recentlyShown.push(choice);
-  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
-  return choice;
+// --- Speech voices setup ---
+let voices = [];
+let currentSpeakArray = [];
+speechSynthesis.onvoiceschanged = () => {
+  voices = speechSynthesis.getVoices();
+};
+
+// Fisher–Yates shuffle
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 // Start a session
 function startSession() {
-  cards = [];
-  for(let i=0; i<sessionSize; i++){
-    cards.push(pickNextCard());
+  // Filter out recently shown cards
+  const available = library.filter(c => !recentlyShown.includes(c));
+  const shuffled = shuffleArray(available.length ? [...available] : [...library]);
+  
+  cards = shuffled.slice(0, sessionSize);
+
+  // Update recentlyShown to track minimal repetition across sessions
+  recentlyShown.push(...cards);
+  if (recentlyShown.length > recentLimit) {
+    recentlyShown.splice(0, recentlyShown.length - recentLimit);
   }
+
   currentIndex = 0;
   updateCard();
 }
 
 // Update the displayed card
-function updateCard(){
+function updateCard() {
   flashcard.classList.remove("flipped");
-  setTimeout(()=>{
+  setTimeout(() => {
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
+    currentSpeakArray   = cards[currentIndex].speak || [];
     counter.innerText   = `${currentIndex+1} / ${cards.length}`;
-  },150);
+  }, 150);
 }
 
+// Navigation buttons
 function nextCard(e){
   e.stopPropagation();
   currentIndex = (currentIndex + 1) % cards.length;
@@ -477,22 +522,50 @@ function prevCard(e){
 
 /* FLIP */
 flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
-backBtn.addEventListener("click",(e)=>{
+backBtn.addEventListener("click", (e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
 });
 
-/* AUDIO – British male voice */
-speakBtn.addEventListener("click",(e)=>{
+/* AUDIO – British male voice with “or” between alternatives */
+speakBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  const utter = new SpeechSynthesisUtterance(backText.innerText);
-  utter.lang = "en-GB";
-  const voices = speechSynthesis.getVoices();
-  const ukMale = voices.find(v=>v.lang==="en-GB" && /male/i.test(v.name));
-  if(ukMale) utter.voice = ukMale;
-  speechSynthesis.speak(utter);
+  if (!currentSpeakArray.length) return;
+
+  speechSynthesis.cancel();
+
+  const ukMale = voices.find(v => v.lang === "en-GB" && /male/i.test(v.name)) || voices.find(v => v.lang === "en-GB");
+
+  let i = 0;
+
+  function speakNext() {
+    if (i >= currentSpeakArray.length) return;
+
+    const utter = new SpeechSynthesisUtterance(currentSpeakArray[i]);
+    utter.lang = "en-GB";
+    if (ukMale) utter.voice = ukMale;
+
+    utter.onend = () => {
+      i++;
+      if (i < currentSpeakArray.length) {
+        const orUtter = new SpeechSynthesisUtterance("or");
+        orUtter.lang = "en-GB";
+        if (ukMale) orUtter.voice = ukMale;
+
+        orUtter.onend = () => setTimeout(speakNext, 60); // short, natural pause
+        speechSynthesis.speak(orUtter);
+      }
+    };
+
+    speechSynthesis.speak(utter);
+  }
+
+  speakNext();
 });
 
-restartBtn.addEventListener("click",startSession);
+// Restart session (Try Again)
+restartBtn.addEventListener("click", startSession);
+
+// Start first session on page load
 startSession();
 </script>
