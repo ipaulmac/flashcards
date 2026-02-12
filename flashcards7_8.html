@@ -14,7 +14,7 @@
 }
 
 body{
-  background:var(--purple);
+  background:var(--navy);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
   overflow:hidden;
 }
@@ -26,21 +26,42 @@ body{
 .flip-card-inner{transition:transform .5s cubic-bezier(.4,0,.2,1);}
 .flipped{transform:rotateY(180deg);}
 
-.front-text{font-size:2.4rem;line-height:1.1;font-weight:800;color:#fff;}
-.back-text{font-size:2.6rem;line-height:1.05;font-weight:800;color:var(--navy);}
+.front-text, .back-text {
+  font-size: 2.4rem;   /* natural size on desktop */
+  line-height: 1.2;    /* gives a little breathing room */
+  font-weight: 800;
+}
+
+.back-text {
+  color: var(--navy);  /* keeps back text readable */
+  line-height: 1.2;    /* match front for balance */
+}
 
 .nav-btn{
-  width:40px;height:40px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.2rem;
 }
 .nav-btn:active{transform:scale(.9);}
 
 .restart-btn{
-  display:flex;align-items:center;justify-content:center;
-  background:none;border:2px solid #fff;color:#fff;
-  padding:6px 14px;border-radius:999px;
-  font-weight:800;letter-spacing:1.5px;
-  text-transform:uppercase;font-size:.85rem;margin-top:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:none;
+  border:2px solid #fff;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:999px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  font-size:.85rem;
+  margin-top:1rem;
 }
 .restart-btn:active{transform:scale(.95);opacity:.8;}
 
@@ -57,8 +78,15 @@ body{
 .audio-btn:active{transform:scale(.95);opacity:.85;}
 
 @media (max-width:480px){
-  .front-text{font-size:1.4rem;}
-  .back-text{font-size:1.7rem;}
+  .front-text, .back-text{
+    font-size:1.5rem;  /* mobile: readable but not too small */
+    line-height:1.3;   /* add a little breathing room on small screens */
+  }
+  .nav-btn{
+    width:40px;        /* slightly smaller on mobile */
+    height:40px;
+    font-size:1rem;
+  }
 }
 </style>
 </head>
@@ -69,8 +97,8 @@ body{
 <div id="flashcard" class="relative w-full h-[360px] preserve-3d flip-card-inner cursor-pointer shadow-2xl rounded-3xl">
 
 <!-- FRONT -->
-<div class="absolute inset-0 bg-[#002147] backface-hidden rounded-3xl flex flex-col justify-between p-5">
-  <div class="text-[10px] font-black text-white/50 uppercase tracking-widest text-right">
+<div class="absolute inset-0 bg-white backface-hidden rounded-3xl flex flex-col justify-between p-5">
+  <div class="text-[10px] font-black text-[#002147]/50 uppercase tracking-widest text-right">
     Lessons 7 & 8
   </div>
 
@@ -79,7 +107,7 @@ body{
   </div>
 
   <div class="flex flex-col items-center space-y-2">
-    <div class="text-white text-[11px] font-black uppercase tracking-[0.2em]">
+    <div class="text-[#002147] text-[11px] font-black uppercase tracking-[0.2em]">
       Tap / Click to reveal
     </div>
 
@@ -98,7 +126,7 @@ body{
   </div>
 
   <div class="flex-grow flex flex-col items-center justify-center text-center px-2">
-    <p id="back-text" class="back-text italic"></p>
+    <p id="back-text" class="back-text"></p>
     <button id="speakBtn" class="audio-btn">🔊 Listen</button>
   </div>
 
@@ -119,53 +147,54 @@ body{
 
 <script>
 const library = [
-  {front:"Essere sveglio / Essere in piedi", back:"Be up"},
-  {front:"Finire / Fermarsi", back:"Call it a day"},
-  {front:"Capire / Calcolare", back:"Figure out"},
-  {front:"Migliorare", back:"Get better"},
-  {front:"Peggiorare", back:"Get worse"},
-  {front:"Farebbe meglio a…", back:"Had better do"},
-  {front:"In tempo", back:"In time"},
-  {front:"Fare pace", back:"Make up"},
-  {front:"Far presente / Sottolineare / Indicare", back:"Point out"},
-  {front:"Preferirebbe fare", back:"Would rather do"},
-  {front:"Puntuale / In orario", back:"On time"},
-  {front:"In tempo", back:"In time"},
-  {front:"Litigare / Rompere i rapporti", back:"Fall out"},
-  {front:"Stare per fare", back:"Be about to do"},
-  {front:"Ripassare / Rinfrescare", back:"Brush up on"},
-  {front:"Innamorarsi di", back:"Fall in love with"},
-  {front:"Spegnersi (fuoco)", back:"Go out"},
-  {front:"Uscire", back:"Go out"},
-  {front:"Frequentarsi", back:"Go out"},
-  {front:"Avere a che fare con", back:"Have to do with"},
-  {front:"A stomaco vuoto", back:"On an empty stomach"},
-  {front:"Non se ne parla proprio", back:"Out of the question"},
-  {front:"Più volte", back:"Over and over again / Time and again"},
-  {front:"Prestare attenzione a", back:"Pay attention to"},
-  {front:"Fare a turno", back:"Take turns doing"},
-  {front:"Buttare via", back:"Throw away"},
-  {front:"Consumare / Logorare", back:"Wear out"},
-  {front:"Trovare il coraggio di fare", back:"Bring oneself to do"},
-  {front:"Per giorni e giorni", back:"For days on end"},
-  {front:"Mettersi in moto / Darsi da fare", back:"Get going"},
-  {front:"Lasciarsi", back:"Split up"},
-  {front:"Ma stai scherzando!", back:"You must be joking!"},
-  {front:"Municipio", back:"Town Hall"},
-  {front:"Tamponare", back:"Run into the back of"},
-  {front:"Molta strada da fare", back:"A long way to go"},
-  {front:"Tenere la bocca chiusa", back:"Mum’s the word"},
-  {front:"Portato / Dotato", back:"Gifted"},
-  {front:"Di lunga durata", back:"Long-lasting"},
-  {front:"Ti è andato bene", back:"You were lucky"},
-  {front:"Andare d’accordo alla grande", back:"Get on, or Get along, like a house on fire!"}
+  {front:"Essere sveglio / Essere in piedi", back:"Be up", speak:["be up"]},
+  {front:"Finire / Fermarsi", back:"Call it a day", speak:["call it a day"]},
+  {front:"Capire / Calcolare", back:"Figure out", speak:["figure out"]},
+  {front:"Migliorare", back:"Get better", speak:["get better"]},
+  {front:"Peggiorare", back:"Get worse", speak:["get worse"]},
+  {front:"Farebbe meglio a…", back:"Had better do", speak:["had better do"]},
+  {front:"In tempo", back:"In time", speak:["in time"]},
+  {front:"Fare pace", back:"Make up", speak:["make up"]},
+  {front:"Far presente / Sottolineare / Indicare", back:"Point out", speak:["point out"]},
+  {front:"Preferirebbe fare", back:"Would rather do", speak:["would rather do"]},
+  {front:"Puntuale / In orario", back:"On time", speak:["on time"]},
+  {front:"In tempo", back:"In time", speak:["in time"]},
+  {front:"Litigare / Rompere i rapporti", back:"Fall out", speak:["fall out"]},
+  {front:"Stare per fare", back:"Be about to do", speak:["be about to do"]},
+  {front:"Ripassare / Rinfrescare", back:"Brush up on", speak:["brush up on"]},
+  {front:"Innamorarsi di", back:"Fall in love with", speak:["fall in love with"]},
+  {front:"Spegnersi (fuoco)", back:"Go out", speak:["go out"]},
+  {front:"Uscire", back:"Go out", speak:["go out"]},
+  {front:"Frequentarsi", back:"Go out", speak:["go out"]},
+  {front:"Avere a che fare con", back:"Have to do with", speak:["have to do with"]},
+  {front:"A stomaco vuoto", back:"On an empty stomach", speak:["on an empty stomach"]},
+  {front:"Non se ne parla proprio", back:"Out of the question", speak:["out of the question"]},
+  {front:"Più volte", back:"Over and over again / Time and again", speak:["over and over again","time and again"]},
+  {front:"Prestare attenzione a", back:"Pay attention to", speak:["pay attention to"]},
+  {front:"Fare a turno", back:"Take turns (doing)", speak:["take turns doing"]},
+  {front:"Buttare via", back:"Throw away", speak:["throw away"]},
+  {front:"Consumare / Logorare", back:"Wear out", speak:["wear out"]},
+  {front:"Trovare il coraggio di fare", back:"Bring oneself to (do)", speak:["bring oneself to do"]},
+  {front:"Per giorni e giorni", back:"For days on end", speak:["for days on end"]},
+  {front:"Mettersi in moto / Darsi da fare", back:"Get going", speak:["get going"]},
+  {front:"Lasciarsi", back:"Split up", speak:["split up"]},
+  {front:"Ma stai scherzando!", back:"You must be joking!", speak:["you must be joking"]},
+  {front:"Municipio", back:"Town Hall", speak:["town hall"]},
+  {front:"Tamponare", back:"Run into the back of", speak:["run into the back of"]},
+  {front:"Molta strada da fare", back:"A long way to go", speak:["a long way to go"]},
+  {front:"Tenere la bocca chiusa", back:"Mum’s the word", speak:["mum's the word"]},
+  {front:"Portato / Dotato", back:"Gifted", speak:["gifted"]},
+  {front:"Di lunga durata", back:"Long-lasting", speak:["long lasting"]},
+  {front:"Ti è andato bene!", back:"You were lucky!", speak:["you were lucky!"]},
+  {front:"Andare d’accordo alla grande", back:"Get on like a house on fire", speak:["get on like a house on fire"]}
 ];
+
 
 let currentIndex = 0;
 let cards = [];
-let recentlyShown = []; // tracks recently shown cards
+let recentlyShown = []; // tracks recently shown cards across sessions
 const sessionSize = 15; // number of cards per session
-const recentLimit = 15; // how many cards to avoid repeating
+const recentLimit = 30;  // how many cards to avoid repeating across sessions
 
 const flashcard = document.getElementById("flashcard");
 const frontText = document.getElementById("front-text");
@@ -175,36 +204,52 @@ const backBtn   = document.getElementById("backBtn");
 const restartBtn= document.getElementById("restartBtn");
 const speakBtn  = document.getElementById("speakBtn");
 
-// Pick a random card avoiding recently shown
-function pickNextCard() {
-  const candidates = library.filter(c => !recentlyShown.includes(c));
-  if(candidates.length === 0) recentlyShown = []; // reset if all cards recently shown
-  const choice = candidates[Math.floor(Math.random() * candidates.length)];
-  recentlyShown.push(choice);
-  if(recentlyShown.length > recentLimit) recentlyShown.shift(); // keep list manageable
-  return choice;
+// --- Speech voices setup ---
+let voices = [];
+let currentSpeakArray = [];
+speechSynthesis.onvoiceschanged = () => {
+  voices = speechSynthesis.getVoices();
+};
+
+// Fisher–Yates shuffle
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 // Start a session
 function startSession() {
-  cards = [];
-  for(let i=0; i<sessionSize; i++){
-    cards.push(pickNextCard());
+  // Filter out recently shown cards
+  const available = library.filter(c => !recentlyShown.includes(c));
+  const shuffled = shuffleArray(available.length ? [...available] : [...library]);
+  
+  cards = shuffled.slice(0, sessionSize);
+
+  // Update recentlyShown to track minimal repetition across sessions
+  recentlyShown.push(...cards);
+  if (recentlyShown.length > recentLimit) {
+    recentlyShown.splice(0, recentlyShown.length - recentLimit);
   }
+
   currentIndex = 0;
   updateCard();
 }
 
 // Update the displayed card
-function updateCard(){
+function updateCard() {
   flashcard.classList.remove("flipped");
-  setTimeout(()=>{
+  setTimeout(() => {
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
+    currentSpeakArray   = cards[currentIndex].speak || [];
     counter.innerText   = `${currentIndex+1} / ${cards.length}`;
-  },150);
+  }, 150);
 }
 
+// Navigation buttons
 function nextCard(e){
   e.stopPropagation();
   currentIndex = (currentIndex + 1) % cards.length;
@@ -219,22 +264,50 @@ function prevCard(e){
 
 /* FLIP */
 flashcard.addEventListener("click", ()=> flashcard.classList.toggle("flipped"));
-backBtn.addEventListener("click",(e)=>{
+backBtn.addEventListener("click", (e)=>{
   e.stopPropagation();
   flashcard.classList.remove("flipped");
 });
 
-/* AUDIO – British male voice */
-speakBtn.addEventListener("click",(e)=>{
+/* AUDIO – British male voice with “or” between alternatives */
+speakBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  const utter = new SpeechSynthesisUtterance(backText.innerText);
-  utter.lang = "en-GB";
-  const voices = speechSynthesis.getVoices();
-  const ukMale = voices.find(v=>v.lang==="en-GB" && /male/i.test(v.name));
-  if(ukMale) utter.voice = ukMale;
-  speechSynthesis.speak(utter);
+  if (!currentSpeakArray.length) return;
+
+  speechSynthesis.cancel();
+
+  const ukMale = voices.find(v => v.lang === "en-GB" && /male/i.test(v.name)) || voices.find(v => v.lang === "en-GB");
+
+  let i = 0;
+
+  function speakNext() {
+    if (i >= currentSpeakArray.length) return;
+
+    const utter = new SpeechSynthesisUtterance(currentSpeakArray[i]);
+    utter.lang = "en-GB";
+    if (ukMale) utter.voice = ukMale;
+
+    utter.onend = () => {
+      i++;
+      if (i < currentSpeakArray.length) {
+        const orUtter = new SpeechSynthesisUtterance("or");
+        orUtter.lang = "en-GB";
+        if (ukMale) orUtter.voice = ukMale;
+
+        orUtter.onend = () => setTimeout(speakNext, 60); // short, natural pause
+        speechSynthesis.speak(orUtter);
+      }
+    };
+
+    speechSynthesis.speak(utter);
+  }
+
+  speakNext();
 });
 
-restartBtn.addEventListener("click",startSession);
+// Restart session (Try Again)
+restartBtn.addEventListener("click", startSession);
+
+// Start first session on page load
 startSession();
 </script>
