@@ -261,7 +261,9 @@ function updateCard() {
   setTimeout(() => {
     frontText.innerText = cards[currentIndex].front;
     backText.innerText  = cards[currentIndex].back;
-    currentSpeakArray   = cards[currentIndex].speak || [];
+    currentSpeakArray = Array.isArray(cards[currentIndex].speak)
+  ? cards[currentIndex].speak
+  : [cards[currentIndex].speak];
     counter.innerText   = `${currentIndex+1} / ${cards.length}`;
   }, 150);
 }
