@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flashcards – Auxiliary Verbs N°2</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+  --bg-blue:#061247;
+  --front-purple:#561386;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+  --border-red:#8C0327;
+}
+body{
+  background:var(--bg-blue);
+  font-family:system-ui, Segoe UI, Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem 1rem 0 1rem;
+  gap:.3rem;
+}
+.perspective{perspective:1000px;}
+.card-inner{
+  width:90vw;
+  max-width:380px;
+  height:55vw;
+  max-height:240px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:.4s;
+  cursor:pointer;
+}
+.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:1rem;}
+.back{transform:rotateY(180deg);}
+.it-text,.en-text{
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1rem;
+}
+.it-text{ color:var(--front-purple); }
+.en-text{ color:var(--en-blue); }
+.listen-btn{background:none;border:none;color:var(--it-red);font-weight:700;font-size:.9rem;}
+.nav-btn{font-size:1.4rem;font-weight:700;color:white;}
+.set-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:380px;width:100%;}
+.set-btn{height:34px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;border-radius:999px;background:white;color:#0E065C;text-align:center;}
+.set-btn.active{background:#8C0327;color:white;}
+
+.link-btn{
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.75rem;
+  font-weight:800;
+  border-radius:999px;
+  background:#BFC926;
+  color:#0E065C;
+  border:none;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.link-btn:hover{
+  background:#25C3D3;
+}
+
+.arrow{
+  font-size:1.2rem;
+  line-height:1;
+}
+
+.special-set{
+  background:#25C3D3;
+  color:#061247;
+  border:2px solid white;
+  box-shadow:0 0 6px rgba(255,255,255,0.4);
+  transition:all .2s ease;
+}
+
+.special-set:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 10px rgba(255,255,255,0.7);
+}
+</style>
+</head>
+
+<body>
+
+<h2 class="text-white text-lg font-extrabold tracking-widest text-center">
+AUX VERBS SERIES N°2
+</h2>
+
+<div class="perspective mt-4">
+  <div id="flashcard" class="card-inner">
+    <div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
+      <div id="front-text" class="it-text"></div>
+    </div>
+    <div class="face back bg-white border-4 border-[#8C0327] flex flex-col justify-between p-4">
+      <div class="flex-grow flex items-center justify-center">
+        <div id="back-text" class="en-text"></div>
+      </div>
+      <div class="flex justify-center pb-2">
+        <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px]">
+  <button onclick="prevCard(event)" class="nav-btn">◀</button>
+  <span id="counter-display" class="text-white font-bold text-sm">1 / 1</span>
+  <button onclick="nextCard(event)" class="nav-btn">▶</button>
+</div>
+
+<div class="w-full max-w-[380px] flex justify-center mt-2">
+  <button onclick="refreshCurrentSet()"
+          class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounded-full">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="18" height="18">
+      <path d="M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/>
+    </svg>
+    <span class="font-bold text-sm">REFRESH</span>
+  </button>
+</div>
+
+<div class="set-grid mt-2">
+<button class="set-btn" onclick="loadSet(1)">HAVE / HAS</button>
+<button class="set-btn" onclick="loadSet(2)">HAD</button>
+<button class="set-btn" onclick="loadSet(3)">WILL HAVE</button>
+<button class="set-btn" onclick="loadSet(4)">WOULD HAVE</button>
+<button class="set-btn" onclick="loadSet(5)">HAVE BEEN</button>
+<button class="set-btn" onclick="loadSet(6)">HAD BEEN</button>
+<button class="set-btn" onclick="loadSet(7)">WILL HAVE BEEN</button>
+<button class="set-btn" onclick="loadSet(8)">WOULD HAVE BEEN</button>
+<button class="set-btn special-set set9" onclick="loadSet(9)">DIVING AUX'S</button>
+<button class="set-btn special-set set10" onclick="loadSet(10)">JUMPING AUX'S</button>
+
+<button class="link-btn" onclick="window.location.href='https://YOUR-AUX-VERBS-1-LINK-HERE'">
+  <span class="arrow" style="margin-right:6px;">◀</span>
+  AUX VERBS N°1
+</button>
+</div>
+
+<script>
+const sets = {
+1:[
+{front:"È appena tornato", back:"He has just come back", speak:"he has just come back"},
+{front:"Non è mai successo", back:"It has never happened", speak:"it has never happened"},
+{front:"Hai visto il mio telefono?", back:"Have you seen my phone?", speak:"have you seen my phone?"},
+{front:"Non ci sono mai stato", back:"I have never been there", speak:"i have never been there"},
+{front:"Non sono mai riuscito a controllarlo", back:"I have never been able to control it", speak:"i have never been able to control it"},
+{front:"Ho già sentito questa storia", back:"I have already heard this story", speak:"i have already heard this story"},
+{front:"Hai mai conosciuto mio fratello?", back:"Have you ever met my brother?", speak:"have you ever met my brother?"},
+{front:"Non abbiamo finito ancora", back:"We haven’t finished yet", speak:"we haven’t finished yet"},
+{front:"Lei ha appena aperto un conto in banca", back:"She has just opened a bank account", speak:"she has just opened a bank account"},
+{front:"Hai già deciso dove andare?", back:"Have you decided where to go yet?", speak:"have you decided where to go yet?"},
+{front:"Lui non ha mai guidato una macchina con cambio automatico", back:"He has never driven an automatic car", speak:"he has never driven an automatic car"},
+{front:"Abbiamo già visto tre volte quel film", back:"We have already seen that film three times", speak:"we have already seen that film three times"},
+{front:"Hai mai provato questo gusto?", back:"Have you ever tried this flavour?", speak:"have you ever tried this flavour?"},
+{front:"Dove sei stato?", back:"Where have you been?", speak:"where have you been?"},
+{front:"Lui ha appena cambiato lavoro", back:"He has just changed jobs", speak:"he has just changed jobs"},
+{front:"Hai mai fatto una cosa simile?", back:"Have you ever done something like this?", speak:"have you ever done something like this?"},
+{front:"Non è mai venuta qui in Italia", back:"She has never come here to Italy", speak:"she has never come here to italy"},
+{front:"Ho già letto questo libro, credo", back:"I think I have already read this book", speak:"i think i have already read this book"},
+{front:"Hai parlato con loro?", back:"Have you spoken to them?", speak:"have you spoken to them?"},
+{front:"È passato tanto tempo!", back:"It’s been a long time!", speak:"it’s been a long time"},
+{front:"Ho già bevuto almeno un litro d’acqua oggi", back:"I have already drunk a litre of water today", speak:"i have already drunk a litre of water today"},
+{front:"Lei mi ha appena mandato un messaggio", back:"She has just sent me a message", speak:"she has just sent me a message"},
+{front:"Hai già pagato il conto?", back:"Have you already paid the bill?", speak:"have you already paid the bill?"},
+{front:"L’ho detto mille volte!", back:"I have said it a thousand times!", speak:"i have said it a thousand times!"},
+{front:"Lui ha appena finito", back:"He has just finished", speak:"he has just finished"},
+{front:"Lo hai portato con te?", back:"Have you brought it with you?", speak:"have you brought it with you?"},
+{front:"Non abbiamo ancora deciso", back:"We haven’t decided yet", speak:"we haven’t decided yet"},
+{front:"Lei ha già cambiato idea", back:"She has already changed her mind", speak:"she has already changed her mind"},
+{front:"Oggi ho preso l’autobus", back:"I have taken the bus today", speak:"i have taken the bus today"},
+{front:"Sembra che mi sia stato dato troppo", back:"It seems I have been given too much", speak:"it seems i have been given too much"},
+{front:"Ho già trovato una soluzione", back:"I have already found a solution", speak:"i have already found a solution"},
+{front:"Ho sempre creduto in lei", back:"I have always believed in her", speak:"i have always believed in her"},
+{front:"Hai spiegato la situazione a tua moglie?", back:"Have you explained the situation to your wife?", speak:"have you explained the situation to your wife?"},
+{front:"Lei non ha mai capito la differenza", back:"She has never understood the difference", speak:"she has never understood the difference"},
+{front:"Abbiamo appena iniziato", back:"We have just started", speak:"we have just started"},
+{front:"Hai mai sentito questa canzone?", back:"Have you ever heard this song?", speak:"have you ever heard this song?"},
+{front:"Lei è appena andata via", back:"She has just left", speak:"she has just left"},
+{front:"Nessuno mi ha mai fatto questa domanda", back:"No one has ever asked me this question", speak:"no one has ever asked me this question"},
+{front:"Non hanno mai visitato la capitale", back:"They have never visited the capital", speak:"they have never visited the capital"},
+{front:"Non ho mai vinto un premio di alcun tipo", back:"I have never won any kind of prize", speak:"i have never won any kind of prize"},
+{front:"Caspita! Quanto è cresciuto!", back:"Wow! How he has grown!", speak:"wow! how he has grown"},
+{front:"Le mie ricerche mi hanno portato fino a qui", back:"My research has led me this far", speak:"my research has led me this far"},
+{front:"Hai messo la sveglia?", back:"Have you set the alarm?", speak:"have you set the alarm?"},
+{front:"Quasi sempre ho mantenuto le promesse", back:"I have almost always kept my promises", speak:"i have almost always kept my promises"},
+{front:"Lei si è rotta la gamba", back:"She has broken her leg", speak:"she has broken her leg"},
+{front:"Hai chiuso la porta?", back:"Have you closed the door?", speak:"have you closed the door?"},
+{front:"Hai spento la luce?", back:"Have you switched off the light?", speak:"have you switched off the light?"},
+{front:"Qualcuno mi ha rubato l’ombrello", back:"Someone has stolen my umbrella", speak:"someone has stolen my umbrella"},
+{front:"Ho sempre sognato di diventare famoso", back:"I have always dreamt of becoming famous", speak:"i have always dreamt of becoming famous"},
+{front:"Ho preso un raffreddore", back:"I’ve caught a cold", speak:"i’ve caught a cold"},
+{front:"Mi è stato appena detto di richiamare", back:"I have just been told to call back", speak:"i have just been told to call back"},
+{front:"Ci è stato chiesto di non dire nulla", back:"We’ve been told not to say anything", speak:"we’ve been told not to say anything"},
+{front:"Non vedo George da due anni", back:"I haven’t seen George for two years", speak:"i haven’t seen George for two years"},
+{front:"Non succede da mesi", back:"It hasn’t happened for months", speak:"it hasn’t happened for months"},
+{front:"È da novembre che non vado in palestra", back:"I haven’t been to the gym since November", speak:"i haven’t been to the gym since november"},
+{front:"Non ci sentiamo dal 2014", back:"We haven’t heard from each other since 2014", speak:"we haven’t heard from each other since 2014"},
+{front:"Non si vedono da diversi mesi", back:"They haven’t seen each other for several months", speak:"they haven’t seen each other for several months"},
+{front:"Sono tre anni che non vado in vacanza", back:"It has been three years since I last went on holiday", speak:"it has been three years since i last went on holiday"},
+{front:"È un mese che non piove", back:"It has been a month since it last rained", speak:"it has been a month since it last rained"},
+{front:"Sono dieci anni che non ci sentiamo", back:"It has been ten years since we last heard from each other", speak:"it has been ten years since we last heard from each other"},
+{front:"Sono sei ore che non mangio e Sto morendo di fame!", back:"It has been six hours since I last ate and I’m starving!", speak:"it has been six hours since i last ate, and i’m starving"},
+{front:"Sono settimane che non sento mia sorella", back:"It has been weeks since I last heard from my sister", speak:"it has been weeks since i last heard from my sister"}
+],
+
+2:[
+ {front:"Ero già uscito quando mi hai chiamato", back:"I had already gone out when you called me", speak:"i had already gone out when you called me"},
+{front:"Lei aveva appena finito di lavorare quando siamo arrivati", back:"She had just finished working when we arrived", speak:"she had just finished working when we arrived"},
+{front:"Non lo avevo mai visto prima", back:"I had never seen him before", speak:"i had never seen him before"},
+{front:"Avevamo già mangiato quando toccava a noi", back:"We had already eaten when it was our turn", speak:"we had already eaten when it was our turn"},
+{front:"Non avevo capito la domanda", back:"I hadn't understood the question", speak:"i hadn't understood the question"},
+{front:"Se lo avessi saputo", back:"If I had known", speak:"if i had known"},
+{front:"Lui aveva perso le chiavi e non poteva entrare", back:"He had lost his keys and couldn’t get in", speak:"he had lost his keys and couldn’t get in"},
+{front:"Non avevamo mai provato quel ristorante prima", back:"We had never tried that restaurant before", speak:"we had never tried that restaurant before"},
+{front:"Avevo già letto il libro che mi hai regalato", back:"I had already read that book that you gave me", speak:"i had already read that book that you gave me"},
+{front:"Prima di ieri, lui non aveva mai conosciuto suo padre", back:"He had never met his father before yesterday", speak:"he had never met his father before yesterday"},
+{front:"Se avessi studiato di più …", back:"If I had studied more …", speak:"if i had studied more"},
+{front:"Avevano già deciso tutto prima che la riunione iniziasse", back:"They had already decided everything before the meeting started", speak:"they had already decided everything before the meeting started"},
+{front:"Non avevo mai pensato a questa possibilità", back:"I had never thought about this possibility before", speak:"i had never thought about this possibility before"},
+{front:"Lei aveva già cambiato idea quando l’ho richiamata", back:"She had already changed her mind when I called her back", speak:"she had already changed her mind when i called her back"},
+{front:"Non avevamo ancora finito quando è arrivata", back:"We had not yet finished when she arrived", speak:"we had not yet finished when she arrived"},
+{front:"Se lo avessi visto …", back:"If I had seen it …", speak:"if i had seen it"},
+{front:"Avevo già sentito quella storia mille volte", back:"I had already heard that story a thousand times", speak:"i had already heard that story a thousand times"},
+{front:"Fino all’anno scorso, lui non aveva mai guidato all’estero", back:"Until last year, he had never driven abroad", speak:"until last year he had never driven abroad"},
+{front:"Per fortuna, avevamo già prenotato (e pagato) quando i prezzi sono saliti", back:"Fortunately, we had already booked - and paid - when the prices went up", speak:"fortunately, we had already booked - and paid - when the prices went up"},
+{front:"Non avevo mai vissuto una situazione simile", back:"I had never experienced a similar situation before", speak:"i had never experienced a similar situation before"},
+{front:"Se mi avessi chiamato …", back:"If you had called me …", speak:"if you had called me"},
+{front:"A quanto pare, lei se n’era già andata via quando ho telefonato", back:"Apparently, she had already left when I called", speak:"apparently she had already left when i called"},
+{front:"Avevo appena spento tutte le luci quando è squillato il telefono", back:"I had just turned off all the lights when the phone rang", speak:"i had just turned off all the lights when the phone rang"},
+{front:"Il problema era che non avevo ancora deciso cosa fare", back:"The problem was that I hadn’t yet decided what to do", speak:"the problem was - that i hadn’t yet decided what to do"},
+{front:"Magari avessimo saputo la verità!", back:"If only we had known the truth!", speak:"if only we had known the truth"},
+{front:"Lui aveva appena venduto la sua macchina quando ci siamo incontrati", back:"He had just sold his car when we met", speak:"he had just sold his car when we met"},
+{front:"Non avevo mai sentito quel nome prima", back:"I had never heard that name before", speak:"i had never heard that name before"},
+{front:"Avevamo già visto il film quando lo hanno trasmesso in TV", back:"We had already seen the film when they showed it on TV", speak:"we had already seen the film when they showed it on tv"},
+{front:"Lei non aveva ancora trovato lavoro quando si è trasferita in Francia", back:"She had not yet found a job when she moved to France", speak:"she had not yet found a job when she moved to france"},
+{front:"Se lo avessi capito bene …", back:"If I had understood it well …", speak:"if i had understood it well"},
+{front:"Avevo già preparato tutto per la cena quando sono arrivati i nostri ospiti", back:"I had already prepared everything for dinner when our guests arrived", speak:"i had already prepared everything for dinner when our guests arrived"},
+{front:"Non avevamo mai parlato di questo argomento prima di ieri", back:"We had never talked about this topic before yesterday", speak:"we had never talked about this topic before yesterday"},
+{front:"Lui aveva appena chiuso il negozio quando siamo arrivati", back:"He had just closed the shop when we arrived", speak:"he had just closed the shop when we arrived"},
+{front:"Non avevo mai lavorato così sodo in tutta la mia vita", back:"I had never worked so hard in all my life", speak:"i had never worked so hard in all my life"},
+{front:"Magari avessi ascoltato i suoi consigli!", back:"If only I had listened to his advice!", speak:"if only i had listened to his advice"},
+{front:"Avevano deciso di iniziare senza di noi", back:"They had decided to start without us", speak:"they had decided to start without us"},
+{front:"Non avevo mai incontrato una persona così gentile prima", back:"I had never met such a kind person before", speak:"i had never met such a kind person before"},
+{front:"Lei aveva già preso la decisione quando abbiamo parlato", back:"She had already made the decision when we spoke", speak:"she had already made the decision when we spoke"},
+{front:"Non lo vedeva da due anni", back:"I had not seen him for two years", speak:"i had not seen him for two years"},
+{front:"Non pioveva dall’inizio del mese", back:"It hadn’t rained since the beginning of the month", speak:"it hadn’t rained since the beginning of the month"},
+{front:"Era da tanto che non ci vedevamo", back:"We hadn’t seen each other for a long time", speak:"we hadn’t seen each other for a long time"},
+{front:"Erano secoli che non si parlavano", back:"They hadn’t spoken to each other for ages", speak:"they hadn’t spoken to each other for ages"},
+{front:"Erano dieci anni che non andavo all’estero", back:"I hadn’t been abroad for ten years", speak:"i hadn’t been abroad for ten years"},
+{front:"Erano mesi che non succedeva", back:"It hadn’t happened for months", speak:"it hadn’t happened for months"},
+{front:"Se fosse successo ...", back:"If it had happened ...", speak:"if it had happened"},
+{front:"Se ci fossero stati problemi ...", back:"If there had been problems ...", speak:"if there had been problems"},
+{front:"Se avessi avuto più tempo ...", back:"If I’d had more time ...", speak:"if i’d had more time"},
+{front:"Se più persone fossero state presenti ...", back:"If more people had been present ...", speak:"if more people had been present"},
+{front:"Erano anni che non andavo in bici", back:"It had been years since I last rode a bicycle", speak:"it had been years since i last rode a bicycle"},
+{front:"Erano sei mesi che lui non andava in palestra", back:"It had been six months since he last went to the gym", speak:"it had been six months since he last went to the gym"},
+{front:"Erano almeno 10 giorni che non pioveva", back:"It had been at least 10 days since it last rained", speak:"it had been at least 10 days since it last rained"},
+{front:"Era da tanto che non andavo a Parigi", back:"It had been a long time since I last went to Paris", speak:"it had been a long time since i last went to paris"},
+{front:"Erano tre anni che non succedeva", back:"It had been 3 years since it last happened", speak:"it had been 3 years since it last happened"}
+],
+
+3:[
+ {front:"Lui avrà finito entro domani", back:"He will have finished by tomorrow", speak:"he will have finished by tomorrow"},
+{front:"Avremo completato il corso tra due settimane", back:"We will have completed the course in two weeks’ time", speak:"we will have completed the course in two weeks’ time"},
+{front:"Lei si sarà già addormentata prima di mezzanotte", back:"She will have already fallen asleep before midnight", speak:"she will have already fallen asleep before midnight"},
+{front:"Avranno finito di pagare tutto quanto entro la fine del mese", back:"They will have finished paying everything off by the end of the month", speak:"they will have finished paying everything off by the end of the month"},
+{front:"Non ti preoccupare! Avrò trovato una soluzione tra pochi giorni", back:"Don’t worry! I will have found a solution in a few days’ time", speak:"don’t worry - i will have found a solution in a few days’ time"},
+{front:"Promettimi che avrai mandato il messaggio entro la fine della giornata", back:"Promise me that you will have sent the message by the end of the day", speak:"promise me that you will have sent the message by the end of the day"},
+{front:"Lui lo avrà già mangiato tutto entro stasera", back:"He will have already eaten it all by this evening", speak:"he will have already eaten it all by this evening"},
+{front:"Sono sicuro che lei avrà capito tutto quanto tra qualche ora", back:"I’m sure she will have understood everything in a few hours’ time", speak:"i’m sure she will have understood everything in a few hours’ time"},
+{front:"Credimi, avremo trovato quello che stiamo cercando entro la fine della giornata", back:"Believe me, we will have found what we are looking for by the end of the day", speak:"believe me - we will have found what we are looking for by the end of the day"},
+{front:"Avremo risolto il problema entro mezzogiorno", back:"We will have resolved the problem by midday", speak:"we will have resolved the problem by midday"},
+{front:"Avranno cambiato casa entro la fine del mese", back:"They will have moved house by the end of the month", speak:"they will have moved house by the end of the month"},
+{front:"Avremo controllato tutti i dati prima della riunione", back:"We will have checked all the data before the meeting", speak:"we will have checked all the data before the meeting"},
+{front:"Lui avrà risparmiato almeno €5000 entro la fine dell’anno", back:"He will have saved at least 5000 euros by the end of the year", speak:"he will have saved at least five thousand euros by the end of the year"},
+{front:"Lei avrà finito per le sei", back:"She will have finished for six o’clock", speak:"she will have finished for six o’clock"},
+{front:"Saranno arrivati ormai", back:"They will have arrived by now", speak:"they will have arrived by now"},
+{front:"Avremo preso la nostra decisione entro domani", back:"We will have made our decision by tomorrow", speak:"we will have made our decision by tomorrow"},
+{front:"Avranno già venduto la casa prima che tu rientri", back:"They will have already sold the house before you return", speak:"they will have already sold the house before you return"},
+{front:"Lui avrà terminato il corso prima dell’estate", back:"He will have finished the course before the summer", speak:"he will have finished the course before the summer"},
+{front:"Lei ti avrà sicuramente chiamato entro stasera", back:"She will surely have called you by this evening", speak:"she will surely have called you by this evening"},
+{front:"Avrò letto tutto il libro tra due giorni", back:"I will have read the whole book in two days’ time", speak:"i will have read the whole book in two days’ time"},
+{front:"Pensi che avrai preparato tutto prima della partenza?", back:"Do you think you will have prepared everything before your departure?", speak:"do you think you will have prepared everything before your departure?"},
+{front:"Avremo risolto il problema entro la fine della giornata", back:"We will have solved the problem by the end of the day", speak:"we will have solved the problem by the end of the day"},
+{front:"Avranno raggiunto l’obiettivo tra un anno", back:"They will have reached their goal in one year’s time", speak:"they will have reached their goal in one year’s time"},
+{front:"Lui avrà ricevuto la risposta prima della fine della prossima settimana", back:"He will have received the reply before the end of next week", speak:"he will have received the reply before the end of next week"},
+{front:"Lei avrà finito di studiare entro mezzanotte", back:"She will have finished studying by midnight", speak:"she will have finished studying by midnight"},
+{front:"Avrò terminato tutto tra poche ore", back:"I will have finished everything in a few hours’ time", speak:"i will have finished everything in a few hours’ time"},
+{front:"Pensi che avrete trovato una casa prima della fine del mese?", back:"Do you think you will have found a house before the end of the month?", speak:"do you think you will have found a house before the end of the month?"},
+{front:"Avranno sistemato tutto quanto entro domani", back:"They will have sorted everything out by tomorrow", speak:"they will have sorted everything out by tomorrow"},
+{front:"Lui avrà stampato i documenti prima della lezione", back:"He will have printed the documents before the lesson", speak:"he will have printed the documents before the lesson"},
+{front:"Lei avrà cambiato idea entro stasera di sicuro", back:"She will certainly have changed her mind by this evening", speak:"she will certainly have changed her mind by this evening"},
+{front:"Sono convinto che avrò imparato molto dopo solo due due mesi di questo corso", back:"I am convinced I'll have learnt a lot after only two months of this course", speak:"i am convinced i'll have learnt a lot after only two months of this course"},
+{front:"Avrai parlato con lui prima dell’incontro?", back:"Will you have spoken to him before the meeting?", speak:"will you have spoken to him before the meeting?"},
+{front:"Avremo completato tutto entro la prossima settimana", back:"We will have completed everything by next week", speak:"we will have completed everything by next week"},
+{front:"Avranno aperto il negozio entro 20 minuti", back:"They will have opened the shop within 20 minutes", speak:"they will have opened the shop within twenty minutes"},
+{front:"Secondo me lui avrà già fatto la doccia prima di cena", back:"I think he will have already taken a shower before dinner", speak:"i think he will have already taken a shower before dinner"},
+{front:"Lei avrà imparato l’inglese abbastanza bene entro la fine dell’anno", back:"She will have learnt English quite well by the end of the year", speak:"she will have learnt english quite well by the end of the year"},
+{front:"Avrò cambiato lavoro tra qualche settimana", back:"I will have changed jobs in a few weeks’ time", speak:"i will have changed jobs in a few weeks’ time"},
+{front:"Avremo finito prima della fine della giornata", back:"We will have finished before the end of the day", speak:"we will have finished before the end of the day"},
+{front:"Che cosa avrai combinato prima che ci rivediamo?", back:"What will you have done before we see each other again?", speak:"what will you have done before we see each other again?"},
+{front:"Credo che sarà già successo ormai", back:"I think it will have already happened by now", speak:"i think it will have already happened by now"},
+{front:"Alla fine del mese sarà un anno esatto che non mangio la cioccolata", back:"At the end of the month it will have been exactly one year since I last ate chocolate", speak:"at the end of the month it will have been exactly one year since i last ate chocolate"},
+{front:"Fra tre giorni sarà già un mese che non fumo una sigaretta", back:"In three days’ time it will already have been a month since I last had a cigarette", speak:"in three days’ time it will already have been a month since i last had a cigarette"},
+{front:"A luglio saranno tre anni che non ci vediamo", back:"In July, it will have been three years since we last saw each other", speak:"in july - it will have been three years since we last saw each other"}
+],
+
+4:[
+{front:"Hanno detto che lui avrebbe finito in orario", back:"They said he would have finished on time", speak:"they said he would have finished on time"},
+{front:"Mi ha spiegato perché lei non avrebbe accettato", back:"He explained to me why she wouldn’t have accepted", speak:"he explained to me why she wouldn’t have accepted"},
+{front:"Ci Hanno assicurato che avrebbero risolto il problema", back:"They assured us they would have resolved the problem", speak:"they assured us they would have resolved the problem"},
+{front:"Mi hanno detto che lui avrebbe chiamato stamattina", back:"They told me he would have called this morning", speak:"they told me he would have called this morning"},
+{front:"Lei mi ha promesso che avrebbe partecipato", back:"She promised me she would have taken part", speak:"she promised me she would have taken part"},
+{front:"Avrei comprato quella casa, ma era troppo cara", back:"I would have bought that house, but it was too expensive", speak:"i would have bought that house - but it was too expensive"},
+{front:"Lui sarebbe venuto, ma non aveva tempo", back:"He would have come, but he didn’t have time", speak:"he would have come - but he didn’t have time"},
+{front:"Saremmo partiti prima, ma pioveva", back:"We would have left earlier, but it was raining", speak:"we would have left earlier - but it was raining"},
+{front:"Forse lei avrebbe detto di sì, ma sembrava troppo indecisa", back:"Maybe she would have said yes, but she seemed too undecided", speak:"maybe she would have said yes - but she seemed too undecided"},
+{front:"Avrei chiamato, ma non avevo il numero", back:"I would have called, but I didn’t have the number", speak:"i would have called - but i didn’t have the number"},
+{front:"Hanno risposto che non avrebbero potuto aiutare", back:"They answered that they wouldn’t have been able to help", speak:"they answered that they wouldn’t have been able to help"},
+{front:"Lei mi ha detto che non avrebbe cambiato idea", back:"She told me she wouldn’t have changed her mind", speak:"she told me she wouldn’t have changed her mind"},
+{front:"Hanno dichiarato che avrebbero sostenuto il progetto", back:"They stated they would have supported the project", speak:"they stated they would have supported the project"},
+{front:"Avremmo finito prima, ma mancava qualcosa", back:"We would have finished earlier, but something was missing", speak:"we would have finished earlier - but something was missing"},
+{front:"Lui avrebbe pagato tutto, ma non aveva contanti", back:"He would have paid everything, but he had no cash", speak:"he would have paid everything - but he had no cash"},
+{front:"Avrei preso il treno, ma era già partito", back:"I would have taken the train, but it had already left", speak:"i would have taken the train - but it had already left"},
+{front:"Lei avrebbe partecipato, solo che non era stata invitata", back:"She would have taken part, only that she hadn't been invited", speak:"she would have taken part - only that she hadn't been invited"},
+{front:"Mi hanno detto che avrebbero confermato la prenotazione per email", back:"They told me they would have confirmed the booking by email", speak:"they told me they would have confirmed the booking by email"},
+{front:"Lei ha detto che lui avrebbe firmato il contratto", back:"She said he would have signed the contract", speak:"she said he would have signed the contract"},
+{front:"Avremmo accettato l’offerta, ma era troppo rischiosa", back:"We would have accepted the offer, but it was too risky", speak:"we would have accepted the offer - but it was too risky"},
+{front:"Lui avrebbe spiegato tutto volentieri, ma nessuno gli ha chiesto", back:"He would have willingly explained everything, but nobody asked him", speak:"he would have willingly explained everything - but nobody asked him"},
+{front:"Avrei portato anche te al teatro, ma non c’era posto", back:"I would have taken you to the theatre too, but there were no seats", speak:"i would have taken you to the theatre too - but there were no seats"},
+{front:"Lei avrebbe continuato, ma era sfinita", back:"She would have continued, but she was tired out", speak:"she would have continued - but she was tired out"},
+{front:"Mi hanno riferito ieri che lui avrebbe parlato oggi con il direttore", back:"They reported to me yesterday that he would have spoken to the manager today", speak:"they reported to me yesterday that he would have spoken to the manager today"},
+{front:"L'avremmo comprato ieri, ma il negozio era chiuso", back:"We would have bought it yesterday, but the shop was closed", speak:"we would have bought it yesterday - but the shop was closed"},
+{front:"Avrei accettato subito, ma avevo dei dubbi", back:"I would have accepted at once, but I had some doubts", speak:"i would have accepted at once - but i had some doubts"},
+{front:"Lei avrebbe risposto, ma non aveva visto il messaggio", back:"She would have replied, but she hadn’t seen the message", speak:"she would have replied - but she hadn’t seen the message"},
+{front:"Mi hanno promesso che avrebbero completato il lavoro entro venerdì", back:"They promised me that they would have completed the work by Friday", speak:"they promised me that they would have completed the work by friday"},
+{front:"Saremmo andati, ma non eravamo disponibili per quelle date", back:"We would have gone, but we were not available on those dates", speak:"we would have gone - but we were not available on those dates"},
+{front:"Avrebbe guidato lui invece, ma era troppo stanco", back:"He would have driven instead, but he was too tired", speak:"he would have driven instead - but he was too tired"},
+{front:"Avrei voluto cambiare posto, ma non era possibile", back:"I would have liked to change seats, but it was not possible", speak:"i would have liked to change seats - but it was not possible"},
+{front:"Lei avrebbe preparato tutto oggi, ma non aveva tempo", back:"She would have prepared everything today, but she didn't have time", speak:"she would have prepared everything today - but she didn't have time"},
+{front:"Mi hanno detto che avrebbero preso una decisione diversa", back:"They told me they would have made a different decision", speak:"they told me they would have made a different decision"},
+{front:"In circostanze normali, avremmo continuato, ma era troppo tardi", back:"In normal circumstances we would have continued, but it was too late", speak:"in normal circumstances we would have continued - but it was too late"},
+{front:"Sicuramente lui avrebbe accettato l’invito, ma era fuori città", back:"He would surely have accepted the invitation, but he was out of town", speak:"he would surely have accepted the invitation - but he was out of town"},
+{front:"Avrei aspettato ancora, ma dovevo andare via", back:"I would have waited longer, but I had to leave", speak:"i would have waited longer - but i had to leave"},
+{front:"Lei avrebbe aiutato, ma nessuno glielo ha chiesto", back:"She would have helped, but nobody asked her", speak:"she would have helped - but nobody asked her"},
+{front:"Hanno detto che avrebbero sostenuto la mia proposta", back:"They said they would have supported my proposal", speak:"they said they would have supported my proposal"},
+{front:"Secondo me non sarebbe mai successo", back:"In my opinion, it would never have happened", speak:"in my opinion - it would never have happened"},
+{front:"Altrimenti non ci sarei andato", back:"Otherwise I wouldn’t have gone there", speak:"otherwise i wouldn’t have gone there"},
+{front:"Sarebbe stato un miracolo!", back:"It would have been a miracle!", speak:"it would have been a miracle"},
+{front:"Quanto sarebbe costato senza lo sconto?", back:"How much would it have cost without the discount?", speak:"how much would it have cost without the discount?"},
+{front:"Mi stai dicendo che non lo avresti fatto?", back:"Are you telling me you wouldn’t have done it?", speak:"are you telling me you wouldn’t have done it?"},
+{front:"Quanto ci sarebbe voluto in macchina?", back:"How long would it have taken by car?", speak:"how long would it have taken by car?"}
+],
+
+5:[
+ {front:"Scrivo da due ore", back:"I have been writing for two hours", speak:"i have been writing for two hours"},
+{front:"Lavoriamo a questo progetto da settimane", back:"We have been working on this project for weeks", speak:"we have been working on this project for weeks"},
+{front:"Lei Vive qui dal 2015", back:"She has been living here since 2015", speak:"she has been living here since 2015"},
+{front:"Piove da stamattina", back:"It has been raining since this morning", speak:"it has been raining since this morning"},
+{front:"Lui si sta allenando molto ultimamente", back:"He has been training a lot recently", speak:"he has been training a lot recently"},
+{front:"È da gennaio che imparo inglese", back:"I have been learning English since January", speak:"i have been learning english since january"},
+{front:"Stanno esplorando nuove possibilità negli ultimi mesi", back:"They have been exploring new possibilities in recent months", speak:"they have been exploring new possibilities in recent months"},
+{front:"Aspetti qui da tanto?", back:"Have you been waiting here long?", speak:"have you been waiting here long?"},
+{front:"Parliamo di questo problema da giorni", back:"We have been discussing this issue for days", speak:"we have been discussing this issue for days"},
+{front:"Lei sta cambiando idea un po’ troppo ultimamente", back:"She has been changing her mind a little too much of late", speak:"she has been changing her mind a little too much of late"},
+{front:"Sto leggendo molto ultimamente", back:"I have been reading a lot recently", speak:"i have been reading a lot recently"},
+{front:"È da mesi che lui cerca un nuovo lavoro", back:"He has been looking for a new job for months", speak:"he has been looking for a new job for months"},
+{front:"Vivono in questa città dal 2018", back:"They have been living in this city since 2018", speak:"they have been living in this city since 2018"},
+{front:"Usi questo programma da molto tempo?", back:"Have you been using this programme for a long time?", speak:"have you been using this program for a long time?"},
+{front:"È dalle 9 che lei sta cercando di contattare il servizio clienti", back:"She has been trying to contact customer service since nine o’clock", speak:"she has been trying to contact customer service since nine o’clock"},
+{front:"È da settimane che aspettano una risposta", back:"They have been waiting for a reply for weeks", speak:"they have been waiting for a reply for weeks"},
+{front:"È da un anno che lei frequenta un corso di spagnolo", back:"She has been attending a Spanish course for a year", speak:"she has been attending a spanish course for a year"},
+{front:"Guido da ore. Fermiamoci per un po’", back:"I have been driving for hours! Let’s stop for a while", speak:"i have been driving for hours - let’s stop for a while"},
+{front:"È da anni che lui parla di trasferirsi all’estero", back:"He has been talking about moving abroad for years", speak:"he has been talking about moving abroad for years"},
+{front:"È da giorni che preparo questo discorso", back:"I have been preparing this speech for days", speak:"i have been preparing this speech for days"},
+{front:"È dal 2019 che costruiscono quella casa", back:"They have been building that house since 2019", speak:"they have been building that house since 2019"},
+{front:"Lei sta riorganizzando tante cose ultimamente", back:"She has been reorganising a lot of things lately", speak:"she has been reorganising a lot of things lately"},
+{front:"Viviamo qui da tanto tempo", back:"We have been living here for a long time", speak:"we have been living here for a long time"},
+{front:"È da ore che lui prova a risolvere il problema", back:"He has been trying to solve the problem for hours", speak:"he has been trying to solve the problem for hours"},
+{front:"Stiamo osservando molti cambiamenti in questi ultimi mesi", back:"We have been observing many changes over the last few months", speak:"we have been observing many changes over the last few months"},
+{front:"Lei frequenta l’università dal 2020", back:"She has been attending university since 2020", speak:"she has been attending university since 2020"},
+{front:"Collaborano insieme da molto tempo", back:"They have been collaborating together for a long time", speak:"they have been collaborating together for a long time"},
+{front:"È da anni che aspettiamo questo momento", back:"We have been waiting for this moment for years", speak:"we have been waiting for this moment for years"},
+{front:"Lui impara a suonare la chitarra solo da qualche mese", back:"He has been learning to play the guitar for only a few months", speak:"he has been learning to play the guitar for only a few months"},
+{front:"È da stamattina che cerco quel documento", back:"I’ve been looking for that document since this morning", speak:"i’ve been looking for that document since this morning"},
+{front:"È dalle 10 che lui parla al telefono", back:"He’s been talking on the phone since ten o’clock", speak:"he’s been talking on the phone since ten o’clock"},
+{front:"È da settimane che cercano una soluzione", back:"They have been searching for a solution for weeks", speak:"they have been searching for a solution for weeks"},
+{front:"Lei insegna inglese da molti anni", back:"She has been teaching English for many years", speak:"she has been teaching english for many years"},
+{front:"Da quando aspetti l’autobus?", back:"Since when have you been waiting for the bus?", speak:"since when have you been waiting for the bus?"},
+{front:"Da quanto tempo vivi qui?", back:"How long have you been living here?", speak:"how long have you been living here?"},
+{front:"Da quanto tempo lavori da queste parti?", back:"How long have you been working around here?", speak:"how long have you been working around here?"},
+{front:"Da quando stai pensando a questa idea?", back:"Since when have you been thinking about this idea?", speak:"since when have you been thinking about this idea?"},
+{front:"Da quanto tempo stai provando a risolvere questo problema?", back:"How long have you been trying to solve this problem?", speak:"how long have you been trying to solve this problem?"},
+{front:"Da quanto tempo lui si sta comportando così?", back:"For how long has he been behaving like this?", speak:"for how long has he been behaving like this?"},
+{front:"Sono qui da due ore", back:"I have been here for two hours", speak:"i have been here for two hours"},
+{front:"Da quando sei qui?", back:"Since when have you been here?", speak:"since when have you been here?"},
+{front:"Da quanti giorni funziona così?", back:"For how many days has it been working like this?", speak:"for how many days has it been working like this?"},
+{front:"Sono diversi mesi che voglio chiedertelo", back:"I’ve been wanting to ask you for several months", speak:"i’ve been wanting to ask you for several months"},
+{front:"È da tanto che vengono?", back:"Have they been coming for a long time?", speak:"have they been coming for a long time?"},
+{front:"Lui fuma da quando aveva 15 anni", back:"He’s been smoking since he was fifteen", speak:"he’s been smoking since he was fifteen"},
+{front:"Da quanti anni si frequentano?", back:"How many years have they been going out with each other?", speak:"how many years have they been going out with each other?"},
+{front:"Non so dirti da quanto tempo lei sta avendo questi problemi", back:"I can’t tell you how long she's been having these problems", speak:"i can’t tell you how long she's been having these problems"},
+{front:"È da qualche settimana che sto sperimentando nuove ricette", back:"I have been experimenting with new recipes for a few weeks", speak:"i have been experimenting with new recipes for a few weeks"},
+{front:"Da quanti giorni ormai stai cercando di imparare a memoria quella poesia?!", back:"For how many days now have you been trying to learn that poem by heart?!", speak:"for how many days now have you been trying to learn that poem by heart?!"},
+{front:"È da mesi che stanno cercando di convincerlo a cambiare idea", back:"They have been trying for months to convince him to change his mind", speak:"they have been trying for months to convince him to change his mind"}
+],
+
+6:[
+{front:"Erano tre giorni che preparavo la presentazione", back:"I had been preparing the presentation for three days", speak:"i had been preparing the presentation for three days"},
+{front:"Era dall’alba che camminavano", back:"They had been walking since dawn", speak:"they had been walking since dawn"},
+{front:"Era dal 2019 che lei gestiva quel locale", back:"She had been running that place since 2019", speak:"she had been running that place since 2019"},
+{front:"Da quanto tempo mi aspettavi?", back:"How long had you been waiting for me?", speak:"how long had you been waiting for me?"},
+{front:"Erano ore che lui cercava di riparare il motore", back:"He had been trying to repair the engine for hours", speak:"he had been trying to repair the engine for hours"},
+{front:"Era da settimane che cercavo di parlargli", back:"I had been trying to speak to him for weeks", speak:"i had been trying to speak to him for weeks"},
+{front:"Erano mesi che lavoravano a quel progetto", back:"They had been working on that project for months", speak:"they had been working on that project for months"},
+{front:"Era da tempo che lei si lamentava del rumore", back:"She had been complaining about the noise for a long time", speak:"she had been complaining about the noise for a long time"},
+{front:"Da quanto tempo studiavi per quell’esame?", back:"How long had you been studying for that exam?", speak:"how long had you been studying for that exam?"},
+{front:"Erano anni che cercavamo una soluzione migliore", back:"We had been searching for a better solution for years", speak:"we had been searching for a better solution for years"},
+{front:"Da quando lavoravi in quell’ufficio?", back:"Since when had you been working in that office?", speak:"since when had you been working in that office?"},
+{front:"Erano ore che discutevano senza arrivare ad un accordo", back:"They had been arguing for hours without reaching an agreement", speak:"they had been arguing for hours without reaching an agreement"},
+{front:"Era da mesi che lei si preparava per quel colloquio", back:"She had been preparing for that interview for months", speak:"she had been preparing for that interview for months"},
+{front:"Da quanto tempo cercavi di cambiare lavoro?", back:"How long had you been trying to change jobs?", speak:"how long had you been trying to change jobs?"},
+{front:"Progettavano il viaggio già dall’inverno scorso", back:"They had already been planning the trip since last winter", speak:"they had already been planning the trip since last winter"},
+{front:"Da quando lavoravi a quell’idea?", back:"Since when had you been working on that idea?", speak:"since when had you been working on that idea?"},
+{front:"Erano mesi che lei raccoglieva quei documenti", back:"She had been collecting those documents for months", speak:"she had been collecting those documents for months"},
+{front:"Erano cinque giorni che aspettavamo notizie", back:"We had been waiting for news for five days", speak:"we had been waiting for news for five days"},
+{front:"Era dall’infanzia che lui sognava quel momento", back:"He had been dreaming of that moment since childhood", speak:"he had been dreaming of that moment since childhood"},
+{front:"Era da oltre una settimana che cercavano di convincerlo", back:"They had been trying to convince him for over a week", speak:"they had been trying to convince him for over a week"},
+{front:"Lei studiava quella zona da mesi", back:"She had been studying that area for months", speak:"she had been studying that area for months"},
+{front:"Da quanto tempo lavoravi lì?", back:"How long had you been working there?", speak:"how long had you been working there?"},
+{front:"Ne parlavano da ore e ore", back:"They had been talking about it for hours and hours", speak:"they had been talking about it for hours and hours"},
+{front:"Era da tempo che pensavo a quella decisione", back:"I had been thinking about that decision for a long time", speak:"i had been thinking about that decision for a long time"},
+{front:"Cercavo le chiavi da ieri mattina", back:"I had been looking for the keys since yesterday morning", speak:"i had been looking for the keys since yesterday morning"},
+{front:"Erano anni che aspettavano quell’occasione", back:"They had been waiting for that opportunity for years", speak:"they had been waiting for that opportunity for years"},
+{front:"Da quanto tempo provavi a risolvere il problema?", back:"How long had you been trying to solve the problem?", speak:"how long had you been trying to solve the problem?"},
+{front:"Erano molti giorni che preparavano la festa", back:"They had been preparing the party for many days", speak:"they had been preparing the party for many days"},
+{front:"Vivevano lì dal 2015", back:"They had been living there since 2015", speak:"they had been living there since 2015"},
+{front:"Da quando aspettavi quel messaggio?", back:"Since when had you been waiting for that message?", speak:"since when had you been waiting for that message?"},
+{front:"Lei collezionava quei libri da diversi anni", back:"She had been collecting those books for several years", speak:"she had been collecting those books for several years"},
+{front:"Da quanto tempo aspettavate fuori?", back:"How long had you been waiting outside?", speak:"how long had you been waiting outside?"},
+{front:"Erano tanti anni che provavano a riparare quella strada", back:"They had been trying to repair that road for many years", speak:"they had been trying to repair that road for many years"},
+{front:"Da quanti anni facevi avanti e indietro?", back:"For how many years had you been travelling back and forth?", speak:"for how many years had you been travelling back and forth?"},
+{front:"Se pioveva non sarei uscito", back:"If it had been raining, I wouldn’t have gone out", speak:"if it had been raining - i wouldn’t have gone out"},
+{front:"Se venivano oggi anziché domani sarebbe stato meglio", back:"If they had been coming today instead of tomorrow, it would have been better", speak:"if they had been coming today instead of tomorrow - it would have been better"},
+{front:"Se partivo la prossima settimana e non questa non sarei potuto venire alla tua festa", back:"If I had been leaving next week and not this week, I wouldn’t have been able to come to your party", speak:"if i had been leaving next week and not this week - i wouldn’t have been able to come to your party"},
+{front:"Se lui lavorava da casa ieri non avrebbe saputo nulla di quello che è successo", back:"If he had been working from home yesterday, he wouldn’t have known anything about what happened", speak:"if he had been working from home yesterday - he wouldn’t have known anything about what happened"},
+{front:"Se guidavo io e non lei saremmo arrivati prima", back:"If I had been driving and not her, we would have arrived sooner", speak:"if i had been driving and not her - we would have arrived sooner"},
+{front:"Se non avessero avuto una riunione all’una sarebbero usciti a pranzo", back:"If they hadn’t been having a meeting at one o’clock, they would have gone out for lunch", speak:"if they hadn’t been having a meeting at one o’clock - they would have gone out for lunch"}
+],
+
+7:[
+ {front:"A dicembre saranno cinque anni che lavoro qui", back:"Come December, I will have been working here for five years", speak:"come december - i will have been working here for five years"},
+{front:"Entro giugno saranno tre anni che lei vive a Berlino", back:"By June, she will have been living in Berlin for three years", speak:"by june - she will have been living in berlin for three years"},
+{front:"Fra due settimane saranno sei mesi che studio giapponese", back:"In two weeks’ time, I will have been studying Japanese for six months", speak:"in two weeks’ time - i will have been studying japanese for six months"},
+{front:"A settembre saranno vent’anni che lei insegna", back:"Come September, she will have been teaching for twenty years", speak:"come september - she will have been teaching for twenty years"},
+{front:"Entro fine anno saranno otto anni che lui gestisce l’attività", back:"By the end of the year, he will have been running the business for eight years", speak:"by the end of the year - he will have been running the business for eight years"},
+{front:"A marzo sarà più di un anno che scrivo questo libro", back:"By March, I will have been writing this book for over a year", speak:"by march - i will have been writing this book for over a year"},
+{front:"A luglio saranno quindici anni che viviamo qui", back:"Come July, we will have been living here for fifteen years", speak:"come july - we will have been living here for fifteen years"},
+{front:"Al prossimo compleanno saranno trent’anni che lui fuma", back:"On his next birthday, he will have been smoking for thirty years", speak:"on his next birthday - he will have been smoking for thirty years"},
+{front:"A fine mese saranno quattro mesi precisi che preparo questo concorso", back:"At the end of the month, I will have been preparing for this exam for exactly four months", speak:"at the end of the month - i will have been preparing for this exam for exactly four months"},
+{front:"Entro novembre saranno cinque anni che collaborano", back:"By November, they will have been collaborating for five years", speak:"by november - they will have been collaborating for five years"},
+{front:"Fra poco saranno sei mesi che lei allena la squadra", back:"Soon, she will have been coaching the team for six months", speak:"soon - she will have been coaching the team for six months"},
+{front:"Quando arriveremo avrò guidato per sei ore senza sosta", back:"When we arrive, I will have been driving non-stop for six hours", speak:"when we arrive - i will have been driving non-stop for six hours"},
+{front:"All’ora di pranzo saranno quasi quattro ore che lavoriamo alla nostra presentazione", back:"Come lunchtime, we will have been working on our presentation for nearly four hours", speak:"come lunchtime - we will have been working on our presentation for nearly four hours"},
+{front:"Quando finirà il suo discorso lei avrà parlato per due ore", back:"When she finishes her speech, she will have been speaking for two hours", speak:"when she finishes her speech - she will have been speaking for two hours"},
+{front:"Quando arriverò a Parigi sarò stato in viaggio per dodici ore", back:"When I arrive in Paris, I will have been travelling for twelve hours", speak:"when i arrive in paris - i will have been travelling for twelve hours"},
+{front:"Quando lui si ritirerà alla fine della stagione avrà giocato a calcio per ventitré anni", back:"When he retires at the end of the season, he will have been playing football for twenty-three years", speak:"when he retires at the end of the season - he will have been playing football for twenty-three years"},
+{front:"A fine anno quanti anni saranno che lavori qui?", back:"At the end of the year, how many years will you have been working here?", speak:"at the end of the year - how many years will you have been working here?"},
+{front:"A fine mese quanto tempo sarà che studi medicina?", back:"At the end of the month, how long will you have been studying medicine for?", speak:"at the end of the month -  how long will you have been studying medicine for?"},
+{front:"A fine anno quanti anni saranno che vivi all’estero?", back:"By the end of the year, how many years will you have been living abroad?", speak:"by the end of the year - how many years will you have been living abroad?"},
+{front:"A settembre quanti anni saranno che collaborano?", back:"By September, for how many years will they have been collaborating?", speak:"by september - for how many years will they have been collaborating?"},
+{front:"L’anno prossimo quanti anni in totale saranno che vivi qui?", back:"Come next year, how many years in total will you have been living here?", speak:"come next year - how many years in total will you have been living here?"},
+{front:"Quando torneranno dall'estero per quanto tempo avranno lavorato insieme?", back:"When they return from abroad, for how long will they have been working together?", speak:"when they return from abroad - for how long will they have been working together?"},
+{front:"A dicembre saranno due anni che gestisco questo sito web", back:"In December, I will have been managing this website for two years", speak:"in december - i will have been managing this website for two years"},
+{front:"Entro agosto saranno quattro anni che sviluppano quel software", back:"By August, they will have been developing that software for four years", speak:"by august - they will have been developing that software for four years"},
+{front:"A febbraio saranno quasi tre mesi che lei segue quella dieta", back:"Come February, she will have been following that diet for nearly three months", speak:"come february - she will have been following that diet for nearly three months"},
+{front:"A fine anno saranno dieci anni che lui investe nel mercato azionario", back:"By the end of the year, he will have been investing in the stock market for ten years", speak:"by the end of the year - he will have been investing in the stock market for ten years"},
+{front:"Quando arriveremo sarà già da almeno quarantacinque minuti che discutono del problema", back:"When we arrive, they will already have been debating the problem for at least forty-five minutes", speak:"when we arrive - they will already have been debating the problem for at least forty-five minutes"},
+{front:"A settembre saranno cinque anni che ricercano nuove soluzioni", back:"By September, they will have been researching new solutions for five years", speak:"by september - they will have been researching new solutions for five years"},
+{front:"Domani compreso per quanti giorni avrai aspettato una risposta?", back:"Including tomorrow, how many days will you have been waiting for an answer?", speak:"including tomorrow - how many days will you have been waiting for an answer?"},
+{front:"Quando loro arriveranno per quanto tempo li avrete aspettati?", back:"When they arrive, how long will you have been waiting for them?", speak:"when they arrive - how long will you have been waiting for them?"},
+{front:"Quando arriverai per quanto tempo avrai guidato?", back:"When you arrive, how many hours will you have been driving?", speak:"when you arrive - how many hours will you have been driving?"},
+{front:"A fine anno da quanto tempo avrai lavorato qui?", back:"By the end of this year, how long will you have been working here?", speak:"by the end of this year - how long will you have been working here?"}
+],
+
+8: [
+
+{front:"Se non me ne fossi andato via sarebbero dieci anni che avrei lavorato lì", back:"If I hadn’t left, I would have been working there for ten years", speak:"if i hadn’t left - i would have been working there for ten years"},
+
+{front:"Lui sarebbe stato ancora a studiare ma si è addormentato", back:"He would still have been studying, but he fell asleep", speak:"he would still have been studying - but he fell asleep"},
+
+{front:"Credo che lei sarebbe stata a parlare con il direttore in quel momento", back:"I think she would have been speaking to the manager at that moment", speak:"i think she would have been speaking to the manager at that moment"},
+
+{front:"Lui sarebbe stato ancora ad aspettare fuori se non lo avessi chiamato dentro", back:"He would still have been waiting outside if I hadn’t called him inside", speak:"he would still have been waiting outside - if i hadn’t called him inside"},
+
+{front:"Immagino che lei sarebbe stata a cercare una soluzione diversa per tutta la mattina", back:"I imagine she would have been looking for a different solution all morning", speak:"i imagine she would have been looking for a different solution all morning"},
+
+{front:"Sono sicuro che lui sarebbe stato a discutere del problema con calma", back:"I'm sure he would have been discussing the problem calmly", speak:"i'm sure he would have been discussing the problem calmly"},
+
+{front:"Sono abbastanza convinto che lei sarebbe stata a comporre un’altra email mentre noi parlavamo", back:"I’m fairly sure that she would have been composing another email while we were talking", speak:"i’m fairly sure that she would have been composing another email while we were talking"},
+
+{front:"Conoscendolo, lui sarebbe stato a pensare a una nuova strategia per ore", back:"Knowing him, he would have been thinking about a new strategy for hours", speak:"knowing him - he would have been thinking about a new strategy for hours"},
+
+{front:"Lei sarebbe stata a lavorare tutta la notte se non fosse stata così stanca", back:"She would have been working all night long if she hadn’t been so tired", speak:"she would have been working all night long - if she hadn’t been so tired"},
+
+{front:"Lui sarebbe stato a lavorare in ufficio oggi ma tutto era chiuso per sciopero", back:"He would have been working at the office today, but everything was closed due to the strike", speak:"He would have been working at the office today -  but everything was closed due to the strike"},
+
+{front:"Lei sarebbe stata a presentare il progetto questo pomeriggio ma la riunione è stata rimandata", back:"She would have been presenting the project this afternoon, but the meeting has been postponed", speak:"she would have been presenting the project this afternoon - but the meeting has been postponed"},
+
+{front:"Lui sarebbe stato a giocare a tennis oggi ma ha un problema al ginocchio", back:"He would have been playing tennis today, but he has a knee problem", speak:"he would have been playing tennis today - but he has a knee problem"},
+
+{front:"Lei sarebbe stata a viaggiare verso Londra in quel momento ma il volo è stato cancellato", back:"She would have been travelling to London at that time, but the flight was cancelled", speak:"she would have been travelling to london at that time - but the flight was cancelled"},
+
+{front:"Lui sarebbe stato a incontrare il cliente più tardi ma l’appuntamento è saltato", back:"He would have been meeting the client later, but the appointment has fallen through", speak:"he would have been meeting the client later - but the appointment has fallen through"},
+
+{front:"Lei sarebbe stata a preparare la cena per tutti stasera ma abbiamo deciso di ordinare take-away", back:"She would have been cooking dinner for everyone tonight, but we've decided to order a take-away", speak:"she would have been cooking dinner for everyone tonight - but we've decided to order a take-away"},
+
+{front:"Lui sarebbe stato a frequentare quel corso quest’anno ma ha cambiato programma", back:"He would have been attending that course this year, but he's changed plans", speak:"he would have been attending that course this year - but he's changed plans"},
+
+{front:"Lei sarebbe stata a partecipare alla conferenza domani ma l’invito non è mai arrivato", back:"She would have been attending the conference tomorrow, but the invitation never arrived", speak:"she would have been attending the conference tomorrow - but the invitation never arrived"},
+
+{front:"Lui sarebbe stato a sistemare il giardino questo fine settimana ma è previsto maltempo", back:"He would have been tidying up the garden this weekend, but bad weather is forecast", speak:"he would have been tidying up the garden this weekend - but bad weather is forecast"},
+
+{front:"Lei sarebbe stata a preparare la valigia oggi per il viaggio ma è stato annullato", back:"She would have been packing for her trip today, but it's been cancelled", speak:"she would have been packing for her trip today - but it's been cancelled"},
+
+{front:"Lui sarebbe stato a sistemare il computer da ore in quel momento", back:"He would have been fixing the computer for hours at that moment", speak:"he would have been fixing the computer for hours at that moment"},
+
+{front:"Lo facevo domani ma ho cambiato programma", back:"I would have been doing it tomorrow, but I've changed my plans", speak:"i would have been doing it tomorrow - but i've changed my plans"},
+
+{front:"Lei sarebbe stata ancora a spiegare la situazione se non l’avessero interrotta", back:"She would still have been explaining the situation if they hadn’t interrupted her", speak:"she would still have been explaining the situation - if they hadn’t interrupted her"},
+
+{front:"Lui sarebbe stato a correre al parco questa mattina ma ha iniziato a piovere", back:"He would have been running in the park this morning, but it started raining", speak:"he would have been running in the park this morning - but it started raining"},
+
+{front:"Lei sarebbe stata a lavorare da casa oggi ma l’hanno chiamata in ufficio", back:"She would have been working from home today, but they've called her into the office", speak:"she would have been working from home today - but they've called her into the office"},
+
+{front:"Probabilmente perché lui sarebbe stato a guardare la partita in quel momento", back:"Probably because he would have been watching the match at that time", speak:"probably because he would have been watching the match at that time"},
+
+{front:"Lei sarebbe stata a fare una telefonata importante a quell'ora", back:"She would have been making an important phone call at that time", speak:"she would have been making an important phone call at that time"},
+
+{front:"Andavo a trovarlo più tardi ma l’appuntamento è saltato", back:"I would have been seeing him later, but the appointment has been cancelled", speak:"i would have been seeing him later - but the appointment has been cancelled"},
+
+{front:"Lui sarebbe stato a controllare i dati da tutta la mattina", back:"He would have been checking the data all morning", speak:"he would have been checking the data all morning"},
+
+{front:"Lei sarebbe stata a leggere quel documento da almeno mezz’ora", back:"She would have been reading that document for at least half an hour", speak:"she would have been reading that document for at least half an hour"},
+
+{front:"Per tutta la giornata, lui sarebbe stato a organizzare il viaggio con calma ", back:"He would have been taking his time all day long organising everything for the trip", speak:"he would have been taking his time - all day long - organising everything for the trip"}
+],
+
+9: [
+
+{it:"Lui deve aver dimenticato le chiavi", en:"He must have forgotten the keys", speak:["he must have forgotten the keys"]},
+{it:"Lei deve aver preso un taxi per arrivarci", en:"She must have taken a taxi to get there", speak:["she must have taken a taxi to get there"]},
+{it:"Lui deve aver sbagliato numero almeno tre volte", en:"He must have dialled the wrong number at least three times", speak:["he must have dialled the wrong number at least three times"]},
+{it:"Non lo vedo. Lui deve aver perso il treno", en:"I can’t see him. He must have missed the train", speak:["i can’t see him. he must have missed the train"]},
+{it:"Lei deve aver capito male", en:"She must have misunderstood", speak:["she must have misunderstood"]},
+{it:"Devono aver cambiato programma", en:"They must have changed plans", speak:["they must have changed plans"]},
+{it:"Lui deve aver finito tardi ieri sera", en:"He must have finished late last night", speak:["he must have finished late last night"]},
+{it:"Lei deve aver già letto il tuo messaggio", en:"She must have already read your message", speak:["she must have already read your message"]},
+{it:"Deve aver piovuto stanotte", en:"It must have rained last night", speak:["it must have rained last night"]},
+{it:"Deve essere successo quando io non c’ero. Altrimenti non si spiega", en:"It must have happened while I wasn’t here. Otherwise, there’s no explanation", speak:["it must have happened while i wasn’t here. otherwise, there’s no explanation"]},
+
+{it:"Avrei potuto dirtelo io", en:"I could have told you that myself", speak:["i could have told you that myself"]},
+{it:"Sono sicuro che lui avrebbe potuto aiutarti", en:"I’m sure he could have helped you", speak:["i’m sure he could have helped you"]},
+{it:"Secondo me lei avrebbe potuto spiegarlo meglio", en:"I think she could have explained it better", speak:["i think she could have explained it better"]},
+{it:"A saperlo, avremmo potuto partire prima", en:"We could have left earlier if we had known", speak:["we could have left earlier - if we had known"]},
+{it:"Lui poteva almeno chiamare per farci sapere", en:"He could have at least called to let us know", speak:["he could have at least called to let us know"]},
+{it:"Lei avrebbe potuto aspettare un po’ di più", en:"She could have waited a little longer", speak:["she could have waited a little longer"]},
+{it:"Non potevi chiedere?", en:"Couldn’t you have asked?", speak:["couldn’t you have asked?"]},
+{it:"Se fossero rimasti altri 10 minuti, lui avrebbe potuto vincere", en:"He could have won if there had been another 10 minutes left", speak:["he could have won if there had been another 10 minutes left"]},
+{it:"Lei non nega che avrebbe potuto studiare di più", en:"She doesn’t deny that she could have studied harder", speak:["she doesn’t deny that she could have studied harder"]},
+{it:"Peccato, perché, a quanto pare, potevano restare fino alla fine", en:"It’s a pity because, apparently, they could have stayed until the end", speak:["it’s a pity because, apparently, they could have stayed until the end"]},
+
+{it:"Lui avrebbe dovuto ascoltare con più attenzione", en:"He should have listened more carefully", speak:["he should have listened more carefully"]},
+{it:"Lei avrebbe dovuto controllare la posta prima di andare via", en:"She should have checked her mail before she left", speak:["she should have checked her mail before she left"]},
+{it:"Avrei dovuto dirlo prima ma ero un po’ indeciso", en:"I should have said it earlier but I was undecided", speak:["i should have said it earlier but i was undecided"]},
+{it:"Avresti dovuto chiamarmi. Sarei venuto con te", en:"You should have called me. I would have come with you", speak:["you should have called me. i would have come with you"]},
+{it:"Lui avrebbe dovuto spegnerlo. Sembra che si sia scordato", en:"He should have switched it off. It seems he forgot to", speak:["he should have switched it off. it seems he forgot to"]},
+{it:"Lei avrebbe dovuto spiegare tutta la situazione", en:"She should have explained the whole situation", speak:["she should have explained the whole situation"]},
+{it:"Avremmo dovuto pensarci più a lungo, non credi?", en:"We should have thought about it more, don’t you think?", speak:["we should have thought about it more, don’t you think?"]},
+{it:"Lui avrebbe dovuto andarci a piedi. Sarebbe stato più veloce", en:"He should have walked there. It would have been quicker", speak:["he should have walked there. it would have been quicker"]},
+{it:"Lei non avrebbe dovuto interrompere. È stata molto maleducata", en:"She shouldn’t have interrupted. She was very rude", speak:["she shouldn’t have interrupted. she was very rude"]},
+{it:"Dovevo uscire ma non mi andava", en:"I should have gone out but I didn’t feel like it", speak:["i should have gone out but i didn’t feel like it"]},
+
+{it:"Lui non può aver mentito. Non sarebbe stato da lui", en:"He can’t have lied. It would have been unlike him", speak:["he can’t have lied. it would have been unlike him"]},
+{it:"Lei non può aver dimenticato", en:"She can’t have forgotten", speak:["she can’t have forgotten"]},
+{it:"Non possono aver sbagliato tutto", en:"They can’t have got everything wrong", speak:["they can’t have got everything wrong"]},
+{it:"Lui non può aver perso tutto", en:"He can’t have lost everything", speak:["he can’t have lost everything"]},
+{it:"Lei non può aver capito così male", en:"She can’t have misunderstood so badly", speak:["she can’t have misunderstood so badly"]},
+{it:"Lui non può aver chiuso così presto", en:"He can’t have closed so early", speak:["he can’t have closed so early"]},
+{it:"Lei non può aver visto tutto", en:"She can’t have seen everything", speak:["she can’t have seen everything"]},
+{it:"Non possono aver deciso così in fretta", en:"They can’t have decided so quickly", speak:["they can’t have decided so quickly"]},
+{it:"Lui non può aver detto questo", en:"He can’t have said that", speak:["he can’t have said that"]},
+{it:"Lei non può aver speso tutti quei soldi", en:"She can’t have spent all that money", speak:["she can’t have spent all that money"]},
+
+{it:"Lui potrebbe aver dimenticato l’appuntamento", en:"He MAY/MIGHT have forgotten the appointment", speak:["he may have forgotten the appointment"]},
+{it:"È possibile che lei abbia perso il treno", en:"She MAY/MIGHT have missed the train", speak:["she may have missed the train"]},
+{it:"Può darsi che abbiano cambiato programma", en:"They MAY/MIGHT have changed plans", speak:["they may have changed plans"]},
+{it:"C’è la possibilità che lui abbia preso la strada sbagliata", en:"He MAY/MIGHT have taken the wrong road", speak:["he may have taken the wrong road"]},
+{it:"Lei potrebbe aver capito male", en:"She MAY/MIGHT have misunderstood", speak:["she may have misunderstood"]},
+
+{it:"Non è escluso che abbiano già deciso", en:"They MIGHT/MAY have already decided", speak:["they might have already decided"]},
+{it:"Lui potrebbe aver esagerato", en:"He MIGHT/MAY have exaggerated", speak:["he might have exaggerated"]},
+{it:"È possibile che lei abbia dimenticato di chiamare", en:"She MIGHT/MAY have forgotten to call", speak:["she might have forgotten to call"]},
+{it:"Può darsi che abbiano chiuso prima del solito oggi", en:"They MIGHT/MAY have closed earlier than usual today", speak:["they might have closed earlier than usual today"]},
+{it:"C’è la possibilità che lui abbia dormito poco", en:"He MIGHT/MAY not have slept very much", speak:["he might not have slept very much"]},
+
+{it:"Forse lui ha dimenticato l’appuntamento", en:"He MIGHT/MAY have forgotten the appointment", speak:["he might have forgotten the appointment"]},
+{it:"Forse lei ha perso il treno", en:"She MIGHT/MAY have missed the train", speak:["she might have missed the train"]},
+{it:"Potrebbero aver sbagliato indirizzo, secondo te?", en:"Do you think they MIGHT/MAY have got the address wrong?", speak:["do you think they might have got the address wrong?"]},
+{it:"Può darsi che lui ti abbia frainteso", en:"He MIGHT/MAY have misunderstood you", speak:["he might have misunderstood you"]},
+{it:"È possibile che lei abbia già cambiato idea", en:"She MIGHT/MAY have already changed her mind", speak:["she might have already changed her mind"]},
+
+{it:"Può darsi che abbiano preso un’altra decisione", en:"They MAY/MIGHT have taken a different decision", speak:["they may have taken a different decision"]},
+{it:"Potrebbe essere già andato via", en:"He MAY/MIGHT have already left", speak:["he may have already left"]},
+{it:"Può darsi che lei abbia lasciato a casa le chiavi", en:"She MIGHT/MAY have left her keys at home", speak:["she might have left her keys at home"]},
+{it:"È possibile che abbiano già annullato l’incontro", en:"They MAY/MIGHT have already cancelled the meeting", speak:["they may have already cancelled the meeting"]},
+{it:"Può darsi che non sia stato possibile", en:"It MIGHT/MAY not have been possible", speak:["it might not have been possible"]}
+
+],
+
+10: [
+
+{it:"Lui dev’essere stato a correre stamattina, perché è molto sudato", en:"He must have been running this morning because he’s very sweaty", speak:["he must have been running this morning - because he’s very sweaty"]},
+{it:"Lei dev’essere stata a piangere, credo, perché ha gli occhi rossi", en:"She must have been crying, I reckon, because her eyes are red", speak:["she must have been crying i reckon - because her eyes are red"]},
+{it:"Devono essere stati a discutere, secondo me. Hai notato come si ignorano?", en:"I think they must have been arguing. Have you noticed how they are ignoring each other?", speak:["i think they must have been arguing, - have you noticed how they are ignoring each other?"]},
+{it:"Lui dev’essere stato a cucinare prima, perché la cucina è sottosopra", en:"He must have been cooking earlier because the kitchen is a mess", speak:["he must have been cooking earlier - because the kitchen is a mess"]},
+{it:"Lei dev’essere stata a mettere tutto in ordine, perché è tutto perfetto", en:"She must have been tidying up because everything is perfect", speak:["she must have been tidying up - because everything is perfect"]},
+{it:"Dev’essere stato a sistemare la bici, perché ha le mani sporche ormai", en:"He must have been fixing the bike because his hands are now dirty", speak:["he must have been fixing the bike - because his hands are now dirty"]},
+{it:"Lei dev’essere stata a studiare tanto in questi giorni perché sembra che sappia tutto", en:"She must have been studying a lot over the last few days because she seems to know everything", speak:["she must have been studying a lot over the last few days - because she seems to know everything"]},
+{it:"Devono essere stati a provare la scena molte volte perché sono molto sincronizzati", en:"They must have been rehearsing the scene many times because they’re perfectly in sync", speak:["they must have been rehearsing the scene many times - because they’re perfectly in sync"]},
+{it:"Lui dev’essere stato a gridare come al solito, perché è senza voce", en:"He must have been shouting as usual because he’s lost his voice", speak:["he must have been shouting as usual - because he’s lost his voice"]},
+{it:"Dev’aver piovuto durante la notte, perché è tutto bagnato fuori", en:"It must have been raining during the night because everything is wet outside", speak:["it must have been raining during the night - because everything is wet outside"]},
+
+{it:"Lui non può essere stato a dormire, perché era ancora online a quell’ora", en:"He can’t have been sleeping because he was still online at that hour", speak:["he can’t have been sleeping - because he was still online at that hour"]},
+{it:"Lei non può essere stata a guidare, perché ha il polso rotto", en:"She can’t have been driving because she’s broken her wrist", speak:["she can’t have been driving - because she’s broken her wrist"]},
+{it:"Non possono essere stati a studiare, perché li ho visti al parco", en:"They can’t have been studying because I saw them at the park", speak:["they can’t have been studying - because i saw them at the park"]},
+{it:"Non può essere stato lui a parlare perché è senza voce", en:"He can’t have been speaking because he’s lost his voice", speak:["he can’t have been speaking - because he’s lost his voice"]},
+{it:"Lei non può essere stata a correre stamattina, perché ha la febbre", en:"She can’t have been running this morning because she’s running a temperature", speak:["she can’t have been running this morning - because she’s running a temperature"]},
+{it:"Non possono essere stati a discutere, perché ridevano quando li ho visti", en:"They can’t have been arguing because they were laughing when I saw them", speak:["they can’t have been arguing - because they were laughing when i saw them"]},
+{it:"Lui non può essere stato a lavorare, perché era in vacanza", en:"He can’t have been working because he was on holiday", speak:["he can’t have been working - because he was on holiday"]},
+{it:"Lei non può essere stata a lavorare da sola, perché vedo due tazze nel lavandino", en:"She can’t have been working alone because I can see two cups in the sink", speak:["she can’t have been working alone - because i can see two cups in the sink"]},
+{it:"Di sicuro, non possono essere stati a sistemare la casa mentre eravamo fuori, perché è ancora in disordine", en:"They definitely can’t have been tidying the house while we were out because it’s still messy", speak:["they definitely can’t have been tidying the house while we were out - because it’s still messy"]},
+{it:"Lui non può essere stato a mentire, perché ha le prove", en:"He can’t have been lying because he’s got proof", speak:["he can’t have been lying - because he’s got proof"]},
+
+{it:"Potrebbe essere stato a dormire quando hai suonato il campanello", en:"He MIGHT/MAY have been sleeping when you rang the doorbell", speak:["he might have been sleeping when you rang the doorbell"]},
+{it:"Il ladro potrebbe essere stato a osservare la casa per giorni", en:"The thief MIGHT/MAY have been watching the house for days", speak:["the thief might have been watching the house for days"]},
+{it:"Potrebbe essere stata a lavorare fino a tardi in ospedale ieri sera", en:"She MAY/MIGHT have been working late at the hospital last night", speak:["she may have been working late at the hospital last night"]},
+{it:"Potrei essere stato ad esagerare un po’ quando ho detto che era il miglior film che avessi mai visto", en:"I MAY/MIGHT have been exaggerating a bit when I said it was the best film I’d ever seen", speak:["i may have been exaggerating a bit - when i said it was the best film i’d ever seen"]},
+{it:"I vicini potrebbero essere stati a litigare; ho sentito molte urla", en:"The neighbours might have been having an argument; I heard a lot of shouting", speak:["the neighbours might have been having an argument - i heard a lot of shouting"]},
+{it:"Può darsi che stesse cercando di chiamarti quando il telefono non aveva segnale", en:"He MIGHT/MAY have been trying to call you while your phone was out of range", speak:["he might have been trying to call you while your phone was out of range"]},
+{it:"Penso che potremmo aver fatto pagare troppo i clienti in questo periodo a causa di questo errore tecnico", en:"I think we MIGHT/MAY have been overcharging customers due to this technical error", speak:["i think we might have been overcharging customers due to this technical error"]},
+{it:"So benissimo perché potresti essere stato a chiederti perché non avessi risposto alla tua email", en:"I know full well why you might have been wondering why I hadn’t answered your email", speak:["i know full well why you might have been wondering why i hadn’t answered your email"]},
+{it:"Avremmo potuto vederli domani se non avessero annullato il viaggio", en:"We might have been seeing them tomorrow if they hadn’t called off their trip", speak:["we might have been seeing them tomorrow if they hadn’t called off their trip"]},
+{it:"Può darsi che stesse piovendo qui, ma giuro che a Londra c’era il sole per tutto il tempo che siamo stati lì", en:"It MAY/MIGHT have been raining here but I swear it was sunny in London all the time we were there", speak:["it may have been raining here - but i swear it was sunny in london all the time we were there"]},
+
+{it:"So che avrei dovuto prestare più attenzione alla strada mentre stavo guidando", en:"I know that I should have been paying more attention to the road while I was driving", speak:["i know that i should have been paying more attention to the road while i was driving"]},
+{it:"Avresti dovuto indossare un giubbotto ad alta visibilità mentre in visita al cantiere", en:"You should have been wearing a high-visibility jacket while visiting the building site", speak:["you should have been wearing a high-visibility jacket while visiting the building site"]},
+{it:"Sarebbero dovuti partire venerdì prossimo, ma il loro cane sta male", en:"They should have been leaving next Friday, but their dog is ill", speak:["they should have been leaving next friday - but their dog is ill"]},
+{it:"Avrei dovuto fare io questa presentazione. Non so perché mi abbiano fermato", en:"I should have been giving this presentation. I don’t know why they stopped me", speak:["i should have been giving this presentation - i don’t know why they stopped me"]},
+{it:"Non avresti dovuto lavorare ieri se avevi la febbre!", en:"You shouldn’t have been working yesterday if you were running a temperature!", speak:["you shouldn’t have been working yesterday if you were running a temperature!"]},
+{it:"Non dovevi partire per la Francia oggi?", en:"Shouldn’t you have been travelling to France today?", speak:["shouldn’t you have been travelling to france today?"]},
+{it:"Avrebbero dovuto giocare la partita domani, ma è stata rinviata", en:"They should have been playing their match tomorrow, but it’s been postponed", speak:["they should have been playing their match tomorrow - but it’s been postponed"]},
+{it:"Se è davvero a dieta, non avrebbe dovuto mangiare la pizza quando l’ho vista ieri sera", en:"If she’s really on a diet, then she shouldn’t have been eating pizza when I saw her last night", speak:["if she’s really on a diet - then she shouldn’t have been eating pizza when i saw her last night"]},
+{it:"Avrebbe dovuto occuparsi del fratello più piccolo ieri sera invece di uscire con la sua ragazza", en:"He should have been looking after his younger brother last night instead of going out with his girlfriend", speak:["he should have been looking after his younger brother last night - instead of going out with his girlfriend"]},
+{it:"Avrei dovuto uscire stasera, ma non ne ho voglia", en:"I should have been going out this evening, but I can’t be bothered", speak:["i should have been going out this evening - but i can’t be bothered"]}
+
+]
+
+};
+
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+let currentSet = 1;
+let fullSet = [];
+let cards = [];
+let index = 0;
+
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const speakBtn  = document.getElementById("speakBtn");
+
+/* ---------- SHUFFLE ---------- */
+function shuffleArray(a){
+  const arr = [...a];
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function pickRandom15(arr){
+  if(!arr || !arr.length) return [];
+  return shuffleArray(arr).slice(0, Math.min(15, arr.length));
+}
+
+/* ---------- LOAD SET ---------- */
+function loadSet(n){
+  currentSet = n;
+
+  if(!sets || !sets[n]) return;
+
+  fullSet = sets[n].filter(Boolean);
+  cards   = pickRandom15(fullSet);
+
+  index = 0;
+  updateCard();
+
+  document.querySelectorAll('.set-btn').forEach((btn,i)=>
+    btn.classList.toggle('active', i + 1 === n)
+  );
+}
+
+/* ---------- REFRESH ---------- */
+function refreshCurrentSet(){
+  if(!fullSet.length) return;
+  cards = pickRandom15(fullSet);
+  index = 0;
+  updateCard();
+}
+
+/* ---------- DISPLAY ---------- */
+function updateCard(){
+  flashcard.classList.remove("flipped");
+  if(!cards.length){
+    frontText.innerText = "—";
+    backText.innerText  = "—";
+    counter.innerText   = "0 / 0";
+    return;
+  }
+
+  setTimeout(()=>{
+    const c = cards[index];
+
+    frontText.innerText = c.it || c.front || "—";
+    backText.innerText  = c.en || c.back  || "—";
+
+    counter.innerText   = `${index + 1} / ${cards.length}`;
+  },120);
+}
+
+/* ---------- NAV ---------- */
+function nextCard(e){
+  e?.stopPropagation();
+  if(!cards.length) return;
+  index = (index + 1) % cards.length;
+  updateCard();
+}
+
+function prevCard(e){
+  e?.stopPropagation();
+  if(!cards.length) return;
+  index = (index - 1 + cards.length) % cards.length;
+  updateCard();
+}
+
+/* ---------- FLIP ---------- */
+flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
+
+/* ---------- SPEAK ---------- */
+speakBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  if(!cards.length) return;
+
+  let t = cards[index].speak;
+  const text = Array.isArray(t) ? t[0] : (t || cards[index].en);
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-GB";
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+});
+
+/* ---------- GLOBAL ---------- */
+window.loadSet = loadSet;
+window.nextCard = nextCard;
+window.prevCard = prevCard;
+window.refreshCurrentSet = refreshCurrentSet;
+
+/* ---------- INIT ---------- */
+loadSet(1);
+
+});
+</script>
+
+</body>
+</html>
