@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flashcards – Auxiliary Verbs N°1</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+<style>
+:root{
+  --bg-blue:#061247;
+  --front-purple:#561386;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+  --border-red:#8C0327;
+}
+body{
+  background:var(--bg-blue);
+  font-family:system-ui, Segoe UI, Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem 1rem 0 1rem;
+  gap:.3rem;
+}
+.perspective{perspective:1000px;}
+.card-inner{
+  width:90vw;
+  max-width:380px;
+  height:55vw;
+  max-height:240px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:.4s;
+  cursor:pointer;
+}
+.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:1rem;}
+.back{transform:rotateY(180deg);}
+.it-text,.en-text{
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1rem;
+}
+.it-text{ color:var(--front-purple); }
+.en-text{ color:var(--en-blue); }
+.listen-btn{background:none;border:none;color:var(--it-red);font-weight:700;font-size:.9rem;}
+.nav-btn{font-size:1.4rem;font-weight:700;color:white;}
+.set-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:380px;width:100%;}
+.set-btn{height:34px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;border-radius:999px;background:white;color:#0E065C;text-align:center;}
+.set-btn.active{background:#8C0327;color:white;}
+
+.link-btn{
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.75rem;
+  font-weight:800;
+  border-radius:999px;
+  background:#BFC926;
+  color:#0E065C;
+  border:none;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.link-btn:hover{
+  background:#25C3D3;
+}
+
+.arrow{
+  font-size:1.2rem;
+  margin-left:6px;
+  line-height:1;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2 class="text-white text-lg font-extrabold tracking-widest text-center">
+AUX VERBS SERIES N°1
+</h2>
+
+<div class="perspective mt-4">
+  <div id="flashcard" class="card-inner">
+    <div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
+      <div id="front-text" class="it-text"></div>
+    </div>
+    <div class="face back bg-white border-4 border-[#8C0327] flex flex-col justify-between p-4">
+      <div class="flex-grow flex items-center justify-center">
+        <div id="back-text" class="en-text"></div>
+      </div>
+      <div class="flex justify-center pb-2">
+        <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px]">
+  <button onclick="prevCard(event)" class="nav-btn">◀</button>
+  <span id="counter-display" class="text-white font-bold text-sm">1 / 1</span>
+  <button onclick="nextCard(event)" class="nav-btn">▶</button>
+</div>
+
+<div class="w-full max-w-[380px] flex justify-center mt-2">
+  <button onclick="refreshCurrentSet()"
+          class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounded-full">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="18" height="18">
+      <path d="M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/>
+    </svg>
+    <span class="font-bold text-sm">REFRESH</span>
+  </button>
+</div>
+
+
+<div class="set-grid mt-2">
+  <button class="set-btn" onclick="loadSet(1)">DO / DOES</button>
+  <button class="set-btn" onclick="loadSet(2)">DID</button>
+  <button class="set-btn" onclick="loadSet(3)">WILL / SHALL</button>
+  <button class="set-btn" onclick="loadSet(4)">WOULD</button>
+  <button class="set-btn" onclick="loadSet(5)">CAN</button>
+  <button class="set-btn" onclick="loadSet(6)">COULD</button>
+  <button class="set-btn" onclick="loadSet(7)">MAY</button>
+  <button class="set-btn" onclick="loadSet(8)">MIGHT</button>
+  <button class="set-btn" onclick="loadSet(9)">MUST</button>
+  <button class="set-btn" onclick="loadSet(10)">SHOULD</button>
+  <button class="set-btn" onclick="loadSet(11)">BE</button>
+
+  <!-- HAVE LINK BUTTON -->
+ <button class="link-btn" onclick="window.location.href='https://www.acceleratedlanguagesystems.com/post/expressions-of-time'">
+  HAVE <span class="arrow">▶</span>
+</button>
+</div>
+
+<script>
+const sets = {
+1:[
+  {it:"Non capisco questa parte",en:"I don’t understand this part",speak:["i don’t understand this part"]},
+  {front:"Lei non lavora il Lunedì", back:"She doesn’t work on Mondays", speak:"she doesn’t work on mondays"},
+  {front:"Non abbiamo abbastanza tempo", back:"We don’t have enough time", speak:"we don’t have enough time"},
+  {front:"A lui non piace il caffè", back:"He doesn’t like coffee", speak:"he doesn’t like coffee"},
+  {front:"Non vivono lontano da qui", back:"They don’t live far from here", speak:"they don’t live far from here"},
+  {front:"Non ricordo il suo nome", back:"I don’t remember his name", speak:"i don’t remember his name"},
+  {front:"Lei non risponde mai al telefono dopo le 18", back:"She never answers the phone after 6 PM", speak:"she never answers the phone, after six pm"},
+  {front:"Non usciamo molto spesso", back:"We don’t go out very often", speak:"we don’t go out very often"},
+  {front:"Non sono d’accordo con la decisione", back:"They don’t agree with the decision", speak:"they don’t agree with the decision"},
+  {front:"Capisci cosa intendo?", back:"Do you see what I mean?", speak:"do you see what i mean?"},
+  {front:"Lei lavora da casa?", back:"Does she work from home?", speak:"does she work from home?"},
+  {front:"Dobbiamo partire adesso?", back:"Do we need to leave now?", speak:"do we need to leave now?"},
+  {front:"Lui sa qualcosa di questo?", back:"Does he know anything about this?", speak:"does he know anything about this?"},
+  {front:"Non Capiscono il problema?", back:"Don't they understand the problem?", speak:"don't they understand the problem?"},
+  {front:"Perché non gli dici la verità?", back:"Why don’t you tell him the truth?", speak:"why don’t you tell him the truth?"},
+  {front:"Perché Lei non vuole venire con noi?", back:"Why doesn’t she want to come with us?", speak:"why doesn’t she want to come with us?"},
+{front:"Cosa significa?", back:"What does it mean?", speak:"what does it mean?"},
+{front:"Perché non succede mai quando ci sono io? ", back:"Why does it never happen when I am around?", speak:"why does it never happen when eye am around?"},
+{front:"Dove abita lei?", back:"Where does she live?", speak:"where does she live?"},
+{front:"Quale preferisci?", back:"Which one do you prefer?", speak:"which one do you prefer?"},
+{front:"Quanto pesa?", back:"How much does it weigh?", speak:"how much does it weigh?"},
+{front:"A che ora vuoi passare?", back:"At what time do you want to pass?", speak:"at what time do you want to pass?"},
+{front:"Non lavoro di sabato", back:"I don’t work on Saturdays", speak:"i don’t work on saturdays"},
+{front:"Non importa", back:"It doesn’t matter", speak:"it doesn’t matter"},
+{front:"Da dove viene lei?", back:"Where does she come from?", speak:"where does she come from?"},
+{front:"Perché lui non vuole partecipare?", back:"Why doesn’t he want to take part?", speak:"why doesn’t he want to take part?"},
+  {front:"Perché non iniziamo adesso?", back:"Why don’t we start now?", speak:"why don’t we start now?"},
+  {front:"Perché Lui non ascolta?", back:"Why doesn’t he listen?", speak:"why doesn’t he listen?"},
+  {front:"Non sento niente", back:"I don’t hear anything", speak:"i don’t hear anything"},
+  {front:"Lei non vede il problema", back:"She doesn’t see the problem", speak:"she doesn’t see the problem"},
+  {front:"Non lo troviamo facile", back:"We don’t find it easy", speak:"we don’t find it easy"},
+  {front:"Lui non si sente bene oggi", back:"He doesn’t feel well today", speak:"he doesn’t feel well today"},
+  {front:"Funziona?", back:"Does it work?", speak:"does it work?"},
+  {front:"Non dicono molto", back:"They don’t say much", speak:"they don’t say much"},
+  {front:"Vuoi qualcosa da bere?", back:"Do you want anything to drink?", speak:"do you want anything to drink?"},
+  {front:"Lei ha bisogno di aiuto?", back:"Does she need any help?", speak:"does she need any help?"},
+  {front:"Dobbiamo aspettare?", back:"Do we have to wait?", speak:"do we have to wait?"},
+  {front:"Lui si ricorda il loro numero?", back:"Does he remember their number?", speak:"does he remember their number?"},
+  {front:"Non ti credono?", back:"Don’t they believe you?", speak:"don’t they believe you?"},
+  {front:"Non penso che sia una buona idea", back:"I don’t think it’s a good idea", speak:"i don’t think it’s a good idea"},
+  {front:"Lei non pensa che sia importante", back:"She doesn’t think it’s important", speak:"she doesn’t think it’s important"},
+  {front:"Non ci aspettiamo problemi", back:"We don’t expect any problems", speak:"we don’t expect any problems"},
+  {front:"Lui non si aspetta una risposta oggi", back:"He doesn’t expect an answer today", speak:"he doesn’t expect an answer today"},
+  {front:"Ti dispiace se mi siedo qui?", back:"Do you mind if I sit here?", speak:"do you mind if i sit here?"},
+  {front:"Come ti sembra?", back:"What does it seem like to you?", speak:"what does it seem like to you?"},
+  {front:"Quanto costa?", back:"How much does it cost?", speak:"how much does it cost?"},
+  {front:"Ti interessa?", back:"Does it interest you?", speak:"does it interest you?"},
+  {front:"A che ora inizia?", back:"At what time does it begin?", speak:"at what time does it begin?"},
+  {front:"Perché vuoi saperlo?", back:"Why do you want to know?", speak:"why do you want to know?"},
+ {it:"Lei non ha bisogno dei tuoi consigli",en:"She doesn’t need your advice",speak:["she doesn’t need your advice"]}
+],
+
+2:[
+ {it:"Non l’ho visto ieri (lui)",en:"I didn’t see him yesterday",speak:["i didn’t see him yesterday"]},
+ {front:"Lei non è venuta al lavoro per tutta la settimana scorsa", back:"She didn’t come to work all last week", speak:"she didn’t come to work all last week"},
+  {front:"Non abbiamo finito la cena. Era tardi", back:"We didn’t finish our dinner. It was late", speak:"we didn’t finish our dinner, it was late"},
+  {front:"Lui non mi ha chiamato ieri sera. Chissà perché?", back:"He didn’t call me last night. I wonder why?", speak:"he didn’t call me last night - i wonder why?"},
+  {front:"Non hanno capito le istruzioni", back:"They didn’t understand the instructions", speak:"they didn’t understand the instructions"},
+  {front:"Perché non me l’hai detto?", back:"Why didn’t you tell me?", speak:"why didn’t you tell me?"},
+  {front:"Non ho sentito la sveglia. Scusa", back:"I didn’t hear the alarm. Sorry", speak:"i didn’t hear the alarm, sorry"},
+  {front:"Lei non ha trovato errori", back:"She didn’t find any mistakes", speak:"she didn’t find any mistakes"},
+  {front:"Non siamo usciti perché faceva troppo freddo", back:"We didn’t go out because it was too cold", speak:"we didn’t go out because it was too cold"},
+  {front:"Lui non sapeva nessuna delle risposte", back:"He didn’t know any of the answers", speak:"he didn’t know any of the answers"},
+  {front:"Hai notato quel nuovo ristorante mentre eri fuori?", back:"Did you notice that new restaurant while you were out?", speak:"did you notice that new restaurant while you were out?"},
+  {front:"Sono venuti tutti alla riunione?", back:"Did they all come to the meeting?", speak:"did they all come to the meeting?"},
+  {front:"Ti sei ricordato di richiamarlo?", back:"Did you remember to call him back?", speak:"did you remember to call him back?"},
+  {front:"Hanno capito la domanda?", back:"Did they understand the question?", speak:"did they understand the question?"},
+  {front:"Ti ho mai parlato del problema?", back:"Did I ever speak to you about the problem?", speak:"did i ever speak to you about the problem?"},
+  {front:"Hai sentito le notizie?", back:"Did you hear the news?", speak:"did you hear the news?"},
+  {front:"Lei ha trovato la sua borsa?", back:"Did she find her bag?", speak:"did she find her bag?"},
+  {front:"Lui non sapeva cosa fare?", back:"Didn’t he know what to do?", speak:"didn’t he know what to do?"},
+  {front:"Perché Lei non voleva andarci in treno?", back:"Why didn’t she want to go there by train?", speak:"why didn’t she want to go there by train?"},
+  {front:"Lei non ha letto attentamente l’email", back:"She didn’t read the email carefully", speak:"she didn’t read the email carefully"},
+  {front:"Non hanno visto nessuno sulla spiaggia", back:"They didn’t see anyone on the beach", speak:"they didn’t see anyone on the beach"},
+  {front:"Hai portato con te l’ombrello?", back:"Did you bring your umbrella with you?", speak:"did you bring your umbrella with you?"},
+  {front:"Lei era d’accordo con la tua idea?", back:"Did she agree with your idea?", speak:"did she agree with your idea?"},
+  {front:"Non ho capito il senso delle sue parole", back:"I didn’t understand the sense of his words", speak:"i didn’t understand the sense of his words"},
+  {front:"Lei era arrabbiata e quindi non ha risposto al telefono", back:"She was angry and so she didn’t answer the phone", speak:"she was angry and so she didn’t answer the phone"},
+  {front:"Non abbiamo portato abbastanza soldi", back:"We didn’t bring enough money", speak:"we didn’t bring enough money"},
+  {front:"Lui non mi ha aiutato con il lavoro", back:"He didn’t help me with the work", speak:"he didn’t help me with the work"},
+  {front:"Ti sei divertito alla festa?", back:"Did you enjoy yourself at the party?", speak:"did you enjoy yourself at the party?"},
+  {front:"Come mai non sei andato?", back:"How come you didn’t go?", speak:"how come you didn’t go?"},
+  {front:"Quando sei arrivato?", back:"When did you arrive?", speak:"when did you arrive?"},
+  {front:"A che ora sei partito?", back:"At what time did you leave?", speak:"at what time did you leave?"},
+  {front:"Quanto è costato?", back:"How much did it cost?", speak:"how much did it cost?"},
+  {front:"Quanto tempo ti ci è voluto?", back:"How long did it take you?", speak:"how long did it take you?"},
+  {front:"Dove l’hai messo?", back:"Where did you put it?", speak:"where did you put it?"},
+  {front:"Perché è successo?", back:"Why did it happen?", speak:"why did it happen?"},
+  {front:"Quale hai comprato?", back:"Which one did you buy?", speak:"which one did you buy?"},
+ {it:"Con Quante persone hai parlato?",en:"How many people did you speak to?",speak:["how many people did you speak to?"]}
+],
+
+3:[
+ {it:"Ti chiamerò più tardi",en:"I will call you later",speak:["i will call you later"]},
+{front:"Lei ti aiuterà se glielo chiedi", back:"She will help you if you ask her", speak:"she will help you if you ask her"},
+  {front:"Vedremo cosa succede", back:"We will see what happens", speak:"we will see what happens"},
+  {front:"Lui tornerà presto", back:"He will come back soon", speak:"he will come back soon"},
+  {front:"Arriveranno verso le sei", back:"They will arrive around six", speak:"they will arrive around six"},
+  {front:"Non preoccuparti, non dimenticherò il tuo compleanno", back:"Don’t worry, I won’t forget your birthday", speak:"don’t worry - i won’t forget your birthday"},
+  {front:"Lei non sarà d’accordo con questa decisione", back:"She won’t agree with this decision", speak:"she won’t agree with this decision"},
+  {front:"Non credo che finiremo in orario", back:"I don’t think we will finish on time", speak:"i don’t think we will finish on time"},
+  {front:"Lui non riuscirà mai a capire il problema", back:"He will never be able to understand the problem", speak:"he will never be able to understand the problem"},
+  {front:"Non aspetteranno molto più a lungo, ne sono sicuro", back:"They won’t wait much longer, I’m sure", speak:"they won’t wait much longer, i’m sure"},
+  {it:"Apro la finestra?", en:"Shall I open the window?", speak:["shall i open the window?"]},
+  {it:"Facciamo una passeggiata?", en:"Shall we go for a walk?", speak:["shall we go for a walk?"]},
+  {it:"Richiamo?", en:"Shall I call back?", speak:["shall i call back?"]},
+  {it:"Mangiamo?", en:"Shall we eat?", speak:["shall we eat?"]},
+  {it:"Lo porto io?", en:"Shall I carry it?", speak:["shall eye carry it?"]},
+  {it:"Ci vediamo all’angolo?", en:"Shall we meet on the corner?", speak:["shall we meet on the corner?"]},
+  {it:"Chiamo un taxi?", en:"Shall I call a taxi?", speak:["shall i call a taxi?"]},
+  {it:"Che ti dico?", en:"What shall I tell you?", speak:["what shall i tell you?"]},
+  {it:"Cominciamo?", en:"Shall we start?", speak:["shall we start?"]},
+  {it:"Vogliamo mangiare fuori stasera?", en:"Shall we eat out tonight?", speak:["shall we eat out tonight?"]},
+  {it:"Spengo la luce?", en:"Shall I turn off the light?", speak:["shall i turn off the light?"]},
+  {it:"Prendiamo l'autobus o andiamo in macchina?", en:"Shall we take the bus or go by car?", speak:["shall we take the bus, or go by car?"]},
+  {it:"Ti aspetto qui?", en:"Shall I wait for you here?", speak:["shall i wait for you here?"]},
+  {it:"Andiamo a casa ora?", en:"Shall we go home now?", speak:["shall we go home now?"]},
+  {it:"Glielo dico?", en:"Shall I tell him?", speak:["shall i tell him?"]},
+  {it:"Che facciamo oggi?", en:"What shall we do today?", speak:["what shall we do today?"]},
+  {front:"Lei Sarà pronta per le 14?", back:"Will she be ready by 2.00?", speak:"will she be ready by two o'clock?"},
+  {front:"Avremo abbastanza tempo?", back:"Will we have enough time?", speak:"will we have enough time?"},
+  {front:"Credi che ci chiameranno più tardi?", back:"Do you believe they will us call later?", speak:"do you believe they will call us later?"},
+  {front:"Troveranno facilmente il posto, secondo te?", back:"Do you think they will find the place easily?", speak:"Do you think they will find the place easily?"},
+  {front:"Non preoccuparti, me ne occuperò io", back:"Don’t worry, I will take care of it", speak:"don’t worry, i will take care of it"},
+  {front:"Sono sicuro che le piacerà il regalo", back:"I’m sure she will like the gift", speak:"i’m sure she will like the gift"},
+  {front:"Ti faremo sapere domani", back:"We will let you know tomorrow", speak:"we will let you know tomorrow"},
+  {front:"Lui dice che ci riproverà", back:"He says he will try again", speak:"he says he will try again"},
+  {front:"Probabilmente sceglieranno l’altra opzione", back:"They will probably choose the other option", speak:"they will probably choose the other option"},
+  {front:"Fidati. Non arriverò in ritardo", back:"Trust me. I won’t arrive late", speak:"trust me - i won’t arrive late"},
+  {front:"Lei non dirà niente a nessuno", back:"She won’t tell anyone", speak:"she won’t tell anyone"},
+  {front:"Non lo faremo senza di te", back:"We won’t do it without you", speak:"we won’t do it without you"},
+  {front:"Lui non cambierà idea", back:"He won’t change his mind", speak:"he won’t change his mind"},
+  {front:"Non crederanno alla tua versione dei fatti", back:"They won’t believe your version of the facts", speak:"they won’t believe your version of the facts"},
+  {front:"Dobbiamo prenotare in anticipo?", back:"Will we need to book in advance?", speak:"will we need to book in advance"},
+  {front:"Sarà un problema per loro se ci sediamo qui?", back:"Will they mind if we sit here?", speak:"will they mind if we sit here?"},
+  {front:"Penso che pioverà questo pomeriggio", back:"I think it will rain this afternoon", speak:"i think it will rain this afternoon"},
+  {front:"Ci vorranno solo pochi minuti", back:"It will only take a few minutes", speak:"it will only take a few minutes"},
+  {front:"Temo che non funzionerà", back:"I’m afraid it won’t work", speak:"i’m afraid it won’t work"},
+  {front:"Andrà tutto bene", back:"Everything will be fine", speak:"everything will be fine"},
+  {front:"Non lo rifarò mai", back:"I will never do it again", speak:"i will never do it again"},
+  {front:"Come arriverai lì?", back:"How will you get there?", speak:"how will you get there?"},
+  {front:"Quanto durerà?", back:"How long will it last?", speak:"how long will it last?"},
+  {front:"Quando ti rivedrò?", back:"When will I see you again?", speak:"when will i see you again?"},
+  {front:"Non succederà più. Lo prometto", back:"It won’t happen again. I promise", speak:"it won’t happen again, i promise"},
+  {front:"Come potrò riconoscerla?", back:"How will I be able to recognise her?", speak:"how will i be able to recognise her?"},
+  {front:"Dovrò prenotare prima", back:"I will need to book first", speak:"i will need to book first"},
+  {front:"Dove andrai in vacanza quest’anno?", back:"Where will you go on holiday this year?", speak:"where will you go on holiday this year?"},
+  {front:"Lei dovrà prendere un appuntamento", back:"She will have to make an appointment", speak:"she will have to make an appointment"},
+ {it:"Dovremo vestirci in modo formale",en:"We will need to dress formally",speak:["we will need to dress formally"]}
+],
+
+4:[
+  {it:"Ti aiuterei se avessi più tempo",en:"I would help you if I had more time",speak:["i would help you - if i had more time"]},
+{front:"Lei verrebbe con noi se fosse libera", back:"She would come with us if she were free", speak:"she would come with us - if she were free"},
+  {front:"Resteremmo più a lungo se fosse possibile", back:"We would stay longer if it was possible", speak:"we would stay longer - if it was possible"},
+  {front:"Lui ti chiamerebbe se avesse il tuo numero", back:"He would call you if he had your number", speak:"he would call you - if he had your number"},
+  {front:"Sono sicuro che sarebbero d’accordo se glielo spiegassi chiaramente", back:"I'm sure they would agree if you explained it to them clearly", speak:"i'm sure they would agree - if you explained it to them clearly"},
+  {front:"Non lo direi", back:"I wouldn’t say that", speak:"i wouldn’t say that"},
+  {front:"a Lei non piacerebbe questa idea", back:"She wouldn’t like this idea", speak:"she wouldn’t like this idea"},
+  {front:"Non ci andremmo un'altra volta", back:"We wouldn’t go there again", speak:"we wouldn’t go there again"},
+  {front:"Lui non ascolterebbe nessuno", back:"He wouldn’t listen to anyone", speak:"he wouldn’t listen to anyone"},
+  {front:"Ti dispiacerebbe aiutarmi per un minuto?", back:"Would you mind helping me for a minute?", speak:"would you mind helping me for a minute?"},
+  {front:"a Lei dispiacerebbe se arrivassimo in ritardo?", back:"Would she mind if we arrived late?", speak:"would she mind if we arrived late?"},
+  {front:"Dovremmo prenotare in anticipo?", back:"Would we need to book in advance?", speak:"would we need to book in advance?"},
+  {front:"pensi che Lui capirebbe il problema?", back:"do you think he Would understand the problem?", speak:"do you think he would understand the problem?"},
+  {front:"Pensi che accetterebbero questa offerta?", back:"Do you think they would accept this offer?", speak:"do you think they would accept this offer?"},
+  {front:"Preferirei restare a casa", back:"I would prefer to stay at home", speak:"i would prefer to stay at home"},
+  {front:"Lei probabilmente direbbe di no", back:"She would probably say no", speak:"she would probably say no"},
+  {front:"Avremmo bisogno di più tempo", back:"We would need more time", speak:"we would need more time"},
+  {front:"Lui si sentirebbe molto meglio dopo un po’ di riposo", back:"He would feel much better after some rest", speak:"he would feel much better after some rest"},
+  {front:"Sarebbero molto sorpresi, ne sono sicuro", back:"They would be very surprised, I’m sure", speak:"they would be very surprised, i’m sure"},
+  {front:"Non saprei cosa fare", back:"I wouldn’t know what to do", speak:"i wouldn’t know what to do"},
+  {front:"Lei non crederebbe mai alla tua storia", back:"She would never believe your story", speak:"she would never believe your story"},
+  {front:"Non ci aspetteremmo quel tipo di risposta", back:"We wouldn’t expect that kind of answer", speak:"we wouldn’t expect that kind of answer"},
+  {front:"Lui non cambierebbe idea anche se lo pagassi", back:"He wouldn’t change his mind even if you paid him", speak:"he wouldn’t change his mind - even if you paid him"},
+  {front:"Non riuscirebbero mai a capire cosa intendi", back:"They would never be able to understand what you mean", speak:"they would never be able to understand what you mean"},
+  {front:"Ti piacerebbe qualcosa da bere?", back:"Would you like something to drink?", speak:"would you like something to drink?"},
+  {front:"Avremmo abbastanza tempo?", back:"Would we have enough time?", speak:"would we have enough time?"},
+  {front:"Pensi che vorrebbero unirsi a noi?", back:"Do you think they would want to join us?", speak:"do you think they would want to join us?"},
+  {front:"Quanto ci costerebbe?", back:"How much would it cost us?", speak:"how much would it cost us?"},
+  {front:"Perché non lo faresti?", back:"Why wouldn’t you do it?", speak:"why wouldn’t you do it?"},
+  {front:"Quanto tempo ci vorrebbe in macchina?", back:"How long would it take by car?", speak:"how long would it take by car?"},
+  {front:"Perché non succederebbe di nuovo?", back:"Why wouldn’t it happen again?", speak:"why wouldn’t it happen again?"},
+  {front:"Quale sarebbe un momento migliore?", back:"When would be a better time?", speak:"when would be a better time?"},
+  {front:"Dove ti piacerebbe andare?", back:"Where would you like to go?", speak:"where would you like to go?"},
+  {front:"Chi sarebbe la persona migliore con cui parlare?", back:"Who would be the best person to speak to?", speak:"who would be the best person to speak to?"},
+ {it:"Quale sarebbe la cosa migliore da fare?",en:"What would be the best thing to do?",speak:["what would be the best thing to do?"]}
+],
+
+5:[
+ {it:"Posso aprire la finestra, per favore?",en:"Can I open the window please?",speak:["can i open the window please?"]},
+{front:"Puoi sederti qui se vuoi", back:"You can sit here if you like", speak:"you can sit here if you like"},
+{front:"Non possiamo entrare senza un biglietto", back:"We can’t enter without a ticket", speak:"we can’t enter without a ticket"},
+{front:"Possiamo uscire prima oggi?", back:"Can we leave earlier today?", speak:"can we leave earlier today?"},
+{front:"Lei può usare il mio telefono, se vuole", back:"She can use my phone, if she likes", speak:"she can use my phone is she likes"},
+{front:"Non può essere giusto", back:"It can’t be right", speak:"it can’t be right"},
+{front:"Lui non riesce mai a ricordare il mio numero di telefono", back:"He can never remember my phone number", speak:"he can never remember my phone number"},
+{front:"Lui non può venire stasera; è occupato", back:"He can’t come tonight; he’s busy", speak:"he can’t come tonight, he’s busy"},
+{front:"Non possono restare un po’ più a lungo?", back:"Can’t they stay a little longer?", speak:"can’t they stay a little longer?"},
+{front:"Mi dispiace, ma non puoi parcheggiare qui", back:"I’m sorry but you can’t park here", speak:"i’m sorry but you can’t park here"},
+{front:"Posso provare di nuovo?", back:"Can I try again?", speak:"can i try again?"},
+{front:"Si può sempre fare un altro giorno", back:"It can always be done another day", speak:"it can always be done another day"},
+{front:"Lui può iniziare domani", back:"He can start tomorrow", speak:"he can start tomorrow"},
+{front:"Lei non può parlare ora; è in riunione", back:"She can’t talk now; she’s in a meeting", speak:"she can’t talk now, she’s in a meeting"},
+{front:"Lei può unirsi a noi più tardi", back:"She can join us later", speak:"she can join us later"},
+{front:"Quanto tempo puoi dedicarmi?", back:"How much time can you give me?", speak:"how much time can you give me?"},
+{front:"Posso usare il bagno, per favore?", back:"Can I please use the bathroom?", speak:"can i please use the bathroom ?"},
+{front:"Non può essere vero", back:"It can’t be true", speak:"it can’t be true"},
+{front:"Mi dispiace, ma non puoi aspettare qui", back:"I’m sorry but you can’t wait here", speak:"i’m sorry - but you can’t wait here"},
+{front:"Posso farti una domanda?", back:"Can I ask you a question?", speak:"can i ask you a question?"},
+{front:"Non trovo la mia borsa", back:"I can’t find my bag", speak:"i can’t find my bag"},
+{front:"Non riesco mai a venire il Venerdì", back:"I can never come on Fridays", speak:"i can never come on fridays"},
+{front:"Mi senti?", back:"Can you hear me?", speak:"can you hear me?"},
+{front:"Non ti vedo. Dove sei?", back:"I can’t see you. Where are you?", speak:"i can’t see you, where are you?"},
+{front:"mi Ricordo la faccia ma non il suo nome", back:"I can remember the face but not his name", speak:"i can remember the face - but not his name"},
+{front:"Non comprendiamo le istruzioni", back:"We can’t understand the instructions", speak:"we can’t understand the instructions"},
+{front:"Purtroppo, lui non vede molto bene", back:"Unfortunately, he can’t see very well", speak:"unfortunately, he can’t see very well"},
+{front:"Sembra che lei non sappia nuotare", back:"It seems she can’t swim", speak:"it seems she can’t swim"},
+{front:"Sai guidare?", back:"Can you drive?", speak:"can you drive?"},
+{front:"Lei sa suonare il pianoforte molto bene", back:"She can play the piano very well", speak:"she can play the piano very well"},
+{front:"Lui non può leggere senza i suoi occhiali", back:"He can’t read without his glasses", speak:"he can’t read without his glasses"},
+{front:"Per fortuna, sanno parlano Italiano", back:"Luckily, they can speak Italian", speak:"luckily, they can speak italian"},
+{front:"Come posso spiegare?", back:"How can I explain?", speak:"how can i explain?"},
+{front:"Cosa posso fare?", back:"What can I do?", speak:"what can i do?"},
+{front:"Se puoi, chiamami questo pomeriggio", back:"If you can, call me this afternoon", speak:"if you can, call me this afternoon"},
+{it:"Posso lasciare qui le mie cose?",en:"Can I leave my things here?",speak:["can i leave my things here?"]}
+
+],
+
+6:[
+  {it:"Lo vedevo perfettamente",en:"I could see it perfectly",speak:["i could see it perfectly"]},
+{front:"Lei non riusciva a sentire niente a causa del rumore", back:"She couldn’t hear anything because of the noise", speak:"she couldn’t hear anything because of the noise"},
+{front:"Non riuscivamo a trovare il posto sulla mappa", back:"We couldn’t find the place on the map", speak:"we couldn’t find the place on the map"},
+{front:"Lui non riusciva a ricordare il suo nome", back:"He couldn’t remember her name", speak:"he couldn’t remember her name"},
+{front:"Non riuscivano a capire le istruzioni", back:"They couldn’t understand the instructions", speak:"they couldn’t understand the instructions"},
+{front:"Sapevo già nuotare all’età di sei anni", back:"I could already swim at the age of six", speak:"i could already swim at the age of six"},
+{front:"Lei non riusciva a dire qual era il problema", back:"She couldn’t say what the problem was", speak:"she couldn’t say what the problem was"},
+{front:"Sapevo parlare abbastanza bene il francese quando ero più giovane", back:"I could speak French quite well when I was younger", speak:"i could speak french quite well when i was younger"},
+{front:"Lui non riusciva a leggere senza gli occhiali", back:"He couldn’t read without his glasses", speak:"he couldn’t read without his glasses"},
+{front:"Non mi sentivi?", back:"Couldn’t you hear me?", speak:"couldn’t you hear me?"},
+{front:"Perché non riuscivi a capire la domanda?", back:"Why couldn’t you understand the question?", speak:"why couldn’t you understand the question?"},
+{front:"Potrei aiutarti più tardi, se vuoi", back:"I could help you later, if you like", speak:"i could help you later, if you like"},
+{front:"Certo che Lei potrebbe venire con noi!", back:"Of course she could come with us!", speak:"of course, she could come with us"},
+{front:"Forse potremmo riprovare domani", back:"We could maybe try again tomorrow", speak:"we could maybe try again tomorrow"},
+{front:"Forse potrebbero aspettare un po’ di più", back:"Perhaps they could wait a little longer", speak:"perhaps they could wait a little longer"},
+{front:"per favore, sapresti dirmi l’ora?", back:"Could you tell me the time please?", speak:"could you tell me the time please?"},
+{front:"Potremmo partire un po’ prima oggi?", back:"Could we leave a bit earlier today?", speak:"could we leave a bit earlier today?"},
+{front:"Potresti spiegarmelo un'altra volta?", back:"Could you explain it to me again?", speak:"could you explain it to me again?"},
+{front:"Potrei usare il tuo telefono, per favore?", back:"Could I use your phone, please?", speak:"could i use your phone please?"},
+{front:"Non riuscirei mai a farlo senza di te", back:"I could never do it without you", speak:"i could never do it without you"},
+{front:"Lei non riusciva a credere a quello che aveva appena sentito", back:"She couldn’t believe what she had just  heard", speak:"she couldn’t believe what she had just heard"},
+{front:"Lui non poteva venire ieri", back:"He couldn’t come yesterday", speak:"he couldn’t come yesterday"},
+{front:"Non potevano restare molto", back:"They couldn’t stay very long", speak:"they couldn’t stay very long"},
+{front:"Quanto potrebbe costare, secondo te?", back:"How much could it cost, do you think?", speak:"how much could it cost do you think?"},
+{front:"Dove potremmo andare invece?", back:"Where could we go instead?", speak:"where could we go instead?"},
+{front:"Cosa potrei fare adesso?", back:"What could I do now?", speak:"what could i do now?"},
+{front:"Perché non potevi venire ieri?", back:"Why couldn’t you come yesterday?", speak:"why couldn’t you come yesterday?"},
+{front:"Per quando potreste organizzarlo?", back:"For when could you arrange it?", speak:"for when could you arrange it?"},
+{front:"Perché non potevi chiedere?", back:"Why couldn’t you ask?", speak:"why couldn’t you ask?"},
+{front:"Come potrei saperlo?", back:"How could I know?", speak:"how could i know?"},
+{front:"Potrebbe essere un grosso problema", back:"It could be a big problem", speak:"it could be a big problem"},
+{front:"Pensi che potrebbe piovere?", back:"Do you think it could rain?", speak:"do you think it could rain?"},
+{front:"Chi potrebbe essere la persona migliore a cui chiedere?", back:"Who could be the best person to ask?", speak:"who could be the best person to ask?"},
+{front:"Potresti passarmi l’acqua, per favore?", back:"Could you pass me the water, please?", speak:"could you pass me the water please?"},
+{it:"Potrebbero avere ragione",en:"They could be right",speak:["they could be right"]}
+],
+
+7:[
+ {it:"Potrei andare al parco più tardi",en:"I may go to the park later",speak:["i may go to the park later"]},
+{front:"È possibile che lei arrivi in ritardo alla riunione", back:"She may be late for the meeting", speak:"she may be late for the meeting"},
+{front:"Potremmo restare a casa se piove", back:"We may stay at home if it rains", speak:"we may stay at home if it rains"},
+{front:"Può darsi che lui ti chiami stasera", back:"He may call you tonight", speak:"he may call you tonight"},
+{front:"Potrebbero unirsi a noi per cena", back:"They may join us for dinner", speak:"they may join us for dinner"},
+{front:"Può darsi che io non lo veda oggi", back:"I may not see him today", speak:"i may not see him today"},
+{front:"È possibile che lei non venga con noi", back:"She may not come with us", speak:"she may not come with us"},
+{front:"Potremmo non finire in tempo", back:"We may not finish in time", speak:"we may not finish in time"},
+{front:"Può darsi che lui non capisca le istruzioni", back:"He may not understand the instructions", speak:"he may not understand the instructions"},
+{front:"Può darsi che loro non sappiano la risposta", back:"They may not know the answer", speak:"they may not know the answer"},
+{front:"Posso sedermi qui?", back:"May I sit here?", speak:"may i sit here?"},
+{front:"Posso usare il tuo telefono, per favore?", back:"May I use your phone, please?", speak:"may i use your phone please?"},
+{front:"Potremmo andare via un po’ prima?", back:"May we leave a bit earlier?", speak:"may we leave a bit earlier?"},
+{front:"Posso unirmi a voi più tardi?", back:"May I join you later?", speak:"may i join you later?"},
+{front:"Potrei aver bisogno di aiuto", back:"I may need some help", speak:"i may need some help"},
+{front:"Può darsi che lei si senta meglio domani", back:"She may feel better tomorrow", speak:"she may feel better tomorrow"},
+{front:"Chi lo sa? Potremmo anche trovare una soluzione oggi", back:"Who knows? We may even find a solution today", speak:"who knows? we may even find a solution today"},
+{front:"È possibile che lui dimentichi di chiamare", back:"He may forget to call", speak:"he may forget to call"},
+{front:"Potrei non avere abbastanza tempo", back:"I may not have enough time", speak:"i may not have enough time"},
+{front:"È possibile che lei non capisca cosa intendo", back:"She may not understand what I mean", speak:"she may not understand what i mean"},
+{front:"Potremmo avere un problema se partiamo tardi", back:"We may have a problem if we leave late", speak:"we may have a problem if we leave late"},
+{front:"Può darsi che a lui non piaccia questa idea", back:"He may not like this idea", speak:"he may not like this idea"},
+{front:"Può darsi che loro non abbiano voglia di venire", back:"They may not want to come", speak:"they may not want to come"},
+{front:"Posso farti una domanda?", back:"May I ask you a question?", speak:"may i ask you a question?"},
+{front:"Posso provarlo in un altro modo?", back:"May I try it another way?", speak:"may i try it another way?"},
+{front:"Può darsi che lei stia dicendo la verità", back:"She may be telling the truth", speak:"she may be telling the truth"},
+{front:"Chissà? Potrei persino imparare qualcosa di nuovo se vado", back:"Who knows? I may even learn something new if I go", speak:"who knows? - i may even learn something new if i go"},
+{front:"Potremmo andare all’estero la prossima estate", back:"We may go abroad next summer", speak:"we may go abroad next summer"},
+{front:"Può darsi che lui cambi idea", back:"He may change his mind", speak:"he may change his mind"},
+{front:"Con chi potrei parlare a riguardo?", back:"Who may I speak to about this?", speak:"who may i speak to about this?"},
+{front:"A che ora pensi che lui possa arrivare?", back:"At what time do you think he may arrive?", speak:"at what time do you think he may arrive?"},
+{front:"È possibile che non succeda mai", back:"It may never happen", speak:"it may never happen"},
+{front:"È possibile che sia l’unica soluzione", back:"It may be the only solution", speak:"it may be the only solution"},
+{front:"Se posso, vorrei tornare domani", back:"If I may, I’d like to come back tomorrow", speak:"if i may - i’d like to come back tomorrow"},
+{front:"Può darsi che stia succedendo proprio ora", back:"It may be happening right now", speak:"it may be happening right now"},
+{it:"Accada quel che accada, ma io ci sarò sicuramente!",en:"Come what may, but I will definitely be there",speak:["come what may, but i will definitely be there"]}
+],
+
+8:[
+ {it:"Potrei andare al parco più tardi",en:"I might go to the park later",speak:["i might go to the park later"]},
+ {front:"Lei potrebbe arrivare in ritardo alla riunione", back:"She might be late for the meeting", speak:"she might be late for the meeting"},
+  {front:"Potremmo restare a casa se piove", back:"We might stay at home if it rains", speak:"we might stay at home if it rains"},
+  {front:"Lui potrebbe chiamarti stasera", back:"He might call you tonight", speak:"he might call you tonight"},
+  {front:"Potrebbero unirsi a noi per cena", back:"They might join us for dinner", speak:"they might join us for dinner"},
+  {front:"Potrei non vederlo oggi", back:"I might not see him today", speak:"i might not see him today"},
+  {front:"Cosa potrebbe succedere?", back:"What might happen?", speak:"what might happen"},
+  {front:"Lei potrebbe non venire alla festa", back:"She might not come to the party", speak:"she might not come to the party"},
+  {front:"Potremmo non finire in tempo", back:"We might not finish on time", speak:"we might not finish on time"},
+  {front:"Può darsi che lui non capirà le istruzioni", back:"He might not understand the instructions", speak:"he might not understand the instructions"},
+  {front:"Potrebbero non sapere la risposta", back:"They might not know the answer", speak:"they might not know the answer"},
+  {front:"è possibile che io avrò bisogno di andare al supermercato", back:"I might need to go to the supermarket", speak:"i might need to go to the supermarket"},
+  {front:"Sai, penso che potresti avere ragione", back:"You know, I think you might be right", speak:"you know, i think you might be right"},
+  {front:"Non è detto che sia così", back:"It mightn’t necessarily be like that", speak:"it mightn’t necessarily be like that"},
+  {front:"Pensi che possa essere in grado di aiutarci?", back:"Do you think he might be able to help us?", speak:"do you think he might be able to help us"},
+  {front:"Lui potrebbe essere stanco dopo il viaggio, secondo te?", back:"do you think he Might be tired after the journey?", speak:"do you think he might be tired after the journey?"},
+  {front:"Potrei dover cancellare il nostro appuntamento", back:"I might have to cancel our appointment", speak:"i might have to cancel our appointment"},
+  {front:"Potrebbero portare qualcun altro?", back:"Might they bring someone else?", speak:"might they bring someone else"},
+  {front:"Potrei avere bisogno di aiuto più tardi", back:"I might need some help later", speak:"i might need some help later"},
+  {front:"Penso che potrei provare qualcosa di diverso", back:"I think I might try something different", speak:"i think i might try something different"},
+  {front:"Lei potrebbe sentirsi meglio domani", back:"She might feel better tomorrow", speak:"she might feel better tomorrow"},
+  {front:"Chissà? Potremmo trovare una soluzione oggi", back:"Who knows? We might find a solution today", speak:"who knows? we might find a solution today"},
+  {front:"Lui potrebbe anche dimenticare di chiamare", back:"He might even forget to call", speak:"he might even forget to call"},
+  {front:"Potrei non avere abbastanza tempo", back:"I might not have enough time", speak:"i might not have enough time"},
+  {front:"Lei potrebbe non capire cosa intendo", back:"She might not understand what I mean", speak:"she might not understand what i mean"},
+  {front:"Potremmo non vederlo se partiamo troppo tardi", back:"We might not see it if we leave too late", speak:"we might not see it if we leave too late"},
+  {front:"può darsi che a lui non piacerà quell’idea", back:"He might not like that idea", speak:"he might not like that idea"},
+  {front:"Potrebbero non voler venire", back:"They might not want to come", speak:"they might not want to come"},
+  {front:"è possibile che lei stia dicendo la verità", back:"She might be telling the truth", speak:"she might be telling the truth"},
+  {front:"Pensi che potrebbero essere d’accordo con questa proposta?", back:"Do you think they might agree to this proposal?", speak:"do you think they might agree to this proposal"},
+  {front:"Se vado oggi, potrei vederlo", back:"If I go today, I might see him", speak:"if i go today - i might see him"},
+  {front:"Potremmo andare in treno questa volta", back:"We might go by train this time", speak:"we might go by train this time"},
+ {it:"è possibile che lui cambierà idea",en:"He might change his mind",speak:["he might change his mind"]}
+],
+
+9:[
+{it:"Devo finire di scrivere questo prima di andare",en:"I must finish writing this before I leave",speak:["i must finish writing this before i leave"]},
+{front:"Devi indossare i guanti quando usi questo prodotto", back:"You must wear gloves when you use this product", speak:"you must wear gloves when you use this product"},
+{front:"I bambini devono stare attenti quando attraversano la strada", back:"Children must be careful when they cross the road", speak:"children must be careful when they cross the road"},
+{front:"Non posso venire. Devo studiare per l’esame di domani", back:"I can’t come. I must study for tomorrow’s exam", speak:"i can’t come. i must study for tomorrow’s exam"},
+{front:"Devo ricordarmi di chiamare mia madre oggi", back:"I must remember to call my mother today", speak:"i must remember to call my mother today"},
+{front:"Non devo dimenticare le chiavi, altrimenti avrò problemi", back:"I mustn’t forget my keys, otherwise I’ll be in trouble", speak:"i mustn’t forget my keys, otherwise i’ll be in trouble"},
+{front:"Il cartello dice che non si deve toccare nulla", back:"The sign says you mustn’t touch anything", speak:"the sign says you mustn’t touch anything"},
+{front:"Non dobbiamo fare tardi alla riunione", back:"We mustn’t be late for the meeting", speak:"we mustn’t be late for the meeting"},
+{front:"Lei non deve mai più fare quell’errore", back:"She must never make that mistake again", speak:"she must never make that mistake again"},
+{front:"Non devono parlare durante la lezione", back:"They mustn’t talk during the lesson", speak:"they mustn’t talk during the lesson"},
+{front:"Non devi andartene senza pagare", back:"You mustn’t leave without paying", speak:"you mustn’t leave without paying"},
+{front:"Non devi usare il telefono mentre sei alla guida", back:"You mustn’t use your phone when driving", speak:"you mustn’t use your phone when driving"},
+{front:"Devo aspettare qui?", back:"Must I wait here?", speak:"must i wait here?"},
+{front:"Devi andare via così presto?", back:"Must you leave so soon?", speak:"must you leave so soon?"},
+{front:"Dobbiamo portare qualcosa alla festa?", back:"Must we bring anything to the party?", speak:"must we bring anything to the party?"},
+{front:"Quanti soldi devo portare?", back:"How much money must I bring?", speak:"how much money must i bring?"},
+{front:"Devo finire questo oggi?", back:"Must I finish this today?", speak:"must i finish this today?"},
+{front:"Dove devo andare?", back:"Where must I go?", speak:"where must i go?"},
+{front:"Quando devo tornare?", back:"When must I come back?", speak:"when must i come back?"},
+{front:"Perché devo aspettare?", back:"Why must I wait?", speak:"why must i wait?"},
+{front:"Dimmi cosa devo fare", back:"Tell me what I must do", speak:"tell me what i must do"},
+{front:"Non deve succedere mai più. Chiaro?", back:"It must never happen again. Is that clear?", speak:"it must never happen again, - is that clear?"},
+{front:"Penso che si debba prenotare in anticipo", back:"I think one must book in advance", speak:"i think one must book in advance"},
+{front:"Dobbiamo pulire la casa prima dell’arrivo degli ospiti", back:"We must clean the house before the guests arrive", speak:"we must clean the house before the guests arrive"},
+{front:"Devo scappare. Ho un treno da prendere", back:"I must dash. I have a train to catch", speak:"i must dash. i have a train to catch"},
+{front:"Di’ a quel tizio che deve smettere di fare rumore", back:"Tell that guy he must stop making a noise", speak:"tell that guy he must stop making a noise"},
+{front:"Non devo fare troppo tardi", back:"I mustn’t be too late", speak:"i mustn’t be too late"},
+{front:"Non devi dimenticare di chiudere la porta a chiave", back:"You mustn’t forget to lock the door", speak:"you mustn’t forget to lock the door"},
+{front:"Non dobbiamo andar via senza salutare tutti quanti", back:"We mustn’t leave without saying goodbye to everyone", speak:"we mustn’t leave without saying goodbye to everyone"},
+{front:"Lei non deve mangiare troppo prima di andare a letto", back:"She mustn’t eat too much before going to bed", speak:"she mustn’t eat too much before going to bed"},
+{front:"Lui non deve guidare se è stanco", back:"He mustn’t drive if he’s tired", speak:"he mustn’t drive if he’s tired"},
+{front:"Lui deve avere ragione", back:"He must be right", speak:"he must be right"},
+{front:"Devi leggere questo libro. È fantastico", back:"You must read this book. It’s fantastic", speak:"you must read this book. it’s fantastic"},
+{front:"Dobbiamo ascoltare attentamente ogni parola", back:"We must listen carefully to every word", speak:"we must listen carefully to every word"},
+{front:"La sua insegnante dice che lei deve esercitarsi due ore ogni giorno", back:"Her teacher says she must practice two hours every day", speak:"her teacher says she must practice two hours every day"},
+{it:"Non dobbiamo mai dimenticare le regole",en:"We must never forget the rules",speak:["we must never forget the rules"]}
+],
+
+10:[
+ {it:"Dovrei mangiare di meno",en:"I should eat less",speak:["i should eat less"]},
+{front:"Non dovrebbe iniziare prima delle due", back:"It shouldn't start before two o’clock", speak:"it shouldn't start before two o’clock"},
+{front:"Non dovrebbe mai succedere", back:"It should never happen", speak:"it should never happen"},
+{front:"Cosa dovrei dire?", back:"What should I say?", speak:"what should i say?"},
+{front:"Lei dovrebbe arrivare prima di me", back:"She should arrive before me", speak:"she should arrive before me"},
+{front:"Quanto dovrebbe costare?", back:"How much should it cost?", speak:"how much should it cost?"},
+{front:"Non dovrebbe essere un problema", back:"It shouldn’t be a problem", speak:"it shouldn’t be a problem"},
+{front:"Non dovrebbero esserci problemi", back:"There shouldn’t be any problems", speak:"there shouldn’t be any problems"},
+{front:"Come dovrei saperlo?", back:"How should I know?", speak:"how should i know?"},
+{front:"Forse dovremmo aspettare", back:"Maybe we should wait", speak:"maybe we should wait"},
+{front:"Dovrei essere io", back:"It should be me", speak:"it should be me"},
+{front:"Dovrebbe toccare a me", back:"It should be my turn", speak:"it should be my turn"},
+{front:"Non dovresti alzarti? È tardi", back:"Shouldn’t you get up? It’s late", speak:"shouldn’t you get up? it’s late"},
+{front:"Non dovresti parlare male degli altri", back:"You shouldn’t speak badly of other people", speak:"you shouldn’t speak badly of other people"},
+{front:"So che dovrei studiare di più per l’esame", back:"I know I should study more for the exam", speak:"i know i should study more for the exam"},
+{front:"Lei dovrebbe indossare un cappotto; fa freddo là fuori", back:"She should wear a coat; it’s cold out there", speak:"she should wear a coat; it’s cold out there"},
+{front:"Dovremmo andare ora, altrimenti arriveremo in ritardo", back:"We should leave now or else we will be late", speak:"we should leave now - or else we will be late"},
+{front:"Lui dovrebbe chiamare più spesso sua madre", back:"He should call his mother more often", speak:"he should call his mother more often"},
+{front:"Dovrebbero essere più attenti", back:"They should be more careful", speak:"they should be more careful"},
+{front:"Non dovresti toccare quello; è caldo", back:"You shouldn’t touch that; it’s hot", speak:"you shouldn’t touch that; it’s hot"},
+{front:"Non dovresti interrompere quando sto parlando", back:"You shouldn’t interrupt when I’m speaking", speak:"you shouldn’t interrupt when i’m speaking"},
+{front:"Lui non dovrebbe parlare durante la lezione", back:"He shouldn’t talk during the lesson", speak:"he shouldn’t talk during the lesson"},
+{front:"Dovrei chiederle aiuto?", back:"Should I ask her for help?", speak:"should i ask her for help?"},
+{front:"Dovremmo aspettarli?", back:"Should we wait for them?", speak:"should we wait for them?"},
+{front:"Dovrei andare ora o più tardi?", back:"Should I go now or later?", speak:"should i go now or later?"},
+{front:"Non dovresti chiamarlo prima di andare?", back:"Shouldn’t you call him before you go?", speak:"shouldn’t you call him before you go?"},
+{front:"Dovrei mangiare più verdure", back:"I should eat more vegetables", speak:"i should eat more vegetables"},
+{front:"Lei dovrebbe esercitarsi ogni giorno", back:"She should practice every day", speak:"she should practice every day"},
+{front:"Dovremmo ascoltare con più attenzione", back:"We should listen more attentively", speak:"we should listen more attentively"},
+{front:"Dovresti cercare di finire in orario", back:"You should try to finish on time", speak:"you should try to finish on time"},
+{front:"Dovrebbero seguire le istruzioni", back:"They should follow the instructions", speak:"they should follow the instructions"},
+{front:"Dovrei andare a letto prima", back:"I should go to bed earlier", speak:"i should go to bed earlier"},
+{front:"Non dovresti preoccuparti troppo", back:"You shouldn’t worry too much", speak:"you shouldn’t worry too much"},
+{front:"Non dovremmo ignorare i segnali", back:"We shouldn’t ignore the signs", speak:"we shouldn’t ignore the signs"},
+{front:"Lui non dovrebbe mangiare così tanto cioccolato", back:"He shouldn’t eat so much chocolate", speak:"he shouldn’t eat so much chocolate"},
+{front:"Lui non dovrebbe guidare se è stanco", back:"He shouldn’t drive if he’s tired", speak:"he shouldn’t drive if he’s tired"},
+{front:"Dovrei aprire la finestra?", back:"Should I open the window?", speak:"should i open the window?"},
+{front:"Dovremmo prendere un ombrello?", back:"Should we take an umbrella?", speak:"should we take an umbrella?"},
+{front:"Dovremmo dire loro la verità?", back:"Should we tell them the truth?", speak:"should we tell them the truth?"},
+{front:"Dovrebbero prepararsi per l’esame?", back:"Should they prepare for the exam?", speak:"should they prepare for the exam?"},
+{front:"Lei dovrebbe chiedere consigli", back:"She should ask for advice", speak:"she should ask for advice"},
+{front:"Dovremmo aspettare un po’ di più", back:"We should wait a little longer", speak:"we should wait a little longer"},
+{front:"Non dovresti chiedere prima di prenderlo in prestito?", back:"Shouldn’t you ask first before borrowing it?", speak:"shouldn’t you ask first before borrowing it?"},
+{front:"Penso che dovremmo iniziare ora", back:"I think we should start now", speak:"i think we should start now"},
+{front:"Perché dovrebbe essere un problema?", back:"Why should it be a problem?", speak:"why should it be a problem?"},
+{front:"A che ora dovrei richiamare?", back:"At what time should I call back?", speak:"at what time should i call back?"},
+{front:"Quante persone dovrebbero essere presenti?", back:"How many people should be present?", speak:"how many people should be present?"},
+{front:"Quando dovremmo tornare?", back:"When should we come back?", speak:"when should we come back?"},
+{front:"Quale dovrei prendere?", back:"Which one should I get?", speak:"which one should I get?"},
+{front:"Quando dovrebbe essere inviato?", back:"When should it be sent?", speak:"when should it be sent?"},
+{it:"Dovrei restare o dovrei andare?",en:"Should I stay or should I go?",speak:["should i stay or should i go?"]}
+],
+
+11:[
+{it:"Attualmente sto leggendo un libro sulla storia cinese",en:"Currently, I am reading a book on Chinese history",speak:["currently, i am reading a book on chinese history"]},
+{front:"Lei sta facendo la doccia. Puoi richiamare?", back:"She is having a shower. Can you call back?", speak:"she is having a shower. can you call back?"},
+{front:"Stiamo ancora aspettando l’autobus", back:"We are still waiting for the bus", speak:"we are still waiting for the bus"},
+{front:"I bambini stanno giocando fuori", back:"The kids are playing outside", speak:"the kids are playing outside"},
+{front:"Oggi lei non lavora", back:"She isn’t working today", speak:"she isn’t working today"},
+{front:"Stasera andiamo al cinema", back:"We are going to the cinema this evening", speak:"we are going to the cinema this evening"},
+{front:"Loro stanno studiando per l’esame di domani", back:"They are studying for tomorrow’s exam", speak:"they are studying for tomorrow’s exam"},
+{front:"Lo sto facendo correttamente?", back:"Am I doing this correctly?", speak:"am i doing this correctly?"},
+{front:"Lei viene con noi?", back:"Is she coming with us?", speak:"is she coming with us?"},
+{front:"Li incontreremo più tardi?", back:"Are we meeting them later?", speak:"are we meeting them later?"},
+{front:"Lui sta guardando la partita", back:"He’s watching the match", speak:"he’s watching the match"},
+{front:"Stai ascoltando quello che sto dicendo?", back:"Are you listening to what I’m saying?", speak:"are you listening to what i’m saying?"},
+{front:"Stavo mangiando quando lei ha chiamato", back:"I was eating when she called", speak:"i was eating when she called"},
+{front:"Lei stava cucinando la cena quando è successo", back:"She was cooking dinner when it happened", speak:"she was cooking dinner when it happened"},
+{front:"Stavamo aspettando alla stazione quando li abbiamo visti", back:"We were waiting at the station when we saw them", speak:"we were waiting at the station when we saw them"},
+{front:"Loro stavano studiando per l’esame", back:"They were studying for the exam", speak:"they were studying for the exam"},
+{front:"Per fortuna, non stavo dormendo in quel momento", back:"Luckily, I wasn’t sleeping at the time", speak:"luckily, i wasn’t sleeping at the time"},
+{front:"Loro non stavano andando da nessuna parte", back:"They weren’t going anywhere", speak:"they weren’t going anywhere"},
+{front:"Stavo facendo qualcosa di sbagliato?", back:"Was I doing something wrong?", speak:"was i doing something wrong?"},
+{front:"Lui lavorava da solo?", back:"Was he working alone?", speak:"was he working alone?"},
+{front:"Ti stavano aspettando?", back:"Were they waiting for you?", speak:"were they waiting for you?"},
+{front:"Sto imparando l’inglese in questo periodo", back:"I am learning English at the moment", speak:"i am learning english at the moment"},
+{front:"Lei stava parlando con la sua amica", back:"She was talking to her friend", speak:"she was talking to her friend"},
+{front:"Stiamo cercando di risolvere il problema", back:"We are trying to solve the problem", speak:"we are trying to solve the problem"},
+{front:"Lui si sentiva meglio ieri", back:"He was feeling better yesterday", speak:"he was feeling better yesterday"},
+{front:"Oggi loro non vengono", back:"They are not coming today", speak:"they are not coming today"},
+{front:"Dove stavi andando?", back:"Where were you going?", speak:"where were you going?"},
+{front:"Cosa indossava lei?", back:"What was she wearing?", speak:"what was she wearing?"},
+{front:"Lei stava parlando al telefono", back:"She was speaking on the phone", speak:"she was speaking on the phone"},
+{front:"Hai una riunione oggi?", back:"Are you having a meeting today?", speak:"are you having a meeting today?"},
+{front:"Parto giovedì mattina", back:"I’m leaving on Thursday morning", speak:"i’m leaving on thursday morning"},
+{front:"Cosa sta succedendo qui?", back:"What is going on here?", speak:"what is going on here?"},
+{front:"Perché stai ridendo?", back:"Why are you laughing?", speak:"why are you laughing?"},
+{front:"Cosa stavi dicendo?", back:"What were you saying?", speak:"what were you saying?"},
+{front:"Lo uso solo mentre lavoro", back:"I use it only while I’m working", speak:"i use it only while i’m working"},
+{front:"Pensi che lui stia guidando troppo veloce?", back:"Do you think he’s driving too fast?", speak:"do you think he’s driving too fast?"},
+{front:"Lei sta perdendo la testa!", back:"She’s losing her mind!", speak:"she’s losing her mind!"},
+{front:"Al momento loro stanno vincendo 2-0", back:"They are winning 2-0 at the moment", speak:"they are winning 2 nil at the moment"},
+{front:"L’ascensore non funziona", back:"The lift isn’t working", speak:"the lift isn’t working"},
+{front:"Lui fa una festa domani sera", back:"He’s having a party tomorrow night", speak:"he’s having a party tomorrow night"},
+{front:"Cosa facciamo oggi?", back:"What are we doing today?", speak:"what are we doing today?"},
+{front:"Quanti di noi parteciperanno?", back:"How many of us are taking part?", speak:"how many of us are taking part?"},
+{front:"Stai facendo lo stupido", back:"You are being stupid", speak:"you are being stupid"},
+{it:"Sta piovendo ancora",en:"It’s still raining",speak:["it’s still raining"]}
+]
+};
+
+</script>   <!-- ADD THIS LINE -->
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+let currentSet = 1;
+let fullSet = [];
+let cards = [];
+let index = 0;
+
+const flashcard = document.getElementById("flashcard");
+const frontText = document.getElementById("front-text");
+const backText  = document.getElementById("back-text");
+const counter   = document.getElementById("counter-display");
+const speakBtn  = document.getElementById("speakBtn");
+
+/* ---------- SHUFFLE ---------- */
+function shuffleArray(a){
+  const arr = [...a];
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function pickRandom15(arr){
+  if(!arr || !arr.length) return [];
+  return shuffleArray(arr).slice(0, Math.min(15, arr.length));
+}
+
+/* ---------- LOAD SET ---------- */
+function loadSet(n){
+  currentSet = n;
+
+  if(!sets || !sets[n]) return;
+
+  fullSet = sets[n].filter(Boolean);
+  cards   = pickRandom15(fullSet);
+
+  index = 0;
+  updateCard();
+
+  document.querySelectorAll('.set-btn').forEach((btn,i)=>
+    btn.classList.toggle('active', i + 1 === n)
+  );
+}
+
+/* ---------- REFRESH ---------- */
+function refreshCurrentSet(){
+  if(!fullSet.length) return;
+  cards = pickRandom15(fullSet);
+  index = 0;
+  updateCard();
+}
+
+/* ---------- DISPLAY ---------- */
+function updateCard(){
+  flashcard.classList.remove("flipped");
+
+  if(!cards.length){
+    frontText.innerText = "—";
+    backText.innerText  = "—";
+    counter.innerText   = "0 / 0";
+    return;
+  }
+
+  const c = cards[index];
+
+  frontText.innerText = c.it || c.front || "—";
+  backText.innerText  = c.en || c.back  || "—";
+
+  counter.innerText   = `${index + 1} / ${cards.length}`;
+}
+
+/* ---------- NAV ---------- */
+function nextCard(e){
+  e?.stopPropagation();
+  if(!cards.length) return;
+  index = (index + 1) % cards.length;
+  updateCard();
+}
+
+function prevCard(e){
+  e?.stopPropagation();
+  if(!cards.length) return;
+  index = (index - 1 + cards.length) % cards.length;
+  updateCard();
+}
+
+/* ---------- FLIP ---------- */
+flashcard.addEventListener("click",()=>{
+  flashcard.classList.toggle("flipped");
+});
+
+/* ---------- SPEAK ---------- */
+speakBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+  if(!cards.length) return;
+
+  let t = cards[index].speak;
+  const text = Array.isArray(t) ? t[0] : (t || cards[index].en);
+
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-GB";
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+});
+
+/* ---------- GLOBAL ---------- */
+window.loadSet = loadSet;
+window.nextCard = nextCard;
+window.prevCard = prevCard;
+window.refreshCurrentSet = refreshCurrentSet;
+
+/* ---------- INIT ---------- */
+loadSet(1);
+
+});
+</script>
+
+</body>
+</html>
