@@ -47,7 +47,20 @@ body{
 .listen-btn{background:none;border:none;color:var(--it-red);font-weight:700;font-size:.9rem;}
 .nav-btn{font-size:1.4rem;font-weight:700;color:white;}
 .set-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:380px;width:100%;}
-.set-btn{height:34px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;border-radius:999px;background:white;color:#0E065C;text-align:center;}
+.set-btn{
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.65rem;      /* improved size */
+  font-weight:800;
+  border-radius:999px;
+  background:white;
+  color:#0E065C;
+  text-align:center;
+  padding:0 6px;         /* spacing */
+  white-space:nowrap;    /* prevents messy wrapping */
+}
 .set-btn.active{background:#8C0327;color:white;}
 
 .link-btn{
@@ -55,7 +68,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:.75rem;
+  font-size:.65rem;
   font-weight:800;
   border-radius:999px;
   background:#BFC926;
@@ -140,8 +153,7 @@ AUX VERBS SERIES N°2
 <button class="set-btn special-set set9" onclick="loadSet(9)">DIVING AUX'S</button>
 <button class="set-btn special-set set10" onclick="loadSet(10)">JUMPING AUX'S</button>
 
-<button class="link-btn" onclick="window.location.href='https://YOUR-AUX-VERBS-1-LINK-HERE'">
-  <span class="arrow" style="margin-right:6px;">◀</span>
+<button class="link-btn" onclick="window.location.href='YOUR-LINK-HERE'">
   AUX VERBS N°1
 </button>
 </div>
