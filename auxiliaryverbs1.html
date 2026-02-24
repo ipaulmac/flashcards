@@ -738,10 +738,22 @@ speakBtn.addEventListener("click",(e)=>{
 
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "en-GB";
+
+  // Slightly clearer pacing
+  u.rate = 0.95;
+
+  // Slightly deeper tone
+  u.pitch = 1.0;
+
+  // Boost pitch slightly for questions (Android fix)
+  if(text.trim().endsWith("?")){
+    u.pitch = 1.25;
+    u.rate = 0.95;
+  }
+
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 });
-
 /* ---------- GLOBAL ---------- */
 window.loadSet = loadSet;
 window.nextCard = nextCard;
