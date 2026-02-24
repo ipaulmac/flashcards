@@ -13,6 +13,7 @@
   --en-blue:#0E065C;
   --border-red:#8C0327;
 }
+
 body{
   background:var(--bg-blue);
   font-family:system-ui, Segoe UI, Arial;
@@ -22,7 +23,9 @@ body{
   padding:1rem 1rem 0 1rem;
   gap:.3rem;
 }
+
 .perspective{perspective:1000px;}
+
 .card-inner{
   width:90vw;
   max-width:380px;
@@ -33,22 +36,45 @@ body{
   transition:.4s;
   cursor:pointer;
 }
+
 .flipped{transform:rotateY(180deg);}
 .face{position:absolute; inset:0; backface-visibility:hidden; border-radius:1rem;}
 .back{transform:rotateY(180deg);}
+
 .it-text,.en-text{
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
   font-size:1rem;
 }
+
 .it-text{ color:var(--front-purple); }
 .en-text{ color:var(--en-blue); }
-.listen-btn{background:none;border:none;color:var(--it-red);font-weight:700;font-size:.9rem;}
-.nav-btn{font-size:1.4rem;font-weight:700;color:white;}
-.set-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:380px;width:100%;}
+
+.listen-btn{
+  background:none;
+  border:none;
+  color:var(--it-red);
+  font-weight:700;
+  font-size:.9rem;
+}
+
+.nav-btn{
+  font-size:1.4rem;
+  font-weight:700;
+  color:white;
+}
+
+.set-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.4rem;
+  max-width:380px;
+  width:100%;
+}
+
 .set-btn{
-  min-height:34px;        /* use min-height instead */
+  min-height:34px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -58,35 +84,12 @@ body{
   background:white;
   color:#0E065C;
   text-align:center;
-  padding:4px 6px;        /* allow wrapping */
+  padding:4px 6px;
 }
 
-.set-btn.active{background:#8C0327;color:white;}
-
-.link-btn{
-  min-height:34px;          /* match set-btn */
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:.65rem;         /* match set-btn */
-  font-weight:800;
-  border-radius:999px;
-  background:#BFC926;
-  color:#0E065C;
-  border:none;
-  text-align:center;
-  cursor:pointer;
-  transition:.2s ease;
-  padding:4px 6px;          /* match set-btn */
-}
-
-.link-btn:hover{
-  background:#25C3D3;
-}
-
-.arrow{
-  font-size:1.2rem;
-  line-height:1;
+.set-btn.active{
+  background:#8C0327;
+  color:white;
 }
 
 .special-set{
@@ -143,20 +146,16 @@ AUX VERBS SERIES N°2
 </div>
 
 <div class="set-grid mt-2">
-<button class="set-btn" onclick="loadSet(1)">HAVE / HAS</button>
-<button class="set-btn" onclick="loadSet(2)">HAD</button>
-<button class="set-btn" onclick="loadSet(3)">WILL HAVE</button>
-<button class="set-btn" onclick="loadSet(4)">WOULD HAVE</button>
-<button class="set-btn" onclick="loadSet(5)">HAVE BEEN</button>
-<button class="set-btn" onclick="loadSet(6)">HAD BEEN</button>
-<button class="set-btn" onclick="loadSet(7)">WILL HAVE BEEN</button>
-<button class="set-btn" onclick="loadSet(8)">WOULD HAVE BEEN</button>
-<button class="set-btn special-set set9" onclick="loadSet(9)">DIVING AUX'S</button>
-<button class="set-btn special-set set10" onclick="loadSet(10)">JUMPING AUX'S</button>
-
-<button class="link-btn" onclick="window.location.href='https://www.acceleratedlanguagesystems.com/post/auxiliaryverbs1'">
-  AUX VERBS N°1
-</button>
+  <button class="set-btn" onclick="loadSet(1)">HAVE / HAS</button>
+  <button class="set-btn" onclick="loadSet(2)">HAD</button>
+  <button class="set-btn" onclick="loadSet(3)">WILL HAVE</button>
+  <button class="set-btn" onclick="loadSet(4)">WOULD HAVE</button>
+  <button class="set-btn" onclick="loadSet(5)">HAVE BEEN</button>
+  <button class="set-btn" onclick="loadSet(6)">HAD BEEN</button>
+  <button class="set-btn" onclick="loadSet(7)">WILL HAVE BEEN</button>
+  <button class="set-btn" onclick="loadSet(8)">WOULD HAVE BEEN</button>
+  <button class="set-btn special-set" onclick="loadSet(9)">DIVING AUX'S</button>
+  <button class="set-btn special-set" onclick="loadSet(10)">JUMPING AUX'S</button>
 </div>
 
 <script>
