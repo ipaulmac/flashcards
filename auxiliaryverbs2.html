@@ -48,19 +48,19 @@ body{
 .nav-btn{font-size:1.4rem;font-weight:700;color:white;}
 .set-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;max-width:380px;width:100%;}
 .set-btn{
-  height:34px;
+  min-height:34px;        /* use min-height instead */
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:.65rem;      /* improved size */
+  font-size:.65rem;
   font-weight:800;
   border-radius:999px;
   background:white;
   color:#0E065C;
   text-align:center;
-  padding:0 6px;         /* spacing */
-  white-space:nowrap;    /* prevents messy wrapping */
+  padding:4px 6px;        /* allow wrapping */
 }
+
 .set-btn.active{background:#8C0327;color:white;}
 
 .link-btn{
@@ -78,7 +78,7 @@ body{
   cursor:pointer;
   transition:.2s ease;
   padding:0 6px;           /* match set-btn */
-  white-space:nowrap;      /* match set-btn */
+      
 }
 
 .link-btn:hover{
