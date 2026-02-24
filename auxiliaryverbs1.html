@@ -737,22 +737,10 @@ speakBtn.addEventListener("click",(e)=>{
   const text = Array.isArray(t) ? t[0] : (t || cards[index].en);
 
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "en-GB";
-  u.rate = 1;
-  u.pitch = 1;
-
-  const voices = speechSynthesis.getVoices();
-
-  // Prefer UK English voice
-  const ukVoice = voices.find(v => v.lang === "en-GB");
-
-  if(ukVoice){
-    u.voice = ukVoice;
-  }
-
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 });
+
 
 /* ---------- GLOBAL ---------- */
 window.loadSet = loadSet;
