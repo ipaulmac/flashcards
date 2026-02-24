@@ -738,22 +738,22 @@ speakBtn.addEventListener("click",(e)=>{
 
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "en-GB";
+  u.rate = 1;
+  u.pitch = 1;
 
-  // Slightly clearer pacing
-  u.rate = 0.95;
+  const voices = speechSynthesis.getVoices();
 
-  // Slightly deeper tone
-  u.pitch = 1.0;
+  // Prefer UK English voice
+  const ukVoice = voices.find(v => v.lang === "en-GB");
 
-  // Boost pitch slightly for questions (Android fix)
-  if(text.trim().endsWith("?")){
-    u.pitch = 1.25;
-    u.rate = 0.95;
+  if(ukVoice){
+    u.voice = ukVoice;
   }
 
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 });
+
 /* ---------- GLOBAL ---------- */
 window.loadSet = loadSet;
 window.nextCard = nextCard;
