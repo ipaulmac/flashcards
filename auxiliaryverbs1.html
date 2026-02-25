@@ -733,11 +733,8 @@ const audio = new Audio();
 
 speakBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
-  if(!cards.length) return;
 
-  const id = cards[index].id;
-
-  audio.src = `https://ipaulmac.github.io/flashcards/audio-test/${id}.mp3`;
+  audio.src = "https://ipaulmac.github.io/flashcards/audio-test/1-01.mp3";
   audio.currentTime = 0;
   audio.play();
 });
@@ -757,4 +754,5 @@ loadSet(1);
 
 </body>
 </html>
+
 
