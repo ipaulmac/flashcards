@@ -729,16 +729,17 @@ flashcard.addEventListener("click",()=>{
 });
 
 /* ---------- SPEAK ---------- */
+const audio = new Audio();
+
 speakBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   if(!cards.length) return;
 
-  let t = cards[index].speak;
-  const text = Array.isArray(t) ? t[0] : (t || cards[index].en);
+  const id = cards[index].id;
 
-  const u = new SpeechSynthesisUtterance(text);
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+  audio.src = `https://ipaulmac.github.io/flashcards/audio-test/${id}.mp3`;
+  audio.currentTime = 0;
+  audio.play();
 });
 
 
@@ -756,3 +757,4 @@ loadSet(1);
 
 </body>
 </html>
+
