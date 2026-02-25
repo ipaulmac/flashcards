@@ -737,14 +737,15 @@ speakBtn.addEventListener("click", function(e){
   e.stopPropagation();
   if(!cards.length) return;
 
-  const card = cards[index];
-  if(!card.id) return;   // Only plays if an ID exists
+  // Find original position inside full set
+  const originalIndex = fullSet.indexOf(cards[index]);
 
-  player.src = "https://ipaulmac.github.io/flashcards/audio/auxiliaryverbs1/" + card.id + ".mp3";
+  // Generate filename automatically (e.g. 1-01, 1-02, etc.)
+  const audioId = currentSet + "-" + String(originalIndex + 1).padStart(2, "0");
+
+  player.src = "https://ipaulmac.github.io/flashcards/audio/auxiliaryverbs1/" + audioId + ".mp3";
   player.load();
-  player.play().catch(function(err){
-    console.log("Playback blocked:", err);
-  });
+  player.play().catch(err => console.log(err));
 });
 
 /* ---------- GLOBAL ---------- */
@@ -760,6 +761,7 @@ loadSet(1);
 </script>
 
 </body>
+
 
 
 
