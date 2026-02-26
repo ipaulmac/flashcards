@@ -145,13 +145,10 @@ AUX VERBS SERIES N°1
   <button class="set-btn" onclick="loadSet(11)">BE</button>
 </div>
 <script>
+
 const sets = {
 1:[
-  {
-    it:"Non capisco questa parte",
-    en:"I don’t understand this part",
-    speak:["i don’t understand this part"]
-  },
+  {it:"Non capisco questa parte",en:"I don’t understand this part",speak:["i don’t understand this part"]},
   {front:"Lei non lavora il Lunedì", back:"She doesn’t work on Mondays", speak:"she doesn’t work on mondays"},
   {front:"Non abbiamo abbastanza tempo", back:"We don’t have enough time", speak:"we don’t have enough time"},
   {front:"A lui non piace il caffè", back:"He doesn’t like coffee", speak:"he doesn’t like coffee"},
@@ -633,11 +630,14 @@ const sets = {
 {it:"Sta piovendo ancora",en:"It’s still raining",speak:["it’s still raining"]}
 ],
 
+
+
 };
 
 </script>   <!-- ADD THIS LINE -->
-<audio id="player" preload="auto"></audio>
+
 <script>
+
 document.addEventListener("DOMContentLoaded",()=>{
 
 let currentSet = 1;
@@ -650,6 +650,19 @@ const frontText = document.getElementById("front-text");
 const backText  = document.getElementById("back-text");
 const counter   = document.getElementById("counter-display");
 const speakBtn  = document.getElementById("speakBtn");
+
+/* ---------- ATTACH PERMANENT IDS (MATCH MASTER FILE ORDER) ---------- */
+function attachSequentialIds() {
+  let counter = 1;
+
+  Object.keys(sets).forEach(setNumber => {
+    sets[setNumber].forEach(card => {
+      const padded = String(counter).padStart(3, "0");
+      card.id = `AUX1-${padded}`;
+      counter++;
+    });
+  });
+}
 
 /* ---------- SHUFFLE ---------- */
 function shuffleArray(a){
@@ -730,22 +743,14 @@ flashcard.addEventListener("click",()=>{
   flashcard.classList.toggle("flipped");
 });
 
-/* ---------- SPEAK ---------- */
-const player = document.getElementById("player");
-
-speakBtn.addEventListener("click", function(e){
+/* ---------- SPEAK (PROFESSIONAL MP3 AUDIO) ---------- */
+speakBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   if(!cards.length) return;
 
-  // Find original position inside full set
-  const originalIndex = fullSet.indexOf(cards[index]);
-
-  // Generate filename automatically (e.g. 1-01, 1-02, etc.)
-  const audioId = currentSet + "-" + String(originalIndex + 1).padStart(2, "0");
-
-  player.src = "https://ipaulmac.github.io/flashcards/audio/auxiliaryverbs1/" + audioId + ".mp3";
-  player.load();
-  player.play().catch(err => console.log(err));
+  const id = cards[index].id;
+  const audio = new Audio(`audio/auxiliaryverbs1/${id}.mp3`);
+  audio.play();
 });
 
 /* ---------- GLOBAL ---------- */
@@ -755,14 +760,11 @@ window.prevCard = prevCard;
 window.refreshCurrentSet = refreshCurrentSet;
 
 /* ---------- INIT ---------- */
+attachSequentialIds();
 loadSet(1);
 
 });
+
 </script>
-
 </body>
-
-
-
-
-
+</html>
