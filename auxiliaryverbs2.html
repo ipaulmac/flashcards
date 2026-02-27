@@ -693,6 +693,16 @@ const sets = {
 
 document.addEventListener("DOMContentLoaded",()=>{
 
+/* ---------- ASSIGN IDS TO ALL CARDS ---------- */
+let globalCounter = 1;
+
+Object.keys(sets).forEach(setKey => {
+  sets[setKey].forEach(card => {
+    card.id = `AUX2-${String(globalCounter).padStart(3, "0")}`;
+    globalCounter++;
+  });
+});
+
 let currentSet = 1;
 let fullSet = [];
 let cards = [];
@@ -722,12 +732,10 @@ function pickRandom15(arr){
 /* ---------- LOAD SET ---------- */
 function loadSet(n){
   currentSet = n;
-
   if(!sets || !sets[n]) return;
 
   fullSet = sets[n].filter(Boolean);
   cards   = pickRandom15(fullSet);
-
   index = 0;
   updateCard();
 
@@ -747,6 +755,7 @@ function refreshCurrentSet(){
 /* ---------- DISPLAY ---------- */
 function updateCard(){
   flashcard.classList.remove("flipped");
+
   if(!cards.length){
     frontText.innerText = "—";
     backText.innerText  = "—";
@@ -756,10 +765,8 @@ function updateCard(){
 
   setTimeout(()=>{
     const c = cards[index];
-
     frontText.innerText = c.it || c.front || "—";
     backText.innerText  = c.en || c.back  || "—";
-
     counter.innerText   = `${index + 1} / ${cards.length}`;
   },120);
 }
@@ -782,7 +789,7 @@ function prevCard(e){
 /* ---------- FLIP ---------- */
 flashcard.addEventListener("click",()=>flashcard.classList.toggle("flipped"));
 
-/* ---------- SPEAK ---------- */
+/* ---------- SPEAK (MP3 SYSTEM) ---------- */
 speakBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   if(!cards.length) return;
@@ -802,8 +809,11 @@ window.refreshCurrentSet = refreshCurrentSet;
 loadSet(1);
 
 });
+
+});
 </script>
 
 </body>
 </html>
+
 
