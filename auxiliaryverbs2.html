@@ -787,13 +787,9 @@ speakBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
   if(!cards.length) return;
 
-  let t = cards[index].speak;
-  const text = Array.isArray(t) ? t[0] : (t || cards[index].en);
-
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "en-GB";
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+  const id = cards[index].id;
+  const audio = new Audio(`audio/auxiliaryverbs2/${id}.mp3`);
+  audio.play();
 });
 
 /* ---------- GLOBAL ---------- */
@@ -810,3 +806,4 @@ loadSet(1);
 
 </body>
 </html>
+
