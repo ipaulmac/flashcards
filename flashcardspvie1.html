@@ -80,6 +80,11 @@ body{
   color:#061247;
 }
 
+.extras-btn{
+  background:#0FF268;
+  color:#061247;
+}
+
 @media (max-width: 480px) {
   .set-btn{
     font-size:.65rem;
@@ -136,6 +141,7 @@ STAGE ONE
   <button class="set-btn" onclick="loadSet('pvie1.4')">LESSONS 7&8</button>
   <button class="set-btn" onclick="loadSet('pvie1.5')">LESSONS 9&10</button>
   <button class="set-btn" onclick="loadSet('pvie1.6')">LESSONS 11&12</button>
+  <button class="set-btn extras-btn" onclick="loadSet('pvie1.7')">EXTRAS</button>
   <button class="set-btn global-btn" onclick="loadGlobal()">GLOBAL 1 - 12</button>
 </div>
 
@@ -412,7 +418,46 @@ const sets = {
   {front:"Disinnescare / Stemperare", back:"Defuse", speak:["defuse"]},
   {front:"Fino a nuovo avviso", back:"Until further notice", speak:["until further notice"]},
   {front:"Non si può negare", back:"There is no denying", speak:["there is no denying"]},
-  {front:"Che programmi hai per oggi?", back:"What are you up to today?", speak:["what are you up to today"]}]
+  {front:"Che programmi hai per oggi?", back:"What are you up to today?", speak:["what are you up to today"]}],
+
+"pvie1.7":[
+ {front:"Purtroppo", back:"I’m afraid", speak:["i'm afraid"]},
+ {front:"Mi raccomando", back:"Whatever you do", speak:["whatever you do"]},
+ {front:"Non vedo un cavolo!", back:"I can't see a damned thing!", speak:["i can't see a damned thing"]},
+ {front:"Volevo solo dire", back:"I just wanted to mention", speak:["i just wanted to mention"]},
+ {front:"Quale è il suo problema?", back:"What’s wrong with him?", speak:["what's wrong with him"]},
+ {front:"Non posso non essere d’accordo con te", back:"I would have to agree with you", speak:["i would have to agree with you"]},
+ {front:"Basta farlo!", back:"Just do it!", speak:["just do it"]},
+ {front:"Deve essere pronto per forza", back:"It must surely be ready", speak:["it must surely be ready"]},
+ {front:"Sono mortificato!", back:"I’m really sorry!", speak:["i'm really sorry"]},
+ {front:"Giusto per cambiare", back:"Just for once", speak:["just for once"]},
+ {front:"Come mai?", back:"How come?", speak:["how come"]},
+ {front:"Chissà perché?", back:"I wonder why?", speak:["i wonder why"]},
+ {front:"Spetta a te", back:"It’s your job", speak:["it's your job"]},
+ {front:"Che ne dici di andare domani?", back:"How about going tomorrow?", speak:["how about going tomorrow"]},
+ {front:"Che ne dici se andiamo oggi?", back:"How about us going today?", speak:["how about us going today"]},
+ {front:"Può essere altrettanto facile ora quanto prima", back:"It can be just as easy now as it was before", speak:["it can be just as easy now as it was before"]},
+ {front:"Peggiorare / Andare a rotoli", back:"Go downhill", speak:["go downhill"]},
+ {front:"Per nessun motivo", back:"There's no way!", speak:["there's no way"]},
+ {front:"Per fortuna", back:"Thankfully", speak:["thankfully"]},
+ {front:"Come mai la finestra è aperta?", back:"Why is it / How come that the window is open?", speak:["why is it that the window is open"]},
+ {front:"A caldo / Nella foga del momento", back:"In the heat of the moment", speak:["in the heat of the moment"]},
+ {front:"Stai scherzando?", back:"You must be joking!", speak:["you must be joking"]},
+ {front:"Non ti preoccupare. Non dirò nulla / Terrò la bocca chiusa", back:"Don't worry. Mum’s the word", speak:["don't worry mum's the word"]},
+ {front:"A mente", back:"In one’s head", speak:["in one's head"]},
+ {front:"Ti è andato molto bene", back:"You were very lucky", speak:["you were very lucky"]},
+ {front:"Andiamo d’amore e d’accordo", back:"We get on / get along like a house on fire", speak:["we get on like a house on fire"]},
+ {front:"Ho bisogno di mangiare qualcosa", back:"I need something inside of me", speak:["i need something inside of me"]},
+ {front:"Non è da me", back:"It’s unlike me", speak:["it's unlike me"]},
+ {front:"Sono io / Mi dica (al telefono)", back:"Speaking!", speak:["speaking"]},
+ {front:"Come posso esserti utile?", back:"What can I do for you?", speak:["what can i do for you"]},
+ {front:"Ci penso io", back:"Leave it to me", speak:["leave it to me"]},
+ {front:"Per me è la stessa cosa", back:"I’m not bothered either way", speak:["i'm not bothered either way"]},
+ {front:"Se non ci sono io", back:"If I am not around", speak:["if i am not around"]},
+ {front:"Hai ragione", back:"You’ve got a point", speak:["you've got a point"]},
+ {front:"Fino a nuovo avviso", back:"Until further notice", speak:["until further notice"]},
+ {front:"Non si può negare", back:"There is no denying", speak:["there is no denying"]}
+]
 };
 
 /* ================= CORE ENGINE ================= */
@@ -510,14 +555,16 @@ function activateButton(folder){
   document.querySelectorAll(".set-btn").forEach(btn=>btn.classList.remove("active"));
   const buttons=document.querySelectorAll(".set-btn");
   const map={
-    "pvie1.1":0,
-    "pvie1.2":1,
-    "pvie1.3":2,
-    "pvie1.4":3,
-    "pvie1.5":4,
-    "pvie1.6":5,
-    "GLOBAL":6
-  };
+  "pvie1.1":0,
+  "pvie1.2":1,
+  "pvie1.3":2,
+  "pvie1.4":3,
+  "pvie1.5":4,
+  "pvie1.6":5,
+  "pvie1.7":6,
+  "GLOBAL":7
+};
+
   buttons[map[folder]].classList.add("active");
 }
 
