@@ -77,6 +77,12 @@ body{
   background:#00cfd5;
   color:#061247;
 }
+
+.extras-btn{
+  background:#0FF268;
+  color:#061247;
+}
+
 .set-btn.active{
   background:#8C0327;
   color:white;
@@ -120,13 +126,14 @@ STAGE TWO – LESSONS 13 to 24
 </div>
 
 <div class="set-grid mt-2">
-  <button class="set-btn" onclick="loadSet('pvie2.1')">LESSONS 13&14</button>
-  <button class="set-btn" onclick="loadSet('pvie2.2')">LESSONS 15&16</button>
-  <button class="set-btn" onclick="loadSet('pvie2.3')">LESSONS 17&18</button>
-  <button class="set-btn" onclick="loadSet('pvie2.4')">LESSONS 19&20</button>
-  <button class="set-btn" onclick="loadSet('pvie2.5')">LESSONS 21&22</button>
-  <button class="set-btn" onclick="loadSet('pvie2.6')">LESSONS 23&24</button>
-  <button class="set-btn global-btn" onclick="loadGlobal()">GLOBAL 13 - 24</button>
+<button class="set-btn" onclick="loadSet('pvie2.1')">LESSONS 13&14</button>
+<button class="set-btn" onclick="loadSet('pvie2.2')">LESSONS 15&16</button>
+<button class="set-btn" onclick="loadSet('pvie2.3')">LESSONS 17&18</button>
+<button class="set-btn" onclick="loadSet('pvie2.4')">LESSONS 19&20</button>
+<button class="set-btn" onclick="loadSet('pvie2.5')">LESSONS 21&22</button>
+<button class="set-btn" onclick="loadSet('pvie2.6')">LESSONS 23&24</button>
+<button class="set-btn extras-btn" onclick="loadSet('pvie2.7')">EXTRAS</button>
+<button class="set-btn global-btn" onclick="loadGlobal()">GLOBAL 13 - 24</button>
 </div>
 
 <script>
@@ -441,6 +448,65 @@ const sets = {
   {front:"Proteste pubbliche", back:"Public outcry"},
   {front:"Preoccuparsi / Angosciarsi", back:"Fret about"},
   {front:"Violazione del contratto", back:"Breach of contract"}
+],
+
+"pvie2.7": [
+  {front:"All’istante", back:"On the spot"},
+  {front:"Bravo!", back:"Good for you!"},
+  {front:"Intendiamoci", back:"Mind you"},
+  {front:"Preferisco non pensare", back:"I hate to think"},
+  {front:"Ci farebbe molto piacere!", back:"We would love to!"},
+  {front:"Molto spiritoso!", back:"Very funny!"},
+  {front:"Mi raccomando, chiamami domani", back:"Do call me tomorrow, won’t you?"},
+  {front:"Non potevo mica rifiutare!", back:"I was hardly going to refuse!"},
+  {front:"Essere decisi a fare", back:"Have one’s heart set on doing"},
+  {front:"Facilissimo!", back:"Piece of cake!"},
+  {front:"Molto probabilmente/Molto probabile che io...", back:"I may well ..."},
+  {front:"Meno male", back:"Just as well"},
+  {front:"Sono indeciso", back:"I’m in two minds"},
+  {front:"Il punto/discorso è", back:"The thing is ..."},
+  {front:"Il più delle volte", back:"More often than not"},
+  {front:"Mi dispiace dirlo", back:"I’m sad to say"},
+  {front:"Salire alle stelle", back:"Go through the roof"},
+  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch"},
+  {front:"Farsi i fatti propri", back:"Mind one's own business"},
+  {front:"Per caso, sai dov'è?", back:"You don't happen to know where it is, do you?"},
+  {front:"Fermo nella mia convinzione", back:"Firm in my belief"},
+  {front:"Per quanto mi sforzi", back:"For the life of me"},
+  {front:"Ero convinto", back:"I could have sworn"},
+  {front:"Per citarne alcuni", back:"To name but a few"},
+  {front:"Per miei gusti", back:"For my liking"},
+  {front:"Ricominciare da zero", back:"Start from scratch"},
+  {front:"24h su 24h/Giorno e notte", back:"Around the clock"},
+  {front:"Siccome (sono) fortunato…!", back:"Knowing my luck"},
+  {front:"Non costa nulla aspettare", back:"There’s no harm waiting"},
+  {front:"Io, per primo", back:"I, for one"},
+  {front:"Mettiamoci al lavoro!", back:"Let's get cracking!"},
+  {front:"Punto e basta (rif: noi)", back:"Won’t we"},
+  {front:"Col cavolo! / Ma quando mai!", back:"Like hell!"},
+  {front:"Cosa vogliamo fare?", back:"What are we going to do about it?"},
+  {front:"Non farsi scrupoli", back:"Think nothing of (doing)"},
+  {front:"Potresti per caso, tornare domani ?", back:"Any chance of coming back tomorrow?"},
+  {front:"Far impazzire", back:"Drive someone mad"},
+  {front:"Suonare familiare", back:"Ring a bell"},
+  {front:"Se posso dirlo/Se posso permettermi", back:"If you don’t mind me saying so"},
+  {front:"Cosa ti è preso?", back:"What’s got into you?"},
+  {front:"La prima volta in assoluto", back:"First ever time"},
+  {front:"Pensa che...! / Solo a pensarci!", back:"Just think!"},
+  {front:"Magari!", back:"If only"},
+  {front:"Significa tutto/Vale un mondo", back:"It means the world"},
+  {front:"In reperibilità", back:"On stand-by"},
+  {front:"Nel momento in cui", back:"By the time"},
+  {front:"Figurati!", back:"No trouble at all!"},
+  {front:"Pensa un po’! / Chi l'avrebbe mai detto!", back:"Fancy that!"},
+  {front:"Zero possibilità/Non c'è santo che tenga", back:"A cat in hell's chance"},
+  {front:"Con loro stupore", back:"Much to their amazement"},
+  {front:"Punto e basta!", back:"That’s that!/That was that!"},
+  {front:"Per l’ennesima volta", back:"For the umpteenth time"},
+  {front:"Qualcuno in più, qualcuno in meno", back:"Give or take"},
+  {front:"Essere permalosi", back:"Be touchy"},
+  {front:"Non ho la più pallida idea", back:"I haven't got a clue"},
+  {front:"All'istante/Con effetto immediato", back:"Right here and now"}
 ]
 
 };
@@ -546,8 +612,10 @@ function activateButton(folder){
     "pvie2.4":3,
     "pvie2.5":4,
     "pvie2.6":5,
-    "GLOBAL":6
+    "pvie2.7":6,
+    "GLOBAL":7
   };
+
   buttons[map[folder]].classList.add("active");
 }
 
