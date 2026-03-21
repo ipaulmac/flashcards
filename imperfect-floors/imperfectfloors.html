@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>THE IMPERFECT FLOORS</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+--bg-blue:#061247;
+--front-purple:#561386;
+--it-red:#8C0327;
+--en-blue:#0E065C;
+}
+
+body{
+background:var(--bg-blue);
+font-family:system-ui, Segoe UI, Arial;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:1rem;
+gap:.3rem;
+}
+
+.perspective{perspective:1000px;}
+
+.card-inner{
+width:90vw;
+max-width:380px;
+height:55vw;
+max-height:240px;
+position:relative;
+transform-style:preserve-3d;
+transition:.4s;
+cursor:pointer;
+}
+
+.flipped{transform:rotateY(180deg);}
+
+.face{
+position:absolute;
+inset:0;
+backface-visibility:hidden;
+border-radius:1rem;
+}
+
+.back{transform:rotateY(180deg);}
+
+.listen-btn{
+background:none;
+border:none;
+color:var(--it-red);
+font-weight:700;
+font-size:.9rem;
+cursor:pointer;
+}
+
+.it-text,.en-text{
+font-weight:800;
+text-transform:uppercase;
+text-align:center;
+font-size:1.25rem;
+}
+
+.it-text{color:var(--front-purple);}
+.en-text{color:var(--en-blue);}
+
+.nav-btn{
+font-size:1.4rem;
+font-weight:700;
+color:white;
+}
+
+.floor-label{
+position:absolute;
+top:6px;
+right:10px;
+font-size:.65rem;
+font-weight:800;
+color:var(--front-purple);
+letter-spacing:.05rem;
+}
+
+.set-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:.25rem;
+max-width:380px;
+width:100%;
+}
+
+.set-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+padding:7px 0;
+font-size:.75rem;
+font-weight:800;
+border-radius:999px;
+background:white;
+color:#0E065C;
+cursor:pointer;
+}
+
+.set-btn.active{
+background:#8C0327;
+color:white;
+}
+
+.test-btn{
+background:#00cfd5;
+color:#061247;
+font-weight:900;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2 class="text-white text-lg font-extrabold tracking-widest text-center">
+THE IMPERFECT FLOORS
+</h2>
+
+<div class="perspective mt-4">
+<div id="flashcard" class="card-inner">
+
+<div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
+<div id="front-text" class="it-text"></div>
+</div>
+
+<div class="face back bg-white border-4 border-[#8C0327] flex flex-col justify-between p-4">
+
+<div id="floor-label" class="floor-label"></div>
+
+<div class="flex-grow flex items-center justify-center">
+<div id="back-text" class="en-text"></div>
+</div>
+
+<div class="flex justify-center pb-2">
+<button id="speakBtn" class="listen-btn">🔊 LISTEN</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px]">
+<button onclick="prevCard()" class="nav-btn">◀</button>
+
+<span id="counter-display" class="text-white font-bold text-sm">
+1 / 1
+</span>
+
+<button onclick="nextCard()" class="nav-btn">▶</button>
+</div>
+
+<div class="w-full max-w-[380px] flex justify-center mt-2">
+<button onclick="refreshCurrentSet()"
+class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounded-full">
+<span class="font-bold text-sm">REFRESH</span>
+</button>
+</div>
+
+<div class="set-grid mt-2">
+<button class="set-btn" onclick="loadSet(1)">FLOOR 1</button>
+<button class="set-btn" onclick="loadSet(2)">FLOOR 2</button>
+<button class="set-btn" onclick="loadSet(3)">FLOOR 3</button>
+
+<button class="set-btn" onclick="loadSet(4)">FLOOR 4</button>
+<button class="set-btn" onclick="loadSet(5)">FLOOR 5</button>
+<button class="set-btn" onclick="loadSet(6)">FLOOR 6</button>
+
+<button class="set-btn" onclick="loadSet(7)">FLOOR 7</button>
+<button class="set-btn" onclick="loadSet(8)">FLOOR 8</button>
+<button class="set-btn" onclick="loadSet(9)">FLOOR 9</button>
+
+<button class="set-btn" onclick="loadSet(10)">FLOOR 10</button>
+<button class="set-btn" onclick="loadSet(11)">FLOOR 11</button>
+
+<button id="test-btn" class="set-btn test-btn" onclick="loadTest()">TEST</button>
+</div>
+
+<script>
+
+const sets = {
+
+1: [
+{"front":"Facevo colazione quando è arrivato il postino","back":"I was having breakfast when the postman arrived","speak":"I was having breakfast when the postman arrived"},
+{"front":"Lei parlava con il cliente mentre io controllavo i documenti","back":"She was speaking with the client while I was checking the documents","speak":"She was speaking with the client while I was checking the documents"},
+{"front":"Aspettavamo l’autobus quando ha iniziato a piovere","back":"We were waiting for the bus when it started raining","speak":"We were waiting for the bus when it started raining"},
+{"front":"Mentre fuori pioveva, lei leggeva sul divano","back":"While it was raining outside, she was reading on the sofa","speak":"While it was raining outside, she was reading on the sofa"},
+{"front":"Lui preparava la cena mentre lei apparecchiava la tavola","back":"He was preparing dinner while she was laying the table","speak":"He was preparing dinner while she was laying the table"},
+{"front":"Facevo colazione quando mi hai chiamato","back":"I was having breakfast when you called me","speak":"I was having breakfast when you called me"},
+{"front":"Cosa cercava Karen quando siete entrati poco fa?","back":"What was Karen looking for when you came in just now?","speak":"What was Karen looking for when you came in just now?"},
+{"front":"Ma non lavoravano già quando è arrivato il direttore?","back":"Weren’t they already working when the manager arrived?","speak":"Weren’t they already working when the manager arrived?"},
+{"front":"Giocavo con il telefono mentre la aspettavo fuori","back":"I was playing on my phone while I was waiting outside for her","speak":"I was playing on my phone while I was waiting outside for her"},
+{"front":"Lei guardava un film in TV quando, all'improvviso, è suonato il telefono","back":"She was watching a film on TV when the phone suddenly rang","speak":"She was watching a film on TV when the phone suddenly rang"},
+{"front":"Lui dormiva profondamente quando la sveglia ha suonato alle 6.30","back":"He was sleeping soundly when the alarm clock went off at six thirty","speak":"He was sleeping soundly when the alarm clock went off at six thirty"},
+{"front":"Cantavi sotto la doccia quando sono tornato","back":"You were singing in the shower when I came back","speak":"You were singing in the shower when I came back"},
+{"front":"Lui studiava in biblioteca quando è arrivato un suo amico","back":"He was studying in the library when a friend of his turned up","speak":"He was studying in the library when a friend of his turned up"},
+{"front":"Perché eri così distratto mentre il professore parlava?","back":"Why were you so distracted while the teacher was speaking?","speak":"Why were you so distracted while the teacher was speaking?"},
+{"front":"Cercavo di fare una torta quando si è rotto il forno","back":"I was trying to bake a cake when the oven broke","speak":"I was trying to bake a cake when the oven broke"},
+{"front":"Tornavo a casa in macchina quando è iniziato il temporale","back":"I was driving back home when the storm started","speak":"I was driving back home when the storm started"},
+{"front":"Lei era ancora lì a scrivere l’email nonostante l’urgenza","back":"She was still there writing the email despite the urgency","speak":"She was still there writing the email despite the urgency"},
+{"front":"Camminavamo nel parco quando abbiamo sentito un rumore davvero forte","back":"We were walking in the park when we heard a really loud noise","speak":"We were walking in the park when we heard a really loud noise"},
+{"front":"Scusami, ma non seguivo la spiegazione. Pensavo ad altro","back":"I'm sorry, but I wasn't following the explanation. I was thinking about something else","speak":"I'm sorry, but I wasn't following the explanation. I was thinking about something else"},
+{"front":"Mentre io tenevo la torcia, lui riparava la bicicletta","back":"While I was holding the torch, he was repairing the bicycle","speak":"While I was holding the torch, he was repairing the bicycle"},
+{"front":"Per caso, preparavate già i bagagli quando vi ho telefonato?","back":"Were you, by chance, already packing when I phoned you?","speak":"Were you, by chance, already packing when I phoned you?"},
+{"front":"Ho notato che lei provava quel vestito per la seconda volta. Sembrava molto indecisa","back":"I noticed that she was trying on that dress for the second time. She seemed very undecided","speak":"I noticed that she was trying on that dress for the second time. She seemed very undecided"},
+{"front":"Perché non ci aspettavate fuori come concordato?","back":"Why weren’t you waiting for us outside as agreed?","speak":"Why weren’t you waiting for us outside as agreed?"},
+{"front":"Dove andavi quando ti ho visto?","back":"Where were you going when I saw you?","speak":"Where were you going when I saw you?"},
+{"front":"Lui teneva i posti mentre compravo i biglietti","back":"He was keeping the seats while I was buying the tickets","speak":"He was keeping the seats while I was buying the tickets"},
+{"front":"Pioveva quando sono uscito di casa","back":"It was raining when I left home","speak":"It was raining when I left home"},
+{"front":"Lei correva al parco quando ha iniziato a grandinare","back":"She was running in the park when it started to hail","speak":"She was running in the park when it started to hail"},
+{"front":"Ti posso assicurare che non guidavo io","back":"I can assure you that I wasn’t driving","speak":"I can assure you that I wasn’t driving"},
+{"front":"Lui era già andato via mentre gli altri cercavano di finire il progetto per il giorno dopo","back":"He had already left while the others were trying to finish the project for the next day","speak":"He had already left while the others were trying to finish the project for the next day"},
+{"front":"Volevo dirtelo ieri sera mentre lavavi i piatti","back":"I wanted to tell you last night while you were doing the washing up","speak":"I wanted to tell you last night while you were doing the washing up"},
+{"front":"Davvero non mi ricordo cosa indossava lei alla festa","back":"I really don't remember what she was wearing at the party","speak":"I really don't remember what she was wearing at the party"},
+{"front":"Pitturavano il salotto quando, all'improvviso, è andata via la luce","back":"They were painting the living room when the power suddenly went out","speak":"They were painting the living room when the power suddenly went out"},
+{"front":"Mentre lui sistemava i libri, io cercavo ancora i miei occhiali","back":"While he was putting the books away, I was still searching for my glasses","speak":"While he was putting the books away, I was still searching for my glasses"},
+{"front":"Mentre lei organizzava la riunione, io preparavo gli appunti","back":"While she was organising the meeting, I was getting the notes ready","speak":"While she was organising the meeting, I was getting the notes ready"},
+{"front":"Provavo il nuovo programma quando il computer si è bloccato per l'ennesima volta","back":"I was trying out the new programme when the computer froze for the umpteenth time","speak":"I was trying out the new programme when the computer froze for the umpteenth time"},
+{"front":"Mi sa che lui cercava un parcheggio quando l’ho visto","back":"I think he was looking for a parking space when I saw him","speak":"I think he was looking for a parking space when I saw him"},
+{"front":"Perché lei continuava a cucinare se avevate già ordinato la pizza?","back":"Why was she continuing to cook if you had already ordered pizza?","speak":"Why was she continuing to cook if you had already ordered pizza?"},
+{"front":"Non so perché ma, mentre parlavo io, lei rideva","back":"I don’t know why, but while I was speaking, she was laughing","speak":"I don’t know why, but while I was speaking, she was laughing"},
+{"front":"Parlavamo del tuo piano durante la pausa caffè","back":"We were talking about your plan during the coffee break","speak":"We were talking about your plan during the coffee break"} 
+],
+
+2: [
+{"front":"Quando ero piccolo, la domenica andavo spesso al lago con mio padre","back":"When I was a child, I often used to go to the lake with my father on Sundays","speak":"When I was a child, I often used to go to the lake with my father on Sundays"},
+
+{"front":"Una volta facevamo colazione insieme, ma ormai lei esce troppo presto","back":"We used to have breakfast together, but she goes out too early now","speak":"We used to have breakfast together, but she goes out too early now"},
+
+{"front":"In passato lavoravo anche il sabato mattina","back":"I also used to work on Saturday mornings","speak":"I also used to work on Saturday mornings"},
+
+{"front":"Da giovane, lei scriveva poesie nei suoi quaderni","back":"When she was young, she used to write poems in her notebooks","speak":"When she was young, she used to write poems in her notebooks"},
+
+{"front":"Durante l’inverno non uscivamo molto la sera","back":"We didn’t use to go out very much in the evenings during the winter","speak":"We didn’t use to go out very much in the evenings during the winter"},
+
+{"front":"Non frequentavi una volta quella palestra vicino alla stazione?","back":"Didn’t you use to go to that gym near the station?","speak":"Didn’t you use to go to that gym near the station?"},
+
+{"front":"Anni fa, lui collezionava vecchie monete","back":"Years ago, he used to collect old coins","speak":"Years ago, he used to collect old coins"},
+
+{"front":"Quando vivevamo a Londra, mangiavamo spesso in quel piccolo ristorante all'angolo","back":"When we were living in London, we often used to eat in that small restaurant on the corner","speak":"When we were living in London, we often used to eat in that small restaurant on the corner"},
+
+{"front":"Una volta non bevevo mai il caffè dopo cena","back":"I never used to drink coffee after dinner","speak":"I never used to drink coffee after dinner"},
+
+{"front":"Da piccolo giocavo spesso nel giardino dei nonni","back":"When I was a child, I often used to play in my grandparents' garden","speak":"When I was a child, I often used to play in my grandparents' garden"},
+
+{"front":"In passato lei non voleva mai andare in vacanza in montagna","back":"In the past, she never used to want to go on holiday to the mountains","speak":"In the past, she never used to want to go on holiday to the mountains"},
+
+{"front":"Come andavi a scuola quando eri piccolo?","back":"How did you use to get to school when you were a child?","speak":"How did you use to get to school when you were a child?"},
+
+{"front":"Da giovani facevamo sport ogni fine settimana","back":"When we were young, we used to do sport every weekend","speak":"When we were young, we used to do sport every weekend"},
+
+{"front":"È vero che da bambino non mangiavi mai le verdure?","back":"Is it true that you never used to eat vegetables when you were a child?","speak":"Is it true that you never used to eat vegetables when you were a child?"},
+
+{"front":"Trent’anni fa abitavano in una piccola casa vicino al mare","back":"Thirty years ago, they used to live in a small house near the sea","speak":"Thirty years ago, they used to live in a small house near the sea"},
+
+{"front":"Da adolescente portavo sempre i capelli lunghi","back":"When I was a teenager, I always used to wear my hair long","speak":"When I was a teenager, I always used to wear my hair long"},
+
+{"front":"Da bambino mi piaceva aiutare mia madre in cucina","back":"When I was a child, I used to like helping my mother in the kitchen","speak":"When I was a child, I used to like helping my mother in the kitchen"},
+
+{"front":"Lui suonava la chitarra in una band locale","back":"He used to play the guitar in a local band","speak":"He used to play the guitar in a local band"},
+
+{"front":"Lei passava le estati a casa dei nonni","back":"She used to spend her summers at her grandparents' house","speak":"She used to spend her summers at her grandparents' house"},
+
+{"front":"Non guardavamo mai la TV dopo cena","back":"We never used to watch TV after dinner","speak":"We never used to watch TV after dinner"},
+
+{"front":"Andavi spesso al cinema con i tuoi amici?","back":"Did you often use to go to the cinema with your friends?","speak":"Did you often use to go to the cinema with your friends?"},
+
+{"front":"Lei non usciva mai da sola la sera","back":"She never used to go out alone in the evenings","speak":"She never used to go out alone in the evenings"},
+
+{"front":"Ridevamo sempre per le sue battute","back":"We always used to laugh at his jokes","speak":"We always used to laugh at his jokes"},
+
+{"front":"Lui spesso disegnava nel tempo libero","back":"He often used to draw in his free time","speak":"He often used to draw in his free time"},
+
+{"front":"La sera lei non rispondeva mai al telefono","back":"She never used to answer the phone in the evening","speak":"She never used to answer the phone in the evening"},
+
+{"front":"Quanto pagavi di affitto in quel periodo?","back":"How much did you use to pay for rent during that time?","speak":"How much did you use to pay for rent during that time?"},
+
+{"front":"Lui arrivava sempre presto alle riunioni","back":"He always used to arrive early for meetings","speak":"He always used to arrive early for meetings"},
+
+{"front":"Quando lavoravo come cameriere in albergo, iniziavo molto presto al mattino","back":"When I was working as a hotel waiter, I used to start very early in the morning","speak":"When I was working as a hotel waiter, I used to start very early in the morning"},
+
+{"front":"Una volta passavamo tutte le estati nella nostra casa in campagna","back":"We used to spend every summer at our house in the country","speak":"We used to spend every summer at our house in the country"},
+
+{"front":"Una volta non prendevo mai il treno per andare al lavoro, ma ora trovo che sia piuttosto comodo","back":"I never used to take the train to go to work, but now I find it’s quite convenient","speak":"I never used to take the train to go to work, but now I find it’s quite convenient"},
+
+{"front":"Quando abitavamo vicino al mare, andavamo a nuotare quasi ogni giorno","back":"When we were living near the seaside, we used to go swimming almost every day","speak":"When we were living near the seaside, we used to go swimming almost every day"},
+
+{"front":"Una volta tenevo un diario e scrivevo ogni sera","back":"I used to keep a diary and write every evening","speak":"I used to keep a diary and write every evening"},
+
+{"front":"Non guidavi una volta una vecchia macchina blu?","back":"Didn’t you use to drive an old blue car?","speak":"Didn’t you use to drive an old blue car?"},
+
+{"front":"Leggevo molto di più in passato","back":"I used to read much more in the past","speak":"I used to read much more in the past"},
+
+{"front":"Una volta non mi piaceva il pesce, ma adesso lo adoro","back":"I didn’t use to like fish, but now I love it","speak":"I didn’t use to like fish, but now I love it"},
+
+{"front":"Una volta era necessario","back":"It used to be necessary","speak":"It used to be necessary"},
+
+{"front":"Succedeva spesso?","back":"Did it often use to happen?","speak":"Did it often use to happen?"},
+
+{"front":"Fino a qualche anno fa, lei guidava solo macchine straniere","back":"Until a few years ago, she used to drive only foreign cars","speak":"Until a few years ago, she used to drive only foreign cars"},
+
+{"front":"Prima non era mai così. Chissà cosa è successo","back":"It never used to be like this before. I wonder what happened?","speak":"It never used to be like this before. I wonder what happened?"},
+
+{"front":"Una volta fumavo un pacchetto di sigarette al giorno","back":"I used to smoke a pack of cigarettes a day","speak":"I used to smoke a pack of cigarettes a day"},
+
+{"front":"Non mi ricordo esattamente dove lavorava lui prima che si sposasse","back":"I don’t remember exactly where he used to work before he got married","speak":"I don’t remember exactly where he used to work before he got married"},
+
+{"front":"Una volta abitavo a due passi da qui","back":"I used to live a stone’s throw from here","speak":"I used to live a stone’s throw from here"},
+
+{"front":"Una volta ci andavamo minimo tre volte all’anno","back":"We used to go there at least three times a year","speak":"We used to go there at least three times a year"},
+
+{"front":"Una volta non mi piaceva il caffè, ma adesso non riesco a iniziare la giornata senza","back":"I didn’t use to like coffee, but now I can’t start the day without it","speak":"I didn’t use to like coffee, but now I can’t start the day without it"},
+
+{"front":"Lavoravi con lui una volta?","back":"Did you use to work with him?","speak":"Did you use to work with him?"},
+
+{"front":"Lo sapevi che questo bar una volta era un parrucchiere?","back":"Did you know this bar used to be a hairdresser’s?","speak":"Did you know this bar used to be a hairdresser’s?"}
+],
+
+3: [ 
+{ "front": "Ogni estate andavamo sempre al mare", "back": "We would always go to the seaside every summer", "speak": "We would always go to the seaside every summer" },
+
+{ "front": "Di solito leggeva un libro prima di dormire", "back": "She would usually read a book before going to sleep", "speak": "She would usually read a book before going to sleep" },
+
+{ "front": "Quando pioveva, restavamo sempre in casa a giocare", "back": "When it rained, we would always stay at home and play", "speak": "When it rained, - we would always stay at home and play" },
+
+{ "front": "La domenica preparava di solito la colazione per tutta la famiglia", "back": "On Sundays, he would usually prepare breakfast for the entire family", "speak": "On Sundays, -  he would usually prepare breakfast for the entire family" },
+
+{ "front": "Dopo scuola andavo di solito direttamente al parco a giocare a calcio con i miei amici", "back": "After school, I would usually go straight to the park and play football with my friends", "speak": "After school, - I would usually go straight to the park and play football with my friends" },
+
+{ "front": "Ogni inverno andavo a sciare in montagna", "back": "Every winter I would go skiing in the mountains", "speak": "Every winter, -  I would go skiing in the mountains" },
+
+{ "front": "Studiava sempre in biblioteca il pomeriggio", "back": "He would always study in the library in the afternoons", "speak": "He would always study in the library in the afternoons" },
+
+{ "front": "Quando guardavano quel programma non smettevano mai di ridere", "back": "When they were watching that programme, they would never stop laughing", "speak": "When they were watching that programme - they would never stop laughing" },
+
+{ "front": "Quando eravamo adolescenti facevamo spesso tardi con gli amici il sabato", "back": "When we were teenagers, we would often stay out late with friends on Saturdays", "speak": "When we were teenagers, - we would often stay out late with friends on Saturdays" },
+
+{ "front": "Spesso uscivamo a bere qualcosa dopo il lavoro", "back": "We would often go out for a drink after work", "speak": "We would often go out for a drink after work" },
+
+{ "front": "Da bambino aiutavo spesso mio padre con il giardinaggio", "back": "As a child, I would often help my father with the gardening", "speak": "As a child, - I would often help my father with the gardening" },
+
+{ "front": "Ogni mattina, prima di andare in pensione, lui prendeva esattamente lo stesso treno per andare al lavoro", "back": "Every morning, before he retired, he would take the exact same train to go to work", "speak": "Every morning - before he retired - he would take the exact same train to go to work" },
+
+{ "front": "Durante le lezioni lui si sedeva di solito verso il fondo dell’aula", "back": "During the lessons, he would usually sit near the back of the classroom", "speak": "During the lessons , - he would usually sit near the back of the classroom" },
+
+{ "front": "Quando eravamo piccoli giocavamo sempre a nascondino", "back": "When we were little, we would always play hide and seek", "speak": "When we were little, -  we would always play hide and seek" },
+
+{ "front": "Lei camminava sempre lungo il fiume invece di prendere la strada principale", "back": "She would always walk along the river instead of taking the main road", "speak": "She would always walk along the river instead of taking the main road" },
+
+{ "front": "Quando faceva bel tempo, di solito andavamo a fare una lunga passeggiata in campagna", "back": "When the weather was nice, we would normally go for a long walk in the countryside", "speak": "When the weather was nice - we would normally go for a long walk in the countryside" },
+
+{ "front": "D’inverno lui indossava raramente cappelli e guanti", "back": "He would rarely wear hats and gloves in winter", "speak": "He would rarely wear hats and gloves in winter" },
+
+{ "front": "Spesso passavamo le serate al campeggio cantando intorno al fuoco", "back": "We would often spend our evenings at the campsite singing around a fire", "speak": "We would often spend our evenings at the campsite - singing around a fire" },
+
+{ "front": "Comprava fiori al mercato ogni sabato", "back": "She would buy flowers at the market every Saturday", "speak": "She would buy flowers at the market every Saturday" },
+
+{ "front": "Viaggiavamo spesso in prima classe quando venivamo mandati in trasferta per lavoro", "back": "We would often travel first class when we were sent on business trips", "speak": "We would often travel first class, when we were sent on business trips" },
+
+{ "front": "Lei ascoltava le notizie solo alla radio e non le guardava mai in TV", "back": "She would only ever listen to the news on the radio and never watch it on TV", "speak": "She would only ever listen to the news on the radio - and never watch it on TV" },
+
+{ "front": "Quando nevicava facevamo spesso un pupazzo di neve in giardino", "back": "When it snowed, we would often make a snowman in the garden", "speak": "When it snowed, - we would often make a snowman in the garden" },
+
+{ "front": "Non mangiava mai tra un pasto e l’altro", "back": "He would never eat between meals", "speak": "He would never eat between meals" },
+
+{ "front": "Lei annaffiava le piante sul balcone ogni mattina", "back": "She would water the plants on the balcony every morning", "speak": "She would water the plants on the balcony every morning" },
+
+{ "front": "I miei genitori spendevano quasi sempre molti soldi in vacanza", "back": "My parents would nearly always spend a lot of money on holiday", "speak": "My parents would nearly always spend a lot of money on holiday" },
+
+{ "front": "Lei prendeva sempre una tazza di tè alle cinque del pomeriggio", "back": "She would always have a cup of tea at five in the afternoon", "speak": "She would always have a cup of tea at five in the afternoon" },
+
+{ "front": "Tornavano di solito molto tardi la sera", "back": "They would usually get back very late in the evening", "speak": "They would usually get back very late in the evening" },
+
+{ "front": "Da piccolo non chiedevo mai ai miei genitori aiuto per i compiti", "back": "When I was a child, I would never ask my parents for help with my homework", "speak": "When I was a child, - I would never ask my parents for help with my homework" },
+
+{ "front": "Dopo scuola aspettavo mia sorella fuori e, poi, tornavamo a casa insieme", "back": "After school, I would wait for my sister outside and, then, we’d go back home together", "speak": "After school, - I would wait for my sister outside - and then -  we’d go back home together" },
+
+{ "front": "Ogni tanto andavo a correre lungo il fiume la mattina", "back": "I would occasionally go running along the river in the morning", "speak": "I would occasionally go running along the river in the morning" },
+
+{ "front": "La domenica i miei genitori venivano spesso a pranzo", "back": "On Sundays, my parents would often come round for lunch", "speak": "On Sundays - my parents would often come round for lunch" },
+
+{ "front": "D’estate cenavamo spesso in giardino", "back": "In summer, we would often have dinner in the garden", "speak": "In summer, - we would often have dinner in the garden" },
+
+{ "front": "Quando pioveva così forte uscivamo raramente", "back": "When it rained really hard, we would hardly ever go out", "speak": "When it rained really hard, -  we would hardly ever go out" },
+
+{ "front": "Dopo cena leggevo sempre qualche pagina di un libro prima di dormire", "back": "After dinner, I would always read a few pages of a book before going to sleep", "speak": "After dinner, - I would always read a few pages of a book - before going to sleep" },
+
+{ "front": "Sebbene mia sorella vivesse in Germania, tornava sempre a casa per Natale", "back": "Although my sister lived in Germany, she would always come back home for Christmas", "speak": "Although my sister lived in Germany - she would always come back home for Christmas" },
+
+{ "front": "Quando ero all’università, la domenica dormivo spesso fino a tardi", "back": "When I was at university, I would often sleep until late on Sundays", "speak": "When I was at university - I would often sleep until late on Sundays" },
+
+{ "front": "Quando ero in Malesia, pioveva quasi sempre nel pomeriggio", "back": "When I was in Malaysia, it would nearly always rain in the afternoons", "speak": "When I was in Malaysia - it would nearly always rain in the afternoons" },
+
+{ "front": "Mio padre beveva spesso un bicchiere di birra prima di pranzo", "back": "My father would frequently have a glass of beer before lunch", "speak": "My father would frequently have a glass of beer before lunch" },
+
+{ "front": "Quando mio fratello era più giovane, non si lavava mai le mani prima di mangiare", "back": "When my brother was younger, he would never wash his hands before eating", "speak": "When my brother was younger - he would never wash his hands before eating" }
+ ],
+
+4: [
+ {"front":"Quando ero piccolo, giocavo spesso nel cortile dopo scuola","back":"When I was a child, I often played in the courtyard after school","speak":"When I was a child, I often played in the courtyard after school"},
+{"front":"Andavamo spesso a correre lungo il fiume la mattina","back":"We often went running along the river in the morning","speak":"We often went running along the river in the morning"},
+{"front":"Preparavo sempre il pranzo per tutta la famiglia la domenica","back":"I always cooked lunch for the whole family on Sundays","speak":"I always cooked lunch for the whole family on Sundays"},
+{"front":"Quando era studentessa, traduceva spesso articoli per esercitarsi","back":"When she was a student, she often translated articles to practise","speak":"When she was a student, she often translated articles to practise"},
+{"front":"D’estate cenavamo quasi sempre in giardino","back":"In summer, we almost always had dinner in the garden","speak":"In summer, we almost always had dinner in the garden"},
+{"front":"Non uscivamo quasi mai durante i mesi invernali","back":"We hardly ever went out during the winter months","speak":"We hardly ever went out during the winter months"},
+{"front":"Da piccolo leggevo sempre qualche pagina di un romanzo prima di addormentarmi","back":"As a child, I always read a few pages of a novel before going to sleep","speak":"As a child, I always read a few pages of a novel before going to sleep"},
+{"front":"Andavi spesso a pescare con tuo zio?","back":"Did you often go fishing with your uncle?","speak":"Did you often go fishing with your uncle?"},
+{"front":"Quando lavoravo in albergo, iniziavo sempre molto presto la mattina","back":"When I worked in a hotel, I always started very early in the morning","speak":"When I worked in a hotel, I always started very early in the morning"},
+{"front":"Fino a dieci anni fa passavamo spesso i fine settimana in montagna","back":"Up until ten years ago, we often spent weekends in the mountains","speak":"Up until ten years ago, we often spent weekends in the mountains"},
+{"front":"In passato non compravo quasi mai i surgelati","back":"In the past, I hardly ever bought frozen food","speak":"In the past, I hardly ever bought frozen food"},
+{"front":"Da giovane lei suonava spesso il pianoforte la sera","back":"When she was young, she often played the piano in the evening","speak":"When she was young, she often played the piano in the evening"},
+{"front":"Di tanto in tanto incontravamo gli amici al bar dopo lavoro","back":"From time to time, we met friends at the bar after work","speak":"From time to time, we met friends at the bar after work"},
+{"front":"Non prendevo quasi mai l’autobus per andare in ufficio","back":"I hardly ever took the bus to go to the office","speak":"I hardly ever took the bus to go to the office"},
+{"front":"Quando studiavo legge, usavo spesso un libro che mio nonno mi aveva regalato","back":"When I was studying law, I often used a book my grandfather had given me","speak":"When I was studying law, I often used a book my grandfather had given me"},
+{"front":"Quando vivevo a Torino, prendevo spesso il tram numero nove","back":"When I lived in Turin, I often took the number nine tram","speak":"When I lived in Turin, I often took the number nine tram"},
+{"front":"Quando studiavamo insieme, discutevamo spesso di politica dopo le lezioni","back":"When we studied together, we often discussed politics after our lessons","speak":"When we studied together, we often discussed politics after our lessons"},
+{"front":"Quando lavorava in quel negozio, lei consigliava sempre i clienti più indecisi","back":"When she worked in that shop, she always advised the more indecisive customers","speak":"When she worked in that shop, she always advised the more indecisive customers"},
+{"front":"Quando preparavo gli esami, ripetevo sempre gli appunti ad alta voce","back":"When I was preparing for my exams, I always went over my notes out loud","speak":"When I was preparing for my exams, I always went over my notes out loud"},
+{"front":"Dopo che ci siamo sposati, non uscivamo quasi mai durante la settimana","back":"After we got married, we hardly ever went out during the week","speak":"After we got married, we hardly ever went out during the week"},
+{"front":"Quando lavoravo fino a tardi, compravo spesso qualcosa da mangiare al bar accanto","back":"When I worked late, I often bought something to eat at the bar next door","speak":"When I worked late, I often bought something to eat at the bar next door"},
+{"front":"Da piccolo giocavo spesso nel giardino dei nonni","back":"I often played in my grandparents’ garden as a child","speak":"I often played in my grandparents' garden as a child"},
+{"front":"In passato lei non andava mai in vacanza in montagna","back":"In the past, she never went on holiday to the mountains","speak":"In the past, she never went on holiday to the mountains"},
+{"front":"Da giovani facevamo di solito sport ogni fine settimana","back":"We usually did sport every weekend when we were young","speak":"We usually did sport every weekend when we were young"},
+{"front":"Da ventenne non mangiavo mai le verdure","back":"I never ate vegetables in my twenties","speak":"I never ate vegetables in my twenties"},
+{"front":"Da adolescente portavo sempre i capelli lunghi","back":"I always wore my hair long when I was a teenager","speak":"I always wore my hair long when I was a teenager"},
+{"front":"Da bambino aiutavo sempre mia madre in cucina","back":"I always helped my mother in the kitchen as a child","speak":"I always helped my mother in the kitchen as a child"},
+{"front":"In quel periodo lui suonava spesso la chitarra in una band locale","back":"During that period, he often played the guitar in a local band","speak":"During that period, he often played the guitar in a local band"},
+{"front":"Durante l’estate lei passava sempre le giornate a casa dei nonni","back":"During the summer, she always spent her days at her grandparents’ house","speak":"During the summer, she always spent her days at her grandparents’ house"},
+{"front":"Non guardavamo mai la TV dopo cena - era vietato","back":"We never watched TV after dinner - it was forbidden","speak":"We never watched TV after dinner - it was forbidden"},
+{"front":"Ogni mattina, prima di andare in pensione, prendeva sempre esattamente lo stesso treno per andare al lavoro","back":"Every morning, before he retired, he always took the exact same train to go to work","speak":"Every morning, before he retired, he always took the exact same train to go to work"},
+{"front":"La domenica i miei genitori venivano spesso a pranzo","back":"On Sundays, my parents often came round for lunch","speak":"On Sundays, my parents often came round for lunch"},
+{"front":"Prendeva sempre una tazza di tè alle cinque del pomeriggio","back":"She always had a cup of tea at five in the afternoon","speak":"She always had a cup of tea at five in the afternoon"},
+{"front":"Quando faceva bel tempo, di solito andavamo a fare lunghe passeggiate in campagna","back":"When the weather was nice, we normally went for long walks in the countryside","speak":"When the weather was nice, we normally went for long walks in the countryside"},
+{"front":"Anche se mia sorella viveva in Germania, tornava sempre a casa per Natale","back":"Although my sister lived in Germany, she always came home for Christmas","speak":"Although my sister lived in Germany, she always came home for Christmas"},
+{"front":"Quando ero all’università, dormivo spesso fino a tardi la domenica","back":"When I was at university, I often slept until late on Sundays","speak":"When I was at university, I often slept until late on Sundays"},
+{"front":"Quando ero in Malesia, pioveva quasi sempre nel pomeriggio","back":"When I was in Malaysia, it nearly always rained in the afternoons","speak":"When I was in Malaysia, it nearly always rained in the afternoons"},
+{"front":"Mio padre beveva frequentemente un bicchiere di birra prima di pranzo","back":"My father frequently had a glass of beer before lunch","speak":"My father frequently had a glass of beer before lunch"},
+{"front":"Quando mio fratello era più giovane, non si lavava mai le mani prima di mangiare","back":"When my brother was younger, he never washed his hands before eating","speak":"When my brother was younger, he never washed his hands before eating"}
+
+],
+
+5: [ 
+{"front":"Era da ore e ore che studiavo prima di capire finalmente lo scopo dell’esercizio","back":"I'd been studying for hours on end before I finally understood the purpose of the exercise","speak":"I'd been studying for hours on end before I finally understood the purpose of the exercise"},
+
+{"front":"Era da quasi mezz’ora che aspettavamo l’autobus quando è finalmente arrivato","back":"We'd been waiting almost half an hour for the bus when it finally arrived","speak":"We'd been waiting almost half an hour for the bus when it finally arrived"},
+
+{"front":"Era da almeno cinque settimane che lavorava su quel progetto quando il cliente ha cambiato idea all’improvviso","back":"He'd been working on that project for at least five weeks when the client unexpectedly changed his mind","speak":"He'd been working on that project for at least five weeks when the client unexpectedly changed his mind"},
+
+{"front":"Camminavamo da venti minuti quando mi sono reso conto di aver lasciato gli occhiali a casa","back":"We'd been walking for twenty minutes when I realised I'd left my glasses at home","speak":"We'd been walking for twenty minutes when I realised I'd left my glasses at home"},
+
+{"front":"Era da tutta la mattina che preparava la presentazione quando il computer si è bloccato all’improvviso","back":"She'd been preparing the presentation all morning when the computer suddenly froze","speak":"She'd been preparing the presentation all morning when the computer suddenly froze"},
+
+{"front":"Guidavo da oltre cinque ore quando alla fine mi sono fermato a fare benzina","back":"I'd been driving for over five hours when I eventually stopped to get some petrol","speak":"I'd been driving for over five hours when I eventually stopped to get some petrol"},
+{"front":"Da quanto tempo aspettavi fuori quando finalmente qualcuno ti ha fatto entrare?","back":"How long had you been waiting outside before somebody finally let you in?","speak":"How long had you been waiting outside before somebody finally let you in?"},
+{"front":"Da quante settimane cercava un posto dove vivere prima di trovare quello giusto?","back":"How many weeks had he been searching for a place to live before he found the right one?","speak":"How many weeks had he been searching for a place to live before he found the right one?"},
+{"front":"Era da quasi mezz’ora che guardava fuori dalla finestra quando i suoi pensieri sono stati interrotti dal suono del telefono","back":"She had been gazing out of the window for almost half an hour when her thoughts were interrupted by the ringing of the phone","speak":"She had been gazing out of the window for almost half an hour when her thoughts were interrupted by the ringing of the phone"},
+{"front":"Lui lavorava alla presentazione dalle 8:30 quando è arrivato il capo","back":"He had been working on the presentation since eight thirty when the boss arrived","speak":"He had been working on the presentation since eight thirty when the boss arrived"},
+{"front":"Da quanto tempo studiavi il cinese prima di trasferirti a Pechino?","back":"How long had you been studying Chinese before you moved to Beijing?","speak":"How long had you been studying Chinese before you moved to Beijing?"},
+{"front":"Camminavamo lungo la spiaggia da solo mezz’ora quando è diventato troppo freddo per continuare","back":"We had been walking along the beach for only half an hour when it became too cold to continue","speak":"We had been walking along the beach for only half an hour when it became too cold to continue"},
+{"front":"Da quanti anni suonava il pianoforte prima di decidere di diventare professionista?","back":"How many years had she been playing the piano before deciding to turn professional?","speak":"How many years had she been playing the piano before deciding to turn professional?"},
+{"front":"Era da due settimane che leggevo quel romanzo prima di capire finalmente di cosa parlava","back":"I'd been reading that novel for two weeks before I finally understood what it was all about","speak":"I'd been reading that novel for two weeks before I finally understood what it was all about"},
+{"front":"Quando siamo tornati, abbiamo scoperto che giocavano ai videogiochi da tutto il pomeriggio","back":"When we got back, we found out that they'd been playing video games all afternoon","speak":"When we got back, we found out that they'd been playing video games all afternoon"},
+{"front":"Da quanto tempo allenavi la squadra quando hai vinto il campionato?","back":"How long had you been coaching the team when you won the championship?","speak":"How long had you been coaching the team when you won the championship?"},
+{"front":"Mi hanno detto che cucinavo ininterrottamente da quattro ore quando sono arrivati gli ospiti","back":"I had no idea I'd been cooking non-stop for four hours when the guests arrived","speak":"I had no idea I'd been cooking non-stop for four hours when the guests arrived"},
+{"front":"Da quanto tempo imparavi lo spagnolo prima di riuscire a sostenere una semplice conversazione?","back":"How long had you been learning Spanish before you were able to hold a simple conversation?","speak":"How long had you been learning Spanish before you were able to hold a simple conversation?"},
+{"front":"Era da oltre un’ora che lei piangeva","back":"She'd been crying for over an hour","speak":"She'd been crying for over an hour"},
+{"front":"Da quante settimane ristrutturavi quella casa quando hai finito i soldi?","back":"How many weeks had you been renovating that house when you ran out of money?","speak":"How many weeks had you been renovating that house when you ran out of money?"},
+{"front":"Parlavo al telefono da più di un’ora prima che la batteria si scaricasse","back":"I'd been talking on the phone for over an hour before my battery ran out","speak":"I'd been talking on the phone for over an hour before my battery ran out"},
+{"front":"Da quando succedeva esattamente?","back":"Since when had this been happening exactly?","speak":"Since when had this been happening exactly?"},
+{"front":"Era da molto tempo che discutevano dell’argomento quando il professore è entrato","back":"They had been discussing the topic for a long time when the professor entered","speak":"They had been discussing the topic for a long time when the professor entered"},
+{"front":"Da quanti mesi preparavi quell’esame quando hai deciso di ritirarti?","back":"How many months had you been preparing for that exam when you decided to pull out","speak":"How many months had you been preparing for that exam when you decided to pull out"},
+{"front":"Era da parecchio tempo che camminavamo nel bosco prima che facesse buio","back":"We had been walking in the woods for quite some time before it got dark","speak":"We had been walking in the woods for quite some time before it got dark"},
+{"front":"Era da tutta la notte che viaggiavamo quando il treno è entrato in stazione","back":"We had been travelling all night when the train pulled into the station","speak":"We had been travelling all night when the train pulled into the station"},
+{"front":"Da quanto tempo pianificavi quel viaggio quando alla fine hai prenotato i biglietti?","back":"How long had you been planning that trip when you eventually booked the tickets","speak":"How long had you been planning that trip when you eventually booked the tickets"},
+{"front":"Siccome dormiva dalle nove della sera prima, ho deciso di svegliarla","back":"As she'd been sleeping since nine o'clock the previous evening, I decided to wake her up","speak":"As she'd been sleeping since nine o'clock the previous evening, I decided to wake her up"},
+{"front":"Da quanto tempo lavoravi in Francia prima di tornare in Italia?","back":"How long had you been working in France before returning to Italy?","speak":"How long had you been working in France before returning to Italy?"},
+{"front":"Erano cinque anni che si frequentavano. Nessuno sapeva dirci perché si erano lasciati","back":"They had been going out together for five years. Nobody could tell us why they had broken up","speak":"They had been going out together for five years. Nobody could tell us why they had broken up"}
+],
+
+6: [
+{"front":"Era da quando si erano trasferiti in Canada che lei non vedeva i suoi cugini","back":"She hadn’t seen her cousins since they moved to Canada","speak":"She hadn’t seen her cousins since they moved to Canada"},
+
+{"front":"Erano tre settimane che non parlavamo con il professore","back":"We hadn’t spoken to the professor for three weeks","speak":"We hadn’t spoken to the professor for three weeks"},
+
+{"front":"Non uscivamo con gli amici da quasi due mesi","back":"We hadn’t gone out with our friends for almost two months","speak":"We hadn’t gone out with our friends for almost two months"},
+
+{"front":"Erano giorni che lui non controllava la posta in arrivo","back":"He hadn’t checked his inbox for days","speak":"He hadn’t checked his inbox for days"},
+
+{"front":"Erano quasi tre anni che non prendevamo un taxi","back":"We hadn’t taken a taxi for almost three years","speak":"We hadn’t taken a taxi for almost three years"},
+
+{"front":"Non dormivo bene da due settimane","back":"I hadn’t slept well for two weeks","speak":"I hadn’t slept well for two weeks"},
+
+{"front":"Non vedevamo Giulia da quando aveva cambiato lavoro","back":"We hadn’t seen Giulia since she changed jobs","speak":"We hadn’t seen Giulia since she changed jobs"},
+
+{"front":"Lui non leggeva un giornale da parecchi mesi","back":"He hadn’t read a newspaper for several months","speak":"He hadn’t read a newspaper for several months"},
+
+{"front":"Non cucinavo niente da quattro giorni ed ero sfinito","back":"I hadn’t cooked anything for four days and I was tired out","speak":"I hadn’t cooked anything for four days and I was tired out"},
+
+{"front":"Erano dieci mesi che non andavamo al cinema","back":"We hadn’t been to the cinema for ten months","speak":"We hadn’t been to the cinema for ten months"},
+
+{"front":"Lui non parlava con il vicino da quando avevano litigato tre anni prima","back":"He hadn’t spoken to his neighbour since they fell out three years earlier","speak":"He hadn’t spoken to his neighbour since they fell out three years earlier"},
+
+{"front":"Prima di partire per il Giappone il mese scorso, non mettevamo piede in un aeroporto da sei anni","back":"Before flying out to Japan last month, we hadn’t seen the inside of an airport for six years","speak":"Before flying out to Japan last month, we hadn’t seen the inside of an airport for six years"},
+
+{"front":"Non guidavo di notte da quasi un anno","back":"I hadn’t driven at night for almost a year","speak":"I hadn’t driven at night for almost a year"},
+
+{"front":"Erano due settimane che lei non apriva il portatile","back":"She hadn’t opened her laptop for two weeks","speak":"She hadn’t opened her laptop for two weeks"},
+
+{"front":"Non vedevano i nonni da cinque mesi","back":"They hadn’t seen their grandparents for five months","speak":"They hadn’t seen their grandparents for five months"},
+
+{"front":"Erano da secoli che lei non ascoltava quel disco","back":"She hadn’t listened to that record for ages","speak":"She hadn’t listened to that record for ages"},
+
+{"front":"Erano cinque anni vhe non prenotavamo una vacanza","back":"We hadn’t booked a holiday for five years","speak":"We hadn’t booked a holiday for five years"},
+
+{"front":"Prima della telefonata di ieri, non parlavo con Marta da quattro settimane","back":"Before yesterday's phone call, I hadn’t spoken to Marta for four weeks","speak":"Before yesterday's phone call, I hadn’t spoken to Marta for four weeks"},
+
+{"front":"Non mangiavano fuori da un bel po’ di tempo","back":"They hadn’t eaten out for quite a while","speak":"They hadn’t eaten out for quite a while"},
+
+{"front":"Non prendevo un giorno libero da quasi tre mesi","back":"I hadn’t taken a day off for almost three months","speak":"I hadn’t taken a day off for almost three months"},
+
+{"front":"Non vedevamo il direttore da due settimane. Era stato fuori in vacanza","back":"We hadn’t seen the manager for two weeks. He had been away on holiday","speak":"We hadn’t seen the manager for two weeks. He had been away on holiday"},
+
+{"front":"Fino a ieri sera, non cantavo in pubblico da quindici anni","back":"Until yesterday evening, I hadn’t sung in public for fifteen years","speak":"Until yesterday evening, I hadn’t sung in public for fifteen years"},
+
+{"front":"Era dal 2014 che non ci sentivamo","back":"We hadn’t heard from each other since 2014","speak":"We hadn’t heard from each other since 2014"},
+
+{"front":"Erano mesi che non mangiavo così bene","back":"I hadn’t eaten so well for months","speak":"I hadn’t eaten so well for months"},
+
+{"front":"Non mi sentivo così stanco da settimane","back":"I hadn’t felt that tired for weeks","speak":"I hadn’t felt that tired for weeks"},
+
+{"front":"Non tornavamo in quel ristorante da quando è cambiata la gestione","back":"We hadn’t been back to that restaurant since it changed management","speak":"We hadn’t been back to that restaurant since it changed management"},
+
+{"front":"Era da tanto che non ridevamo così tanto","back":"We hadn’t laughed so much for a long time","speak":"We hadn’t laughed so much for a long time"},
+
+{"front":"Non prendevo parte a una riunione così importante da anni","back":"I hadn’t taken part in such an important meeting for years","speak":"I hadn’t taken part in such an important meeting for years"},
+
+{"front":"Non lo vedevo da quando è partito per Londra","back":"I hadn’t seen him since he left for London","speak":"I hadn’t seen him since he left for London"},
+
+{"front":"Era da una vita che non pioveva così forte","back":"It hadn’t rained so hard for ages","speak":"It hadn’t rained so hard for ages"},
+
+{"front":"Non si parlavano da quando hanno litigato alla mia festa","back":"They hadn’t spoken to each other ever since they fell out at my party","speak":"They hadn’t spoken to each other ever since they fell out at my party"},
+
+{"front":"Erano anni che non ci pensavo","back":"I hadn’t thought about it for years","speak":"I hadn’t thought about it for years"},
+
+{"front":"Non dormivo così bene da mesi","back":"I hadn’t slept so well for months","speak":"I hadn’t slept so well for months"} 
+],
+
+7: [
+{"front":"Da quanto tempo non vedevi Marco?","back":"How long had it been since you last saw Marco?","speak":"How long had it been since you last saw Marco?"},
+
+{"front":"Da quanti mesi non indossavi quel completo?","back":"How many months had it been since you last wore that suit?","speak":"How many months had it been since you last wore that suit?"},
+
+{"front":"Da quanto tempo non andavi a trovare i tuoi nonni?","back":"How long had it been since you last went to see your grandparents?","speak":"How long had it been since you last went to see your grandparents?"},
+
+{"front":"Da quanti giorni non prendevi la macchina per andare al lavoro?","back":"How many days had it been since you last drove to work?","speak":"How many days had it been since you last drove to work?"},
+
+{"front":"Da quanti anni non si parlavano?","back":"How many years had it been since they last spoke to each other?","speak":"How many years had it been since they last spoke to each other?"},
+
+{"front":"Da quanto tempo non uscivate insieme?","back":"How long had it been since you last went out together?","speak":"How long had it been since you last went out together?"},
+
+{"front":"Da quanti mesi lui non lavorava da casa?","back":"How many months had it been since he last worked from home?","speak":"How many months had it been since he last worked from home?"},
+
+{"front":"Da quanto tempo lei non tornava a casa dopo mezzanotte?","back":"How long had it been since she last came home after midnight?","speak":"How long had it been since she last came home after midnight?"},
+
+{"front":"Da quanti anni non andavano all’estero?","back":"How many years had it been since they last went abroad?","speak":"How many years had it been since they last went abroad?"},
+
+{"front":"Da quanto tempo non facevi una vera pausa?","back":"How long had it been since you last had a proper break?","speak":"How long had it been since you last had a proper break?"},
+
+{"front":"Da quanto tempo non ci vedevamo di persona?","back":"How long had it been since we last saw each other in person?","speak":"How long had it been since we last saw each other in person?"},
+
+{"front":"Da quanti mesi non leggevi un libro?","back":"How many months had it been since you last read a book?","speak":"How many months had it been since you last read a book?"},
+
+{"front":"Da quanto tempo non pensavi a quella cosa?","back":"How long had it been since you last thought about it?","speak":"How long had it been since you last thought about it?"},
+
+{"front":"Da quanti giorni non dormivi bene?","back":"How many days had it been since you last slept well?","speak":"How many days had it been since you last slept well?"},
+
+{"front":"Da quanto tempo non facevi colazione sul balcone?","back":"How long had it been since you last had breakfast on the balcony?","speak":"How long had it been since you last had breakfast on the balcony?"},
+
+{"front":"Da quanto tempo non facevamo una passeggiata?","back":"How long had it been since we last went for a walk?","speak":"How long had it been since we last went for a walk?"},
+
+{"front":"Da quanti mesi non mangiavano fuori?","back":"How many months had it been since they last ate out?","speak":"How many months had it been since they last ate out?"},
+
+{"front":"Da quante settimane non lavavi la macchina?","back":"How many weeks had it been since you last washed the car?","speak":"How many weeks had it been since you last washed the car?"},
+
+{"front":"Da quanto tempo non prendevi la macchina per andare al lavoro?","back":"How long had it been since you last drove to work?","speak":"How long had it been since you last drove to work?"},
+
+{"front":"Da quanto tempo non uscivamo tutti insieme come famiglia?","back":"How long had it been since we last went out together as a family?","speak":"How long had it been since we last went out together as a family?"},
+
+{"front":"Da quanti giorni non cucinavi un pasto serio?","back":"How many days had it been since you last cooked a proper meal?","speak":"How many days had it been since you last cooked a proper meal?"},
+
+{"front":"Da quanto tempo non sentivi tuo cugino Peter?","back":"How long had it been since you last heard from your cousin Peter?","speak":"How long had it been since you last heard from your cousin Peter?"},
+
+{"front":"Da quanti giorni non facevi una conversazione interessante?","back":"How many days had it been since you last had an interesting conversation?","speak":"How many days had it been since you last had an interesting conversation?"},
+
+{"front":"Da quanto tempo lei non andava dal dentista?","back":"How long had it been since she last saw her dentist?","speak":"How long had it been since she last saw her dentist?"},
+
+{"front":"Da quanti mesi lui non andava dal medico?","back":"How many months had it been since he last saw a doctor?","speak":"How many months had it been since he last saw a doctor?"},
+
+{"front":"Da quanti anni non succedeva nulla del genere?","back":"How many years had it been since something like that last happened?","speak":"How many years had it been since something like that last happened?"},
+
+{"front":"Da quanti mesi qualcuno non ci invitava a cena?","back":"How many months had it been since somebody last invited us for dinner?","speak":"How many months had it been since somebody last invited us for dinner?"},
+
+{"front":"Da quanto tempo non andavi a trovare i tuoi genitori?","back":"How long had it been since you last went to see your parents?","speak":"How long had it been since you last went to see your parents?"},
+
+{"front":"Da quanti giorni non ti facevi la barba?","back":"How many days had it been since you last had a shave?","speak":"How many days had it been since you last had a shave?"},
+
+{"front":"Da quanti anni non avevano questo problema?","back":"How many years had it been since they last had this problem?","speak":"How many years had it been since they last had this problem?"}
+ 
+],
+
+8: [
+{ "front": "Se c’ero io, non sarebbe successo", "back": "If I had been here, it wouldn't have happened", "speak": "If I had been here, it wouldn't have happened" },
+
+{ "front": "Se controllavo meglio i dati, non avremmo perso mezz’ora", "back": "If I had checked the data more carefully, we wouldn't have lost half an hour", "speak": "If I had checked the data more carefully, we wouldn't have lost half an hour" },
+
+{ "front": "Se non fermavo James in tempo, avrebbe rivelato tutto", "back": "If I hadn't stopped James in time, he'd have revealed everything", "speak": "If I hadn't stopped James in time, he'd have revealed everything" },
+
+{ "front": "Se compravamo i biglietti ieri, avremmo pagato molto meno", "back": "If we'd bought the tickets yesterday, we would have paid much less", "speak": "If we'd bought the tickets yesterday, we would have paid much less" },
+
+{ "front": "Se non avvisavo Emily, sarebbe arrivata troppo tardi", "back": "If I hadn't warned Emily, she'd have arrived too late", "speak": "If I hadn't warned Emily, she'd have arrived too late" },
+
+{ "front": "Se provavo prima quelle scarpe, non avrei comprato il numero sbagliato", "back": "If I'd tried those shoes first, I wouldn't have bought the wrong size", "speak": "If I'd tried those shoes first, I wouldn't have bought the wrong size" },
+
+{ "front": "Se spegnevo il computer, non avrebbe consumato tutta la batteria", "back": "If I had switched off the computer, it wouldn't have used up all the battery power", "speak": "If I had switched off the computer, it wouldn't have used up all the battery power" },
+
+{ "front": "Se glielo spiegavo con più calma, avrebbe capito subito", "back": "If I had explained it more calmly, he would have understood immediately", "speak": "If I had explained it more calmly, he would have understood immediately" },
+
+{ "front": "Se non salvavo il documento, avrei perso tutto il lavoro", "back": "If I hadn't saved the document, I'd have lost all the work", "speak": "If I hadn't saved the document, I'd have lost all the work" },
+
+{ "front": "Se facevamo un confronto dei prezzi prima, avremmo trovato un’offerta migliore", "back": "If we had compared the prices first, we would have found a better deal", "speak": "If we had compared the prices first, we would have found a better deal" },
+
+{ "front": "Se non invitavo Daniel, si sarebbe offeso", "back": "If I hadn't invited Daniel, he would have been offended", "speak": "If I hadn't invited Daniel, he would have been offended" },
+
+{ "front": "Se organizzavano meglio la serata, sarebbe stata molto più divertente", "back": "If they'd organised the evening better, it would have been much more enjoyable", "speak": "If they'd organised the evening better, it would have been much more enjoyable" },
+
+{ "front": "Se non notavo quell’errore, nessuno se ne sarebbe accorto", "back": "If I hadn't noticed that mistake, nobody would've realised", "speak": "If I hadn't noticed that mistake, nobody would've realised" },
+
+{ "front": "Se traducevi quel passaggio con più attenzione, l’avresti capito meglio", "back": "If you had translated that passage more carefully, you'd have understood it better", "speak": "If you had translated that passage more carefully, you'd have understood it better" },
+
+{ "front": "Se non bloccavo quell’uomo all’ingresso, sarebbe entrato", "back": "If I hadn't stopped that man at the entrance, he would have got in", "speak": "If I hadn't stopped that man at the entrance, he would have got in" },
+
+{ "front": "Se prenotavamo il tavolo online, avremmo avuto uno sconto del 20%", "back": "If we had booked the table online, we would have got a 20% discount", "speak": "If we had booked the table online, we would have got a 20% discount" },
+
+{ "front": "Se non ricordavo io la scadenza, l’avrebbero dimenticata tutti", "back": "If I hadn't remembered the deadline, everyone would have forgotten it", "speak": "If I hadn't remembered the deadline, everyone would have forgotten it" },
+
+{ "front": "Se risolvevamo il problema subito, non avrebbe causato altri guai", "back": "If we had solved the problem immediately, it wouldn't have caused more problems", "speak": "If we had solved the problem immediately, it wouldn't have caused more problems" },
+
+{ "front": "Se non portavo con me il passaporto, non mi avrebbero fatto salire", "back": "If I hadn't brought my passport with me, they wouldn't have let me board", "speak": "If I hadn't brought my passport with me, they wouldn't have let me board" },
+
+{ "front": "Se rileggevo il messaggio con attenzione, avrei capito il tono", "back": "If I'd read the message again carefully, I would have understood the tone", "speak": "If I'd red the message again carefully, I would have understood the tone" },
+
+{ "front": "Se non prenotavamo l’albergo in anticipo, non avremmo trovato posto", "back": "If we hadn't booked the hotel in advance, we wouldn't have found a room", "speak": "If we hadn't booked the hotel in advance, we wouldn't have found a room" },
+
+{ "front": "Se parlavo direttamente con il direttore, mi avrebbe spiegato tutto", "back": "If I had spoken directly with the manager, he would have explained everything to me", "speak": "If I had spoken directly with the manager, he would have explained everything to me" },
+
+{ "front": "Se non proponevo quell’idea, nessuno ci avrebbe pensato", "back": "If I hadn't suggested that idea, nobody would have thought of it", "speak": "If I hadn't suggested that idea, nobody would have thought of it" },
+
+{ "front": "Se cambiavi strategia subito, il progetto sarebbe andato meglio", "back": "If you had changed strategy immediately, the project would have gone better", "speak": "If you had changed strategy immediately, the project would have gone better" },
+
+{ "front": "Se non mettevo quei soldi da parte, li avrei spesi tutti", "back": "If I hadn't put that money aside, I would have spent it all", "speak": "If I hadn't put that money aside, I would have spent it all" },
+
+{ "front": "Se prendevo un taxi, sarei arrivato in orario", "back": "If I had taken a taxi, I would have arrived on time", "speak": "If I had taken a taxi, I would have arrived on time" },
+
+{ "front": "Se leggevi le istruzioni, non avresti fatto quell’errore", "back": "If you had read the instructions, you wouldn't have made that mistake", "speak": "If you had read the instructions, you wouldn't have made that mistake" },
+
+{ "front": "Se non lasciavi la porta aperta, il cane non sarebbe scappato", "back": "If you hadn't left the door open, the dog wouldn't have run away", "speak": "If you hadn't left the door open, the dog wouldn't have run away" },
+
+{ "front": "Se sceglievamo un’altra strada, non saremmo rimasti bloccati nel traffico", "back": "If we had chosen another route, we wouldn't have got stuck in traffic", "speak": "If we had chosen another route, we wouldn't have got stuck in traffic" },
+
+{ "front": "Se accettavi l’offerta subito, avresti ottenuto condizioni migliori", "back": "If you had accepted the offer straight away, you'd have got better terms", "speak": "If you had accepted the offer straight away, you'd have got better terms" }
+ 
+],
+
+9: [
+{ "front": "Se guidava lei, non si sarebbero persi", "back": "If she'd been driving, they wouldn't have got lost", "speak": "If she'd been driving, they wouldn't have got lost" },
+
+{ "front": "Se ti aspettavamo dentro invece di fuori, non ci saremmo bagnati", "back": "If we'd been waiting for you inside instead of outside, we wouldn't have got wet", "speak": "If we'd been waiting for you inside instead of outside, we wouldn't have got wet" },
+
+{ "front": "Se non parlavi al telefono, avrei bussato", "back": "If you hadn't been talking on the phone, I would have knocked", "speak": "If you hadn't been talking on the phone, I would have knocked" },
+
+{ "front": "Se non lavoravo a casa ieri, avrei potuto accedere subito ai nostri archivi", "back": "If I hadn't been working at home yesterday, I could have accessed our archives at once", "speak": "If I hadn't been working at home yesterday, I could have accessed our archives at once" },
+
+{ "front": "Se l’ascensore funzionava, non avrei dovuto fare otto piani a piedi", "back": "If the lift had been working, I wouldn't have had to walk up eight floors", "speak": "If the lift had been working, I wouldn't have had to walk up eight floors" },
+
+{ "front": "Se prestavi più attenzione, avresti visto le indicazioni per l’autostrada", "back": "If you'd been paying more attention, you would have seen the signs for the motorway", "speak": "If you'd been paying more attention, you would have seen the signs for the motorway" },
+
+{ "front": "Se guardavi me e non lui, avresti saputo come fare", "back": "If you had been watching me and not him, you would have known what to do", "speak": "If you had been watching me and not him, you would have known what to do" },
+
+{ "front": "Se non andavo al lavoro, mi sarei fermato volentieri per chiacchierare con te un po’", "back": "If I hadn't been going to work, I would gladly have stayed to chat with you for a while", "speak": "If I hadn't been going to work, I would gladly have stayed to chat with you for a while" },
+
+{ "front": "Se non avevo una riunione a mezzogiorno, avrei accettato subito il tuo invito", "back": "If I hadn't been having a meeting at noon, I would have accepted your invitation straight away", "speak": "If I hadn't been having a meeting at noon, I would have accepted your invitation straight away" },
+
+{ "front": "Se non partivo giovedì prossimo, sarebbe stato più facile organizzarmi per venire a trovarti", "back": "If I hadn't been leaving next Thursday, it would have been easier to organise myself to come and see you", "speak": "If I hadn't been leaving next Thursday, it would have been easier to organise myself to come and see you" },
+
+{ "front": "Se pioveva a quell'ora, sarei rimasto a casa", "back": "If it had been raining at that time, I would have stayed at home", "speak": "If it had been raining at that time, I would have stayed at home" },
+
+{ "front": "Ovviamente, se nevicava, saremmo andati in treno e non in macchina", "back": "Obviously, if it had been snowing, we would have gone there by train and not by car", "speak": "Obviously, if it had been snowing, we would have gone there by train and not by car" },
+
+{ "front": "Se lui non portava la cravatta, non sarebbe potuto entrare", "back": "If he hadn't been wearing a tie, he wouldn't have been able to get in", "speak": "If he hadn't been wearing a tie, he wouldn't have been able to get in" },
+
+{ "front": "Se non dormivo, avrei sentito squillare il telefono", "back": "If I hadn't been sleeping, I would have heard the phone ringing", "speak": "If I hadn't been sleeping, I would have heard the phone ringing" },
+
+{ "front": "Se non mangiavo fuori ieri sera, ti sarei venuto a trovare", "back": "If I hadn't been eating out last night, I would have come to see you", "speak": "If I hadn't been eating out last night, I would have come to see you" },
+
+{ "front": "Se mi ascoltavi con più attenzione quando te l’ho spiegato, non avresti ripetuto lo stesso errore", "back": "If you had been listening to me more carefully when I explained it, you wouldn't have repeated the same mistake", "speak": "If you had been listening to me more carefully when I explained it, you wouldn't have repeated the same mistake" },
+
+{ "front": "Se giocava lui fin dal primo minuto, non avremmo perso ieri sera di sicuro", "back": "If he'd been playing from the first minute, we definitely wouldn't have lost last night", "speak": "If he'd been playing from the first minute, we definitely wouldn't have lost last night" },
+
+{ "front": "Se non cenavamo dai nostri amici ieri sera, vi avremmo fatto vedere la nuova casa", "back": "If we hadn't been having dinner at our friends' place last night, we would have shown you around our new house", "speak": "If we hadn't been having dinner at our friends' place last night, we would have shown you around our new house" },
+
+{ "front": "Se partivo martedì invece di domani, avrei avuto un giorno in più per prepararmi", "back": "If I had been leaving on Tuesday instead of tomorrow, I would have had one more day to prepare", "speak": "If I had been leaving on Tuesday instead of tomorrow, I would have had one more day to prepare" },
+
+{ "front": "Se venivano oggi, non avremmo avuto tempo di organizzare tutto per bene", "back": "If they had been coming today, we wouldn't have had time to organise everything properly", "speak": "If they had been coming today, we wouldn't have had time to organise everything properly" },
+
+{ "front": "Se il corso iniziava la settimana prossima, mi sarei iscritto anch’io", "back": "If the course had been starting next week, I would have enrolled too", "speak": "If the course had been starting next week, I would have enrolled too" },
+
+{ "front": "Se giocavano domani sera invece che sabato, sarei andato allo stadio", "back": "If they had been playing tomorrow evening instead of on Saturday, I would have gone to the stadium", "speak": "If they had been playing tomorrow evening instead of on Saturday, I would have gone to the stadium" },
+
+{ "front": "Se facevano l’evento venerdì prossimo, saremmo sicuramente venuti", "back": "If they had been holding the event next Friday, we would certainly have come", "speak": "If they had been holding the event next Friday, we would certainly have come" },
+
+{ "front": "Se ci vedevamo stasera invece, non sarei riuscito a portarti tutti i soldi che ti devo", "back": "If we had been seeing each other this evening instead, I wouldn't have been able to bring you all the money I owe you", "speak": "If we had been seeing each other this evening instead, I wouldn't have been able to bring you all the money I owe you" },
+
+{ "front": "Se guidava lui quando è successo, le cose sarebbero potute finire molto diversamente", "back": "If he had been driving when it happened, things might have turned out very differently", "speak": "If he had been driving when it happened, things might have turned out very differently" },
+
+{ "front": "Se lei studiava per una laurea in Sociologia, avrebbe potuto studiare anche Criminologia", "back": "If she had been studying for a degree in Sociology, she could have studied Criminology too", "speak": "If she had been studying for a degree in Sociology, she could have studied Criminology too" } 
+],
+
+10: [
+{ "front": "Aspettavo di più se avevo più pazienza", "back": "I would have waited longer if I'd had more patience", "speak": "I would have waited longer if I'd had more patience" },
+
+{ "front": "Ti chiamavo subito se avessi visto il messaggio prima", "back": "I would have called you immediately if I had seen the message earlier", "speak": "I would have called you immediately if I had seen the message earlier" },
+
+{ "front": "Arrivavamo in tempo se avessimo preso il treno delle 8.15", "back": "We would have arrived on time if we had taken the 8.15 train", "speak": "We would have arrived on time if we had taken the eight fifteen train" },
+
+{ "front": "Se fossi rimasto a casa ieri sera, perdevo una grande occasione", "back": "If I'd stayed home last night, I would have missed a big opportunity", "speak": "If I'd stayed home last night, I would have missed a big opportunity" },
+
+{ "front": "Se lo avessero controllato con più attenzione, trovavano subito l’errore", "back": "If they had checked it more carefully, they would have found the mistake at once", "speak": "If they had checked it more carefully, they would have found the mistake at once" },
+
+{ "front": "Se avessi saputo che eri ancora in ufficio, mi trattenevo qualche minuto in più", "back": "If I'd known you were still in the office, I would have stayed on a few more minutes", "speak": "If I'd known you were still in the office, I would have stayed on a few more minutes" },
+
+{ "front": "Se me lo avessi chiesto direttamente, ti dicevo la verità", "back": "If you'd asked me directly, I would have told you the truth", "speak": "If you'd asked me directly, I would have told you the truth" },
+
+{ "front": "Prendevamo il treno se fossimo usciti cinque minuti prima", "back": "We would have taken the train if we had left five minutes earlier", "speak": "We would have taken the train if we had left five minutes earlier" },
+
+{ "front": "Se avevo più spazio in valigia, portavo con me anche la giacca rossa", "back": "If I'd had more space in my suitcase, I would have brought my red jacket with me too", "speak": "If I'd had more space in my suitcase, I would have brought my red jacket with me too" },
+
+{ "front": "Se mi avessero fatto la stessa offerta un anno fa, accettavo subito", "back": "If they had made me that offer a year ago, I would have accepted right away", "speak": "If they had made me that offer a year ago, I would have accepted right away" },
+
+{ "front": "Se lui non portava il cappello, lo riconoscevo subito", "back": "If he hadn’t been wearing a hat, I would have recognised him at once", "speak": "If he hadn’t been wearing a hat, I would have recognised him at once" },
+
+{ "front": "Optavo per qualcos’altro se mi davano più tempo per decidere", "back": "I would have opted for something different if they'd given me more time to decide", "speak": "I would have opted for something different if they'd given me more time to decide" },
+
+{ "front": "Se mi avessi fatto una domanda più precisa, rispondevo in modo diverso", "back": "If you had asked me a more precise question, I would have answered differently", "speak": "If you had asked me a more precise question, I would have answered differently" },
+
+{ "front": "Evitavamo un sacco di problemi se facevamo più attenzione fin dall’inizio", "back": "We would have avoided a lot of problems if we had paid more attention right from the start", "speak": "We would have avoided a lot of problems if we had paid more attention right from the start" },
+
+{ "front": "Se avessi saputo che eri in città, ti invitavo a cena", "back": "If I'd known you were in town, I would have invited you to dinner", "speak": "If I'd known you were in town, I would have invited you to dinner" },
+
+{ "front": "Se facevi più attenzione ai dettagli, vedevi quasi subito la differenza", "back": "If you had paid more attention to the details, you would have seen the difference almost immediately", "speak": "If you had paid more attention to the details, you would have seen the difference almost immediately" },
+
+{ "front": "A saperlo, dicevi di no, vero?", "back": "If you had known, you would have said no, right?", "speak": "If you had known, you would have said no, right?" },
+
+{ "front": "Se arrivavamo cinque minuti dopo, perdevo l’inizio del film", "back": "If we had arrived five minutes later, I would have missed the beginning of the film", "speak": "If we had arrived five minutes later, I would have missed the beginning of the film" },
+
+{ "front": "Forse suggerivo un’alternativa se mi avessero chiesto un parere", "back": "Maybe I would have suggested an alternative if they had asked for my opinion", "speak": "Maybe I would have suggested an alternative if they had asked for my opinion" },
+
+{ "front": "Grazie per avermelo ricordato. Sicuramente lo dimenticavo, se no", "back": "Thanks for reminding me.  I would definitely have forgotten otherwise", "speak": "Thanks for reminding me. - I would definitely have forgotten otherwise" },
+
+{ "front": "Beh, se mi avessi guardato negli occhi, capivi che qualcosa non andava", "back": "Well, if you had looked me in the eye, you would have realised that something was wrong", "speak": "Well, if you had looked me in the eye, you would have realised that something was wrong" },
+
+{ "front": "Certo che ti prestavo la macchina! Perché non me lo hai chiesto?", "back": "Of course I would have lent you the car! Why didn’t you ask me?", "speak": "Of course I would have lent you the car! Why didn’t you ask me?" },
+
+{ "front": "Se mi fossi accorto del problema prima, li avvisavo", "back": "If I had known about the problem earlier, I would have warned them", "speak": "If I had known about the problem earlier, I would have warned them" },
+
+{ "front": "Se c’erano dei problemi, tornavo indietro", "back": "If there had been any problems, I would have come back", "speak": "If there had been any problems, I would have come back" },
+
+{ "front": "Ripensandoci, sceglievo un colore diverso", "back": "On second thoughts, I would have chosen a different colour", "speak": "On second thoughts, I would have chosen a different colour" } 
+],
+
+11: [
+ { "front": "Se non mi fossi preso qualche giorno di ferie, dovevo andare io al convegno e non lei", "back": "If I had not taken a few days off, I would have been having to go to the conference and not her", "speak": "If I had not taken a few days off, I would have been having to go to the conference, and not her" },
+
+  { "front": "Senza il tuo messaggio, ti aspettavo ancora fuori dal bar", "back": "Without your message, I would still have been waiting for you outside the bar", "speak": "Without your message, I would still have been waiting for you outside the bar" },
+
+  { "front": "Pensa un po'! Senza i problemi di ieri, a quest'ora eravamo in viaggio per le Seychelles", "back": "Just think! Without yesterday's problems, we would have been travelling to the Seychelles at this time", "speak": "Just think! Without yesterday's problems, we would have been travelling to the Seychelles at this time" },
+
+  { "front": "In circostanze normali, a quest'ora, facevo la mia lezione d'inglese", "back": "In normal circumstances, I would have been having my English lesson at this time", "speak": "In normal circumstances, I would have been having my English lesson at this time" },
+
+  { "front": "Partivano per la Grecia a fine mese, ma hanno avuto un imprevisto", "back": "They would have been going to Greece at the end of the month, but something came up", "speak": "They would have been going to Greece at the end of the month, but something came up" },
+
+  { "front": "Facevo tutto questo da sola se non c'eri tu", "back": "I would have been doing all this on my own if you hadn't been here", "speak": "I would have been doing all this on my own if you hadn't been here" },
+
+  { "front": "Domani vedevo un amico, ma c'è uno sciopero dei trasporti", "back": "I would have been seeing a friend tomorrow, but there is a transport strike", "speak": "I would have been seeing a friend tomorrow, but there is a transport strike" },
+
+  { "front": "Parlava ancora se non lo avessi interrotto", "back": "He would still have been speaking if I had not interrupted him", "speak": "He would still have been speaking if I had not interrupted him" },
+
+  { "front": "A quest'ora eravamo sdraiati sulla spiaggia se non avessi lasciato a casa i miei documenti", "back": "We would have been lying on the beach now if I had not left my documents at home", "speak": "We would have been lying on the beach now if I had not left my documents at home" },
+
+  { "front": "Guardavamo la partita insieme, ma gli è stato chiesto di sostituire un collega al lavoro stasera", "back": "We'd have been watching the match together, but he has been asked to replace a colleague at work this evening", "speak": "We'd have been watching the match together, but he has been asked to replace a colleague at work this evening" },
+
+  { "front": "Stavamo seduti in giardino tutto il pomeriggio se il tempo non fosse diventato così freddo", "back": "We would have been sitting in the garden all afternoon if the weather had not turned so cold", "speak": "We would have been sitting in the garden all afternoon if the weather had not turned so cold" },
+
+  { "front": "Domani ero in volo per Tokyo, ma c'è un problema con il mio visto", "back": "I'd have been flying to Tokyo tomorrow, but there is a problem with my visa", "speak": "I'd have been flying to Tokyo tomorrow, but there is a problem with my visa" },
+
+  { "front": "Si trasferivano nella casa nuova questo fine settimana, ma la casa è ancora senza le utenze", "back": "They would have been moving into their new house this weekend, but the house is still without utilities", "speak": "They would have been moving into their new house this weekend, but the house is still without utilities" },
+
+  { "front": "Lei iniziava il nuovo incarico lunedì, ma ha deciso di prendersi una settimana di pausa invece", "back": "She would have been starting her new role on Monday, but she has decided to take a week off instead", "speak": "She would have been starting her new role on Monday, but she has decided to take a week off instead" },
+
+  { "front": "Lui lavorava da casa oggi senza l'emergenza in ufficio", "back": "Without the emergency at the office, he'd have been working from home today", "speak": "Without the emergency at the office, he'd have been working from home today" },
+
+  { "front": "Stavano da noi, ma sono riusciti a trovare un B&B vicino al centro", "back": "They would have been staying with us, but they managed to find a Bed and Breakfast near the centre", "speak": "They would have been staying with us, but they managed to find a Bed and Breakfast near the centre" },
+
+  { "front": "Lei si preparava per l'esame finale tutta questa settimana, ma è stato spostato al mese prossimo", "back": "She'd have been preparing for her final exam all this week, but it has been moved to next month", "speak": "She'd have been preparing for her final exam all this week, but it has been moved to next month" },
+
+  { "front": "Festeggiavamo tutti insieme il suo compleanno, ma ha dovuto tornare a Londra", "back": "We would all have been celebrating his birthday together, but he has had to return to London", "speak": "We would all have been celebrating his birthday together, but he has had to return to London" },
+
+  { "front": "Lui teneva una relazione alla conferenza domani, ma ha perso la voce", "back": "He would have been giving a talk at the conference tomorrow, but he has lost his voice", "speak": "He would have been giving a talk at the conference tomorrow, but he has lost his voice" },
+
+  { "front": "Guardavamo la partita a casa, ma fortunatamente è riuscito a trovare i biglietti per lo stadio", "back": "We'd have been watching the match at home, but luckily he managed to get tickets to the stadium", "speak": "We'd have been watching the match at home, but luckily he managed to get tickets to the stadium" },
+
+  { "front": "Per fortuna hanno spostato la scadenza di una settimana, altrimenti lavoravo fino a tardi stasera", "back": "Luckily, they have pushed the deadline back a week, otherwise I would have been working until late this evening", "speak": "Luckily, they have pushed the deadline back a week, otherwise I would have been working until late this evening" },
+
+  { "front": "Beh, salivamo sull'aereo proprio adesso, ma la compagnia ha appena annunciato un ritardo di tre ore", "back": "Well, we would have been boarding our flight right now, but the airline has just announced a three-hour delay", "speak": "Well, we would have been boarding our flight right now, but the airline has just announced a three-hour delay" },
+
+  { "front": "Gli scienziati monitoravano ancora l'attività del vulcano se non avessero interrotto i finanziamenti", "back": "The scientists would still have been monitoring the volcano's activity if they had not stopped the funding", "speak": "The scientists would still have been monitoring the volcano's activity if they had not stopped the funding" },
+
+  { "front": "Alloggiavamo in un piccolo hotel sul mare, ma a quanto pare avevano preso troppe prenotazioni", "back": "We would have been staying at a small hotel by the sea, but apparently they had overbooked", "speak": "We would have been staying at a small hotel by the sea, but apparently they had overbooked" },
+
+  { "front": "Andavano a trovare i nonni questa settimana, ma il figlio ha preso un raffreddore", "back": "They would have been visiting the grandparents this week, but their son has come down with a cold", "speak": "They would have been visiting the grandparents this week, but their son has come down with a cold" }
+ 
+]
+
+}
+
+let cards=[]
+let index=0
+let currentFloor=1
+let mode="floor"
+let currentAudio=null
+
+let recentCards=[]
+const RECENT_LIMIT=20
+
+const flashcard=document.getElementById("flashcard")
+const frontText=document.getElementById("front-text")
+const backText=document.getElementById("back-text")
+const counter=document.getElementById("counter-display")
+const speakBtn=document.getElementById("speakBtn")
+const floorLabel=document.getElementById("floor-label")
+
+/* ================= SHUFFLE ================= */
+
+function shuffle(arr){
+const a=[...arr]
+for(let i=a.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1))
+let temp=a[i]
+a[i]=a[j]
+a[j]=temp
+}
+return a
+}
+
+/* ================= BUTTON HIGHLIGHT ================= */
+
+function activateButton(n){
+document.querySelectorAll(".set-btn").forEach(btn=>{
+btn.classList.remove("active")
+})
+
+if(mode==="test"){
+document.getElementById("test-btn").classList.add("active")
+}else{
+document.querySelectorAll(".set-btn")[n-1].classList.add("active")
+}
+}
+
+/* ================= LOAD FLOOR ================= */
+
+window.loadSet=function(n){
+
+mode="floor"
+currentFloor=n
+
+let weightedPool=[]
+
+sets[n].forEach(card=>{
+if(recentCards.includes(card)){
+if(Math.random()<0.3){
+weightedPool.push(card)
+}
+}else{
+weightedPool.push(card)
+}
+})
+
+if(weightedPool.length<10){
+weightedPool=[...sets[n]]
+}
+
+let selected=shuffle(weightedPool).slice(0,10)
+
+cards=selected.map(card=>{
+let originalIndex=sets[n].indexOf(card)+1
+return {
+...card,
+audio:`audio/floor${n}/F${n}-${String(originalIndex).padStart(3,'0')}.mp3`
+}
+})
+
+recentCards=[...recentCards,...cards].slice(-RECENT_LIMIT)
+
+index=0
+
+activateButton(n)
+updateCard()
+}
+
+/* ================= TEST MODE ================= */
+
+window.loadTest=function(){
+
+mode="test"
+
+let combined=[]
+
+for(let i=1;i<=11;i++){
+if(sets[i]){
+sets[i].forEach((card,idx)=>{
+combined.push({
+...card,
+floor:i,
+audio:`audio/floor${i}/F${i}-${String(idx+1).padStart(3,'0')}.mp3`
+})
+})
+}
+}
+
+cards=shuffle(combined).slice(0,30)
+
+index=0
+
+activateButton()
+updateCard()
+}
+
+/* ================= REFRESH ================= */
+
+window.refreshCurrentSet=function(){
+if(mode==="floor"){
+loadSet(currentFloor)
+}else{
+loadTest()
+}
+}
+
+/* ================= UPDATE CARD ================= */
+
+function updateCard(){
+flashcard.classList.remove("flipped")
+
+const c=cards[index]
+
+frontText.innerText=c.front.toUpperCase()
+backText.innerText=c.back.toUpperCase()
+
+if(mode==="floor"){
+floorLabel.innerText="FLOOR "+currentFloor
+}else{
+floorLabel.innerText="FLOOR "+c.floor
+}
+
+counter.innerText=(index+1)+" / "+cards.length
+}
+
+/* ================= NAVIGATION ================= */
+
+window.nextCard=function(){
+index=(index+1)%cards.length
+updateCard()
+}
+
+window.prevCard=function(){
+index=(index-1+cards.length)%cards.length
+updateCard()
+}
+
+/* ================= CARD FLIP ================= */
+
+flashcard.addEventListener("click",()=>{
+flashcard.classList.toggle("flipped")
+})
+
+/* ================= AUDIO ================= */
+
+speakBtn.addEventListener("click",(e)=>{
+
+e.stopPropagation()
+
+if(currentAudio){
+currentAudio.pause()
+currentAudio.currentTime=0
+}
+
+currentAudio=new Audio(cards[index].audio)
+currentAudio.play()
+
+})
+
+/* ================= INITIAL LOAD ================= */
+
+loadSet(1)
+
+</script>
+</body>
+</html>
