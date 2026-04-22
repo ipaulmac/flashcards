@@ -36,12 +36,19 @@ body{
 .flipped{transform:rotateY(180deg);}
 .face{position:absolute; inset:0; backface-visibility:hidden; border-radius:1rem;}
 .back{transform:rotateY(180deg);}
+
+
 .it-text,.en-text{
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:1.25rem;
+  font-size:clamp(.82rem, 3.2vw, 1.25rem);
+  line-height:1.25;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  padding:0 .35rem;
 }
+
 .it-text{ color:var(--front-purple); }
 .en-text{ color:var(--en-blue); }
 .listen-btn{
