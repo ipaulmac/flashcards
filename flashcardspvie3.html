@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PVIE3 – Lessons 25–36</title>
+<!-- update -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+  --bg-blue:#061247;
+  --front-purple:#561386;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+}
+body{
+  background:var(--bg-blue);
+  font-family:system-ui, Segoe UI, Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem;
+  gap:.3rem;
+}
+.perspective{perspective:1000px;}
+.card-inner{
+  width:90vw;
+  max-width:380px;
+  height:55vw;
+  max-height:240px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:.4s;
+  cursor:pointer;
+}
+.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:1rem;}
+.back{transform:rotateY(180deg);}
+.it-text,.en-text{
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.25rem;
+}
+.it-text{ color:var(--front-purple); }
+.en-text{ color:var(--en-blue); }
+.listen-btn{
+  background:none;
+  border:none;
+  color:var(--it-red);
+  font-weight:700;
+  font-size:.9rem;
+}
+.nav-btn{
+  font-size:1.4rem;
+  font-weight:700;
+  color:white;
+}
+.set-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.25rem;
+  max-width:380px;
+  width:100%;
+}
+
+.set-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:7px 0;
+  font-size:.75rem;
+  font-weight:800;
+  border-radius:999px;
+  background:white;
+  color:#0E065C;
+  line-height:1.3;
+  text-align:center;
+}
+
+.global-btn{
+  background:#00cfd5;
+  color:#061247;
+}
+
+.extras-btn{
+  background:#0FF268;
+  color:#061247;
+}
+
+.inactive-btn{
+  background:#A8E6A3;
+  color:#061247;
+}
+
+@media (max-width: 480px) {
+  .set-btn{
+    font-size:.65rem;
+  }
+}
+
+.set-btn.active{
+  background:#8C0327;
+  color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2 class="text-white text-lg font-extrabold tracking-widest text-center">
+STAGE THREE
+</h2>
+
+<div class="perspective mt-4">
+  <div id="flashcard" class="card-inner">
+    <div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
+      <div id="front-text" class="it-text"></div>
+    </div>
+    <div class="face back bg-white border-4 border-[#8C0327] flex flex-col justify-between p-4">
+      <div class="flex-grow flex items-center justify-center">
+        <div id="back-text" class="en-text"></div>
+      </div>
+      <div class="flex justify-center pb-2">
+        <button id="speakBtn" class="listen-btn">🔊 LISTEN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px]">
+  <button onclick="prevCard(event)" class="nav-btn">◀</button>
+  <span id="counter-display" class="text-white font-bold text-sm">1 / 1</span>
+  <button onclick="nextCard(event)" class="nav-btn">▶</button>
+</div>
+
+<div class="w-full max-w-[380px] flex justify-center mt-2">
+  <button onclick="refreshCurrentSet()"
+          class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounded-full">
+    <span class="font-bold text-sm">REFRESH</span>
+  </button>
+</div>
+
+<div class="set-grid mt-2">
+<button class="set-btn" onclick="loadSet('pvie3.1')">LESSON 25</button>
+<button class="set-btn" onclick="loadSet('pvie3.2')">LESSON 26</button>
+<button class="set-btn inactive-btn">LESSON 27</button>
+<button class="set-btn inactive-btn">LESSON 28</button>
+<button class="set-btn inactive-btn">LESSON 29</button>
+<button class="set-btn inactive-btn">LESSON 30</button>
+<button class="set-btn inactive-btn">LESSON 31</button>
+<button class="set-btn inactive-btn">LESSON 32</button>
+<button class="set-btn inactive-btn">LESSON 33</button>
+<button class="set-btn inactive-btn">LESSON 34</button>
+<button class="set-btn inactive-btn">LESSON 35</button>
+<button class="set-btn inactive-btn">LESSON 36</button>
+<button class="set-btn global-btn" onclick="loadGlobal()">TEST 25-36</button>
+</div>
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+/* ================= MASTER SETS ================= */
+
+const sets = {
+
+"pvie3.1": [
+  {"front":"era ora!", "back":"about time!"},
+  {"front":"mettere in conto", "back":"bargain for"},
+  {"front":"causare / provocare", "back":"bring about"},
+  {"front":"accadere / verificarsi", "back":"come about"},
+  {"front":"stroncare / giro di vite contro", "back":"crack down on / clamp down on"},
+  {"front":"finire di bere", "back":"drink up"},
+  {"front":"far impazzire qualcuno", "back":"drive someone round the bend"},
+  {"front":"finire di mangiare", "back":"eat up"},
+  {"front":"ma insomma!", "back":"for crying out loud!"},
+  {"front":"prendere la mano", "back":"get the hang of"},
+  {"front":"assecondare", "back":"go along with"},
+  {"front":"ammalarsi", "back":"go down with / come down with"},
+  {"front":"meno male", "back":"good job"},
+  {"front":"venirsi incontro", "back":"meet someone half-way"},
+  {"front":"scelta scontata", "back":"no-brainer"},
+  {"front":"al settimo cielo", "back":"over the moon"},
+  {"front":"meritarsela", "back":"serve someone right"},
+  {"front":"rimandare la decisione a domani", "back":"sleep on it"},
+  {"front":"spiccare", "back":"stand out"},
+  {"front":"convincere qualcuno a fare qualcosa", "back":"talk someone into doing"},
+  {"front":"far cambiare idea", "back":"talk someone out of doing"},
+  {"front":"non avevo fatto i conti con questo tempo", "back":"i hadn't bargained for this weather"},
+  {"front":"la nuova legge porterà dei cambiamenti", "back":"the new law will bring about changes"},
+  {"front":"è successo per caso", "back":"it came about by accident"},
+  {"front":"la polizia ha intenzione di intervenire con fermezza contro le proteste", "back":"the police intend clamping down / cracking down on protests"},
+  {"front":"il governo ha intenzione di dare un giro di vite all'immigrazione", "back":"the government intends cracking down on immigration"},
+  {"front":"finisci di bere! è ora di andare", "back":"drink up! it's time to go"},
+  {"front":"finisci di mangiare o faremo tardi", "back":"eat up or we will be late"},
+  {"front":"ci prenderai la mano presto", "back":"you'll get the hang of it soon"},
+  {"front":"non asseconderò questa idea", "back":"i won't go along with this idea"},
+  {"front":"purtroppo, mi sono ammalato d'influenza", "back":"unfortunately, i've come down with the flu"},
+  {"front":"alla fine ci siamo venuti incontro", "back":"in the end, we met half-way"},
+  {"front":"dire sì era una scelta scontata", "back":"saying yes was a no-brainer"},
+  {"front":"era al settimo cielo", "back":"she was over the moon"},
+  {"front":"se l'è meritata per essere stato così sfacciato", "back":"it served him right for being so flippant"},
+  {"front":"ha detto che ci avrebbe dormito sopra", "back":"he said he would sleep on it"},
+  {"front":"il suo lavoro spicca davvero", "back":"her work really stands out"},
+  {"front":"mi hanno convinto ad andare da solo", "back":"they talked me into going alone"},
+  {"front":"sono riuscito a fargli cambiare idea", "back":"i was able to talk him out of it"},
+  {"front":"una moda passeggera", "back":"a fleeting trend"},
+  {"front":"opinionisti", "back":"pundits"},
+  {"front":"hai ragione", "back":"good point"},
+  {"front":"agente immobiliare", "back":"estate agent"},
+  {"front":"irremovibile", "back":"adamant"},
+  {"front":"ritorsione", "back":"reprisal"},
+  {"front":"multe salate", "back":"hefty fines"},
+  {"front":"mi tormenta / mi dà fastidio", "back":"it bugs me"},
+  {"front":"balzare alla mente", "back":"spring to mind"},
+  {"front":"disoccupato", "back":"out of work"}
+],
+
+ "pvie3.2": [
+  {"front":"divertirsi un mondo", "back":"a whale of a time"},
+  {"front":"essere in perfetta forma", "back":"be right as rain"},
+  {"front":"andare per le lunghe", "back":"beat about the bush"},
+  {"front":"attirare l'attenzione", "back":"catch the eye"},
+  {"front":"assolutamente sì!", "back":"damn right i do!"},
+  {"front":"cascarci", "back":"fall for something"},
+  {"front":"passarla liscia", "back":"get away with something"},
+  {"front":"ma dai!", "back":"get away!"},
+  {"front":"rimangiarsi la parola", "back":"go back on one's word"},
+  {"front":"passare il tempo", "back":"hang out"},
+  {"front":"prendere di mira qualcuno", "back":"have it in for someone"},
+  {"front":"serbare rancore", "back":"hold a grudge / bear a grudge"},
+  {"front":"come un pugno nell'occhio!", "back":"like a sore thumb!"},
+  {"front":"su due piedi", "back":"off the cuff"},
+  {"front":"vedere come va", "back":"play it by ear"},
+  {"front":"risaltare", "back":"stick out"},
+  {"front":"mettere in ordine", "back":"straighten out"},
+  {"front":"assumere il controllo", "back":"take over"},
+  {"front":"rimpiazzare", "back":"take over"},
+  {"front":"ci siamo divertiti un mondo ieri sera", "back":"we had a whale of a time last night"},
+  {"front":"non preoccuparti, domani sarà in perfetta forma", "back":"don't worry, he'll be right as rain tomorrow"},
+  {"front":"smettila di andare per le lunghe", "back":"stop beating about the bush"},
+  {"front":"il suo cappotto rosso ha attirato la mia attenzione", "back":"her red coat caught my eye"},
+  {"front":"puoi scommetterci che lo farò!", "back":"damn right i will!"},
+  {"front":"ci sono cascato di nuovo", "back":"i fell for it again"},
+  {"front":"l'ha fatta franca dopo aver barato", "back":"he got away with cheating"},
+  {"front":"ma dai! stai scherzando?", "back":"get away! are you joking?"},
+  {"front":"si è rimangiata la parola. maledizione!", "back":"she went back on her word. damn it!"},
+  {"front":"di solito passiamo il tempo a casa sua il sabato sera", "back":"we usually hang out at his place on saturday evenings"},
+  {"front":"chissà perché ce l'ha con me?", "back":"i wonder why she has it in for me?"},
+  {"front":"serba ancora rancore", "back":"he still bears a grudge"},
+  {"front":"le sue scarpe verdi risaltavano davvero molto", "back":"his green shoes really stuck out"},
+  {"front":"ho dovuto dare una risposta su due piedi", "back":"i had to give an answer off the cuff"},
+  {"front":"sarebbe meglio vedere come va", "back":"it would be better to play it by ear"},
+  {"front":"assumerà il controllo il mese prossimo", "back":"she will take over next month"},
+  {"front":"i robot potrebbero rimpiazzare molti lavori", "back":"robots may take over many jobs"},
+  {"front":"prendere in giro da morire", "back":"tease like hell"},
+  {"front":"soglie", "back":"thresholds"},
+  {"front":"aumento di stipendio", "back":"pay-rise"},
+  {"front":"fuori discussione", "back":"off the table"},
+  {"front":"affidare", "back":"entrust"},
+  {"front":"arduo", "back":"daunting"},
+  {"front":"alla rinfusa", "back":"haphazard"},
+  {"front":"impegnativo / esigente", "back":"demanding"},
+  {"front":"voci / indiscrezioni", "back":"rumours"},
+  {"front":"fidato / di fiducia", "back":"trusty"},
+  {"front":"un tratto di nebbia", "back":"a patch of fog"}
+]
+ 
+};
+
+/* ================= CORE ENGINE ================= */
+
+let cards=[];
+let index=0;
+let activeMode=null;
+let activeFolder=null;
+
+const flashcard=document.getElementById("flashcard");
+const frontText=document.getElementById("front-text");
+const backText=document.getElementById("back-text");
+const counter=document.getElementById("counter-display");
+const speakBtn=document.getElementById("speakBtn");
+
+function shuffle(arr){
+  const a=[...arr];
+
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+
+  return a;
+}
+
+function prepareSet(folder){
+  return sets[folder].map((card,i)=>({
+    ...card,
+    folder,
+    id:`PVIE3-${String(i+1).padStart(3,"0")}`
+  }));
+}
+
+window.loadSet = function(folder){
+  activeMode="single";
+  activeFolder=folder;
+  index=0;
+
+  const fullPool=prepareSet(folder);
+  cards=shuffle(fullPool).slice(0,12);
+
+  updateCard();
+  activateButton(folder);
+}
+
+window.loadGlobal = function(){
+  activeMode="global";
+  activeFolder=null;
+  index=0;
+
+  let combined=[];
+
+  Object.keys(sets).forEach(folder=>{
+    combined.push(...prepareSet(folder));
+  });
+
+  cards=shuffle(combined).slice(0,20);
+
+  updateCard();
+  activateButton("GLOBAL");
+}
+
+window.refreshCurrentSet = function(){
+  if(activeMode==="single"){
+    loadSet(activeFolder);
+  }else if(activeMode==="global"){
+    loadGlobal();
+  }
+}
+
+function updateCard(){
+  flashcard.classList.remove("flipped");
+
+  const c=cards[index];
+
+  frontText.innerText=c.front.toUpperCase();
+  backText.innerText=c.back.toUpperCase();
+  counter.innerText=`${index+1} / ${cards.length}`;
+}
+
+window.nextCard=function(e){
+  if(e) e.stopPropagation();
+  index=(index+1)%cards.length;
+  updateCard();
+};
+
+window.prevCard=function(e){
+  if(e) e.stopPropagation();
+  index=(index-1+cards.length)%cards.length;
+  updateCard();
+};
+
+flashcard.addEventListener("click",()=>{
+  flashcard.classList.toggle("flipped");
+});
+
+speakBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+
+  const c=cards[index];
+  const audio=new Audio(`audio/${c.folder}/${c.id}.mp3`);
+
+  audio.play();
+});
+
+function activateButton(folder){
+  document.querySelectorAll(".set-btn").forEach(btn=>
+    btn.classList.remove("active")
+  );
+
+  const buttons=document.querySelectorAll(".set-btn");
+
+  const map={
+    "pvie3.1":0,
+    "pvie3.2":1,
+    "pvie3.3":2,
+    "pvie3.4":3,
+    "pvie3.5":4,
+    "pvie3.6":5,
+    "pvie3.7":6,
+    "pvie3.8":7,
+    "pvie3.9":8,
+    "pvie3.10":9,
+    "pvie3.11":10,
+    "pvie3.12":11,
+    "GLOBAL":12
+  };
+
+  buttons[map[folder]].classList.add("active");
+}
+
+/* INITIAL LOAD */
+loadSet("pvie3.1");
+
+}); 
+
+</script>
+</body>
+</html>
