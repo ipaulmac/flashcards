@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STAGE 1 PVIE</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.9rem;
+letter-spacing:.05em;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+}
+
+/* CARD */
+
+.card{
+position:relative;
+width:92vw;
+max-width:380px;
+height:230px;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:12px 18px 18px 18px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+text-align:center;
+}
+
+.lesson-tag{
+position:absolute;
+top:6px;
+right:10px;
+font-size:.65rem;
+font-weight:900;
+color:var(--red);
+letter-spacing:.05em;
+}
+
+.sentence{
+font-size:1.08rem;
+font-weight:900;
+color:var(--blue);
+line-height:1.45;
+text-transform:uppercase;
+}
+
+.highlight{
+color:#8C0327;
+font-weight:900;
+}
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.info-row div:first-child{
+text-align:left;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+/* INPUT */
+
+.label{
+width:92vw;
+max-width:380px;
+color:#fff;
+font-weight:900;
+font-size:.92rem;
+margin:8px 0 6px;
+}
+
+input{
+width:92vw;
+max-width:380px;
+height:46px;
+padding-left:22px !important;
+padding-right:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:900 !important;
+font-family:Arial, Helvetica, sans-serif;
+box-sizing:border-box;
+outline:none;
+appearance:none;
+-webkit-appearance:none;
+text-transform:uppercase;
+color:#061247;
+letter-spacing:.02em;
+}
+
+
+details summary::-webkit-details-marker{
+display:none;
+}
+
+details summary{
+list-style:none;
+}
+
+
+/* FEEDBACK */
+
+.feedback{
+width:92vw;
+max-width:380px;
+min-height:20px;
+margin:6px 0;
+font-weight:900;
+text-align:center;
+color:#ef4444;
+}
+
+
+/* BUTTONS */
+
+button{
+border:none;
+border-radius:10px;
+padding:8px 14px;
+font-size:.8rem;
+font-weight:900;
+text-transform:uppercase;
+width:auto;
+}
+
+
+.buttons{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+align-items:center;
+margin-top:-4px;
+}
+
+.buttons button{
+width:90px;               /* reduced size */
+height:34px;              /* slightly smaller height */
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:10px;
+font-weight:900;
+}
+
+
+#checkBtn,
+#skipBtn,
+#nextBtn{
+justify-self:center;
+}
+
+.set-btn.purple{
+background:#FA73EB;
+color:#061247;
+}
+
+.set-btn{
+background:#fff;
+color:#0E065C;
+border-radius:999px;
+padding:6px 0; /* smaller button */
+font-size:1.1rem; /* bigger number */
+font-weight:900;
+text-align:center;
+}
+
+.skip-btn{
+background:#FFEB3B;
+color:#061247;
+font-weight:900;
+border-radius:10px;   /* same rounded rectangle */
+}
+
+
+.check-btn{background:var(--purple);color:#fff;}
+.next-btn{background:var(--cyan);color:#061247;}
+
+
+button:disabled{opacity:.5;}
+button:active{transform:scale(.97);}
+
+/* DIVIDER */
+
+.divider{
+width:92vw;
+max-width:380px;
+height:3px;
+background:#ffffff66;
+margin:10px 0;
+}
+
+/* LESSON BUTTON GRID */
+
+.set-grid{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:6px;
+}
+
+.set-btn{
+background:#fff;
+color:#0E065C;
+border-radius:999px;
+padding:6px 0;
+font-size:.9rem;
+font-weight:900;
+text-align:center;
+}
+
+/* GREEN GROUP BUTTONS */
+.set-btn.green{
+background:#A8E6A3;
+color:#061247;
+}
+
+/* CYAN TEST BUTTON */
+.set-btn.cyan{
+background:#00cfd5;
+color:#061247;
+}
+
+/* ACTIVE STATE (OVERRIDES ALL) */
+.set-btn.active{
+background:#8C0327 !important;
+color:#ffffff !important;
+}
+
+
+/* POPUPS */
+
+.popup{
+position:fixed;
+top:18%;
+left:50%;
+transform:translate(-50%,-50%);
+width:80vw;
+max-width:360px;
+display:none;
+justify-content:center;
+z-index:9999;
+align-items:center; /* ADD THIS */
+}
+
+.popup-box{
+background:#eef6ff;
+border:3px solid var(--red);
+border-radius:14px;
+padding:18px;
+width:100%;
+box-sizing:border-box;
+text-align:center;
+font-weight:900;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="correctSound"><source src="audio/correct.mp3"></audio>
+<audio id="wrongSound"><source src="audio/wrong.mp3"></audio>
+<audio id="passSound"><source src="audio/pass.mp3"></audio>
+<audio id="failSound"><source src="audio/fail.mp3"></audio>
+
+<!-- TOP -->
+<div class="top-bar">
+<div class="top-title">PVIE STAGE ONE</div>
+<button id="soundToggle" class="sound-btn">🔊 ON</button>
+</div>
+
+<!-- CARD -->
+<div class="card" id="card">
+<div class="sentence">CHOOSE YOUR LESSON</div>
+</div>
+
+<!-- INFO -->
+<div class="info-row">
+<div id="progress">0 / 0</div>
+
+<details id="instructionsBox">
+  <summary style="color:#FFEB3B;font-weight:900;cursor:pointer;">
+    Instructions ▶
+  </summary>
+
+  <div style="
+    position:absolute;
+    top:80px;
+    left:50%;
+    transform:translateX(-50%);
+    width:92vw;
+    max-width:380px;
+    box-sizing:border-box;
+    background:#eef6ff;
+    color:#061247;
+    padding:16px;
+    border-radius:12px;
+    font-size:.80rem;
+    line-height:1.15;
+    z-index:100;
+  ">
+
+    First, <span class="highlight">SELECT THE LESSON</span> you would like to attempt<br><br>
+
+    You have <span class="highlight">TWO ATTEMPTS</span> at answering each question<br><br>
+
+    If you can't answer the question, use the <span class="highlight">SKIP</span> button<br><br>
+
+    Note how many <span class="highlight">WORDS/LETTERS</span> are required and be sure to use <span class="highlight">THE HYPHEN</span> (-) where needed<br><br>
+
+    Check your <span class="highlight">SPELLING</span>
+
+    <div onclick="document.getElementById('instructionsBox').removeAttribute('open')"
+    style="margin-top:12px;text-align:right;color:#8C0327;font-weight:900;cursor:pointer;">
+      CLOSE ▲
+    </div>
+
+  </div>
+</details>
+
+
+<div id="score" class="right">0 / 0</div>
+</div>
+
+<div class="label">Enter your answer here:</div>
+<input id="answerInput" autocomplete="off">
+
+<div id="feedback" class="feedback"></div>
+
+<div class="buttons">
+<button id="checkBtn" class="check-btn">CHECK</button>
+
+<button id="skipBtn" class="skip-btn">SKIP</button>
+
+<button id="nextBtn" class="next-btn" disabled>NEXT</button>
+</div>
+
+<div class="divider"></div>
+
+<!-- LESSON BUTTONS -->
+<div class="set-grid">
+<button class="set-btn" onclick="openStartPopup('lesson1', event)">1</button>
+<button class="set-btn" onclick="openStartPopup('lesson2', event)">2</button>
+<button class="set-btn" onclick="openStartPopup('lesson3', event)">3</button>
+<button class="set-btn" onclick="openStartPopup('lesson4', event)">4</button>
+
+<button class="set-btn" onclick="openStartPopup('lesson5', event)">5</button>
+<button class="set-btn" onclick="openStartPopup('lesson6', event)">6</button>
+<button class="set-btn" onclick="openStartPopup('lesson7', event)">7</button>
+<button class="set-btn" onclick="openStartPopup('lesson8', event)">8</button>
+
+<button class="set-btn" onclick="openStartPopup('lesson9', event)">9</button>
+<button class="set-btn" onclick="openStartPopup('lesson10', event)">10</button>
+<button class="set-btn" onclick="openStartPopup('lesson11', event)">11</button>
+<button class="set-btn" onclick="openStartPopup('lesson12', event)">12</button>
+
+<button class="set-btn green" onclick="openStartPopup(['lesson1','lesson2','lesson3','lesson4','lesson5','lesson6'], event)">1–6</button>
+
+<button class="set-btn green" onclick="openStartPopup(['lesson7','lesson8','lesson9','lesson10','lesson11','lesson12'], event)">7–12</button>
+
+<button class="set-btn purple" onclick="openStartPopup('ifwhen', event)">IF/WHEN</button>
+
+<button class="set-btn cyan" onclick="openStartPopup(['lesson1','lesson2','lesson3','lesson4','lesson5','lesson6','lesson7','lesson8','lesson9','lesson10','lesson11','lesson12'], event)">TEST</button>
+
+</div>
+
+<!-- START POPUP -->
+<div id="startPopup" class="popup">
+  <div class="popup-box">
+
+    <div id="popupText"></div>
+
+    <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;">
+
+      <div onclick="closeStartPopup()" style="
+      color:#0E065C;
+      font-weight:900;
+      cursor:pointer;
+      ">
+      CLOSE ✖
+      </div>
+
+      <div onclick="startQuiz()" style="
+      color:#8C0327;
+      font-weight:900;
+      cursor:pointer;
+      ">
+      START QUIZ ▶
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- CORRECT POPUP -->
+<div id="correctPopup" class="popup">
+<div class="popup-box" style="max-width:260px;padding:14px;">
+
+<div style="
+color:#16a34a;
+font-size:1rem;
+font-weight:900;
+margin-bottom:8px;
+text-align:left;
+">
+CORRECT
+</div>
+
+<div onclick="nextFromPopup()" style="
+text-align:right;
+color:#8C0327;
+font-size:.8rem;
+font-weight:900;
+cursor:pointer;
+text-transform:uppercase;
+">
+NEXT QUESTION ▶
+</div>
+
+</div>
+</div>
+
+<script>
+
+/* DATA */
+
+const sets = {
+
+lesson1:[
+
+{sentence:"IF YOU GIVE ME YOUR COLLEAGUE'S NUMBER I CAN ________ HER ______ SOMETIME THIS AFTERNOON (4,2)",answer:["CALL UP"],lesson:"LESSON 1"},
+
+{sentence:"I _____________ ALL THE LIGHTS BEFORE I WENT TO BED (4,3)",answer:["SHUT OFF"],lesson:"LESSON 1"},
+
+{sentence:"<span class='highlight'>IN THE BEGINNING</span>, I THOUGHT IT WAS FALSE (2,5)",answer:["AT FIRST"],lesson:"LESSON 1"},
+
+{sentence:"AS SOON AS WE ____________ THE CAR, WE SHOULD FASTEN OUR SEATBELTS (3,4)",answer:["GET INTO"],lesson:"LESSON 1"},
+
+{sentence:"IT MEANS <span class='highlight'>SUBITO</span> IN ITALIAN (2,4)",answer:["AT ONCE"],lesson:"LESSON 1"},
+
+{sentence:"I'LL BE THERE AROUND LUNCHTIME. FIRST, I NEED TO <span class='highlight'>COLLECT</span> MY FRIEND FROM THE STATION (4,2)",answer:["PICK UP"],lesson:"LESSON 1"},
+
+{sentence:"<span class='highlight'>FINALLY</span>! NOW WE CAN START (2,4)",answer:["AT LAST"],lesson:"LESSON 1"},
+
+{sentence:"WHEN IT BECAME TOO HOT, HE ______________ THE AIR-CONDITIONER (8,2)",answer:["SWITCHED ON"],lesson:"LESSON 1"},
+
+{sentence:"IF YOU NEED IT URGENTLY, I CAN GO AND GET IT <span class='highlight'>IMMEDIATELY</span> (5,4)",answer:["RIGHT AWAY"],lesson:"LESSON 1"},
+
+{sentence:"I ALWAYS ___________ THE BUS TWO STOPS EARLY AND WALK THE REST OF THE WAY HOME (3,3)",answer:["GET OFF"],lesson:"LESSON 1"},
+
+{sentence:"I CAN'T TALK NOW. CAN I _______ YOU _______? (4,4)",answer:["CALL BACK"],lesson:"LESSON 1"},
+
+{sentence:"BE SURE TO ___________ THE LIGHT BEFORE YOU LEAVE THE HOUSE (VARIOUS ANSWERS)",answer:["SWITCH OFF","TURN OFF","SHUT OFF"],lesson:"LESSON 1"},
+
+{sentence:"PAT ____________ HER COAT AS IT WAS BEGINNING TO RAIN (3,2)",answer:["PUT ON"],lesson:"LESSON 1"},
+
+{sentence:"I NEED TO REST MY FEET. DO YOU MIND IF I __________ MY SHOES? (4,3)",answer:["TAKE OFF"],lesson:"LESSON 1"},
+
+{sentence:"HE'S STILL SINGLE BUT I IMAGINE THAT, __________________, HE'LL FIND SOMEONE TO MARRY (6,2,5)",answer:["SOONER OR LATER"],lesson:"LESSON 1"},
+
+{sentence:"__________, I THOUGHT THE PROBLEM WAS ME BUT I FOUND OUT LATER THAT I WAS WRONG (2,5)",answer:["AT FIRST"],lesson:"LESSON 1"},
+
+{sentence:"JOHN HURT HIS BACK WHEN HE BENT DOWN TO ___________ HIS PEN WHICH HAD DROPPED TO THE GROUND (4,2)",answer:["PICK UP"],lesson:"LESSON 1"},
+
+{sentence:"THE BUS WAS SO CROWDED THAT I COULDN'T ____________ AND I HAD TO WAIT FOR THE NEXT ONE (3,2)",answer:["GET ON"],lesson:"LESSON 1"},
+
+{sentence:"COURIERS ARE USED TO PICK UP AND DELIVER __________ (7)",answer:["PARCELS"],lesson:"LESSON 1"},
+
+{sentence:"VOGLIO <span class='highlight'>SGRANCHIRMI LE GAMBE</span> (7,2,4)",answer:["STRETCH MY LEGS"],lesson:"LESSON 1"},
+
+{sentence:"<span class='highlight'>BLOCCATO</span> NEL TRAFFICO (5)",answer:["STUCK"],lesson:"LESSON 1"},
+
+{sentence:"HE'S NOT HERE, <span class='highlight'>UNFORTUNATELY</span> (1,2,6)",answer:["I AM AFRAID"],lesson:"LESSON 1"},
+
+{sentence:"<span class='highlight'>MI RACCOMANDO</span>, NON FARE TARDI! (8,3,2)",answer:["WHATEVER YOU DO"],lesson:"LESSON 1"},
+
+{sentence:"PER L'AMOR DEL CIELO! (3,7,4)",answer:["FOR HEAVEN'S SAKE","FOR HEAVENS SAKE"],lesson:"LESSON 1"},
+
+{sentence:"VOLEVO SOLO DIRE (1,4,6,2,7)",answer:["I JUST WANTED TO MENTION"],lesson:"LESSON 1"},
+
+{sentence:"NON PREOCCUPARTI DI CHIAMARE UN TAXI = DON'T _________ CALLING A TAXI! (6)",answer:["BOTHER"],lesson:"LESSON 1"}
+
+],
+
+lesson2:[
+
+{sentence:"<span class='highlight'>GUARDAMI</span>! (4,2,2)",answer:["LOOK AT ME"],lesson:"LESSON 2"},
+
+{sentence:"SHE'S BEEN WORKING VERY HARD ALL DAY AND NOW SHE'S TOTALLY _____________ (4,3)",answer:["WORN OUT"],lesson:"LESSON 2"},
+
+{sentence:"THE OPPOSITE OF I <span class='highlight'>WENT TO BED</span> IS: I _________ (3,2)",answer:["GOT UP"],lesson:"LESSON 2"},
+
+{sentence:"I'VE BEEN _________________ MY GLASSES EVERYWHERE BUT I CAN'T FIND THEM (9,3)",answer:["SEARCHING FOR"],lesson:"LESSON 2"},
+
+{sentence:"BISOGNA <span class='highlight'>INFORMARSI</span> (4,3)",answer:["FIND OUT"],lesson:"LESSON 2"},
+
+{sentence:"I KNEW <span class='highlight'>FROM THE BEGINNING</span> YOU WOULD SAY THAT! (3,5)",answer:["ALL ALONG"],lesson:"LESSON 2"},
+
+{sentence:"MATHEMATICAL PROBLEMS OFTEN NEED SOLVING ______________ (4,2,4)",answer:["STEP BY STEP"],lesson:"LESSON 2"},
+
+{sentence:"IS IT <span class='highlight'>OK</span> IF I USE YOUR CAR TODAY? (3,5)",answer:["ALL RIGHT"],lesson:"LESSON 2"},
+
+{sentence:"<span class='highlight'>NON FA NIENTE</span>! (5,4)",answer:["NEVER MIND"],lesson:"LESSON 2"},
+
+{sentence:"NO NEED TO <span class='highlight'>WEAR ELEGANT CLOTHES</span>. IT'S ONLY AN INFORMAL OCCASION (5,2)",answer:["DRESS UP"],lesson:"LESSON 2"},
+
+{sentence:"HIS ALARM CLOCK IS ALWAYS SET FOR SIX O'CLOCK. HE ______________ AT THE SAME TIME EVERY DAY (4,2)",answer:["GETS UP"],lesson:"LESSON 2"},
+
+{sentence:"WE ARE STILL ____________________ THE MISSING DOG (VARIOUS ANSWERS)",answer:["SEARCHING FOR","LOOKING FOR"],lesson:"LESSON 2"},
+
+{sentence:"WERE YOU ABLE TO _____________ WHAT TIME THE TRAIN LEAVES TOMORROW MORNING? (4,3)",answer:["FIND OUT"],lesson:"LESSON 2"},
+
+{sentence:"I'VE BEEN PLAYING TENNIS SINCE NINE O'CLOCK AND I FEEL TOTALLY ____________ (VARIOUS ANSWERS)",answer:["WORN OUT","TIRED OUT"],lesson:"LESSON 2"},
+
+{sentence:"__________, SARAH IS LATE FOR THE MEETING AGAIN! IT'S NOT THE FIRST TIME! (2,5)",answer:["AS USUAL"],lesson:"LESSON 2"},
+
+{sentence:"JOHN'S MOTHER KNEW _____________ THAT HE WASN'T TELLING THE TRUTH (3,5)",answer:["ALL ALONG"],lesson:"LESSON 2"},
+
+{sentence:"I'VE LOOKED ____________ FOR MY KEYS BUT I STILL CAN'T FIND THEM! (3,4)",answer:["ALL OVER"],lesson:"LESSON 2"},
+
+{sentence:"OH NO! I'VE BROKEN THE VASE! - _________! IT WASN'T WORTH VERY MUCH (5,4)",answer:["NEVER MIND"],lesson:"LESSON 2"},
+
+{sentence:"LA SESTA SETTIMANA <span class='highlight'>DI FILA</span> (2,1,3)",answer:["IN A ROW"],lesson:"LESSON 2"},
+
+{sentence:"DON'T FILL THE WINE GLASS TO THE TOP, OTHERWISE YOU MIGHT __________ IT OVER YOUR JACKET! (5)",answer:["SPILL"],lesson:"LESSON 2"},
+
+{sentence:"QUALE È IL TUO PROBLEMA? = WHAT'S _______________ ? (5,4,3)",answer:["WRONG WITH YOU"],lesson:"LESSON 2"},
+
+{sentence:"NON POSSO NON ESSERE D'ACCORDO CON TE = I ____________ AGREE WITH YOU (5,4,2)",answer:["WOULD HAVE TO"],lesson:"LESSON 2"},
+
+{sentence:"HO GUIDATO DIECI ORE <span class='highlight'>SENZA SOSTA</span> (3-4)",answer:["NON-STOP"],lesson:"LESSON 2"}
+
+],
+
+lesson3:[
+
+{sentence:"THERE'S NO HURRY. YOU CAN ______________ (4,4,4)",answer:["TAKE YOUR TIME"],lesson:"LESSON 3"},
+
+{sentence:"I WILL NEED TO <span class='highlight'>DISCUSS THIS</span> WITH MY COLLEAGUE FIRST (4,2,4)",answer:["TALK IT OVER"],lesson:"LESSON 3"},
+
+{sentence:"I NEED TO <span class='highlight'>CONTINUE</span> WITH MY WORK. THERE IS A DEADLINE TO MEET (3,2)",answer:["GET ON"],lesson:"LESSON 3"},
+
+{sentence:"WOULD YOU LIKE TO ______________ IN THE WAITING-ROOM? (4,1,4)",answer:["TAKE A SEAT"],lesson:"LESSON 3"},
+
+{sentence:"WE PREFER TO BE IN COMPANY RATHER THAN ________ (2,3,3)",answer:["ON OUR OWN"],lesson:"LESSON 3"},
+
+{sentence:"I DIDN'T DO IT <span class='highlight'>DELIBERATELY</span> (2,7)",answer:["ON PURPOSE"],lesson:"LESSON 3"},
+
+{sentence:"YESTERDAY, I WAS BUSY <span class='highlight'>FROM MORNING TO EVENING</span> (3,3,4)",answer:["ALL DAY LONG"],lesson:"LESSON 3"},
+
+{sentence:"SHE <span class='highlight'>HAD A GOOD RAPPORT</span> WITH EVERYONE AT LAST YEAR'S CONFERENCE (3,5)",answer:["GOT ALONG"],lesson:"LESSON 3"},
+
+{sentence:"WHEN YOU HAVE A BAD HEADACHE, PERHAPS IT'S BETTER TO _________ FOR A WHILE UNTIL IT PASSES (3,4)",answer:["LIE DOWN"],lesson:"LESSON 3"},
+
+{sentence:"HOW ARE YOU _________________ WITH YOUR NEW JOB? DO YOU LIKE IT? (7,2)",answer:["GETTING ON"],lesson:"LESSON 3"},
+
+{sentence:"ELDERLY PEOPLE DON'T LIKE BEING ______________; ESPECIALLY AT CHRISTMAS (2,5,3)",answer:["ON THEIR OWN"],lesson:"LESSON 3"},
+
+{sentence:"CAN'T WE _________ IT __________ WHEN EVERYBODY IS HERE? IT'S BETTER TO DISCUSS IT TOGETHER (4,4)",answer:["TALK OVER"],lesson:"LESSON 3"},
+
+{sentence:"PEOPLE USUALLY ______________ WITH EACH OTHER WHEN THEY SHARE COMMON INTERESTS (3,2)",answer:["GET ON"],lesson:"LESSON 3"},
+
+{sentence:"A PAY-RISE OF €150 A MONTH WOULD ___________________ TO THE QUALITY OF MY LIFE (4,1,10)",answer:["MAKE A DIFFERENCE"],lesson:"LESSON 3"},
+
+{sentence:"MANY PARKS HAVE ___________ WHERE PEOPLE CAN SIT DOWN (7)",answer:["BENCHES"],lesson:"LESSON 3"},
+
+{sentence:"DELINQUENTI (13)",answer:["TROUBLEMAKERS"],lesson:"LESSON 3"},
+
+{sentence:"WHEN IT RAINS A LOT, SOME AREAS OF THE COUNTRY CAN BECOME <span class='highlight'>UNDERWATER</span> (7)",answer:["FLOODED"],lesson:"LESSON 3"},
+
+{sentence:"LUI È MOLTO <span class='highlight'>PIGRO</span>! (4)",answer:["LAZY"],lesson:"LESSON 3"},
+
+{sentence:"ASCOLTATE BENE!",answer:["LISTEN UP"],lesson:"LESSON 3"},
+
+{sentence:"DOVREMMO RICHIAMARE, <span class='highlight'>MAGARI</span> (5)",answer:["MAYBE"],lesson:"LESSON 3"},
+
+{sentence:"CASPITA!",answer:["WOW"],lesson:"LESSON 3"},
+
+{sentence:"GIUSTO PER CAMBIARE (4,3,4)",answer:["JUST FOR ONCE"],lesson:"LESSON 3"}
+
+],
+
+lesson4:[
+
+{sentence:"THE NEXT TIME I'M IN TOWN I'LL __________ YOU ______ (4,2)",answer:["LOOK UP"],lesson:"LESSON 4"},
+
+{sentence:"A PERSON WHO IS DIRECT AND HONEST IN HIS MANNER AND WAY OF TALKING CAN BE DESCRIBED AS _____________ (10)",answer:["FORTHRIGHT".toUpperCase()],lesson:"LESSON 4"},
+
+{sentence:"<span class='highlight'>FINORA</span>, NE ABBIAMO VENDUTO CINQUE (2,2,3)",answer:["UP TO NOW","AS OF YET"],lesson:"LESSON 4"},
+
+{sentence:"MAY I ___________ ANOTHER PAIR OF SHOES, PLEASE? (3,2)",answer:["TRY ON"],lesson:"LESSON 4"},
+
+{sentence:"WILL YOU BE <span class='highlight'>PARTICIPATING</span> IN NEXT YEAR'S COMPETITION? (6,4)",answer:["TAKING PART"],lesson:"LESSON 4"},
+
+{sentence:"I DIDN'T KNOW ITS MEANING SO I ____________ ON GOOGLE (6,2,2)",answer:["LOOKED IT UP"],lesson:"LESSON 4"},
+
+{sentence:"CONTENTO? <span class='highlight'>PER NIENTE</span>! (3,2,3)",answer:["NOT AT ALL"],lesson:"LESSON 4"},
+
+{sentence:"CHILDREN! I DON'T WANT TO SEE YOUR TOYS ON THE FLOOR. ___________! (3,4,4)",answer:["PUT THEM AWAY"],lesson:"LESSON 4"},
+
+{sentence:"I HAVE ALWAYS <span class='highlight'>ADMIRED</span> MY PARENTS (6,2,2)",answer:["LOOKED UP TO"],lesson:"LESSON 4"},
+
+{sentence:"WHERE IS THE MEETING <span class='highlight'>BEING HELD</span>? (6,5)",answer:["TAKING PLACE"],lesson:"LESSON 4"},
+
+{sentence:"CAN I <span class='highlight'>REFLECT ON</span> THE MATTER FOR A COUPLE OF DAYS? (5,4)",answer:["THINK OVER"],lesson:"LESSON 4"},
+
+{sentence:"DO YOU FEEL LIKE _____________ THAT NEW RESTAURANT WHICH OPENED LAST WEEK? (6,3)",answer:["TRYING OUT"],lesson:"LESSON 4"},
+
+{sentence:"DO YOU HAVE A TELEPHONE DIRECTORY I COULD BORROW? I NEED TO _______________ SOMEBODY'S TELEPHONE NUMBER (4,2)",answer:["LOOK UP"],lesson:"LESSON 4"},
+
+{sentence:"DENTISTS ADVISE US TO BRUSH OUR TEETH _______________ THREE TIMES A DAY (2,5)",answer:["AT LEAST"],lesson:"LESSON 4"},
+
+{sentence:"_________, IT HAS BEEN HOT EVERY DAY (2,3)",answer:["SO FAR"],lesson:"LESSON 4"},
+
+{sentence:"SHE IS VERY <span class='highlight'>TIMID</span> BY NATURE (3)",answer:["SHY"],lesson:"LESSON 4"},
+
+{sentence:"SORRY BUT THESE SHOES ARE TOO SMALL. THEY DON'T _______ ME. CAN I TRY ON ANOTHER PAIR? (3)",answer:["FIT"],lesson:"LESSON 4"},
+
+{sentence:"<span class='highlight'>OFFRO IO</span>! (2,2,2,2)",answer:["IT IS ON ME","IT'S ON ME"],lesson:"LESSON 4"},
+
+{sentence:"LAVARE E STIRARE (7,3,7)",answer:["WASHING AND IRONING"],lesson:"LESSON 4"},
+
+{sentence:"SONO <span class='highlight'>STUFO</span> (3,2)",answer:["FED UP"],lesson:"LESSON 4"},
+
+{sentence:"<span class='highlight'>PERCHÉ DIAVOLO</span> NON MI HAI CHIAMATO?! (3,3,4)",answer:["WHY THE HELL"],lesson:"LESSON 4"},
+
+{sentence:"COME MAI? (3,4)",answer:["HOW COME"],lesson:"LESSON 4"},
+
+{sentence:"<span class='highlight'>A PRESCINDERE</span> DAL TEMPO (10)",answer:["REGARDLESS"],lesson:"LESSON 4"},
+
+{sentence:"<span class='highlight'>SPETTA A TE</span>, NON A ME (2,2,4,3)",answer:["IT IS YOUR JOB","IT'S YOUR JOB"],lesson:"LESSON 4"}
+
+],
+
+lesson5:[
+
+{sentence:"________________ PEOPLE RARELY, IF EVER, CHANGE THEIR MINDS (8)",answer:["STUBBORN"],lesson:"LESSON 5"},
+
+{sentence:"WHEN WE CATCH A COLD, WE TRY TO ____________ IT __________ (5,3)",answer:["SHAKE OFF"],lesson:"LESSON 5"},
+
+{sentence:"ATTENTO ALLE <span class='highlight'>BUCHE</span>! (3-5)",answer:["POT-HOLES"],lesson:"LESSON 5"},
+
+{sentence:"UNA VITA <span class='highlight'>SPERICOLATA</span> (8)",answer:["RECKLESS"],lesson:"LESSON 5"},
+
+{sentence:"IN ITALIAN, IT MEANS <span class='highlight'>UNA RIUNIONE DEL CDA</span> (5-7)",answer:["BOARD-MEETING"],lesson:"LESSON 5"},
+
+{sentence:"LE PREVISIONI (8)",answer:["FORECAST"],lesson:"LESSON 5"},
+
+{sentence:"THE MATCH HAS BEEN _____________ DUE TO HEAVY RAIN (6,3)",answer:["CALLED OFF"],lesson:"LESSON 5"},
+
+{sentence:"SHE'S NEVER COMING BACK. I THINK SHE'S GONE __________ THIS TIME (3,4)",answer:["FOR GOOD"],lesson:"LESSON 5"},
+
+{sentence:"IT CAN TAKE PEOPLE A LONG TIME TO __________ THE COVID VIRUS (3,4)",answer:["GET OVER"],lesson:"LESSON 5"},
+
+{sentence:"THEY INTRODUCED THEMSELVES AND ___________ HANDS (5)",answer:["SHOOK"],lesson:"LESSON 5"},
+
+{sentence:"COULD YOU PREPARE IT FOR ME AS QUICKLY AS POSSIBLE? I'M _________ (2,1,4)",answer:["IN A RUSH"],lesson:"LESSON 5"},
+
+{sentence:"<span class='highlight'>DECIDE</span>! THE BLUE ONE OR THE RED ONE? (4,4,4,2)",answer:["MAKE YOUR MIND UP"],lesson:"LESSON 5"},
+
+{sentence:"I SEE YOU ARE SNEEZING AND SNIFFING. HAVE YOU ____________ OR IS IT JUST AN ALLERGY? (6,1,4)",answer:["CAUGHT A COLD"],lesson:"LESSON 5"},
+
+{sentence:"<span class='highlight'>ATTENTO</span>! STA VENENDO VERSO DI TE (4,3)",answer:["LOOK OUT"],lesson:"LESSON 5"},
+
+{sentence:"DON'T <span class='highlight'>DELAY</span> UNTIL TOMORROW WHAT YOU CAN DO TODAY (3,3)",answer:["PUT OFF"],lesson:"LESSON 5"},
+
+{sentence:"HE HAS __________ HIS ________. HE'S NOW DECIDED NOT TO COME WITH US (7,4)",answer:["CHANGED MIND"],lesson:"LESSON 5"},
+
+{sentence:"DO YOU THINK IT'S TOO PREMATURE TO <span class='highlight'>CANCEL</span> TOMORROW'S MEETING? (4,3)",answer:["CALL OFF"],lesson:"LESSON 5"},
+
+{sentence:"ALTHOUGH I STILL HAVE A LOT OF WORK TO DO, I THINK I'LL STOP <span class='highlight'>FOR NOW</span> AND CONTINUE TOMORROW (3,3,4,5)",answer:["FOR THE TIME BEING"],lesson:"LESSON 5"},
+
+{sentence:"ALWAYS ________________ PICKPOCKETS WHEN TRAVELLING ON THE METRO OR ON BUSES! (VARIOUS ANSWERS)",answer:["LOOK OUT FOR","WATCH OUT FOR"],lesson:"LESSON 5"},
+
+{sentence:"WEAR YOUR HEAVY COAT IF YOU GO OUTSIDE OTHERWISE YOU MIGHT ______________ (5,1,4)",answer:["CATCH A COLD"],lesson:"LESSON 5"},
+
+{sentence:"C'HO MESSO <span class='highlight'>BEN DUE GIORNI</span> PER COMPLETARLO (1,4,3,4)",answer:["A GOOD TWO DAYS"],lesson:"LESSON 5"},
+
+{sentence:"È <span class='highlight'>ALTRETTANTO</span> IMPORTANTE (4,2)",answer:["JUST AS"],lesson:"LESSON 5"},
+
+{sentence:"<span class='highlight'>CASA MIA</span> AL TERZO PIANO (2,5)",answer:["MY PLACE"],lesson:"LESSON 5"},
+
+{sentence:"PER NESSUN MOTIVO! (2,3)",answer:["NO WAY"],lesson:"LESSON 5"}
+
+],
+
+lesson6:[
+
+{sentence:"UNFORTUNATELY, ALL THE PHONE LINES ARE <span class='highlight'>NOT WORKING</span> (3,2,5)",answer:["OUT OF ORDER"],lesson:"LESSON 6"},
+
+{sentence:"HE MUST HAVE EATEN SOMETHING WHICH HAD GONE OFF BECAUSE, _________________, HE BEGAN TO FEEL SICK (3,2,1,6)",answer:["ALL OF A SUDDEN"],lesson:"LESSON 6"},
+
+{sentence:"I'M BUSY THIS WEEK, BUT I HOPE TO __________ A COUPLE OF DAYS _______ NEXT WEEK (4,3)",answer:["HAVE OFF","TAKE OFF"],lesson:"LESSON 6"},
+
+{sentence:"IT'S NICE TO KNOW THAT I CAN _______________ YOU FOR HELP WHEN I NEED IT (6,2)",answer:["DEPEND ON"],lesson:"LESSON 6"},
+
+{sentence:"I'M SORRY BUT YOU'LL HAVE TO _______________ THAT CIGARETTE BEFORE YOU CAN COME IN (3,3)",answer:["PUT OUT"],lesson:"LESSON 6"},
+
+{sentence:"THE TOURISTS WERE HAPPY BECAUSE THEY <span class='highlight'>HAD THE OPPORTUNITY</span> TO SEE THE CHANGING OF THE GUARD (3,2)",answer:["GOT TO"],lesson:"LESSON 6"},
+
+{sentence:"WE KEEP OUR CLOTHES IN A ___________ (8)",answer:["WARDROBE"],lesson:"LESSON 6"},
+
+{sentence:"DARE UN PASSAGGIO (4,1,4)",answer:["GIVE A LIFT"],lesson:"LESSON 6"},
+
+{sentence:"NOT ONLY A JOURNEY BY SHIP BUT ALSO THE SURNAME OF A FAMOUS ACTOR! (6)",answer:["CRUISE"],lesson:"LESSON 6"},
+
+{sentence:"UNA <span class='highlight'>VISITA</span> MEDICA (11)",answer:["APPOINTMENT"],lesson:"LESSON 6"},
+
+{sentence:"EVERYTHING HAPPENED <span class='highlight'>SO QUICKLY</span>. I DIDN'T KNOW WHAT TO DO (3,2,4)",answer:["ALL AT ONCE"],lesson:"LESSON 6"},
+
+{sentence:"I WANT TO <span class='highlight'>REVIEW</span> THE DOCUMENT BEFORE SIGNING IT (4,4)",answer:["LOOK OVER"],lesson:"LESSON 6"},
+
+{sentence:"I DON'T EARN A LOT OF MONEY BUT I <span class='highlight'>SURVIVE</span> (3,2)",answer:["GET BY"],lesson:"LESSON 6"},
+
+{sentence:"AS SOON AS I <span class='highlight'>CLOSED THE TELEPHONE CONVERSATION</span>, I REMEMBERED THAT I HADN'T ASKED HIM ALL THE QUESTIONS (4,2)",answer:["HUNG UP"],lesson:"LESSON 6"},
+
+{sentence:"WHAT'S <span class='highlight'>HAPPENING</span> HERE?! (5,2)",answer:["GOING ON"],lesson:"LESSON 6"},
+
+{sentence:"WHEN WE DON'T FEEL 100%, WE SAY WE ARE <span class='highlight'>UNDER</span> __________ (3,7)",answer:["THE WEATHER"],lesson:"LESSON 6"},
+
+{sentence:"ALL OFFICES MUST HAVE EXTINGUISHERS TO __________ SMALL FIRES (3,3)",answer:["PUT OUT"],lesson:"LESSON 6"},
+
+{sentence:"I CAN ALWAYS <span class='highlight'>DEPEND ON</span> MY BROTHER WHEN I NEED HELP (4,2)",answer:["RELY ON"],lesson:"LESSON 6"},
+
+{sentence:"I THINK THE STREETLIGHTS WILL ___________ AT AROUND 5PM (2,2)",answer:["GO ON"],lesson:"LESSON 6"},
+
+{sentence:"THE BUSINESSMAN ___________________ THE CONTRACT CAREFULLY BEFORE HE SIGNED IT (VARIOUS ANSWERS)",answer:["LOOKED OVER","CHECKED OVER","WENT OVER"],lesson:"LESSON 6"},
+
+{sentence:"<span class='highlight'>COME MAI</span> HAI FATTO TARDI?! (3,2,2,4)",answer:["WHY IS IT THAT"],lesson:"LESSON 6"},
+
+{sentence:"È <span class='highlight'>VINCOLANTE</span>? (7-7)",answer:["LEGALLY-BINDING"],lesson:"LESSON 6"},
+
+{sentence:"<span class='highlight'>SOPRAFFATTO</span> DALLA VITA (11)",answer:["OVERWHELMED"],lesson:"LESSON 6"},
+
+{sentence:"UN RAPPORTO <span class='highlight'>DI LUNGA DATA</span> (4-8)",answer:["LONG-STANDING"],lesson:"LESSON 6"}
+
+],
+
+lesson7:[
+
+{sentence:"I CAN'T <span class='highlight'>CALCULATE</span> THE TOTAL WITHOUT A CALCULATOR (6,3)",answer:["FIGURE OUT"],lesson:"LESSON 7"},
+
+{sentence:"NON DIRÒ NULLA! (3,2,3,4)",answer:["MUM'S THE WORD","MUM IS THE WORD"],lesson:"LESSON 7"},
+
+{sentence:"C'È ANCORA <span class='highlight'>MOLTA STRADA DA FARE</span> (1,4,3,2,2)",answer:["A LONG WAY TO GO"],lesson:"LESSON 7"},
+
+{sentence:"<span class='highlight'>STAI SCHERZANDO</span>! (3,4,2,6)",answer:["YOU MUST BE JOKING"],lesson:"LESSON 7"},
+
+{sentence:"WHEN THE REFEREE BLEW HIS WHISTLE FOR A FOUL IN THE 90TH MINUTE, EVERYONE THOUGHT THAT THE MATCH <span class='highlight'>HAD FINISHED</span> (3,4)",answer:["WAS OVER"],lesson:"LESSON 7"},
+
+{sentence:"THIS MATHEMATICAL PROBLEM IS TOO DIFFICULT FOR ME TO ________________ BY MYSELF (6,3)",answer:["FIGURE OUT"],lesson:"LESSON 7"},
+
+{sentence:"YOUR PIANO PLAYING WILL _________________ BUT ONLY IF YOU PRACTICE EVERY DAY (3,6)",answer:["GET BETTER"],lesson:"LESSON 7"},
+
+{sentence:"AIRPLANES RARELY TAKE OFF _____________ (2,4)",answer:["ON TIME"],lesson:"LESSON 7"},
+
+{sentence:"MIDNIGHT? OF COURSE, I _______ ALWAYS _______ AT THAT TIME. I NEVER GO TO BED BEFORE 1.00 (2,2)",answer:["AM UP"],lesson:"LESSON 7"},
+
+{sentence:"THE TEACHER TOLD ME I HAD MADE THREE MISTAKES BUT HE DIDN'T ______________ TO ME WHAT THEY WERE (5,3)",answer:["POINT OUT"],lesson:"LESSON 7"},
+
+{sentence:"IL MUNICIPIO (4,4)",answer:["TOWN HALL"],lesson:"LESSON 7"},
+
+{sentence:"MI HA FATTO PAGARE DI PIÙ = HE ________________ EXTRA (7,2)",answer:["CHARGED ME"],lesson:"LESSON 7"},
+
+{sentence:"DOTATO/BRILLANTE (6)",answer:["GIFTED"],lesson:"LESSON 7"},
+
+{sentence:"IL PRIMO TEMPO (5-4)",answer:["FIRST-HALF"],lesson:"LESSON 7"},
+
+{sentence:"ALTRIMENTI (2,4)",answer:["OR ELSE"],lesson:"LESSON 7"},
+
+{sentence:"FARESTI MEGLIO AD ASPETTARE = YOU _____________ WAIT (3,6)",answer:["HAD BETTER"],lesson:"LESSON 7"},
+
+{sentence:"THE TRAIN TO PARIS ALWAYS LEAVES <span class='highlight'>PUNCTUALLY</span> (2,4)",answer:["ON TIME"],lesson:"LESSON 7"},
+
+{sentence:"THEY HAVE _____________ WITH EACH OTHER AND THEY ARE NO LONGER ON SPEAKING TERMS (6,3)",answer:["FALLEN OUT"],lesson:"LESSON 7"},
+
+{sentence:"I'M CALLING __________. I'M GOING HOME (2,1,3)",answer:["IT A DAY"],lesson:"LESSON 7"},
+
+{sentence:"HANNO FATTO PACE (4,2)",answer:["MADE UP"],lesson:"LESSON 7"},
+
+{sentence:"UNFORTUNATELY, HIS CONDITION IS <span class='highlight'>DETERIORATING</span> (7,5)",answer:["GETTING WORSE"],lesson:"LESSON 7"},
+
+{sentence:"I WOULD <span class='highlight'>PREFER TO</span> EAT LATER THAN MIDDAY (6)",answer:["RATHER"],lesson:"LESSON 7"},
+
+{sentence:"EAT IN OR EAT OUT? I'D ___________________ EAT AT HOME THIS EVENING, TO BE HONEST (6)",answer:["RATHER"],lesson:"LESSON 7"},
+
+{sentence:"YOU _______________ THINK IT OVER CAREFULLY BEFORE DECIDING WHAT TO DO, DON'T YOU THINK? (3,6)",answer:["HAD BETTER"],lesson:"LESSON 7"}
+
+],
+
+lesson8:[
+
+{sentence:"LA FATTURA (7)",answer:["INVOICE"],lesson:"LESSON 8"},
+
+{sentence:"SORRY BUT I WASN'T <span class='highlight'>CONCENTRATING</span>. WHAT WERE YOU SAYING? (6,9)",answer:["PAYING ATTENTION"],lesson:"LESSON 8"},
+
+{sentence:"I WAS <span class='highlight'>ON THE POINT OF</span> CALLING YOU (5,2)",answer:["ABOUT TO"],lesson:"LESSON 8"},
+
+{sentence:"I WILL NEED TO ______________ MY CHINESE BEFORE GOING TO TAIWAN (5,2,2)",answer:["BRUSH UP ON"],lesson:"LESSON 8"},
+
+{sentence:"NO WAY! IMPOSSIBLE! IT'S ____________ THE QUESTION! (3,2)",answer:["OUT OF"],lesson:"LESSON 8"},
+
+{sentence:"YOUR SHOES WILL SOON __________ IF YOU USE THEM ALL THE TIME (4,3)",answer:["WEAR OUT"],lesson:"LESSON 8"},
+
+{sentence:"ROMEO AND JULIET ______________ WITH EACH OTHER (4,2,4)",answer:["FELL IN LOVE"],lesson:"LESSON 8"},
+
+{sentence:"I AM NOT INVOLVED AT ALL. I HAVE NOTHING ___________ IT (2,2,4)",answer:["TO DO WITH"],lesson:"LESSON 8"},
+
+{sentence:"WHEN YOU SKIP BREAKFAST, YOU GO TO WORK ____________ STOMACH (2,2,5)",answer:["ON AN EMPTY"],lesson:"LESSON 8"},
+
+{sentence:"WHEN SOMETHING IS BROKEN OR NO LONGER NEEDED, WE USUALLY __________ IT _________ (5,4)",answer:["THROW AWAY"],lesson:"LESSON 8"},
+
+{sentence:"DON'T ______________ THOSE OLD CARDBOARD BOXES; JIM MIGHT NEED THEM FOR PACKING HIS THINGS WHEN HE MOVES INTO HIS NEW APARTMENT (5,4)",answer:["THROW AWAY"],lesson:"LESSON 8"},
+
+{sentence:"I DON'T KNOW HOW BUT MY JEANS SEEM TO _______________ IN NO TIME! (4,3)",answer:["WEAR OUT"],lesson:"LESSON 8"},
+
+{sentence:"INSTEAD OF ONLY ONE OF US DOING IT, WHY DON'T WE <span class='highlight'>BOTH ALTERNATE</span>? (4,5)",answer:["TAKE TURNS"],lesson:"LESSON 8"},
+
+{sentence:"I LOVE THAT SONG SO MUCH THAT I LISTEN TO IT _________________ (4,3,5)",answer:["TIME AND AGAIN"],lesson:"LESSON 8"},
+
+{sentence:"I'M SURE THAT THEIR FALLING OUT HAD ________________________ WITH MONEY BUT WITH THEIR PRIDE (7,2,2)",answer:["NOTHING TO DO"],lesson:"LESSON 8"},
+
+{sentence:"JUST AT THAT MOMENT, I WAS ___________ SAY NO BUT THEN I CHANGED MY MIND (5,2)",answer:["ABOUT TO"],lesson:"LESSON 8"},
+
+{sentence:"ALL THE LIGHTS HAVE _________________. IS THERE A PROBLEM WITH THE ELECTRICITY? (4,3)",answer:["GONE OUT"],lesson:"LESSON 8"},
+
+{sentence:"MI È ANDATO BENE! (1,3,5)",answer:["I WAS LUCKY"],lesson:"LESSON 8"},
+
+{sentence:"IN ORDER TO OBTAIN A DRIVING LICENSE, WE NEED TO STUDY THIS (7,4)",answer:["HIGHWAY CODE"],lesson:"LESSON 8"},
+
+{sentence:"<span class='highlight'>EXIT</span> A PLANE, TRAIN, ETC (4,3)",answer:["STEP OFF"],lesson:"LESSON 8"},
+
+{sentence:"UNA FORTE GRANDINATA (9)",answer:["HAILSTORM"],lesson:"LESSON 8"},
+
+{sentence:"VANNO D'ACCORDO? - SÌ, <span class='highlight'>ALLA GRANDE</span>! (4,1,5,2,4)",answer:["LIKE A HOUSE ON FIRE"],lesson:"LESSON 8"}
+
+],
+
+lesson9:[
+
+{sentence:"WE NEED TO <span class='highlight'>REDUCE</span> HOW MUCH WE SPEND ON ENERGY (3,4,2)",answer:["CUT BACK ON"],lesson:"LESSON 9"},
+
+{sentence:"MOST PEOPLE HAVE <span class='highlight'>BECOME AWARE OF</span> THE DANGERS OF GLOBAL WARMING (5,2,2)",answer:["WOKEN UP TO"],lesson:"LESSON 9"},
+
+{sentence:"HE FINISHED HIS BREAKFAST <span class='highlight'>VERY QUICKLY</span> (2,2,4)",answer:["IN NO TIME"],lesson:"LESSON 9"},
+
+{sentence:"QUITE ______________ BARS AND RESTAURANTS OFFER FREE WI-FI THESE DAYS (1,3)",answer:["A FEW"],lesson:"LESSON 9"},
+
+{sentence:"TI CI ABITUERAI = YOU WILL _____________ IT (3,4,2)",answer:["GET USED TO"],lesson:"LESSON 9"},
+
+{sentence:"HOW CAN I <span class='highlight'>CONTACT</span> PETER? (3,2,5,4)",answer:["GET IN TOUCH WITH"],lesson:"LESSON 9"},
+
+{sentence:"A COMMUTER (PENDOLARE) TRAVELS _______________ BETWEEN HOME AND THEIR WORKPLACE (4,3,5)",answer:["BACK AND FORTH"],lesson:"LESSON 9"},
+
+{sentence:"I WILL PROBABLY NEVER BE ABLE TO STOP SMOKING BUT I CAN AT LEAST TRY TO <span class='highlight'>SMOKE LESS</span> (3,4)",answer:["CUT DOWN"],lesson:"LESSON 9"},
+
+{sentence:"I FORGOT TO SET THE ALARM LAST NIGHT SO I DIDN'T ____________ AT THE USUAL TIME (4,2)",answer:["WAKE UP"],lesson:"LESSON 9"},
+
+{sentence:"UNA VOLTA, NON ERA COSÌ = IT DIDN'T ____________ LIKE THAT (3,2,2)",answer:["USE TO BE"],lesson:"LESSON 9"},
+
+{sentence:"CAN I SPEAK TO THE PERSON <span class='highlight'>WHO IS RESPONSIBLE FOR</span> DELIVERIES, PLEASE? (2,6,2)",answer:["IN CHARGE OF"],lesson:"LESSON 9"},
+
+{sentence:"DIVERTITI! = HAVE __________! (1,4,4)",answer:["A GOOD TIME"],lesson:"LESSON 9"},
+
+{sentence:"SHE WAS SO HUNGRY THAT SHE FINISHED HER PIZZA (2,2,4) _____________",answer:["IN NO TIME"],lesson:"LESSON 9"},
+
+{sentence:"JOE HAS NEVER BEEN ABLE TO ADJUST TO WORKING THE NIGHT-SHIFT (3,4,2)",answer:["GET USED TO"],lesson:"LESSON 9"},
+
+{sentence:"________________ PEOPLE LEFT THE BEACH WHEN IT STARTED RAINING (5,1,3)",answer:["QUITE A FEW"],lesson:"LESSON 9"},
+
+{sentence:"PROVE SCHIACCIANTI = ____________ EVIDENCE (12)",answer:["OVERWHELMING"],lesson:"LESSON 9"},
+
+{sentence:"LE PRIME LUCI DELL'ALBA = THE __________ OF DAWN (5)",answer:["CRACK"],lesson:"LESSON 9"},
+
+{sentence:"THE HEAD OF HUMAN RESOURCES IS USUALLY RESPONSIBLE FOR THE _______________ OF NEW PERSONNEL (11)",answer:["RECRUITMENT"],lesson:"LESSON 9"},
+
+{sentence:"UNFORTUNATELY, HE FELL ASLEEP ON THE TRAIN AND NEVER _______________ AGAIN. HOW SAD! (4,2)",answer:["WOKE UP"],lesson:"LESSON 9"},
+
+{sentence:"NON È DA LEI (2,2,6,3)",answer:["IT IS UNLIKE HER"],lesson:"LESSON 9"},
+
+{sentence:"(ON THE PHONE) <span class='highlight'>SONO IO</span> (8)",answer:["SPEAKING"],lesson:"LESSON 9"},
+
+{sentence:"MI SONO RESO RIDICOLO (1,4,1,4,2,6)",answer:["I MADE A FOOL OF MYSELF"],lesson:"LESSON 9"},
+
+{sentence:"INGENUO (5)",answer:["NAIVE"],lesson:"LESSON 9"}
+
+],
+
+lesson10:[
+
+{sentence:"I ALWAYS ________________ THAT I LOCK THE DOOR OF MY HOUSE WHEN I LEAVE HOME IN THE MORNING (4,4)",answer:["MAKE SURE"],lesson:"LESSON 10"},
+
+{sentence:"IF WE TRAVEL BY NIGHT AND IF THE WEATHER REMAINS GOOD, WE WILL CERTAINLY _______________ TIME (4,4)",answer:["MAKE GOOD"],lesson:"LESSON 10"},
+
+{sentence:"I CAN REPEAT ALL OF IT WITHOUT <span class='highlight'>REFERRING TO THE BOOK</span> (2,5)",answer:["BY HEART"],lesson:"LESSON 10"},
+
+{sentence:"PYGMIES _____________ NEW GUINEA (4,4)",answer:["COME FROM"],lesson:"LESSON 10"},
+
+{sentence:"THE QUALITY OF YOUR WORK IS <span class='highlight'>OF AN EXCELLENT LEVEL</span> (5-4)",answer:["FIRST-RATE"],lesson:"LESSON 10"},
+
+{sentence:"CI PENSO IO = I'LL __________ IT (3,2)",answer:["SEE TO"],lesson:"LESSON 10"},
+
+{sentence:"<span class='highlight'>OCCASIONALLY</span>, I NEED TO SEE MY DENTIST (3,3,4)",answer:["NOW AND THEN"],lesson:"LESSON 10"},
+
+{sentence:"I GO THERE ONE DAY, YES, AND ONE DAY, NO (5,5,3)",answer:["EVERY OTHER DAY"],lesson:"LESSON 10"},
+
+{sentence:"IT WAS SO DARK THAT IT WAS ALMOST IMPOSSIBLE TO <span class='highlight'>UNDERSTAND CLEARLY</span> WHO WAS ARRIVING (4,3)",answer:["MAKE OUT"],lesson:"LESSON 10"},
+
+{sentence:"MI CONFONDO = I _____________ UP (3,5)",answer:["GET MIXED"],lesson:"LESSON 10"},
+
+{sentence:"THE MANAGER ASKED ME TO ________________ AT ALL COSTS THAT I DIDN'T ARRIVE LATE AT WORK AS WE HAD AN IMPORTANT MEETING (4,7)",answer:["MAKE CERTAIN"],lesson:"LESSON 10"},
+
+{sentence:"I'VE GOT A GOOD IDEA FOR THIS WEEKEND. WHY DON'T WE _________________ ALL THE THINGS WE NO LONGER NEED? (3,3,2)",answer:["GET RID OF"],lesson:"LESSON 10"},
+
+{sentence:"UNFORTUNATELY, THE CURTAINS NO LONGER _________________ THE NEW COLOUR SCHEME IN THE BEDROOM (2,4)",answer:["GO WITH"],lesson:"LESSON 10"},
+
+{sentence:"_________________, I FIND THE TIME TO GO TO THE CINEMA. I'D LIKE TO GO MORE OFTEN (3,3,5)",answer:["NOW AND AGAIN"],lesson:"LESSON 10"},
+
+{sentence:"ALL ENGLISH WORDS ENDING IN -OLOGY ________________ GREEK (4,4)",answer:["COME FROM"],lesson:"LESSON 10"},
+
+{sentence:"BECAUSE I WAS GIVEN TOO MUCH INFORMATION AT THE SAME TIME, I GOT <span class='highlight'>CONFUSED</span> (5,2)",answer:["MIXED UP"],lesson:"LESSON 10"},
+
+{sentence:"ALTHOUGH IT WAS VERY FOGGY, WE COULD JUST _________________ THE CAR IN FRONT OF US (4,3)",answer:["MAKE OUT"],lesson:"LESSON 10"},
+
+{sentence:"ACTORS HAVE TO LEARN THEIR LINES _________________ BEFORE PERFORMING ON STAGE (2,5)",answer:["BY HEART"],lesson:"LESSON 10"},
+
+{sentence:"LE SPINE SONO STATE <span class='highlight'>STACCATE</span> (6)",answer:["PULLED"],lesson:"LESSON 10"},
+
+{sentence:"ABBIAMO FATTO DUE CHIACCHIERE = WE __________ (7)",answer:["CHATTED"],lesson:"LESSON 10"},
+
+{sentence:"CI PENSO IO! (5,2,2,2)",answer:["LEAVE IT TO ME"],lesson:"LESSON 10"},
+
+{sentence:"SICURAMENTE! (10)",answer:["DEFINITELY"],lesson:"LESSON 10"},
+
+{sentence:"IN COLLINA (2,3,5)",answer:["IN THE HILLS"],lesson:"LESSON 10"}
+
+],
+
+lesson11:[
+
+{sentence:"I CAN'T <span class='highlight'>SEE ANY DEFECTS</span> WITH IT (4,5)",answer:["FIND FAULT"],lesson:"LESSON 11"},
+
+{sentence:"I DIDN'T GO NEAR IT! = I ___________ FROM IT (4,4)",answer:["KEPT AWAY"],lesson:"LESSON 11"},
+
+{sentence:"I FELT <span class='highlight'>UNCOMFORTABLE</span> WHEN I WAS NOT WEARING MY MASK IN CROWDED PLACES (3,2,4)",answer:["ILL AT EASE"],lesson:"LESSON 11"},
+
+{sentence:"<span class='highlight'>IT'S YOUR DECISION</span> (2,2,3)",answer:["UP TO YOU"],lesson:"LESSON 11"},
+
+{sentence:"I WILL TRY TO INFORM MYSELF OF WHAT THE PROBLEM IS = I WILL __________ THE PROBLEM (4,4)",answer:["LOOK INTO"],lesson:"LESSON 11"},
+
+{sentence:"I PROMISE I WILL <span class='highlight'>COMPENSATE</span> FOR MY MISTAKES (4,2)",answer:["MAKE UP"],lesson:"LESSON 11"},
+
+{sentence:"I WAS SO IMMERSED IN MY WORK THAT I LOST ALL __________ TIME (5,2)",answer:["TRACK OF"],lesson:"LESSON 11"},
+
+{sentence:"I GOT <span class='highlight'>EXCITED</span> BY ALL THE GOOD NEWS! (7,4)",answer:["CARRIED AWAY"],lesson:"LESSON 11"},
+
+{sentence:"THERE ARE APPS NOWADAYS WHICH ALLOW YOU TO _______________ OF YOUR CHILDREN'S MOVEMENTS (4,5)",answer:["KEEP TRACK"],lesson:"LESSON 11"},
+
+{sentence:"IT WOULD PROBABLY BE BETTER IF YOU __________________ MY NEIGHBOUR'S DOGS; THEY ARE NOT VERY FRIENDLY! (6,4,4)",answer:["STAYED AWAY FROM"],lesson:"LESSON 11"},
+
+{sentence:"LAURA'S NEW WORK COLLEAGUES ARE VERY FRIENDLY AND HAVE MADE HER FEEL TOTALLY ____________ RIGHT FROM THE FIRST DAY (2,4)",answer:["AT EASE"],lesson:"LESSON 11"},
+
+{sentence:"THE POLICE SAID THAT IT WAS UNLIKELY THEY WOULD FIND THE BURGLAR BUT THAT THEY WOULD _____________ THE MATTER ANYWAY (4,4)",answer:["LOOK INTO"],lesson:"LESSON 11"},
+
+{sentence:"I GOT ____________________ BY EMOTION WHEN MY FRIENDS ORGANISED A SURPRISE BIRTHDAY PARTY FOR ME (7,4)",answer:["CARRIED AWAY"],lesson:"LESSON 11"},
+
+{sentence:"________ 2025 _________, NEW LAWS WILL BE INTRODUCED TO GOVERN THE USE OF SCOOTERS ON THE ROADS (4,2)",answer:["FROM ON"],lesson:"LESSON 11"},
+
+{sentence:"I HAVEN'T SEEN JACKIE FOR A LONG TIME. I WONDER WHAT SHE IS __________? (2,2)",answer:["UP TO"],lesson:"LESSON 11"},
+
+{sentence:"WHAT WE SAVE BY TRAVELLING THERE BY TRAIN SHOULD ___________________ WHAT WE ARE SPENDING ON THE HOTEL (4,2,3)",answer:["MAKE UP FOR"],lesson:"LESSON 11"},
+
+{sentence:"I DON'T THINK I ______________ TO GIVING A PRESENTATION. CAN'T SOMEONE ELSE DO IT? (2,2)",answer:["AM UP"],lesson:"LESSON 11"},
+
+{sentence:"MY NEW SMARTPHONE IS FIRST-RATE. I SIMPLY CAN'T __________________ IT! (4,5,4)",answer:["FIND FAULT WITH"],lesson:"LESSON 11"},
+
+{sentence:"NON HO VOGLIA (1,2,3,2,3,4)",answer:["I AM NOT IN THE MOOD"],lesson:"LESSON 11"},
+
+{sentence:"UNA NOIA TOTALE! (1,4,4)",answer:["A REAL BORE"],lesson:"LESSON 11"},
+
+{sentence:"PORTAVOCE (12)",answer:["SPOKESPERSON"],lesson:"LESSON 11"},
+
+{sentence:"PIEDI PER TERRA! (4,2,3,6)",answer:["FEET ON THE GROUND"],lesson:"LESSON 11"},
+
+{sentence:"IT IS <span class='highlight'>EXTREMELY SLOW</span>! (8)",answer:["SLUGGISH"],lesson:"LESSON 11"},
+
+{sentence:"BISOGNA <span class='highlight'>RIAVVIARE</span> IL COMPUTER? (6)",answer:["REBOOT"],lesson:"LESSON 11"},
+
+{sentence:"BESIDES MEANING SFIDA IN ITALIAN, THE WORD <span class='highlight'>CHALLENGE</span> ALSO MEANS __________ IN ITALIAN (7)",answer:["IMPEGNO"],lesson:"LESSON 11"}
+
+],
+
+lesson12:[
+
+{sentence:"<span class='highlight'>AS FAR AS I AM CONCERNED</span>, IT IS PERFECT! (2,3,2)",answer:["AS FOR ME"],lesson:"LESSON 12"},
+
+{sentence:"PEOPLE CAN ___________ THEMSELVES ________ IF THEY GET STRESSED AND WORK TOO HARD (4,3)",answer:["BURN OUT"],lesson:"LESSON 12"},
+
+{sentence:"I KNOW I SHOULDN'T SPEAK BUT SOMETIMES I CAN'T __________ SAYING WHAT I THINK. IT'S UNAVOIDABLE (4)",answer:["HELP"],lesson:"LESSON 12"},
+
+{sentence:"YOUR TYRE IS FLAT; YOU NEED TO _______ IT _____ (4,2)",answer:["BLOW UP"],lesson:"LESSON 12"},
+
+{sentence:"YOU SAY IT IS LOGICAL BUT, PERSONALLY, I DON'T THINK IT ___________ REASON (6,2)",answer:["STANDS TO"],lesson:"LESSON 12"},
+
+{sentence:"THE NUMBER 150 CONTAINS THREE ___________ (7)",answer:["FIGURES"],lesson:"LESSON 12"},
+
+{sentence:"YOUR PASSPORT IS NOT VALID; IT IS _____________ (3,2,4)",answer:["OUT OF DATE"],lesson:"LESSON 12"},
+
+{sentence:"FIGHTING _____________ IN THE STREETS BETWEEN RIVAL GANGS (5,3)",answer:["BROKE OUT"],lesson:"LESSON 12"},
+
+{sentence:"NOW AND AGAIN = ONCE ____________ (2,1,5)",answer:["IN A WHILE"],lesson:"LESSON 12"},
+
+{sentence:"IT <span class='highlight'>IS LOGICAL</span> THAT YOU WILL GET DEHYDRATED IF YOU DON'T DRINK ENOUGH (6,2,6)",answer:["STANDS TO REASON"],lesson:"LESSON 12"},
+
+{sentence:"THE FOOTBALL SEEMED A LITTLE SOFT SO WE BORROWED A PUMP AND _________ IT _________ (4,2)",answer:["BLEW UP"],lesson:"LESSON 12"},
+
+{sentence:"WHEN I'M AWAY WORKING IN A FOREIGN COUNTRY, I DO MY BEST TO KEEP ______________ WITH THE NEWS FROM MY COUNTRY (2,2,4)",answer:["UP TO DATE"],lesson:"LESSON 12"},
+
+{sentence:"A GREAT PHOTO BUT ALL OUR FRAMES ARE TOO LARGE. WE'LL NEED TO HAVE IT _______________ (5,2)",answer:["BLOWN UP"],lesson:"LESSON 12"},
+
+{sentence:"I _________ REALLY ___________ JANE AND TOM BECAUSE THE THIEVES STOLE EVERYTHING OF VALUE IN THEIR HOUSE (4,5,3)",answer:["FEEL SORRY FOR"],lesson:"LESSON 12"},
+
+{sentence:"THE FIREMEN SAID THEY CAN DO NOTHING ABOUT THE FIRE; WE'LL HAVE TO WAIT UNTIL IT __________ ITSELF ________ (5,3)",answer:["BURNS OUT"],lesson:"LESSON 12"},
+
+{sentence:"WARS ARE ALWAYS ______________________ SOMEWHERE IN THE WORLD (8,3)",answer:["BREAKING OUT"],lesson:"LESSON 12"},
+
+{sentence:"HO <span class='highlight'>UNA GOMMA A TERRA</span> (4,4)",answer:["FLAT TYRE"],lesson:"LESSON 12"},
+
+{sentence:"<span class='highlight'>DISINNESCARE</span> UNA BOMBA (6)",answer:["DEFUSE"],lesson:"LESSON 12"},
+
+{sentence:"THIS ITEM OF CLOTHING WAS POPULAR IN THE 1970S (6,8)",answer:["FLARED TROUSERS"],lesson:"LESSON 12"},
+
+{sentence:"IL RITMO DELLA VITA (4)",answer:["PACE"],lesson:"LESSON 12"},
+
+{sentence:"HAI <span class='highlight'>RAGIONE</span>! (1,5)",answer:["A POINT"],lesson:"LESSON 12"},
+
+{sentence:"<span class='highlight'>NON SI PUÒ NEGARE</span> (5,2,2,7)",answer:["THERE IS NO DENYING"],lesson:"LESSON 12"}
+
+],
+
+ifwhen:[
+
+{sentence:"WHEN SOMETHING BECOMES A HABIT, YOU ARE __________________ TO IT (4)",answer:["USED"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU CANCEL AN APPOINTMENT, YOU CALL IT _________ (3)",answer:["OFF"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU RETURN A PHONE CALL, YOU CALL SOMEONE ________ (4)",answer:["BACK"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU GET VERY EXCITED, YOU GET ___________________ (7,4)",answer:["CARRIED AWAY"],lesson:"IF/WHEN"},
+
+{sentence:"IF YOU ARE THE BOSS, YOU ARE _________________ (2,6)",answer:["IN CHARGE"],lesson:"IF/WHEN"},
+
+{sentence:"IF YOU THINK YOU ARE CAPABLE OF DOING SOMETHING, YOU FEEL YOU ARE ____________ IT (2,2)",answer:["UP TO"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN SOMETHING ENDS, IT IS ___________ (4)",answer:["OVER"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU ARE OUT OF BED, YOU ARE ________ (2)",answer:["UP"],lesson:"IF/WHEN"},
+
+{sentence:"IF YOU HAVE A GOOD RAPPORT WITH SOMEONE, YOU GET _____________ THEM (2,4)",answer:["ON WITH"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU BECOME CONFUSED, YOU GET _____________ (5,2)",answer:["MIXED UP"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU RECOVER FROM AN ILLNESS, YOU GET ____________ IT (4)",answer:["OVER"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU THROW SOMETHING AWAY, YOU GET _____________ IT (3,2)",answer:["RID OF"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU CONTINUE DOING SOMETHING, YOU GET _______________ IT (2,4)",answer:["ON WITH"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU NEED TO LEAVE, YOU GET ______________ (5)",answer:["GOING"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU WANT TO CONTACT SOMEONE, YOU GET _________________ THEM (2,5,4)",answer:["IN TOUCH WITH"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU HAVE THE OPPORTUNITY TO DO SOMETHING, YOU GET ________ IT (2,2)",answer:["TO DO"],lesson:"IF/WHEN"},
+
+{sentence:"IF YOU ADMIRE SOMEONE, YOU LOOK ______________ THEM (2,2)",answer:["UP TO"],lesson:"IF/WHEN"},
+
+{sentence:"IF YOU WANT TO FIND THE MEANING OF A WORD, YOU LOOK IT _________ IN A DICTIONARY (2)",answer:["UP"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU REVIEW SOMETHING, YOU LOOK IT __________ (4)",answer:["OVER"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU LOSE SOMETHING, YOU LOOK _________ IT (3)",answer:["FOR"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU OBSERVE SOMETHING, YOU LOOK _______ IT (2)",answer:["AT"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU ARE CAREFUL, YOU ARE LOOKING _______ FOR POSSIBLE DANGER (3)",answer:["OUT"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU CHECK SOMETHING, YOU MAKE __________ IT IS CORRECT (VARIOUS ANSWERS)",answer:["SURE","CERTAIN"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU ARRIVE EARLY, YOU HAVE MADE ___________ (4,4)",answer:["GOOD TIME"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU MAKE A DECISION, YOU HAVE MADE ____________ (2,4,4)",answer:["UP YOUR MIND"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN SOMETHING IS DIFFICULT TO SEE OR HEAR, YOU CAN'T MAKE IT __________ (3)",answer:["OUT"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU RESOLVE DIFFERENCES, YOU MAKE ________ (2)",answer:["UP"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN SOMETHING CAN CHANGE A SITUATION, IT MAKES __________ (1,10)",answer:["A DIFFERENCE"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU COMPENSATE FOR AN ERROR, YOU MAKE __________ IT (2,3)",answer:["UP FOR"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU GO TO BED, YOU TAKE __________ YOUR CLOTHES (3)",answer:["OFF"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU DO SOMETHING WITHOUT HURRYING, YOU ARE TAKING ___________ (4,4)",answer:["YOUR TIME"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU PARTICIPATE, YOU TAKE _______ IT (4,2)",answer:["PART IN"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU DON'T GO TO WORK, YOU TAKE TWO DAYS _________ (3)",answer:["OFF"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN AN EVENT IS HELD, IT IS TAKING __________ (5)",answer:["PLACE"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU ALTERNATE RESPONSIBILITY, YOU TAKE __________ DOING IT (5)",answer:["TURNS"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN SOMETHING FALLS, YOU PICK IT _______ (2)",answer:["UP"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU TIDY A ROOM, YOU PUT THINGS _________ (4)",answer:["AWAY"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU DELAY DOING SOMETHING, YOU PUT IT _____ (3)",answer:["OFF"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU BECOME AWARE OF SOMETHING, YOU WAKE __________ IT (2,2)",answer:["UP TO"],lesson:"IF/WHEN"},
+
+{sentence:"WHEN YOU REFLECT ON SOMETHING, YOU THINK IT __________ (4)",answer:["OVER"],lesson:"IF/WHEN"}
+
+]
+
+};
+
+
+let quiz=[],index=0,score=0,attempts=0,retryMode=false,selectedSet=null,soundOn=true;
+
+/* SOUND */
+
+document.getElementById("soundToggle").onclick=function(){
+soundOn=!soundOn;
+this.innerText=soundOn?"🔊 ON":"🔇 OFF";
+};
+
+function playSound(id){
+if(!soundOn)return;
+let a=document.getElementById(id);
+a.currentTime=0;
+a.play();
+}
+
+/* CLEAN INPUT */
+
+function clean(t){
+return t.trim().replace(/\s+/g," ").toUpperCase();
+}
+
+/* POPUP */
+
+function openStartPopup(setName, event){
+
+document.querySelectorAll('.set-btn').forEach(btn=>btn.classList.remove('active'));
+
+if(event){
+event.currentTarget.classList.add('active');
+}
+
+selectedSet = setName;
+
+/* BUILD COMBINED SET */
+let combined = [];
+
+if(Array.isArray(setName)){
+setName.forEach(name=>{
+if(sets[name]){
+combined = combined.concat(sets[name]);
+}
+});
+}else{
+combined = sets[setName] || [];
+}
+
+let total = combined.length;
+
+/* SET QUIZ SIZE */
+window.quizSize = Array.isArray(setName)
+? (setName.length === 12 ? 20 : 15)
+: 10;
+
+/* POPUP TEXT */
+
+document.getElementById("popupText").innerHTML =
+`THIS LESSON CONTAINS A TOTAL OF 
+<span class="highlight">${total} QUESTIONS</span>,<br><br>
+OF WHICH <span class="highlight">${window.quizSize}</span> ARE SELECTED RANDOMLY.`;
+
+/* SHOW POPUP */
+document.getElementById("startPopup").style.display = "flex";
+document.body.style.overflow = "hidden";   // ADD THIS
+
+/* STORE TEMP */
+window.tempQuiz = combined;
+}
+
+/* SHOW */
+
+function showQuestion(){
+attempts=0;
+retryMode=false;
+
+let q=quiz[index];
+
+document.getElementById("card").innerHTML=`
+<div class="lesson-tag">${q.lesson}</div>
+<div class="sentence">${q.sentence}</div>
+`;
+
+document.getElementById("progress").innerText=`${index+1} / ${quiz.length}`;
+document.getElementById("score").innerText=`${score} / ${quiz.length}`;
+
+document.getElementById("answerInput").value="";
+document.getElementById("answerInput").disabled=false;
+
+document.getElementById("feedback").innerText="";
+document.getElementById("checkBtn").disabled=false;
+document.getElementById("checkBtn").innerText="CHECK";
+document.getElementById("nextBtn").disabled=true;
+}
+
+function restartQuiz(){
+quiz = [...(window.tempQuiz || [])]
+.sort(()=>Math.random()-0.5)
+.slice(0, window.quizSize || 10);
+
+index=0;
+score=0;
+
+showQuestion();
+}
+
+
+/* CHECK */
+
+function checkAnswer(){
+
+let q = quiz[index];
+let input = document.getElementById("answerInput");
+
+if(retryMode){
+input.value="";
+retryMode=false;
+document.getElementById("checkBtn").innerText="CHECK";
+document.getElementById("feedback").innerText="";
+return;
+}
+
+let user = clean(input.value);
+if(!user) return;
+
+let correct = q.answer.some(a => clean(a) === user);
+
+if(correct){
+
+playSound("correctSound");
+
+score++;
+input.disabled=true;
+
+document.getElementById("score").innerText=`${score} / ${quiz.length}`;
+
+document.getElementById("checkBtn").disabled=true;
+document.getElementById("nextBtn").disabled=true;
+
+document.getElementById("correctPopup").style.display="flex";
+
+
+}else{
+
+attempts++;
+playSound("wrongSound");
+
+if(attempts===1){
+document.getElementById("feedback").innerText="Wrong answer. Try again";
+document.getElementById("checkBtn").innerText="TRY AGAIN";
+retryMode=true;
+}else{
+document.getElementById("feedback").innerText="NO ATTEMPTS LEFT";
+input.disabled=true;
+document.getElementById("nextBtn").disabled=false;
+}
+
+}
+}
+
+/* EVENTS */
+
+window.addEventListener("DOMContentLoaded", function(){
+
+document.getElementById("checkBtn").onclick = checkAnswer;
+
+document.getElementById("answerInput").addEventListener("keydown", e=>{
+if(e.key==="Enter") checkAnswer();
+});
+
+document.getElementById("nextBtn").onclick=function(){
+if(index<quiz.length-1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+};
+
+document.getElementById("skipBtn").onclick=function(){
+if(index<quiz.length-1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+};
+
+});
+
+
+/* START QUIZ */
+
+function startQuiz(){
+
+document.getElementById("startPopup").style.display="none";
+document.body.style.overflow = "auto";   // ADD THIS
+
+quiz = [...(window.tempQuiz || [])]
+.sort(()=>Math.random()-0.5)
+.slice(0, window.quizSize || 10);
+
+index=0;
+score=0;
+
+showQuestion();
+}
+
+function closeStartPopup(){
+document.getElementById("startPopup").style.display = "none";
+
+/* OPTIONAL: remove active state if user cancels */
+document.querySelectorAll('.set-btn').forEach(btn=>btn.classList.remove('active'));
+}
+
+
+/* NEXT FROM POPUP */
+
+function nextFromPopup(){
+
+document.getElementById("correctPopup").style.display="none";
+
+if(index<quiz.length-1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+
+}
+
+/* END QUIZ */
+
+function endQuiz(){
+
+let passMark=Math.ceil(quiz.length*0.7);
+
+if(score>=passMark){
+playSound("passSound");
+}else{
+playSound("failSound");
+}
+
+let message = score>=passMark
+? "WELL DONE! YOU'VE PASSED! 🎉"
+: "BAD LUCK! ❌";
+
+let button = `
+<div style="margin-top:14px;display:flex;justify-content:center;">
+<button onclick="restartQuiz()" style="
+background:#8C0327;
+color:#ffffff;
+font-weight:900;
+padding:8px 16px;
+border-radius:10px;
+">
+TRY AGAIN
+</button>
+</div>`;
+
+
+
+document.getElementById("card").innerHTML=`
+<div style="font-weight:900;color:#561386;text-align:center;">
+${message}
+${button}
+</div>
+`;
+}
+
+</script>
+
+</body>
+</html>
