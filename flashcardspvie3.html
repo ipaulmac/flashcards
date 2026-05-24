@@ -51,17 +51,13 @@ body{
 
 .it-text{ color:var(--front-purple); }
 .en-text{ color:var(--en-blue); }
-
-
 .listen-btn{
   background:none;
   border:none;
   color:var(--it-red);
   font-weight:700;
-  font-size:.78rem;
-  letter-spacing:.02em;
+  font-size:.9rem;
 }
-
 .nav-btn{
   font-size:1.4rem;
   font-weight:700;
@@ -135,7 +131,7 @@ STAGE THREE
         <div id="back-text" class="en-text"></div>
       </div>
       <div class="flex justify-center pb-2">
-        <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+        <button id="speakBtn" class="listen-btn">🔊 LISTEN</button>
       </div>
     </div>
   </div>
@@ -157,7 +153,7 @@ STAGE THREE
 <div class="set-grid mt-2">
 <button class="set-btn" onclick="loadSet('pvie3.1')">LESSON 25</button>
 <button class="set-btn" onclick="loadSet('pvie3.2')">LESSON 26</button>
-<button class="set-btn inactive-btn">LESSON 27</button>
+<button class="set-btn" onclick="loadSet('pvie3.3')">LESSON 27</button>
 <button class="set-btn inactive-btn">LESSON 28</button>
 <button class="set-btn inactive-btn">LESSON 29</button>
 <button class="set-btn inactive-btn">LESSON 30</button>
@@ -277,8 +273,57 @@ const sets = {
   {"front":"voci / indiscrezioni", "back":"rumours"},
   {"front":"fidato / di fiducia", "back":"trusty"},
   {"front":"un tratto di nebbia", "back":"a patch of fog"}
+],
+
+"pvie3.3": [
+
+  {"front":"tirarsi indietro", "back":"back out"},
+  {"front":"essere nell’aria", "back":"be on the cards"},
+  {"front":"rovinarsi le possibilità", "back":"blow one’s chances"},
+  {"front":"procurarsi", "back":"get hold of"},
+  {"front":"riuscire a contattare", "back":"get hold of"},
+  {"front":"prendere il sopravvento su", "back":"get the better of"},
+  {"front":"portare a termine", "back":"go through with"},
+  {"front":"calma!", "back":"hold your horses!"},
+  {"front":"mangiarsi le mani", "back":"kick oneself"},
+  {"front":"trasferirsi", "back":"move in"},
+  {"front":"lasciare casa", "back":"move out"},
+  {"front":"testa a testa", "back":"neck and neck"},
+  {"front":"riprendersi", "back":"pull through"},
+  {"front":"tirare troppo la corda", "back":"push one’s luck"},
+  {"front":"prenderla male", "back":"take something the wrong way"},
+  {"front":"peggio per lui", "back":"that’s his loss"},
+  {"front":"impossibile da prevedere", "back":"too close to call"},
+  {"front":"sul filo del rasoio", "back":"touch and go"},
+  {"front":"sorpresa clamorosa / colpo di scena", "back":"a turn-up for the books"},
+  {"front":"prendere di mira", "back":"pick on"},
+  {"front":"dare un vantaggio a qualcuno", "back":"give someone the edge"},
+  {"front":"avere la meglio", "back":"have the edge"},
+  {"front":"non ce la faccio più!", "back":"i can’t take this anymore!"},
+  {"front":"essere licenziato / perdere il lavoro", "back":"be laid off"},
+
+  {"front":"si è tirato indietro all’ultimo momento", "back":"he backed out at the last minute"},
+  {"front":"una promozione potrebbe essere nell’aria", "back":"a promotion could be on the cards"},
+  {"front":"si è giocato le sue possibilità arrivando in ritardo", "back":"he blew his chances by arriving late"},
+  {"front":"alla fine sono riuscito a contattarla", "back":"i finally got hold of her"},
+  {"front":"la paura ha preso il sopravvento su di lui", "back":"fear got the better of him"},
+  {"front":"lei ha portato a termine il piano", "back":"she went through with the plan"},
+  {"front":"calma! non siamo ancora pronti", "back":"hold your horses! we’re not ready yet"},
+  {"front":"mi mangerei le mani per averlo detto", "back":"i could kick myself for saying that"},
+  {"front":"ci trasferiamo la prossima settimana", "back":"we’re moving in next week"},
+  {"front":"hanno lasciato casa il mese scorso", "back":"they moved out last month"},
+  {"front":"le due squadre sono testa a testa", "back":"the two teams are neck and neck"},
+  {"front":"si è ripresa dopo l’operazione", "back":"she pulled through after the operation"},
+  {"front":"non tirare troppo la corda", "back":"don’t push your luck"},
+  {"front":"credo che tu l’abbia presa male", "back":"i think you took that the wrong way"},
+  {"front":"i ragazzi più grandi lo prendevano di mira", "back":"older kids used to pick on him"},
+  {"front":"l’esperienza le ha dato un vantaggio", "back":"experience gave her the edge"},
+  {"front":"la nostra squadra quest’anno parte avvantaggiata, mi sa", "back":"i reckon our team has the edge this year"},
+
+  {"front":"impappinarsi", "back":"stumbling over one’s words"},
+  {"front":"avevo il cuore a mille", "back":"my pulse was racing"},
+  {"front":"trasparire", "back":"shine through"}
 ]
- 
 };
 
 /* ================= CORE ENGINE ================= */
