@@ -283,6 +283,7 @@ color:#061247;
 .set-btn.purple{
 background:#FA73EB;
 color:#061247;
+font-size:.78rem;
 }
 
 .set-btn.cyan{
@@ -363,7 +364,7 @@ font-weight:900;
 
 <details id="instructionsBox">
   <summary style="color:#FFEB3B;font-weight:900;cursor:pointer;">
-    Instructions ▶
+    READ ME
   </summary>
 
   <div style="
@@ -395,7 +396,7 @@ font-weight:900;
 
     <div onclick="document.getElementById('instructionsBox').removeAttribute('open')"
     style="margin-top:12px;text-align:right;color:#8C0327;font-weight:900;cursor:pointer;">
-      CLOSE ▲
+      <span style="color:darkgreen;">CLOSE</span>
     </div>
 
   </div>
@@ -459,7 +460,7 @@ font-weight:900;
       font-weight:900;
       cursor:pointer;
       ">
-      CLOSE ✖
+      <span style="color:darkgreen;">CLOSE</span>
       </div>
 
       <div onclick="startQuiz()" style="
@@ -1318,9 +1319,16 @@ document.getElementById("answerInput").value="";
 document.getElementById("answerInput").disabled=false;
 
 document.getElementById("feedback").innerText="";
+
 document.getElementById("checkBtn").disabled=false;
+document.getElementById("checkBtn").style.opacity="1";
 document.getElementById("checkBtn").innerText="CHECK";
+
 document.getElementById("nextBtn").disabled=true;
+document.getElementById("nextBtn").style.opacity=".4";
+
+document.getElementById("skipBtn").disabled=false;
+document.getElementById("skipBtn").style.opacity="1";
 }
 
 function restartQuiz(){
@@ -1378,20 +1386,28 @@ playSound("wrongSound");
 
 if(attempts===1){
 document.getElementById("feedback").innerText="Wrong answer. Try again";
-document.getElementById("checkBtn").innerText="TRY AGAIN";
+document.getElementById("checkBtn").innerText="RETRY";
 retryMode=true;
 }else{
 document.getElementById("feedback").innerText="NO ATTEMPTS LEFT";
 input.disabled=true;
-document.getElementById("nextBtn").disabled=false;
-}
 
+document.getElementById("checkBtn").disabled=true;
+document.getElementById("checkBtn").style.opacity=".4";
+
+document.getElementById("skipBtn").disabled=true;
+document.getElementById("skipBtn").style.opacity=".4";
+
+document.getElementById("nextBtn").disabled=false;
+document.getElementById("nextBtn").style.opacity="1";
+}
 }
 }
 
 /* EVENTS */
 
 window.addEventListener("DOMContentLoaded", function(){
+document.getElementById("skipBtn").disabled = true;
 
 document.getElementById("checkBtn").onclick = checkAnswer;
 
@@ -1409,8 +1425,10 @@ endQuiz();
 };
 
 document.getElementById("skipBtn").onclick=function(){
-if(index<quiz.length-1){
-index++;
+
+if(!quiz.length) return;
+
+if(index<quiz.length-1){index++;
 showQuestion();
 }else{
 endQuiz();
