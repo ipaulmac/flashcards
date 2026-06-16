@@ -50,29 +50,31 @@ body{
   right:.6rem;
   font-size:.6rem;
   font-weight:800;
-  color:#061247;
+  color:#8C0327;
 }
 
+
 .it-text{
-  color:var(--it-red);
+  color:#4B0082;
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
   font-size:1.1rem;
 }
+
 .en-text{
   color:var(--en-blue);
-  font-weight:700;
+  font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:1rem;
+  font-size:1.15rem;
   white-space:pre-line;
 }
 
 .listen-btn{
   background:none;
   border:none;
-  color:var(--it-red);
+  color:var(--en-blue);
   font-weight:700;
   font-size:.9rem;
 }
@@ -202,9 +204,15 @@ const counter=document.getElementById("counter-display");
 const speakBtn=document.getElementById("speakBtn");
 
 function loadSet(n){
- currentSet=n; cards=sets[n]; index=0;
- updateCard(); highlightSet(n);
+  currentSet = n;
+  cards = [...sets[n]];
+  shuffle(cards);
+  index = 0;
+  updateCard();
+  highlightSet(n);
 }
+
+
 function highlightSet(n){
  document.querySelectorAll('.set-btn').forEach((b,i)=>b.classList.toggle('active',i+1===n));
 }
@@ -235,6 +243,14 @@ speakBtn.onclick=e=>{
  speechSynthesis.cancel();
  speechSynthesis.speak(u);
 };
+
+function shuffle(array){
+  for(let i = array.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 
 loadSet(1);
 </script>
