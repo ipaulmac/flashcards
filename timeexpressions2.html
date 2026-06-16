@@ -49,14 +49,14 @@ body{
   right:.5rem;
   font-size:.65rem;
   font-weight:800;
-  color:#0E065C;
+  color:#8C0327;
 }
 .it-text{
-  color:#8C0327;
+  color:#4B0082;
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:1.25rem;
+  font-size:1.20rem;
 }
 .en-text-main,.en-text-alt{
   color:#0E065C;
@@ -65,14 +65,17 @@ body{
   text-align:center;
   font-size:1.05rem;
 }
+
 #speakBtn{
-  background:#0E065C;
-  color:#FFD700;
-  font-weight:bold;
-  border-radius:.375rem;
-  padding:.25rem .75rem;
+  background:none;
+  border:none;
+  color:#8C0327;
+  font-weight:700;
   font-size:.9rem;
+  padding:0;
+  margin:.6rem 0;
 }
+
 .nav-buttons{
   display:flex;
   justify-content:space-between;
@@ -211,7 +214,7 @@ const MONTHS = [
 ];
 
 const YEARS = [
-  {front:"UN ANNO HA 365 O 366 GIORNI", back:"A YEAR HAS EITHER 365 OR 366 DAYS", speak:"a year has, either three hundred and sixty-five, or three hundred and sixty-six days"},
+  {front:"UN ANNO HA O 365 O 366 GIORNI", back:"A YEAR HAS EITHER 365 OR 366 DAYS", speak:"a year has, either three hundred and sixty-five, or three hundred and sixty-six days"},
   {front:"L’ANNO BISESTILE SI VERIFICA OGNI QUATTRO ANNI", back:"A LEAP YEAR HAPPENS EVERY FOUR YEARS", speak:"a leap year happens, every four years"},
   {front:"IN UN ANNO BISESTILE FEBBRAIO HA 29 GIORNI", back:"IN A LEAP YEAR, FEBRUARY HAS 29 DAYS", speak:"in a leap year, february has twenty-nine days"},
   {front:"SONO NATO NEL 1978", back:"I WAS BORN IN 1978", speak:"i was born, in nineteen seventy-eight"},
