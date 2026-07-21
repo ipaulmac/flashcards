@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Flashcards – Auxiliary Verbs N°1</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -45,7 +46,7 @@ body{
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:1rem;
+  font-size:1.15rem;
 }
 
 .it-text{ color:var(--front-purple); }
@@ -62,7 +63,7 @@ body{
 .nav-btn{
   font-size:1.4rem;
   font-weight:700;
-  color:white;
+  color:#BFDFFF;
 }
 
 .set-grid{
@@ -90,16 +91,114 @@ body{
   background:#8C0327;
   color:white;
 }
+
+.special-set{
+  background:#25C3D3;
+  color:#061247;
+  border:2px solid white;
+  box-shadow:0 0 6px rgba(255,255,255,0.4);
+  transition:all .2s ease;
+}
+
+.special-set:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 10px rgba(255,255,255,0.7);
+}
+
+
+/* ---------- READ ME ---------- */
+
+.readme-text{
+color:#FFD54A;
+font-weight:900;
+font-size:.88rem;
+cursor:pointer;
+user-select:none;
+}
+
+/* ---------- POPUP ---------- */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+z-index:99999;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+background:#fff;
+border:4px solid var(--border-red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:var(--en-blue);
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:#006400;
+cursor:pointer;
+}
+
+.back-header-btn{
+  background:#1F7A4D;
+  color:white;
+  border:2px solid white;
+  border-radius:8px;
+  padding:4px 14px;
+  font-size:.78rem;
+  font-weight:900;
+  cursor:pointer;
+  transition:.2s;
+  white-space:nowrap;
+}
+
+.back-header-btn:hover{
+  background:#FFF3A3;
+  color:darkred;
+  border-color:darkred;
+}
 </style>
 </head>
 
 <body>
 
-<h2 class="text-white text-lg font-extrabold tracking-widest text-center">
-AUX VERBS SERIES N°1
+<div class="w-full max-w-[380px] flex justify-between items-center gap-2">
+
+<button id="libraryBackBtn" class="back-header-btn">
+◀ BACK
+</button>
+
+<h2 class="text-white font-extrabold tracking-widest m-0 text-[1rem]">
+AUX VERBS PT 1 <span style="color:#FFF3A3;">(B1-)</span>
 </h2>
 
-<div class="perspective mt-4">
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+</div>
+<div class="perspective mt-2">
   <div id="flashcard" class="card-inner">
     <div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
       <div id="front-text" class="it-text"></div>
@@ -117,13 +216,13 @@ AUX VERBS SERIES N°1
 
 <div class="flex justify-between items-center w-full max-w-[380px]">
   <button onclick="prevCard(event)" class="nav-btn">◀</button>
-  <span id="counter-display" class="text-white font-bold text-sm">1 / 1</span>
+  <span id="counter-display" class="font-bold text-sm" style="color:#BFDFFF;">1 / 1</span>
   <button onclick="nextCard(event)" class="nav-btn">▶</button>
 </div>
 
 <div class="w-full max-w-[380px] flex justify-center mt-2">
   <button onclick="refreshCurrentSet()"
-          class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounded-full">
+          class="text-white flex items-center gap-3 px-3 py-1.5 border border-white rounded-full">
     <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="18" height="18">
       <path d="M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/>
     </svg>
@@ -142,8 +241,49 @@ AUX VERBS SERIES N°1
   <button class="set-btn" onclick="loadSet(8)">MIGHT</button>
   <button class="set-btn" onclick="loadSet(9)">MUST</button>
   <button class="set-btn" onclick="loadSet(10)">SHOULD</button>
-  <button class="set-btn" onclick="loadSet(11)">BE</button>
+<button class="set-btn" onclick="loadSet(11)">BE</button>
+<button class="set-btn special-set" onclick="loadSet('TEST')">TEST</button>
 </div>
+
+
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+WELCOME TO <span style="color:var(--it-red);">AUXILIARY VERBS FLASHCARDS</span> PART 1
+
+<br><br>
+
+HERE, YOU WILL FIND OVER <span style="color:var(--it-red);">450 EXAMPLES</span> PRACTISING THESE FUNDAMENTAL AUXILIARY VERBS
+
+<br><br>
+
+EACH SET CONTAINS BETWEEN <span style="color:var(--it-red);">50 – 60 ENTRIES</span>, OF WHICH ONLY <span style="color:var(--it-red);">15</span> ARE SELECTED RANDOMLY AT A TIME
+
+<br><br>
+
+THE <span style="color:var(--it-red);">TEST BUTTON</span> CONTAINS THE CONTENTS OF <span style="color:var(--it-red);">ALL 11 SETS</span>. THIS TIME, <span style="color:var(--it-red);">20</span> ARE SELECTED RANDOMLY
+
+<br><br>
+
+TAP THE <span style="color:var(--it-red);">REFRESH BUTTON</span> AT ANY TIME TO <span style="color:var(--it-red);">SHUFFLE</span> (MISCHIARE) THE CARDS
+
+</div>
+<div id="closePopup" class="popup-close-text">
+CLOSE
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
 <script>
 
 const sets = {
@@ -681,21 +821,47 @@ function pickRandom15(arr){
 
 /* ---------- LOAD SET ---------- */
 function loadSet(n){
+
   currentSet = n;
 
-  if(!sets || !sets[n]) return;
+  /* ---------- TEST MODE ---------- */
 
-  fullSet = sets[n].filter(Boolean);
-  cards   = pickRandom15(fullSet);
+  if(n === "TEST"){
+
+    fullSet = [];
+
+    Object.values(sets).forEach(set=>{
+      fullSet.push(...set.filter(Boolean));
+    });
+
+  }else{
+
+    if(!sets || !sets[n]) return;
+
+    fullSet = sets[n].filter(Boolean);
+
+  }
+
+  cards = (n === "TEST")
+  ? fullSet.sort(() => Math.random() - 0.5).slice(0,20)
+  : pickRandom15(fullSet);
 
   index = 0;
   updateCard();
 
-  document.querySelectorAll('.set-btn').forEach((btn,i)=>
-    btn.classList.toggle('active', i + 1 === n)
-  );
-}
+  document.querySelectorAll('.set-btn').forEach(btn=>{
+    btn.classList.remove('active');
+  });
 
+  if(n === "TEST"){
+    document.querySelector(".special-set").classList.add("active");
+  }else{
+    document.querySelectorAll('.set-btn').forEach((btn,i)=>{
+      btn.classList.toggle('active', i + 1 === n);
+    });
+  }
+
+}
 /* ---------- REFRESH ---------- */
 function refreshCurrentSet(){
   if(!fullSet.length) return;
@@ -759,10 +925,46 @@ window.nextCard = nextCard;
 window.prevCard = prevCard;
 window.refreshCurrentSet = refreshCurrentSet;
 
+
+/* ---------- BACK BUTTON ---------- */
+
+const BACK_BUTTON_URL = "https://www.acceleratedlanguagesystems.com/virtual-classroom-booster";
+
+document.getElementById("libraryBackBtn").onclick = function(){
+
+    window.location.href = BACK_BUTTON_URL;
+
+};
+
+
+
+/* ---------- READ ME POPUP ---------- */
+
+document.getElementById("readMeBtn").onclick = function(){
+
+document.getElementById("popupOverlay").style.display = "flex";
+
+};
+
+document.getElementById("closePopup").onclick = function(){
+
+document.getElementById("popupOverlay").style.display = "none";
+
+};
+
+document.getElementById("popupOverlay").onclick = function(e){
+
+if(e.target === this){
+
+this.style.display = "none";
+
+}
+
+};
+
 /* ---------- INIT ---------- */
 attachSequentialIds();
 loadSet(1);
-
 });
 
 </script>
