@@ -44,7 +44,9 @@ color:#fff;
 font-weight:900;
 font-size:.9rem;
 letter-spacing:.05em;
+text-align:center;
 }
+
 
 .sound-btn{
 background:#fff;
@@ -54,6 +56,25 @@ padding:6px 10px;
 font-weight:900;
 font-size:.8rem;
 }
+
+.back-btn{
+background:#C46A1A;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+cursor:pointer;
+transition:.2s;
+}
+
+.back-btn:hover{
+background:#FFF3A3;
+color:#8C0327;
+}
+
+
 
 /* CARD */
 
@@ -331,8 +352,19 @@ font-weight:900;
 
 <!-- TOP -->
 <div class="top-bar">
-<div class="top-title">PVIE STAGE ONE</div>
-<button id="soundToggle" class="sound-btn">🔊 ON</button>
+
+<button id="libraryBackBtn" class="back-btn">
+◀ BACK
+</button>
+
+<div class="top-title">
+PVIE STAGE ONE <span style="color:#FFF3A3;">(B1+)</span>
+</div>
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
 </div>
 
 <!-- CARD -->
@@ -1107,85 +1139,85 @@ lesson12:[
 
 ifwhen:[
 
-{sentence:"WHEN SOMETHING BECOMES A HABIT, YOU ARE __________________ TO IT (4)",answer:["USED"],lesson:"IF/WHEN"},
+{sentence:"WHEN SOMETHING BECOMES A HABIT, YOU ARE __________________ TO IT",answer:["USED"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU CANCEL AN APPOINTMENT, YOU CALL IT _________ (3)",answer:["OFF"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU CANCEL AN APPOINTMENT, YOU CALL IT _________",answer:["OFF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU RETURN A PHONE CALL, YOU CALL SOMEONE ________ (4)",answer:["BACK"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU RETURN A PHONE CALL, YOU CALL SOMEONE ________",answer:["BACK"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU GET VERY EXCITED, YOU GET ___________________ (7,4)",answer:["CARRIED AWAY"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU GET VERY EXCITED, YOU GET ___________________",answer:["CARRIED AWAY"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU ARE THE BOSS, YOU ARE _________________ (2,6)",answer:["IN CHARGE"],lesson:"IF/WHEN"},
+{sentence:"IF YOU ARE THE BOSS, YOU ARE _________________",answer:["IN CHARGE"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU THINK YOU ARE CAPABLE OF DOING SOMETHING, YOU FEEL YOU ARE ____________ IT (2,2)",answer:["UP TO"],lesson:"IF/WHEN"},
+{sentence:"IF YOU THINK YOU ARE CAPABLE OF DOING SOMETHING, YOU FEEL YOU ARE ____________ IT",answer:["UP TO"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN SOMETHING ENDS, IT IS ___________ (4)",answer:["OVER"],lesson:"IF/WHEN"},
+{sentence:"WHEN SOMETHING ENDS, IT IS ___________",answer:["OVER"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU ARE OUT OF BED, YOU ARE ________ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU ARE OUT OF BED, YOU ARE ________",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU HAVE A GOOD RAPPORT WITH SOMEONE, YOU GET _____________ THEM (2,4)",answer:["ON WITH"],lesson:"IF/WHEN"},
+{sentence:"IF YOU HAVE A GOOD RAPPORT WITH SOMEONE, YOU GET _____________ THEM",answer:["ON WITH"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU BECOME CONFUSED, YOU GET _____________ (5,2)",answer:["MIXED UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU BECOME CONFUSED, YOU GET _____________",answer:["MIXED UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU RECOVER FROM AN ILLNESS, YOU GET ____________ IT (4)",answer:["OVER"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU RECOVER FROM AN ILLNESS, YOU GET ____________ IT",answer:["OVER"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU THROW SOMETHING AWAY, YOU GET _____________ IT (3,2)",answer:["RID OF"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU THROW SOMETHING AWAY, YOU GET _____________ IT",answer:["RID OF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU CONTINUE DOING SOMETHING, YOU GET _______________ IT (2,4)",answer:["ON WITH"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU CONTINUE DOING SOMETHING, YOU GET _______________ IT",answer:["ON WITH"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU NEED TO LEAVE, YOU GET ______________ (5)",answer:["GOING"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU NEED TO LEAVE, YOU GET ______________",answer:["GOING"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU WANT TO CONTACT SOMEONE, YOU GET _________________ THEM (2,5,4)",answer:["IN TOUCH WITH"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU WANT TO CONTACT SOMEONE, YOU GET _________________ THEM",answer:["IN TOUCH WITH"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU HAVE THE OPPORTUNITY TO DO SOMETHING, YOU GET ________ IT (2,2)",answer:["TO DO"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU HAVE THE OPPORTUNITY TO DO SOMETHING, YOU GET ________ IT",answer:["TO DO"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU ADMIRE SOMEONE, YOU LOOK ______________ THEM (2,2)",answer:["UP TO"],lesson:"IF/WHEN"},
+{sentence:"IF YOU ADMIRE SOMEONE, YOU LOOK ______________ THEM",answer:["UP TO"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU WANT TO FIND THE MEANING OF A WORD, YOU LOOK IT _________ IN A DICTIONARY (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"IF YOU WANT TO FIND THE MEANING OF A WORD, YOU LOOK IT _________ IN A DICTIONARY",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU REVIEW SOMETHING, YOU LOOK IT __________ (4)",answer:["OVER"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU REVIEW SOMETHING, YOU LOOK IT __________",answer:["OVER"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU LOSE SOMETHING, YOU LOOK _________ IT (3)",answer:["FOR"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU LOSE SOMETHING, YOU LOOK _________ IT",answer:["FOR"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU OBSERVE SOMETHING, YOU LOOK _______ IT (2)",answer:["AT"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU OBSERVE SOMETHING, YOU LOOK _______ IT",answer:["AT"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU ARE CAREFUL, YOU ARE LOOKING _______ FOR POSSIBLE DANGER (3)",answer:["OUT"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU ARE CAREFUL, YOU ARE LOOKING _______ FOR POSSIBLE DANGER",answer:["OUT"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU CHECK SOMETHING, YOU MAKE __________ IT IS CORRECT (VARIOUS ANSWERS)",answer:["SURE","CERTAIN"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU CHECK SOMETHING, YOU MAKE __________ IT IS CORRECT",answer:["SURE","CERTAIN"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU ARRIVE EARLY, YOU HAVE MADE ___________ (4,4)",answer:["GOOD TIME"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU ARRIVE EARLY, YOU HAVE MADE ___________",answer:["GOOD TIME"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU MAKE A DECISION, YOU HAVE MADE ____________ (2,4,4)",answer:["UP YOUR MIND"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU MAKE A DECISION, YOU HAVE MADE ____________",answer:["UP YOUR MIND"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN SOMETHING IS DIFFICULT TO SEE OR HEAR, YOU CAN'T MAKE IT __________ (3)",answer:["OUT"],lesson:"IF/WHEN"},
+{sentence:"WHEN SOMETHING IS DIFFICULT TO SEE OR HEAR, YOU CAN'T MAKE IT __________",answer:["OUT"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU RESOLVE DIFFERENCES, YOU MAKE ________ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU RESOLVE DIFFERENCES, YOU MAKE ________",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN SOMETHING CAN CHANGE A SITUATION, IT MAKES __________ (1,10)",answer:["A DIFFERENCE"],lesson:"IF/WHEN"},
+{sentence:"WHEN SOMETHING CAN CHANGE A SITUATION, IT MAKES __________",answer:["A DIFFERENCE"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU COMPENSATE FOR AN ERROR, YOU MAKE __________ IT (2,3)",answer:["UP FOR"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU COMPENSATE FOR AN ERROR, YOU MAKE __________ IT",answer:["UP FOR"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU GO TO BED, YOU TAKE __________ YOUR CLOTHES (3)",answer:["OFF"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU GO TO BED, YOU TAKE __________ YOUR CLOTHES",answer:["OFF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU DO SOMETHING WITHOUT HURRYING, YOU ARE TAKING ___________ (4,4)",answer:["YOUR TIME"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU DO SOMETHING WITHOUT HURRYING, YOU ARE TAKING ___________",answer:["YOUR TIME"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU PARTICIPATE, YOU TAKE _______ IT (4,2)",answer:["PART IN"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU PARTICIPATE, YOU TAKE _______ IT",answer:["PART IN"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU DON'T GO TO WORK, YOU TAKE TWO DAYS _________ (3)",answer:["OFF"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU DON'T GO TO WORK, YOU TAKE TWO DAYS _________",answer:["OFF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN AN EVENT IS HELD, IT IS TAKING __________ (5)",answer:["PLACE"],lesson:"IF/WHEN"},
+{sentence:"WHEN AN EVENT IS HELD, IT IS TAKING __________",answer:["PLACE"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU ALTERNATE RESPONSIBILITY, YOU TAKE __________ DOING IT (5)",answer:["TURNS"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU ALTERNATE RESPONSIBILITY, YOU TAKE __________ DOING IT",answer:["TURNS"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN SOMETHING FALLS, YOU PICK IT _______ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN SOMETHING FALLS, YOU PICK IT _______",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU TIDY A ROOM, YOU PUT THINGS _________ (4)",answer:["AWAY"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU TIDY A ROOM, YOU PUT THINGS _________",answer:["AWAY"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU DELAY DOING SOMETHING, YOU PUT IT _____ (3)",answer:["OFF"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU DELAY DOING SOMETHING, YOU PUT IT _____",answer:["OFF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU BECOME AWARE OF SOMETHING, YOU WAKE __________ IT (2,2)",answer:["UP TO"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU BECOME AWARE OF SOMETHING, YOU WAKE __________ IT",answer:["UP TO"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU REFLECT ON SOMETHING, YOU THINK IT __________ (4)",answer:["OVER"],lesson:"IF/WHEN"}
+{sentence:"WHEN YOU REFLECT ON SOMETHING, YOU THINK IT __________",answer:["OVER"],lesson:"IF/WHEN"}
 
 ]
 
@@ -1368,6 +1400,11 @@ document.getElementById("nextBtn").style.opacity="1";
 /* EVENTS */
 
 window.addEventListener("DOMContentLoaded", function(){
+
+document.getElementById("libraryBackBtn").addEventListener("click", function () {
+  window.location.href = "https://www.acceleratedlanguagesystems.com/idiomatic-expressions-booster";
+});
+
 document.getElementById("skipBtn").disabled = true;
 
 document.getElementById("checkBtn").onclick = checkAnswer;
