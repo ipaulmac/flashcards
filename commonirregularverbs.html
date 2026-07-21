@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Common Irregular Verbs</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -23,6 +24,37 @@ body{
   padding:1rem;
   gap:0rem;
 }
+
+/* TOP BAR */
+
+.top-bar{
+  width:90vw;
+  max-width:380px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:0px;
+}
+
+.top-title{
+  color:#fff;
+  font-weight:900;
+  font-size:1rem;
+  letter-spacing:.04em;
+  margin:0;
+}
+
+/* READ ME */
+
+.readme-text{
+  color:#FFD700;
+  font-weight:900;
+  font-size:.88rem;
+  cursor:pointer;
+  user-select:none;
+}
+
+
 
 /* CARD */
 .perspective{perspective:1000px;}
@@ -46,18 +78,19 @@ body{
 .back{transform:rotateY(180deg);}
 
 .it-text{
-  color:var(--it-red);
+  color:#4B0082;
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:1.1rem;
+  font-size:1.3rem;
 }
+
 .en-text{
   color:var(--en-blue);
-  font-weight:700;
+  font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:1rem;
+  font-size:1.20rem;
 }
 
 .listen-btn{
@@ -97,26 +130,170 @@ body{
   color:white;
 }
 
+.set-btn.all-btn{
+  background:#22f15a;
+  color:#061247;
+}
+
+.set-btn.all-btn.active{
+  background:#8C0327;
+  color:white;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+background:#fff;
+border:4px solid var(--border-red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:var(--en-blue);
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkgreen;
+cursor:pointer;
+user-select:none;
+}
+
+/* BACK BUTTON */
+
+.back-header-btn{
+  background:#1A4378;
+  color:white;
+  border:2px solid white;
+  border-radius:8px;
+  padding:4px 14px;
+  font-size:.78rem;
+  font-weight:900;
+  cursor:pointer;
+  transition:.2s;
+  white-space:nowrap;
+}
+
+.back-header-btn:hover{
+  background:#FFF3A3;
+  color:darkred;
+  border-color:darkred;
+}
+
+
 /* CORNER HINTS */
+
 .corner-hint{
   position:absolute;
   top:.4rem;
   right:.6rem;
   font-size:.6rem;
   font-weight:800;
-  color:#061247;
+  color:#8C0327;
 }
+
 </style>
+
+
 </head>
 
 <body>
 
-<h1 class="text-white font-extrabold text-base sm:text-lg mb-2 whitespace-nowrap">
-  COMMON IRREGULAR VERBS (X 84)
+<div class="top-bar">
+
+<button id="libraryBackBtn" class="back-header-btn">
+◀ BACK
+</button>
+
+<h1 class="top-title">
+IRREGULAR VERBS
 </h1>
 
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+</div>
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+THESE FLASHCARDS DEAL WITH COMMON
+<span style="color:darkred;">ENGLISH IRREGULAR VERBS</span>
+
+<br><br>
+
+THESE ARE VERBS YOU NEED TO
+<span style="color:darkred;">MASTER</span> (PADRONEGGIARE)
+IN ORDER TO TAKE YOUR ENGLISH TO A HIGHER LEVEL
+
+<br><br>
+
+THERE ARE
+<span style="color:darkred;">6 SETS</span>,
+ALL CONTAINING
+<span style="color:darkred;">14 VERBS</span>
+
+<br><br>
+
+THE
+<span style="color:mediumvioletred;">ALL SETS</span>
+BUTTON CONTAINS ALL
+<span style="color:darkred;">84</span>
+IRREGULAR VERBS FROM ALL THE SETS 1–6,
+FROM WHICH ONLY
+<span style="color:darkred;">12</span>
+ARE SELECTED RANDOMLY EACH TIME
+
+<br><br>
+
+PRACTICE MAKES PERFECT!
+TRY LEARNING JUST
+<span style="color:darkred;">ONE SET EVERY DAY!</span>
+
+</div>
+<div id="closePopup" class="popup-close-text">
+CLOSE
+</div>
+
+</div>
+
+</div>
+
+
+
+
 <!-- FLASHCARD -->
-<div class="perspective mt-4">
+<div class="perspective mt-3">
   <div id="flashcard" class="card-inner">
 
     <!-- FRONT -->
@@ -150,6 +327,7 @@ body{
   <button class="set-btn" onclick="loadSet(4)">SET 4</button>
   <button class="set-btn" onclick="loadSet(5)">SET 5</button>
   <button class="set-btn" onclick="loadSet(6)">SET 6</button>
+  <button class="set-btn all-btn" onclick="loadSet(7)">ALL SETS</button>
 </div>
 
 <script>
@@ -275,11 +453,35 @@ const counter   = document.getElementById("counter-display");
 const speakBtn  = document.getElementById("speakBtn");
 
 function loadSet(n){
+
   currentSet = n;
-  cards = sets[n];
+
+  if(n === 7){
+
+    cards = [
+      ...sets[1],
+      ...sets[2],
+      ...sets[3],
+      ...sets[4],
+      ...sets[5],
+      ...sets[6]
+    ];
+
+    shuffle(cards);
+
+    cards = cards.slice(0,12);
+
+  }else{
+
+    cards = [...sets[n]];
+    shuffle(cards);
+
+  }
+
   index = 0;
   updateCard();
   highlightSet(n);
+
 }
 
 function highlightSet(n){
@@ -330,6 +532,48 @@ speakBtn.addEventListener("click", (e) => {
   speechSynthesis.cancel();
   speechSynthesis.speak(utter);
 });
+
+function shuffle(array){
+  for(let i = array.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+/* READ ME POPUP */
+
+document.getElementById("readMeBtn").onclick = function(){
+
+document.getElementById("popupOverlay")
+.style.display = "flex";
+
+};
+
+document.getElementById("closePopup").onclick = function(){
+
+document.getElementById("popupOverlay")
+.style.display = "none";
+
+};
+
+document.getElementById("popupOverlay").onclick = function(e){
+
+if(e.target === this){
+
+this.style.display = "none";
+
+}
+
+};
+
+/* BACK BUTTON */
+
+document.getElementById("libraryBackBtn").onclick = function(){
+
+window.location.href = "https://www.acceleratedlanguagesystems.com/vocabulary-booster";
+
+};
+
 
 // INIT
 loadSet(1);
