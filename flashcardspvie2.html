@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PVIE2 – Lessons 13–24</title>
 <!-- update -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -42,6 +43,8 @@ body{
   text-align:center;
   font-size:1.25rem;
 }
+
+
 .it-text{ color:var(--front-purple); }
 .en-text{ color:var(--en-blue); }
 .listen-btn{
@@ -51,15 +54,20 @@ body{
   font-weight:700;
   font-size:.9rem;
 }
+
+
 .nav-btn{
   font-size:1.4rem;
   font-weight:700;
   color:white;
 }
+
+
 .set-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:.25rem;
+  row-gap:.5rem;
+  column-gap:.25rem;
   max-width:380px;
   width:100%;
 }
@@ -69,13 +77,14 @@ body{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:7px 0;
+  height:42px;
+  padding:0;
   font-size:.75rem;
   font-weight:800;
   border-radius:999px;
   background:white;
   color:#0E065C;
-  line-height:1.3;
+  line-height:1.15;
   text-align:center;
 }
 
@@ -88,6 +97,29 @@ body{
   background:#0FF268;
   color:#061247;
 }
+
+.back-btn{
+  background:#C46A1A;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:42px;
+  padding:0;
+  font-size:.75rem;
+  font-weight:800;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:.2s;
+}
+
+.back-btn:hover{
+  background:#FFF3A3;
+  color:darkred;
+}
+
 
 @media (max-width: 480px) {
   .set-btn{
@@ -106,7 +138,7 @@ body{
 <body>
 
 <h2 class="text-white text-lg font-extrabold tracking-widest text-center">
-STAGE TWO
+STAGE TWO <span style="color:#FFF3A3;">(B2)</span>
 </h2>
 
 <div class="perspective mt-4">
@@ -138,17 +170,48 @@ STAGE TWO
   </button>
 </div>
 
-<div class="set-grid mt-2">
-<button class="set-btn" onclick="loadSet('pvie2.1')">LESSONS<br>13&14</button>
-<button class="set-btn" onclick="loadSet('pvie2.2')">LESSONS<br>15&16</button>
-<button class="set-btn" onclick="loadSet('pvie2.3')">LESSONS<br>17&18</button>
-<button class="set-btn" onclick="loadSet('pvie2.4')">LESSONS<br>19&20</button>
-<button class="set-btn" onclick="loadSet('pvie2.5')">LESSONS<br>21&22</button>
-<button class="set-btn" onclick="loadSet('pvie2.6')">LESSONS<br>23&24</button>
-<button class="set-btn extras-btn" onclick="loadSet('pvie2.7')">EXTRAS</button>
-<button class="set-btn global-btn" onclick="loadGlobal()">GLOBAL<br>13–24</button>
-</div>
+<div class="set-grid">
 
+  <button class="set-btn" onclick="loadSet('pvie2.1')">
+    LESSONS<br>13&14
+  </button>
+
+  <button class="set-btn" onclick="loadSet('pvie2.2')">
+    LESSONS<br>15&16
+  </button>
+
+  <button class="set-btn" onclick="loadSet('pvie2.3')">
+    LESSONS<br>17&18
+  </button>
+
+  <button class="set-btn" onclick="loadSet('pvie2.4')">
+    LESSONS<br>19&20
+  </button>
+
+  <button class="set-btn" onclick="loadSet('pvie2.5')">
+    LESSONS<br>21&22
+  </button>
+
+  <button class="set-btn" onclick="loadSet('pvie2.6')">
+    LESSONS<br>23&24
+  </button>
+
+  <button class="set-btn extras-btn"
+          onclick="loadSet('pvie2.7')">
+    EXTRAS
+  </button>
+
+  <button class="set-btn global-btn"
+          onclick="loadGlobal()">
+    GLOBAL<br>13–24
+  </button>
+
+  <button id="libraryBackBtn"
+          class="set-btn back-btn">
+    ◀ BACK
+  </button>
+
+</div>
 <script>
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -632,11 +695,14 @@ function activateButton(folder){
   buttons[map[folder]].classList.add("active");
 }
 
+document.getElementById("libraryBackBtn").addEventListener("click", function () {
+  window.location.href = "https://www.acceleratedlanguagesystems.com/idiomatic-expressions-booster";
+});
+
 /* INITIAL LOAD */
 loadSet("pvie2.1");
 
-});   
-
+});
 </script>
 </body>
 </html>
