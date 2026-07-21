@@ -3,6 +3,7 @@
 
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>THE IMPERFECT FLOORS</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -30,8 +31,8 @@ gap:.3rem;
 .card-inner{
 width:90vw;
 max-width:380px;
-height:70vw;
-max-height:340px;
+height:64vw;
+max-height:310px;
 position:relative;
 transform-style:preserve-3d;
 transition:.4s;
@@ -62,7 +63,7 @@ cursor:pointer;
 font-weight:800;
 text-transform:uppercase;
 text-align:center;
-font-size:0.92rem;
+font-size:1.2rem;
 line-height:1.28;
 word-break:break-word;
 }
@@ -117,17 +118,148 @@ background:#00cfd5;
 color:#061247;
 font-weight:900;
 }
+
+/* TOP BAR */
+
+.top-bar{
+width:90vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:4px;
+}
+
+.top-title{
+color:white;
+font-weight:900;
+font-size:.92rem;
+letter-spacing:.08em;
+}
+
+.readme-text{
+color:#FFD700;
+font-weight:900;
+font-size:.92rem;
+letter-spacing:.03em;
+cursor:pointer;
+user-select:none;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+max-height:80vh;
+overflow-y:auto;
+background:#fff;
+border:4px solid #8C0327;
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkgreen;
+cursor:pointer;
+user-select:none;
+}
+.library-back-btn{
+  width:100%;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.75rem;
+  font-weight:800;
+  text-transform:uppercase;
+  border-radius:999px;
+  background:#1F7A4D;
+  color:white;
+  border:2px solid white;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.library-back-btn:hover{
+  background:#FFF3A3;
+  color:darkred;
+  border-color:darkred;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<h2 class="text-white text-lg font-extrabold tracking-widest text-center">
-THE IMPERFECT FLOORS
-</h2>
+<div class="top-bar">
 
-<div class="perspective mt-4">
+<div class="top-title">
+THE IMPERFECT FLOORS <span style="color:#FFF3A3;">(B2-)</span>
+</div>
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+</div>
+
+
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+EACH <span style="color:darkred;">FLOOR</span> HAS <span style="color:darkred;">30–40</span> EXAMPLES BUT ONLY <span style="color:darkred;">10</span> SHOW EACH TIME<br><br>
+
+YOU CAN REFRESH THE CARDS AT ANY MOMENT<br><br>
+
+<span style="color:darkgreen;">TEST</span> = ALL <span style="color:darkred;">FLOORS</span> MIXED TOGETHER OF WHICH <span style="color:darkred;">30</span> ARE SELECTED RANDOMLY FROM A TOTAL OF <span style="color:darkred;">330</span><br><br>
+
+FIRST READ → DECIDE WHICH <span style="color:darkred;">FLOOR</span> → FLIP TO CHECK
+</div>
+
+<div id="closePopup" class="popup-close-text">
+START →
+</div>
+
+</div>
+</div>
+
+
+
+
+<div class="perspective mt-1">
 <div id="flashcard" class="card-inner">
 
 <div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
@@ -186,7 +318,28 @@ class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounde
 <button id="test-btn" class="set-btn test-btn" onclick="loadTest()">TEST</button>
 </div>
 
+<div class="w-full max-w-[380px] mt-2">
+  <button id="libraryBackBtn" class="library-back-btn">
+    ⬅ BACK TO VIRTUAL CLASSROOM MENU
+  </button>
+</div>
+
 <script>
+
+const BACK_BUTTON_URL = "https://www.acceleratedlanguagesystems.com/virtual-classroom-booster";
+
+document.getElementById("libraryBackBtn").onclick = function(){
+    window.location.href = BACK_BUTTON_URL;
+};
+
+document.getElementById("readMeBtn").onclick = function(){
+document.getElementById("popupOverlay").style.display = "flex";
+};
+
+
+document.getElementById("closePopup").onclick = function(){
+document.getElementById("popupOverlay").style.display = "none";
+};
 
 const sets = {
 
