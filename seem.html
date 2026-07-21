@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HOW DOES IT SEEM?</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg-blue:#061247;
+--dark-red:#8C0327;
+--dark-blue:#0E065C;
+--gold:#FFD700;
+--test-colour:#0A6B3A;
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+background:var(--bg-blue);
+font-family:system-ui,Segoe UI,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:1rem;
+margin:0;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:90vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+}
+
+.top-title{
+color:white;
+font-weight:900;
+font-size:1rem;
+letter-spacing:.06em;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.9rem;
+cursor:pointer;
+user-select:none;
+}
+
+/* CARD */
+
+.perspective{
+perspective:1000px;
+}
+
+.card-inner{
+width:90vw;
+max-width:380px;
+height:52vw;
+max-height:250px;
+position:relative;
+transform-style:preserve-3d;
+transition:.45s;
+cursor:pointer;
+}
+
+.flipped{
+transform:rotateY(180deg);
+}
+
+.face{
+position:absolute;
+inset:0;
+backface-visibility:hidden;
+border-radius:16px;
+background:white;
+border:4px solid var(--dark-red);
+padding:18px;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.back{
+transform:rotateY(180deg);
+}
+
+.it-text,
+.en-text{
+font-weight:800;
+font-size:1rem;
+line-height:1.4;
+text-align:center;
+text-transform:uppercase;
+color:var(--dark-blue);
+}
+
+.highlight{
+color:var(--dark-red);
+font-weight:900;
+}
+
+.meaning-label{
+position:absolute;
+top:8px;
+right:12px;
+font-size:.72rem;
+font-weight:900;
+letter-spacing:.04em;
+color:var(--dark-red);
+}
+
+/* NAVIGATION */
+
+.navigation{
+width:90vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:10px;
+}
+
+.nav-btn{
+background:none;
+border:none;
+color:white;
+font-size:1.5rem;
+font-weight:900;
+cursor:pointer;
+}
+
+.counter{
+color:white;
+font-size:.9rem;
+font-weight:800;
+}
+
+/* BUTTONS */
+
+.button-grid{
+width:90vw;
+max-width:380px;
+margin-top:14px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+.category-btn{
+border:none;
+border-radius:8px;
+padding:7px 10px;
+font-size:.95rem;
+font-weight:900;
+cursor:pointer;
+background:white;
+color:var(--dark-blue);
+}
+
+.category-btn.active{
+background:var(--dark-red);
+color:white;
+}
+
+.test-row{
+width:90vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin-top:14px;
+}
+
+.test-btn{
+border:none;
+border-radius:8px;
+padding:7px 32px;
+font-size:.95rem;
+font-weight:900;
+cursor:pointer;
+background:#0DDED2;
+color:var(--dark-blue);
+}
+
+.test-btn.active{
+background:var(--dark-red);
+color:white;
+}
+
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.8);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:80px;
+z-index:9999;
+}
+
+.popup{
+background:white;
+width:85vw;
+max-width:360px;
+border:4px solid var(--dark-red);
+border-radius:16px;
+padding:20px;
+}
+
+.popup-text{
+font-size:.9rem;
+font-weight:700;
+line-height:1.5;
+color:var(--dark-blue);
+}
+
+.popup-close{
+margin-top:16px;
+text-align:right;
+font-weight:900;
+color:darkgreen;
+cursor:pointer;
+}
+
+/* BACK BUTTON */
+
+.back-header-btn{
+background:#1F7A4D;
+color:white;
+border:2px solid white;
+border-radius:8px;
+padding:4px 10px;
+font-size:.78rem;
+font-weight:900;
+cursor:pointer;
+transition:.2s;
+white-space:nowrap;
+}
+
+.back-header-btn:hover{
+background:#FFF3A3;
+color:darkred;
+border-color:darkred;
+}
+
+
+
+/* MOBILE */
+
+@media (max-width:480px){
+
+.card-inner{
+height:58vw;
+}
+
+.it-text,
+.en-text{
+font-size:.95rem;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="top-bar">
+
+<button id="libraryBackBtn" class="back-header-btn">
+◀ BACK
+</button>
+
+<h1 class="top-title">
+COME TI SEMBRA? (B1)
+</h1>
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+</div>
+
+<div id="popupOverlay" class="popup-overlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+HERE, WE LOOK AT THE VERB <span class="highlight">SEMBRARE</span> AND ITS VARIOUS POSSIBLE TRANSLATIONS INTO ENGLISH. THERE ARE <span class="highlight">80</span> SENTENCES IN TOTAL, OF WHICH <span class="highlight">8</span> ARE SELECTED RANDOMLY EACH TIME
+
+<br><br>
+
+WE SUGGEST THAT YOU
+
+<span style="color:#E60073;font-weight:900;">A)</span>
+
+FIRST READ
+
+THE POSTS
+
+<span class="highlight">SEEM PARTS 1 & 2</span>
+
+IN THE
+
+<span style="color:#E60073;font-weight:900;">VIRTUAL CLASSROOM</span>
+
+<br><br>
+
+<span style="color:#E60073;font-weight:900;">B)</span>
+
+REVIEW EVERYTHING VIA THESE FLASHCARDS
+<br><br>
+
+<span style="color:#E60073;font-weight:900;">C)</span>
+
+TRY OUT THE
+
+<span class="highlight">SEEM QUIZ</span>
+
+TO TEST YOUR KNOWLEDGE
+
+</div>
+
+<div id="closePopup" class="popup-close">
+START →
+</div>
+
+</div>
+
+</div>
+
+<div class="perspective">
+
+<div id="flashcard" class="card-inner">
+
+<div class="face">
+
+<div id="front-text" class="it-text"></div>
+
+</div>
+
+<div class="face back">
+
+<div id="meaning-label" class="meaning-label"></div>
+
+<div id="back-text" class="en-text"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="navigation">
+
+<button class="nav-btn" onclick="prevCard()">
+◀
+</button>
+
+<div id="counter" class="counter">
+1 / 1
+</div>
+
+<button class="nav-btn" onclick="nextCard()">
+▶
+</button>
+
+</div>
+
+<div class="w-full max-w-[380px] flex justify-center mt-2">
+
+<button id="refreshBtn" onclick="refreshCurrentSet()"
+class="text-white flex items-center gap-2 px-3 py-1.5 border border-yellow-400 rounded-full">
+
+<span class="font-bold text-sm">REFRESH</span>
+
+</button>
+
+</div>
+
+<div class="button-grid">
+
+<button class="category-btn active"
+onclick="loadCategory('LOOK',event)">
+LOOK
+</button>
+
+<button class="category-btn"
+onclick="loadCategory('SOUND',event)">
+SOUND
+</button>
+
+<button class="category-btn"
+onclick="loadCategory('FEEL',event)">
+FEEL
+</button>
+
+<button class="category-btn"
+onclick="loadCategory('SMELL_TASTE',event)">
+SMELL / TASTE
+</button>
+
+</div>
+
+<div class="test-row">
+
+<button id="testBtn"
+class="test-btn"
+onclick="loadTest(event)">
+TEST
+</button>
+
+</div>
+
+<script>
+
+const sets = {
+
+LOOK:[
+{
+meaning:"LOOK",
+front:'<span class="highlight">SEMBRA</span> CHE SARÀ UNA BELLISSIMA GIORNATA DI SOLE',
+back:'IT <span class="highlight">LOOKS</span> LIKE IT’S GOING TO BE A BEAUTIFUL SUNNY DAY'
+},
+
+{
+meaning:"LOOK",
+front:'TI TROVO BENE! NON <span class="highlight">SEMBRI</span> AFFATTO STANCO NONOSTANTE IL LUNGO VIAGGIO',
+back:'YOU LOOK WELL! YOU DON’T <span class="highlight">LOOK</span> TIRED AT ALL DESPITE THE LONG JOURNEY'
+},
+
+{
+meaning:"LOOK",
+front:'HO APPENA VISTO LA PIANTINA DEL NOSTRO NUOVO UFFICIO; MI <span class="highlight">SEMBRA</span> UN POSTO DAVVERO MODERNO',
+back:'I’VE JUST SEEN THE PLANS FOR OUR NEW OFFICE; IT <span class="highlight">LOOKS</span> LIKE A VERY MODERN PLACE TO ME'
+},
+
+{
+meaning:"LOOK",
+front:'A GIUDICARE DALLE NUVOLE, <span class="highlight">SEMBRA</span> CHE POSSA PIOVERE A BREVE',
+back:'JUDGING BY THE CLOUDS, IT <span class="highlight">LOOKS</span> LIKE IT MIGHT RAIN SOON'
+},
+
+{
+meaning:"LOOK",
+front:'LA TORTA IN VETRINA <span class="highlight">SEMBRAVA</span> COSÌ DELIZIOSA CHE SONO ENTRATO A COMPRARLA',
+back:'THAT CAKE IN THE SHOP WINDOW <span class="highlight">LOOKED</span> SO DELICIOUS THAT I WENT IN AND BOUGHT IT'
+},
+
+{
+meaning:"LOOK",
+front:'CON QUEL CAPPOTTO SCURO E GLI OCCHIALI DA SOLE, <span class="highlight">SEMBRA</span> PIÙ UN TRUFFATORE CHE UN POLIZIOTTO',
+back:'WITH THAT DARK COAT AND SUNGLASSES, HE <span class="highlight">LOOKS</span> MORE LIKE A CONMAN THAN A POLICEMAN'
+},
+
+{
+meaning:"LOOK",
+front:'ANNA AVEVA GLI OCCHI ROSSI E <span class="highlight">SEMBRAVA</span> MOLTO TURBATA DURANTE LA RIUNIONE',
+back:'ANNA’S EYES WERE RED AND SHE <span class="highlight">LOOKED</span> REALLY UPSET DURING THE MEETING'
+},
+
+{
+meaning:"LOOK",
+front:'HO DATO UN’ALTRA OCCHIATA AI VESTITI MA NON MI <span class="highlight">SEMBRAVANO</span> ELEGANTI ABBASTANZA',
+back:'I TOOK ANOTHER LOOK AT THE CLOTHES, BUT THEY DIDN’T <span class="highlight">LOOK</span> SMART ENOUGH TO ME'
+},
+
+{
+meaning:"LOOK",
+front:'QUEL CUCCIOLO <span class="highlight">SEMBRA</span> UNA VOLPINA CON QUELLA CODA COSÌ LUNGA',
+back:'THAT PUPPY <span class="highlight">LOOKS</span> LIKE A LITTLE FOX WITH THAT LONG TAIL'
+},
+
+{
+meaning:"LOOK",
+front:'DALLE FOTO DELL’OPUSCOLO, L’HOTEL <span class="highlight">SEMBRAVA</span> MOLTO ACCOGLIENTE',
+back:'FROM THE PHOTOS IN THE BROCHURE, THE HOTEL <span class="highlight">LOOKED</span> VERY WELCOMING'
+},
+
+{
+meaning:"LOOK",
+front:'COME HAI DORMITO? <span class="highlight">SEMBRI</span> MOLTO STANCO STAMATTINA',
+back:'HOW DID YOU SLEEP? YOU <span class="highlight">LOOK</span> VERY TIRED THIS MORNING'
+},
+
+{
+meaning:"LOOK",
+front:'DA FUORI, IL RISTORANTE <span class="highlight">SEMBRA</span> MOLTO COSTOSO',
+back:'FROM THE OUTSIDE, THE RESTAURANT <span class="highlight">LOOKS</span> VERY EXPENSIVE'
+},
+
+{
+meaning:"LOOK",
+front:'NON <span class="highlight">SEMBRA</span> CONTENTA DELLA DECISIONE',
+back:'SHE DOESN’T <span class="highlight">LOOK</span> HAPPY WITH THE DECISION'
+},
+
+{
+meaning:"LOOK",
+front:'ALL’INIZIO, <span class="highlight">SEMBRAVA</span> UNA SITUAZIONE NORMALE',
+back:'AT FIRST, IT <span class="highlight">LOOKED</span> LIKE A NORMAL SITUATION'
+},
+
+{
+meaning:"LOOK",
+front:'VESTITO COSÌ, <span class="highlight">SEMBRI</span> UN INSEGNANTE DEGLI ANNI ’80!',
+back:'DRESSED LIKE THAT, YOU <span class="highlight">LOOK</span> LIKE A TEACHER FROM THE 1980S!'
+},
+
+{
+meaning:"LOOK",
+front:'DALLE FOTO, COSA TI <span class="highlight">SEMBRA</span> QUESTO POSTO?',
+back:'FROM THE PHOTOS, WHAT DOES THIS PLACE <span class="highlight">LOOK</span> LIKE TO YOU?'
+},
+
+{
+meaning:"LOOK",
+front:'LA PIZZA <span class="highlight">SEMBRAVA</span> FANTASTICA, MA NON L’HO ASSAGGIATA',
+back:'THE PIZZA <span class="highlight">LOOKED</span> FANTASTIC, BUT I DIDN’T TASTE IT'
+},
+
+{
+meaning:"LOOK",
+front:'DOPO LA PARTITA, <span class="highlight">SEMBRAVANO</span> COMPLETAMENTE ESAUSTI',
+back:'AFTER THE MATCH, THEY <span class="highlight">LOOKED</span> COMPLETELY EXHAUSTED'
+},
+
+{
+meaning:"LOOK",
+front:'NON MI <span class="highlight">SEMBRA</span> MOLTO PROFESSIONALE QUESTO DOCUMENTO',
+back:'THIS DOCUMENT DOESN’T <span class="highlight">LOOK</span> VERY PROFESSIONAL TO ME'
+},
+
+{
+meaning:"LOOK",
+front:'QUANDO L’HO VISTO STAMATTINA, <span class="highlight">SEMBRAVA</span> PIUTTOSTO NERVOSO',
+back:'WHEN I SAW HIM THIS MORNING, HE <span class="highlight">LOOKED</span> QUITE ANXIOUS'
+}
+
+],
+
+SOUND:[
+
+{
+meaning:"SOUND",
+front:'LA TUA VOCE <span class="highlight">SEMBRAVA</span> MOLTO STRANA AL TELEFONO IERI. HAI IL RAFFREDDORE?',
+back:'YOUR VOICE <span class="highlight">SOUNDED</span> VERY STRANGE ON THE PHONE YESTERDAY. DO YOU HAVE A COLD?'
+},
+
+{
+meaning:"SOUND",
+front:'DAL RUMORE CHE FA, NON <span class="highlight">SEMBRA</span> UN MOTORE ORIGINALE',
+back:'FROM THE NOISE IT’S MAKING, IT DOESN’T <span class="highlight">SOUND</span> LIKE AN ORIGINAL ENGINE'
+},
+
+{
+meaning:"SOUND",
+front:'NON HO ANCORA VISTO IL PROGRAMMA DEL CORSO, MA A SENTIRNE PARLARE <span class="highlight">SEMBRA</span> UN’OTTIMA OPPORTUNITÀ',
+back:'I HAVEN’T SEEN THE COURSE SYLLABUS YET, BUT FROM WHAT I HEAR, IT <span class="highlight">SOUNDS</span> LIKE AN EXCELLENT OPPORTUNITY'
+},
+
+{
+meaning:"SOUND",
+front:'HO ASCOLTATO IL SUO ACCENTO; <span class="highlight">SEMBRAVA</span> UNA MADRELINGUA INGLESE',
+back:'I LISTENED TO HIS ACCENT; HE <span class="highlight">SOUNDED</span> LIKE A NATIVE ENGLISH SPEAKER'
+},
+
+{
+meaning:"SOUND",
+front:'DA QUELLO CHE MI HAI APPENA DETTO, <span class="highlight">SEMBRA</span> CHE LA TUA VACANZA SIA STATA UN INCUBO!',
+back:'FROM WHAT YOU’VE JUST TOLD ME, YOUR HOLIDAY <span class="highlight">SOUNDS</span> LIKE A NIGHTMARE!'
+},
+
+{
+meaning:"SOUND",
+front:'QUANDO CI SIAMO SENTITI IERI SERA, LUI NON <span class="highlight">SEMBRAVA</span> MOLTO CONVINTO DEL PROGETTO',
+back:'WHEN WE SPOKE LAST NIGHT, HE DIDN’T <span class="highlight">SOUND</span> VERY CONVINCED ABOUT THE PROJECT'
+},
+
+{
+meaning:"SOUND",
+front:'<span class="highlight">SEMBRA</span> UNA CANZONE DEGLI ANNI ’60',
+back:'IT <span class="highlight">SOUNDS</span> LIKE A SONG FROM THE 1960S'
+},
+
+{
+meaning:"SOUND",
+front:'AL PRIMO ASCOLTO, LA MELODIA <span class="highlight">SEMBRAVA</span> MOLTO DIFFICILE DA IMPARARE',
+back:'ON FIRST HEARING, THE MELODY <span class="highlight">SOUNDED</span> VERY DIFFICULT TO LEARN'
+},
+
+{
+meaning:"SOUND",
+front:'NON L’HO MAI INCONTRATO DI PERSONA, MA DAI MESSAGGI VOCALI <span class="highlight">SEMBRA</span> UN TIPO SIMPATICO',
+back:'I’VE NEVER MET HIM IN PERSON, BUT FROM HIS VOICE MESSAGES, HE <span class="highlight">SOUNDS</span> LIKE A NICE GUY'
+},
+
+{
+meaning:"SOUND",
+front:'SENTO DEI PASSI; <span class="highlight">SEMBRA</span> IL POSTINO',
+back:'I HEAR FOOTSTEPS; IT <span class="highlight">SOUNDS</span> LIKE THE POSTMAN'
+},
+
+{
+meaning:"SOUND",
+front:'<span class="highlight">SEMBRAVI</span> MOLTO PREOCCUPATO AL TELEFONO IERI SERA',
+back:'YOU <span class="highlight">SOUNDED</span> VERY WORRIED ON THE PHONE LAST NIGHT'
+},
+
+{
+meaning:"SOUND",
+front:'DA COME LO DICI, <span class="highlight">SEMBRA</span> UN’IDEA DAVVERO INTERESSANTE',
+back:'FROM THE WAY YOU SAY IT, IT <span class="highlight">SOUNDS</span> LIKE A REALLY INTERESTING IDEA'
+},
+
+{
+meaning:"SOUND",
+front:'QUANDO CI HA PARLATO, <span class="highlight">SEMBRAVA</span> ARRABBIATA',
+back:'WHEN SHE SPOKE TO US, SHE <span class="highlight">SOUNDED</span> ANGRY'
+},
+
+{
+meaning:"SOUND",
+front:'A DIRE LA VERITÀ, LA TUA SPIEGAZIONE NON <span class="highlight">SEMBRA</span> MOLTO CONVINCENTE',
+back:'TO BE HONEST, YOUR EXPLANATION DOESN’T <span class="highlight">SOUND</span> VERY CONVINCING'
+},
+
+{
+meaning:"SOUND",
+front:'DA COME NE PARLANO, IL LAVORO <span class="highlight">SEMBRA</span> TROPPO DIFFICILE PER ME',
+back:'FROM THE WAY THEY TALK ABOUT IT, THE JOB <span class="highlight">SOUNDS</span> TOO DIFFICULT FOR ME'
+},
+
+{
+meaning:"SOUND",
+front:'QUANDO LEI PARLA IN INGLESE, <span class="highlight">SEMBRA</span> PIÙ AMERICANA CHE SPAGNOLA',
+back:'WHEN SHE SPEAKS ENGLISH, SHE <span class="highlight">SOUNDS</span> MORE AMERICAN THAN SPANISH'
+},
+
+{
+meaning:"SOUND",
+front:'DA QUELLO CHE TI HO RACCONTATO FINORA, TI <span class="highlight">SEMBRA</span> UNA BUONA PROPOSTA?',
+back:'FROM WHAT I HAVE TOLD YOU SO FAR, DOES IT <span class="highlight">SOUND</span> LIKE A GOOD PROPOSAL TO YOU?'
+},
+
+{
+meaning:"SOUND",
+front:'LA NOTIZIA <span class="highlight">SEMBRAVA</span> TROPPO BELLA PER ESSERE VERA. SECONDO ME, LUI MENTIVA',
+back:'THE NEWS <span class="highlight">SOUNDED</span> TOO GOOD TO BE TRUE. IN MY OPINION, HE WAS LYING'
+},
+
+{
+meaning:"SOUND",
+front:'ROGER <span class="highlight">SEMBRA</span> MOLTO NERVOSO OGGI: NON HA FATTO ALTRO CHE URLARE',
+back:'ROGER <span class="highlight">SOUNDS</span> VERY ON EDGE TODAY: HE HAS DONE NOTHING BUT SHOUT'
+}
+
+],
+
+FEEL:[
+
+{
+meaning:"FEEL",
+front:'<span class="highlight">SEMBRA</span> SETA SULLA PELLE',
+back:'IT <span class="highlight">FEELS</span> LIKE SILK AGAINST YOUR SKIN'
+},
+
+{
+meaning:"FEEL",
+front:'OGNI VOLTA CHE FACCIO IL BAGNO AL MIO CANE, DOPO IL SUO PELO <span class="highlight">SEMBRA</span> DAVVERO MORBIDO AL TATTO',
+back:'WHENEVER I GIVE MY DOG A BATH, HIS FUR <span class="highlight">FEELS</span> REALLY SOFT AFTERWARDS'
+},
+
+{
+meaning:"FEEL",
+front:'STAVO PENSANDO DI COMPRARE QUELLA CAMICIA, MA NON MI <span class="highlight">SEMBRAVA</span> DI BUONA QUALITÀ',
+back:'I WAS THINKING OF BUYING THAT SHIRT, BUT IT DIDN’T <span class="highlight">FEEL</span> LIKE GOOD QUALITY TO ME'
+},
+
+{
+meaning:"FEEL",
+front:'TIENI QUESTO MAGLIONE UN ATTIMO; TI <span class="highlight">SEMBRA</span> LANA O COTONE?',
+back:'HOLD THIS SWEATER A MOMENT; DOES IT <span class="highlight">FEEL</span> LIKE WOOL OR COTTON TO YOU?'
+},
+
+{
+meaning:"FEEL",
+front:'LE PARETI DELLA VECCHIA CASA <span class="highlight">SEMBRAVANO</span> MOLTO UMIDE AL TATTO',
+back:'THE WALLS OF THE OLD HOUSE <span class="highlight">FELT</span> VERY DAMP TO THE TOUCH'
+},
+
+{
+meaning:"FEEL",
+front:'<span class="highlight">SEMBRA</span> MOLTO FREDDO QUI DENTRO ANCHE CON IL RISCALDAMENTO ACCESO',
+back:'IT <span class="highlight">FEELS</span> VERY COLD IN HERE EVEN WITH THE HEATING ON'
+},
+
+{
+meaning:"FEEL",
+front:'NON C’È QUASI NESSUNO IN GIRO OGGI; <span class="highlight">SEMBRA</span> QUASI DOMENICA!',
+back:'THERE IS HARDLY ANYONE ABOUT TODAY; IT <span class="highlight">FEELS</span> ALMOST LIKE SUNDAY!'
+},
+
+{
+meaning:"FEEL",
+front:'SI RESPIRA UN’ARIA STRANA IN QUESTO UFFICIO; NON <span class="highlight">SEMBRA</span> MOLTO ACCOGLIENTE',
+back:'THERE IS A STRANGE ATMOSPHERE IN THIS OFFICE; IT DOESN’T <span class="highlight">FEEL</span> VERY WELCOMING'
+},
+
+{
+meaning:"FEEL",
+front:'NON SO SPIEGARLO, MA NON MI <span class="highlight">SEMBRA</span> LA DECISIONE GIUSTA DA PRENDERE',
+back:'I CAN’T EXPLAIN IT, BUT IT JUST DOESN’T <span class="highlight">FEEL</span> LIKE THE RIGHT DECISION TO MAKE'
+},
+
+{
+meaning:"FEEL",
+front:'QUESTA CITTÀ <span class="highlight">SEMBRA</span> MOLTO DIVERSA RISPETTO A COM’ERA L’ULTIMA VOLTA CHE SONO STATO QUI',
+back:'THIS TOWN <span class="highlight">FEELS</span> VERY DIFFERENT FROM HOW IT WAS THE LAST TIME I WAS HERE'
+},
+
+{
+meaning:"FEEL",
+front:'NON APPENA SIAMO ENTRATI NELLA STANZA, <span class="highlight">SEMBRAVA</span> CHE QUALCUNO CI STESSE GUARDANDO',
+back:'AS SOON AS WE ENTERED THE ROOM, IT <span class="highlight">FELT</span> LIKE SOMEONE WAS WATCHING US'
+},
+
+{
+meaning:"FEEL",
+front:'DOPO AVER PARLATO CON IL NUOVO CAPO, NON MI <span class="highlight">SEMBRA</span> UNA SITUAZIONE MOLTO STABILE LA NOSTRA',
+back:'AFTER TALKING TO THE NEW BOSS, OUR SITUATION DOESN’T <span class="highlight">FEEL</span> VERY STABLE'
+},
+
+{
+meaning:"FEEL",
+front:'DAL MODO IN CUI SI COMPORTANO, <span class="highlight">SEMBRA</span> CHE STIANO NASCONDENDO QUALCOSA',
+back:'FROM THE WAY THEY’RE BEHAVING, IT <span class="highlight">FEELS</span> LIKE THEY’RE HIDING SOMETHING'
+},
+
+{
+meaning:"FEEL",
+front:'APPENA SIAMO ARRIVATI IN HOTEL, CI È SUBITO <span class="highlight">SEMBRATO</span> DI ESSERE A CASA',
+back:'AS SOON AS WE ARRIVED AT THE HOTEL, IT IMMEDIATELY <span class="highlight">FELT</span> LIKE HOME'
+},
+
+{
+meaning:"FEEL",
+front:'QUESTO MAGLIONE <span class="highlight">SEMBRA</span> MOLTO PESANTE ADDOSSO. FAMMELO TOGLIERE',
+back:'THIS JUMPER <span class="highlight">FEELS</span> VERY HEAVY. LET ME TAKE IT OFF'
+},
+
+{
+meaning:"FEEL",
+front:'PASSACI LA MANO SOPRA. NON TROVI CHE <span class="highlight">SEMBRI</span> PIÙ PLASTICA CHE LEGNO?',
+back:'RUN YOUR HAND OVER THIS. DON’T YOU THINK IT <span class="highlight">FEELS</span> MORE LIKE PLASTIC THAN WOOD?'
+},
+
+{
+meaning:"FEEL",
+front:'DOPO QUELLA CONVERSAZIONE, TUTTO <span class="highlight">SEMBRAVA</span> DIVERSO',
+back:'AFTER THAT CONVERSATION, EVERYTHING <span class="highlight">FELT</span> DIFFERENT'
+},
+
+{
+meaning:"FEEL",
+front:'QUESTA STANZA <span class="highlight">SEMBRA</span> UNA GABBIA. NON MI SENTO A MIO AGIO QUI',
+back:'THIS ROOM <span class="highlight">FEELS</span> LIKE A CAGE. I DON’T FEEL COMFORTABLE HERE'
+},
+
+{
+meaning:"FEEL",
+front:'LA SETA <span class="highlight">SEMBRA</span> MOLTO LISCIA AL TATTO',
+back:'SILK <span class="highlight">FEELS</span> VERY SMOOTH TO THE TOUCH'
+},
+
+{
+meaning:"FEEL",
+front:'SAPEVI CHE LA PELLE DELL’ELEFANTE <span class="highlight">SEMBRA</span> RUVIDA AL TATTO?',
+back:'DID YOU KNOW THAT AN ELEPHANT’S SKIN <span class="highlight">FEELS</span> ROUGH TO THE TOUCH?'
+},
+
+{
+meaning:"FEEL",
+front:'OGGI <span class="highlight">SEMBRA</span> UNA DOMENICA D’INVERNO. LE STRADE SONO DESERTE',
+back:'TODAY <span class="highlight">FEELS</span> LIKE A SUNDAY IN WINTER. THE STREETS ARE DESERTED'
+},
+
+{
+meaning:"FEEL",
+front:'DA QUANDO LUI SE N’È ANDATO, LA CASA <span class="highlight">SEMBRA</span> VUOTA',
+back:'SINCE HE LEFT, THE HOUSE <span class="highlight">FEELS</span> EMPTY'
+},
+
+{
+meaning:"FEEL",
+front:'PER QUALCHE MOTIVO, QUESTO POSTO MI <span class="highlight">SEMBRA</span> FAMILIARE',
+back:'FOR SOME REASON, THIS PLACE <span class="highlight">FEELS</span> FAMILIAR TO ME'
+},
+
+{
+meaning:"FEEL",
+front:'LA SITUAZIONE È <span class="highlight">SEMBRATA</span> PERICOLOSA FIN DALL’INIZIO',
+back:'THE SITUATION <span class="highlight">FELT</span> DANGEROUS RIGHT FROM THE START'
+},
+
+{
+meaning:"FEEL",
+front:'QUANDO SONO ENTRATO NELL’UFFICIO, L’ATMOSFERA <span class="highlight">SEMBRAVA</span> SUBITO MOLTO TESA',
+back:'WHEN I WALKED INTO THE OFFICE, THE ATMOSPHERE IMMEDIATELY <span class="highlight">FELT</span> VERY TENSE'
+},
+
+{
+meaning:"FEEL",
+front:'MI <span class="highlight">SEMBRAVA</span> CHE QUALCOSA NON ANDASSE',
+back:'IT <span class="highlight">FELT</span> LIKE SOMETHING WAS WRONG'
+}
+
+],
+
+SMELL_TASTE:[
+
+{
+meaning:"SMELL",
+front:'CHE BEL PROFUMINO! <span class="highlight">SEMBRA</span> UNA TORTA APPENA SFORNATA',
+back:'WHAT A LOVELY SMELL! IT <span class="highlight">SMELLS</span> LIKE A FRESHLY BAKED CAKE'
+},
+
+{
+meaning:"TASTE",
+front:'APPENA HO BEVUTO UN SORSO, MI <span class="highlight">SEMBRAVA</span> PIÙ ACETO CHE VINO!',
+back:'AS SOON AS I TOOK A SIP, IT <span class="highlight">TASTED</span> MORE LIKE VINEGAR THAN WINE!'
+},
+
+{
+meaning:"SMELL",
+front:'C’È UN ODORE STRANO CHE PROVIENE DAL GARAGE. PERÒ, NON MI <span class="highlight">SEMBRA</span> BENZINA',
+back:'THERE’S A STRANGE SMELL COMING FROM THE GARAGE; THOUGH IT DOESN’T <span class="highlight">SMELL</span> LIKE PETROL TO ME'
+},
+
+{
+meaning:"TASTE",
+front:'HO PROVATO IL SUGO POCO FA, MA NON MI È <span class="highlight">SEMBRATO</span> MOLTO BUONO',
+back:'I TRIED THE SAUCE JUST NOW, BUT IT DIDN’T <span class="highlight">TASTE</span> VERY GOOD'
+},
+
+{
+meaning:"SMELL",
+front:'<span class="highlight">SEMBRA</span> CHE QUALCUNO STIA BRUCIANDO DELLE FOGLIE IN GIARDINO',
+back:'IT <span class="highlight">SMELLS</span> LIKE SOMEONE IS BURNING LEAVES IN THE GARDEN'
+},
+
+{
+meaning:"TASTE",
+front:'QUESTA ZUPPA È DELIZIOSA; MI <span class="highlight">SEMBRA</span> A BASE DI ZENZERO',
+back:'THIS SOUP IS DELICIOUS; IT <span class="highlight">TASTES</span> LIKE IT’S MADE WITH GINGER'
+},
+
+{
+meaning:"SMELL",
+front:'SENTI QUESTO FORMAGGIO; TI <span class="highlight">SEMBRA</span> ANDATO A MALE?',
+back:'SMELL THIS CHEESE; DOES IT <span class="highlight">SMELL</span> TO YOU LIKE IT HAS GONE OFF?'
+},
+
+{
+meaning:"TASTE",
+front:'HO PROVATO QUEL PIATTO, MA ALL’INIZIO <span class="highlight">SEMBRAVA</span> SAPONE!',
+back:'I TRIED THAT DISH, BUT AT FIRST, IT <span class="highlight">TASTED</span> LIKE SOAP!'
+},
+
+{
+meaning:"SMELL",
+front:'ENTRANDO IN CANTINA, <span class="highlight">SEMBRAVA</span> CI FOSSE MOLTA MUFFA',
+back:'WALKING INTO THE CELLAR, IT <span class="highlight">SMELT</span> LIKE THERE WAS A LOT OF MOULD'
+},
+
+{
+meaning:"TASTE",
+front:'PROVA UN PEZZETTO DI QUESTO CIOCCOLATO; TI <span class="highlight">SEMBRA</span> FONDENTE O AL LATTE?',
+back:'TRY A PIECE OF THIS CHOCOLATE; DOES IT <span class="highlight">TASTE</span> MORE LIKE DARK OR MILK CHOCOLATE TO YOU?'
+},
+
+{
+meaning:"TASTE",
+front:'NON TI <span class="highlight">SEMBRA</span> UN PO’ TROPPO SALATA QUESTA SALSA?',
+back:'DOESN’T THIS SAUCE <span class="highlight">TASTE</span> A BIT TOO SALTY TO YOU?'
+},
+
+{
+meaning:"SMELL",
+front:'APPENA HO APERTO IL CONTENITORE, L’ARIA INTORNO A ME <span class="highlight">SEMBRAVA</span> DI PESCE MARCIO',
+back:'AS SOON AS I OPENED THE CONTAINER, THE AIR AROUND ME <span class="highlight">SMELT</span> LIKE FISH'
+},
+
+{
+meaning:"TASTE",
+front:'COM’È? TI <span class="highlight">SEMBRA</span> UN PO’ TROPPO DOLCE?',
+back:'HOW IS IT? DOES IT <span class="highlight">TASTE</span> A LITTLE TOO SWEET TO YOU?'
+}
+
+]
+
+};
+
+
+
+/* STATE */
+
+let currentSet = "LOOK";
+
+let cards = [];
+
+let current = 0;
+
+/* SHUFFLE */
+
+function shuffle(array){
+
+const shuffled = [...array];
+
+for(let i = shuffled.length - 1; i > 0; i--){
+
+const j = Math.floor(Math.random() * (i + 1));
+
+[shuffled[i], shuffled[j]] =
+[shuffled[j], shuffled[i]];
+
+}
+
+return shuffled;
+
+}
+
+/* REFRESH */
+
+function refreshCurrentSet(){
+
+if(currentSet === "TEST"){
+
+cards = shuffle([
+
+...sets.LOOK,
+...sets.SOUND,
+...sets.FEEL,
+...sets.SMELL_TASTE
+
+]).slice(0,12);
+
+}else{
+
+cards = shuffle(sets[currentSet]).slice(0,8);
+
+}
+
+current = 0;
+
+loadCard();
+
+}
+
+/* LOAD CATEGORY */
+
+function loadCategory(category,event){
+
+cards = shuffle(sets[category]).slice(0,8);
+
+currentSet = category;
+
+current = 0;
+
+loadCard();
+
+document
+.querySelectorAll(".category-btn")
+.forEach(btn =>
+btn.classList.remove("active"));
+
+document
+.getElementById("testBtn")
+.classList.remove("active");
+
+event.target.classList.add("active");
+
+}
+
+/* LOAD TEST */
+
+function loadTest(event){
+
+cards = shuffle([
+
+...sets.LOOK,
+...sets.SOUND,
+...sets.FEEL,
+...sets.SMELL_TASTE
+
+]).slice(0,12);
+
+currentSet = "TEST";
+
+current = 0;
+
+loadCard();
+
+document
+.querySelectorAll(".category-btn")
+.forEach(btn =>
+btn.classList.remove("active"));
+
+document
+.getElementById("testBtn")
+.classList.add("active");
+
+}
+
+/* LOAD CARD */
+
+function loadCard(){
+
+document.getElementById("front-text").innerHTML =
+cards[current].front;
+
+document.getElementById("back-text").innerHTML =
+cards[current].back;
+
+document.getElementById("meaning-label").textContent =
+cards[current].meaning;
+
+document.getElementById("counter").textContent =
+`${current + 1} / ${cards.length}`;
+
+flashcard.classList.remove("flipped");
+
+}
+
+/* NAVIGATION */
+
+function nextCard(){
+
+current++;
+
+if(current >= cards.length){
+
+current = 0;
+
+}
+
+loadCard();
+
+}
+
+function prevCard(){
+
+current--;
+
+if(current < 0){
+
+current = cards.length - 1;
+
+}
+
+loadCard();
+
+}
+
+/* FLIP CARD */
+
+const flashcard =
+document.getElementById("flashcard");
+
+flashcard.addEventListener("click", () => {
+
+flashcard.classList.toggle("flipped");
+
+});
+
+/* READ ME */
+
+document
+.getElementById("readMeBtn")
+.addEventListener("click", () => {
+
+document
+.getElementById("popupOverlay")
+.style.display = "flex";
+
+});
+
+document
+.getElementById("closePopup")
+.addEventListener("click", () => {
+
+document
+.getElementById("popupOverlay")
+.style.display = "none";
+
+});
+
+/* BACK BUTTON */
+
+document.getElementById("libraryBackBtn").onclick = function(){
+
+window.location.href = "https://www.acceleratedlanguagesystems.com/virtual-classroom-booster";
+
+};
+
+
+/* START */
+
+cards = shuffle(sets.LOOK).slice(0,8);
+
+loadCard();
+
+</script>
+
+</body>
+</html>
