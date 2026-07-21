@@ -33,18 +33,22 @@ min-height:100vh;
 .top-bar{
 width:92vw;
 max-width:380px;
-display:flex;
-justify-content:space-between;
+display:grid;
+grid-template-columns:auto 1fr auto;
 align-items:center;
+column-gap:8px;
 margin-bottom:10px;
 }
+
 
 .top-title{
 color:#fff;
 font-weight:900;
-font-size:.9rem;
+font-size:1rem;
 letter-spacing:.05em;
+text-align:center;
 }
+
 
 .sound-btn{
 background:#fff;
@@ -53,6 +57,24 @@ border-radius:10px;
 padding:6px 10px;
 font-weight:900;
 font-size:.8rem;
+}
+
+
+.back-btn{
+background:#C46A1A;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+cursor:pointer;
+transition:.2s;
+}
+
+.back-btn:hover{
+background:#FFF3A3;
+color:#8C0327;
 }
 
 /* CARD */
@@ -349,8 +371,19 @@ font-weight:900;
 
 <!-- TOP -->
 <div class="top-bar">
-<div class="top-title">PVIE STAGE TWO</div>
-<button id="soundToggle" class="sound-btn">🔊 ON</button>
+
+<button id="libraryBackBtn" class="back-btn">
+◀ BACK
+</button>
+
+<div class="top-title">
+PVIE STAGE TWO <span style="color:#FFF3A3;">(B2)</span>
+</div>
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
 </div>
 
 <!-- CARD -->
@@ -1146,88 +1179,86 @@ lesson24:[
 
 ifwhen:[
 
-{sentence:"WHEN WE THINK WE ARE ABLE TO FINISH SOMETHING SOONER THAN EXPECTED, WE ARE _________ OF SCHEDULE (5)",answer:["AHEAD"],lesson:"IF/WHEN"},
+{sentence:"WHEN WE THINK WE ARE ABLE TO FINISH SOMETHING SOONER THAN EXPECTED, WE ARE _________ OF SCHEDULE",answer:["AHEAD"],lesson:"IF/WHEN"},
 
-{sentence:"IF SOMETHING IS NEAR, IT IS _________ HAND (2)",answer:["AT"],lesson:"IF/WHEN"},
+{sentence:"IF SOMETHING IS NEAR, IT IS _________ HAND",answer:["AT"],lesson:"IF/WHEN"},
 
-{sentence:"IF SOMETHING IS UNCONTROLLABLE, IT IS ___________ HAND (6,2)",answer:["OUT OF"],lesson:"IF/WHEN"},
+{sentence:"IF SOMETHING IS UNCONTROLLABLE, IT IS ___________ HAND",answer:["OUT OF"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU CAN REPEAT SOMETHING FROM MEMORY, THEN YOU KNOW IT _________ HEART (2)",answer:["BY"],lesson:"IF/WHEN"},
+{sentence:"IF YOU CAN REPEAT SOMETHING FROM MEMORY, THEN YOU KNOW IT _________ HEART",answer:["BY"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU ARE REALLY INTERESTED IN A SUBJECT OR FIELD, YOU ARE __________ IT (4)",answer:["INTO"],lesson:"IF/WHEN"},
+{sentence:"IF YOU ARE REALLY INTERESTED IN A SUBJECT OR FIELD, YOU ARE __________ IT",answer:["INTO"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN SOMETHING STOPS WORKING, IT HAS BROKEN __________ (4)",answer:["DOWN"],lesson:"IF/WHEN"},
+{sentence:"WHEN SOMETHING STOPS WORKING, IT HAS BROKEN __________",answer:["DOWN"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU FIND SOMETHING BY CHANCE, YOU COME __________ IT (6)",answer:["ACROSS"],lesson:"IF/WHEN"},
+{sentence:"IF YOU FIND SOMETHING BY CHANCE, YOU COME __________ IT",answer:["ACROSS"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU APPROACH SOMEONE, YOU GO _________ THEM (2,2)",answer:["UP TO"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU APPROACH SOMEONE, YOU GO _________ THEM",answer:["UP TO"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU ARE ISOLATED, YOU ARE CUT ________ FROM PEOPLE OR PLACES (3)",answer:["OFF"],lesson:"IF/WHEN"},
+{sentence:"IF YOU ARE ISOLATED, YOU ARE CUT ________ FROM PEOPLE OR PLACES",answer:["OFF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU KEEP A PHOTO FROM A MAGAZINE, YOU CUT IT ________ (3)",answer:["OUT"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU KEEP A PHOTO FROM A MAGAZINE, YOU CUT IT ________",answer:["OUT"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU VISIT SOMEONE BRIEFLY, YOU DROP ______ (2)",answer:["BY"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU VISIT SOMEONE BRIEFLY, YOU DROP ______",answer:["BY"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU EAT AT A RESTAURANT, YOU EAT ________ (3)",answer:["OUT"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU EAT AT A RESTAURANT, YOU EAT ________",answer:["OUT"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN A FORM NEEDS COMPILING, YOU FILL IT _________ (VARIOUS ANSWERS)",answer:["IN","OUT"],lesson:"IF/WHEN"},
+{sentence:"WHEN A FORM NEEDS COMPILING, YOU FILL IT _________",answer:["IN","OUT"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU ARE CERTAIN, YOU KNOW ______ SURE (3)",answer:["FOR"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU ARE CERTAIN, YOU KNOW ______ SURE",answer:["FOR"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU STOP DOING SOMETHING, YOU GIVE IT _______ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU STOP DOING SOMETHING, YOU GIVE IT _______",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU DISTRIBUTE SOMETHING, YOU HAND IT _______ (3)",answer:["OUT"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU DISTRIBUTE SOMETHING, YOU HAND IT _______",answer:["OUT"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU ARE WEARING A COAT, YOU HAVE IT _____ (2)",answer:["ON"],lesson:"IF/WHEN"},
+{sentence:"IF YOU ARE WEARING A COAT, YOU HAVE IT _____",answer:["ON"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU ARE DELAYED, YOU ARE HELD ______ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU ARE DELAYED, YOU ARE HELD ______",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU COMMUNICATE WITH PEOPLE, YOU HEAR _______ THEM (4)",answer:["FROM"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU COMMUNICATE WITH PEOPLE, YOU HEAR _______ THEM",answer:["FROM"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN PEOPLE SMOKE, THEY LIGHT IT ______ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN PEOPLE SMOKE, THEY LIGHT IT ______",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU HAVE LITTLE RESPECT FOR SOMEONE, YOU LOOK _________ THEM (4,2)",answer:["DOWN ON"],lesson:"IF/WHEN"},
+{sentence:"IF YOU HAVE LITTLE RESPECT FOR SOMEONE, YOU LOOK _________ THEM",answer:["DOWN ON"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU TAKE CARE OF SOMEONE, YOU LOOK ________ THEM (5)",answer:["AFTER"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU TAKE CARE OF SOMEONE, YOU LOOK ________ THEM",answer:["AFTER"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU MATCH SOMEONE'S SPEED, YOU KEEP ________ THEM (2,4)",answer:["UP WITH"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU MATCH SOMEONE'S SPEED, YOU KEEP ________ THEM",answer:["UP WITH"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU FAINT, YOU PASS ________ (3)",answer:["OUT"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU FAINT, YOU PASS ________",answer:["OUT"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU HOST SOMEONE, YOU PUT THEM ________ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU HOST SOMEONE, YOU PUT THEM ________",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU SUCCEED AGAINST THE ODDS, YOU PULL IT ______ (3)",answer:["OFF"],lesson:"IF/WHEN"},
+{sentence:"IF YOU SUCCEED AGAINST THE ODDS, YOU PULL IT ______",answer:["OFF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU CAN'T TOLERATE SOMETHING, YOU PUT __________ IT (2,4)",answer:["UP WITH"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU CAN'T TOLERATE SOMETHING, YOU PUT __________ IT",answer:["UP WITH"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN SOMETHING IS UPSIDE DOWN, IT IS THE WRONG WAY ______ (VARIOUS ANSWERS)",answer:["ROUND","UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN SOMETHING IS UPSIDE DOWN, IT IS THE WRONG WAY ______",answer:["ROUND","UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN SOMETHING IS COMPLETELY CONSUMED, YOU HAVE RUN __________ IT (3,2)",answer:["OUT OF"],lesson:"IF/WHEN"},
+{sentence:"WHEN SOMETHING IS COMPLETELY CONSUMED, YOU HAVE RUN __________ IT",answer:["OUT OF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU BEGIN A JOURNEY, YOU SET ________ (VARIOUS ANSWERS)",answer:["OUT","OFF"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU BEGIN A JOURNEY, YOU SET ________",answer:["OUT","OFF"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU INTEND TO DO SOMETHING, YOU SET _______ TO DO IT (3)",answer:["OUT"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU INTEND TO DO SOMETHING, YOU SET _______ TO DO IT",answer:["OUT"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU ENTER A PLACE QUICKLY, YOU SLIP ____ (2)",answer:["IN"],lesson:"IF/WHEN"},
+{sentence:"IF YOU ENTER A PLACE QUICKLY, YOU SLIP ____",answer:["IN"],lesson:"IF/WHEN"},
 
-{sentence:"IF YOU USE ACRONYMS, THE LETTERS STAND ________ WORDS (3)",answer:["FOR"],lesson:"IF/WHEN"},
+{sentence:"IF YOU USE ACRONYMS, THE LETTERS STAND ________ WORDS",answer:["FOR"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU DON'T GO OUT, YOU STAY ____ (2)",answer:["IN"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU DON'T GO OUT, YOU STAY ____",answer:["IN"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU DON'T GO TO BED, YOU STAY _____ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU DON'T GO TO BED, YOU STAY _____",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU BEGIN A CONVERSATION, YOU STRIKE ______ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU BEGIN A CONVERSATION, YOU STRIKE ______",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU HAVE SIMILAR TRAITS, YOU TAKE ________ THEM (5)",answer:["AFTER"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU HAVE SIMILAR TRAITS, YOU TAKE ________ THEM",answer:["AFTER"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU BEGIN A HOBBY, YOU TAKE IT _______ (2)",answer:["UP"],lesson:"IF/WHEN"},
+{sentence:"WHEN YOU BEGIN A HOBBY, YOU TAKE IT _______",answer:["UP"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN TWO THINGS ARE VERY SIMILAR, IT IS HARD TO TELL THEM _________ (5)",answer:["APART"],lesson:"IF/WHEN"},
+{sentence:"WHEN TWO THINGS ARE VERY SIMILAR, IT IS HARD TO TELL THEM _________",answer:["APART"],lesson:"IF/WHEN"},
 
-{sentence:"WHEN YOU REFUSE SOMETHING, YOU TURN IT ________ (4)",answer:["DOWN"],lesson:"IF/WHEN"}
-
+{sentence:"WHEN YOU REFUSE SOMETHING, YOU TURN IT ________",answer:["DOWN"],lesson:"IF/WHEN"}
 ]
-
 };
 
 
@@ -1407,6 +1438,11 @@ document.getElementById("nextBtn").style.opacity="1";
 /* EVENTS */
 
 window.addEventListener("DOMContentLoaded", function(){
+
+document.getElementById("libraryBackBtn").addEventListener("click", function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/idiomatic-expressions-booster";
+});
+
 document.getElementById("skipBtn").disabled = true;
 
 document.getElementById("checkBtn").onclick = checkAnswer;
