@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THE PRESENT DOORS</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+--bg-blue:#061247;
+--front-purple:#561386;
+--it-red:#8C0327;
+--en-blue:#0E065C;
+}
+
+body{
+background:var(--bg-blue);
+font-family:system-ui, Segoe UI, Arial;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:1rem;
+gap:.3rem;
+}
+
+.perspective{perspective:1000px;}
+
+.card-inner{
+width:90vw;
+max-width:380px;
+height:64vw;
+max-height:310px;
+position:relative;
+transform-style:preserve-3d;
+transition:.4s;
+cursor:pointer;
+}
+
+.flipped{transform:rotateY(180deg);}
+
+.face{
+position:absolute;
+inset:0;
+backface-visibility:hidden;
+border-radius:1rem;
+}
+
+.back{transform:rotateY(180deg);}
+
+.listen-btn{
+background:none;
+border:none;
+color:var(--it-red);
+font-weight:700;
+font-size:.9rem;
+cursor:pointer;
+}
+
+.it-text,.en-text{
+font-weight:800;
+text-transform:uppercase;
+text-align:center;
+font-size:1.08rem;
+line-height:1.28;
+word-break:break-word;
+}
+
+.it-text{color:var(--front-purple);}
+.en-text{color:var(--en-blue);}
+
+.nav-btn{
+font-size:1.4rem;
+font-weight:700;
+color:white;
+}
+
+.door-label{
+position:absolute;
+top:6px;
+right:10px;
+font-size:.65rem;
+font-weight:800;
+color:var(--front-purple);
+letter-spacing:.05rem;
+}
+
+.set-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:.25rem;
+max-width:380px;
+width:100%;
+}
+
+.set-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+padding:7px 0;
+font-size:.75rem;
+font-weight:800;
+border-radius:999px;
+background:white;
+color:#0E065C;
+cursor:pointer;
+}
+
+.set-btn.active{
+background:#8C0327;
+color:white;
+}
+
+.read-btn{
+  background:#FFD700;
+  color:#061247;
+  font-weight:900;
+}
+
+.test-btn{
+background:#00cfd5;
+color:#061247;
+font-weight:900;
+}
+
+.library-back-btn{
+width:100%;
+height:36px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:.75rem;
+font-weight:800;
+text-transform:uppercase;
+border-radius:999px;
+background:#1F7A4D;
+color:white;
+border:2px solid white;
+cursor:pointer;
+transition:.2s;
+}
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:darkred;
+border-color:darkred;
+}
+
+
+
+</style>
+
+</head>
+
+<body>
+
+<h2 class="text-white text-lg font-extrabold tracking-widest text-center">
+THE PRESENT DOORS <span style="color:#FFF3A3;">(A2-B1)</span>
+</h2>
+
+<div class="perspective mt-4">
+<div id="flashcard" class="card-inner">
+
+<div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
+<div id="front-text" class="it-text"></div>
+</div>
+
+<div class="face back bg-white border-4 border-[#8C0327] flex flex-col justify-between p-4">
+
+<div id="door-label" class="door-label"></div>
+
+<div class="flex-grow flex items-center justify-center">
+<div id="back-text" class="en-text"></div>
+</div>
+
+<div class="flex justify-center pb-2">
+<button id="speakBtn" class="listen-btn">🔊 LISTEN</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px]">
+<button onclick="prevCard()" class="nav-btn">◀</button>
+
+<span id="counter-display" class="text-white font-bold text-sm">
+1 / 1
+</span>
+
+<button onclick="nextCard()" class="nav-btn">▶</button>
+</div>
+
+<div class="w-full max-w-[380px] flex justify-center mt-2">
+<button onclick="refreshCurrentSet()"
+class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounded-full">
+<span class="font-bold text-sm">REFRESH</span>
+</button>
+</div>
+
+<div class="set-grid mt-2">
+<button class="set-btn" onclick="loadSet(1)">DOOR 1</button>
+<button class="set-btn" onclick="loadSet(2)">DOOR 2</button>
+<button class="set-btn" onclick="loadSet(3)">DOOR 3</button>
+
+<button class="set-btn" onclick="loadSet(4)">DOOR 4</button>
+<button class="set-btn" onclick="loadSet(5)">DOOR 5</button>
+<button class="set-btn" onclick="loadSet(6)">DOOR 6</button>
+
+<button class="set-btn" onclick="loadSet(7)">DOOR 6+</button>
+
+<button id="test-btn" class="set-btn test-btn" onclick="loadTest()">TEST</button>
+<button class="set-btn read-btn" onclick="loadInstructions()">READ ME</button>
+</div>
+
+<div class="w-full max-w-[380px] mt-2">
+  <button id="libraryBackBtn" class="library-back-btn">
+    ⬅ BACK TO VIRTUAL CLASSROOM MENU
+  </button>
+</div>
+
+
+<script>
+
+const sets = {
+
+1: [
+  { "front": "Non capisco questa parte", "back": "I don’t understand this part", "speak": "I don’t understand this part" },
+  { "front": "Lui non lavora il lunedì", "back": "He doesn’t work on Mondays", "speak": "He doesn’t work on Mondays" },
+  { "front": "Non abbiamo abbastanza tempo", "back": "We don’t have enough time", "speak": "We don’t have enough time" },
+  { "front": "A lui non piace il caffè", "back": "He doesn’t like coffee", "speak": "He doesn’t like coffee" },
+  { "front": "Loro non abitano lontano da qui", "back": "They don’t live far from here", "speak": "They don’t live far from here" },
+  { "front": "Non mi ricordo il suo nome", "back": "I don’t remember his name", "speak": "I don’t remember his name" },
+  { "front": "Loro non rispondono al telefono dopo le sei", "back": "They don’t answer the phone after 6pm", "speak": "They don’t answer the phone after six o'clock in the evening" },
+  { "front": "Non usciamo molto spesso", "back": "We don’t go out very often", "speak": "We don’t go out very often" },
+  { "front": "Lui non sa cosa dire", "back": "He doesn’t know what to say", "speak": "He doesn’t know what to say" },
+  { "front": "Loro non sono d’accordo con la decisione", "back": "They don’t agree with the decision", "speak": "They don’t agree with the decision" },
+
+  { "front": "Lavora da casa lui?", "back": "Does he work from home?", "speak": "Does he work from home?" },
+  { "front": "Dobbiamo andare via adesso?", "back": "Do we need to leave now?", "speak": "Do we need to leave now?" },
+  { "front": "Lui lo sa?", "back": "Does he know about this?", "speak": "Does he know about this?" },
+  { "front": "Capiscono il problema?", "back": "Do they understand the problem?", "speak": "Do they understand the problem?" },
+
+  { "front": "Perché non gli dici la verità?", "back": "Why don’t you tell him the truth?", "speak": "Why don’t you tell him the truth?" },
+  { "front": "Perché non vogliono venire con noi?", "back": "Why don’t they want to come with us?", "speak": "Why don’t they want to come with us?" },
+  { "front": "Perché non iniziamo adesso?", "back": "Why don’t we start now?", "speak": "Why don’t we start now?" },
+  { "front": "Perché lui non mi ascolta?", "back": "Why doesn’t he listen to me?", "speak": "Why doesn’t he listen to me?" },
+
+  { "front": "Oggi non mi sento bene", "back": "I don’t feel well today", "speak": "I don’t feel well today" },
+  { "front": "Funziona?", "back": "Does it work?", "speak": "Does it work?" },
+  { "front": "Loro non dicono molto", "back": "They don’t say much", "speak": "They don’t say much" },
+  { "front": "Hai bisogno di aiuto?", "back": "Do you need any help?", "speak": "Do you need any help?" },
+  { "front": "Dobbiamo aspettare?", "back": "Do we have to wait?", "speak": "Do we have to wait?" },
+  { "front": "Lui si ricorda il loro numero?", "back": "Does he remember their number?", "speak": "Does he remember their number?" },
+  { "front": "Non ti credono?", "back": "Don’t they believe you?", "speak": "Don’t they believe you?" },
+
+  { "front": "Non penso che sia una buona idea", "back": "I don’t think it’s a good idea", "speak": "I don’t think it’s a good idea" },
+  { "front": "Loro non pensano che sia importante", "back": "They don’t think it’s important", "speak": "They don’t think it’s important" },
+  { "front": "Non ci aspettiamo problemi", "back": "We don’t expect any problems", "speak": "We don’t expect any problems" },
+  { "front": "Ti dispiace se mi siedo qui?", "back": "Do you mind if I sit here?", "speak": "Do you mind if I sit here?" },
+
+  { "front": "Cosa significa?", "back": "What does it mean?", "speak": "What does it mean?" },
+  { "front": "Cosa ti sembra?", "back": "What does it look like to you?", "speak": "What does it look like to you?" },
+  { "front": "Quanto costano?", "back": "How much do they cost?", "speak": "How much do they cost?" },
+  { "front": "Ti interessa?", "back": "Does it interest you?", "speak": "Does it interest you?" },
+  { "front": "A che ora inizia lo spettacolo?", "back": "At what time does the show begin?", "speak": "At what time does the show begin?" },
+  { "front": "Perché vuoi saperlo?", "back": "Why do you want to know?", "speak": "Why do you want to know?" },
+  { "front": "Lui non ha bisogno del tuo consiglio", "back": "He doesn’t need your advice", "speak": "He doesn’t need your advice" } 
+],
+
+2: [
+  { "front": "Oggi pomeriggio vedo un paio di clienti in centro.", "back": "I’m seeing a couple of clients in the city centre this afternoon.", "speak": "I’m seeing a couple of clients in the city centre this afternoon." },
+  { "front": "Domani mattina alle 10.30 incontro il responsabile. Dobbiamo parlare del nostro prossimo progetto.", "back": "I’m meeting the manager at 10:30 tomorrow morning. We need to talk about our next project.", "speak": "I’m meeting the manager at ten thirty tomorrow morning. We need to talk about our next project." },
+  { "front": "Stasera vado al cinema con alcuni amici miei.", "back": "I’m going to the cinema with some friends of mine tonight.", "speak": "I’m going to the cinema with some friends of mine tonight." },
+  { "front": "Domani sera vengono i miei a cena. Non so cosa cucinare.", "back": "My parents are coming over for dinner tomorrow evening. I don’t know what to cook.", "speak": "My parents are coming over for dinner tomorrow evening. I don’t know what to cook." },
+  { "front": "Sabato mattina porto la macchina dal meccanico.", "back": "I’m taking the car to the mechanic’s on Saturday morning.", "speak": "I’m taking the car to the mechanic’s on Saturday morning." },
+  { "front": "Stasera guardo la partita a casa.", "back": "I’m watching the match at home tonight.", "speak": "I’m watching the match at home tonight." },
+  { "front": "Oggi lavoro da casa. C’è uno sciopero dei mezzi.", "back": "I’m working from home today. There’s a transport strike.", "speak": "I’m working from home today. There’s a transport strike." },
+  { "front": "Lo giuro! Questa settimana uso i mezzi e non la macchina.", "back": "I swear! I’m using public transport this week and not my car.", "speak": "I swear! - I’m using public transport this week and not my car." },
+  { "front": "Oggi mangio leggero perché può darsi che ceniamo fuori stasera", "back": "I’m eating light today because we might be eating out tonight", "speak": "I’m eating light today, because We might be eating out tonight." },
+  { "front": "Domani mattina prendo il treno delle sette. Devo stare a Firenze entro le 11.", "back": "I’m taking the seven o’clock train tomorrow morning. I need to be in Florence by 11.", "speak": "I’m taking the seven o’clock train tomorrow morning. I need to be in Florence by eleven." },
+
+  { "front": "Stasera resto a casa perché domani mi devo alzare presto.", "back": "I’m staying at home tonight because I have to get up early tomorrow.", "speak": "I’m staying at home tonight because I have to get up early tomorrow." },
+  { "front": "Oggi pomeriggio passo io a prendere i bambini a scuola. Mia moglie non sta bene.", "back": "I’m picking the kids up from school this afternoon. My wife isn’t well.", "speak": "I’m picking the kids up from school this afternoon. My wife isn’t well." },
+  { "front": "Stasera preparo qualcosa di veloce da mangiare. La partita inizia alle 20.", "back": "I’m making something quick to eat tonight. The match starts at 8.", "speak": "I’m making something quick to eat tonight. The match starts at eight." },
+  { "front": "Domani mattina accompagno mia madre dal medico.", "back": "I’m taking my mother to the doctor tomorrow morning.", "speak": "I’m taking my mother to the doctor tomorrow morning." },
+  { "front": "Stasera provo una ricetta nuova per la prima volta.", "back": "I’m trying a new recipe for the first time this evening.", "speak": "I’m trying a new recipe for the first time this evening." },
+  { "front": "Domani pomeriggio sono libero, quindi sistemo il giardino prima che arrivino gli ospiti.", "back": "I’m free tomorrow afternoon, so I’m tidying the garden before the guests arrive.", "speak": "I’m free tomorrow afternoon, so I’m tidying the garden before the guests arrive." },
+  { "front": "Stasera, come ogni martedì, seguo una lezione online di fotografia.", "back": "This evening, like every Tuesday, I’m attending an online photography lesson.", "speak": "This evening - like every Tuesday - I’m attending an online photography lesson." },
+  { "front": "Domani sera festeggiamo il compleanno di mio fratello.", "back": "We’re celebrating my brother’s birthday tomorrow evening.", "speak": "We’re celebrating my brother’s birthday tomorrow evening." },
+  { "front": "Domani mattina passo dall’ufficio postale. Devo spedire un pacco.", "back": "I’m stopping by the post office tomorrow morning. I need to send a parcel.", "speak": "I’m stopping by the post office tomorrow morning. I need to send a parcel." },
+  { "front": "Passo a prenderla domani alle 8.", "back": "I’m picking her up at 8 tomorrow.", "speak": "I’m picking her up at eight tomorrow." },
+
+  { "front": "Che fai? Te ne vai?", "back": "What are you doing? Are you leaving?", "speak": "What are you doing? - Are you leaving?" },
+  { "front": "Dove vai così di fretta?", "back": "Where are you going in such a hurry?", "speak": "Where are you going in such a hurry?" },
+  { "front": "Con chi parli?", "back": "Who are you talking to?", "speak": "Who are you talking to?" },
+  { "front": "Perché ridi?", "back": "Why are you laughing?", "speak": "Why are you laughing?" },
+  { "front": "Perché mi guardi così?", "back": "Why are you looking at me like that?", "speak": "Why are you looking at me like that?" },
+  { "front": "Che ascolti?", "back": "What are you listening to?", "speak": "What are you listening to?" },
+  { "front": "Con chi esci stasera?", "back": "Who are you going out with tonight?", "speak": "Who are you going out with tonight?" },
+  { "front": "A che ora arrivano?", "back": "What time are they coming?", "speak": "What time are they coming?" },
+  { "front": "Per quanto tempo resti?", "back": "How long are you staying for?", "speak": "How long are you staying for?" },
+  { "front": "Quando parti?", "back": "When are you leaving?", "speak": "When are you leaving?" },
+
+  { "front": "Piove ancora?", "back": "Is it still raining?", "speak": "Is it still raining?" },
+  { "front": "Partiamo domani ma, questa volta, guida mia moglie.", "back": "We’re leaving tomorrow but, this time, my wife is driving.", "speak": "We’re leaving tomorrow but - this time - my wife is driving." },
+  { "front": "Vieni o non vieni?!", "back": "Are you coming or not?!", "speak": "Are you coming or not?!" },
+  { "front": "è meglio se richiami nel pomeriggio. Lei dorme ancora.", "back": "It’s better if you call back this afternoon. She’s still sleeping.", "speak": "It’s better if you call back this afternoon - She’s still sleeping." },
+
+  {
+  "front": "Che succede?",
+  "back": "What’s happening? / What’s going on?",
+  "speak": "What’s happening? - or - What’s going on?"
+},
+
+  { "front": "Chi canta?", "back": "Who’s singing?", "speak": "Who’s singing?" },
+  { "front": "Dove si svolge?", "back": "Where is it taking place?", "speak": "Where is it taking place?" },
+  { "front": "Quando giocano?", "back": "When are they playing?", "speak": "When are they playing?" },
+  { "front": "Mi trasferisco nella mia nuova casa alla fine del mese.", "back": "I’m moving into my new house at the end of the month.", "speak": "I’m moving into my new house at the end of the month." },
+  { "front": "Cosa cucini stasera?", "back": "What are you cooking this evening?", "speak": "What are you cooking this evening?" },
+  { "front": "L’ascensore funziona adesso?", "back": "Is the lift working now?", "speak": "Is the lift working now?" }
+],
+
+3: [
+  { "front": "Forse lo faccio domani", "back": "Maybe I will do it tomorrow", "speak": "Maybe I will do it tomorrow" },
+  { "front": "Magari lui non accetta l’offerta", "back": "Maybe he will not accept the offer", "speak": "Maybe he will not accept the offer" },
+  { "front": "Probabilmente ci chiamano più tardi", "back": "They will probably call us later", "speak": "They will probably call us later" },
+  { "front": "Forse non resto molto", "back": "Maybe I will not stay long", "speak": "Maybe I will not stay long" },
+  { "front": "Tranquillo, sistemo io la faccenda", "back": "Don’t worry, I’ll take care of the matter", "speak": "Don’t worry - I’ll take care of the matter" },
+  { "front": "Forse Mark arriva più tardi", "back": "Maybe Mark will arrive later", "speak": "Maybe Mark will arrive later" },
+  { "front": "Secondo te, il direttore accetta o non accetta la proposta?", "back": "In your opinion,  will the manager accept the proposal or not?", "speak": "In your opinion,  will the manager accept the proposal or not?" },
+  { "front": "Ci pensa il tecnico a sistemarlo", "back": "The technician will repair it", "speak": "The technician will repair it" },
+  { "front": "Sicuramente il treno arriva in ritardo", "back": "The train will arrive late for sure", "speak": "The train will arrive late for sure" },
+
+  { "front": "Probabilmente finiamo più tardi oggi", "back": "We will probably finish later today", "speak": "We will probably finish later today" },
+  
+  { "front": "Spero che il cameriere ci porti il conto tra poco", "back": "I hope the waiter will bring us the bill soon", "speak": "I hope the waiter will bring us the bill soon" },
+  { "front": "Quando succede, secondo te?", "back": "When do you think it will happen?", "speak": "When do you think it will happen?" },
+
+  { "front": "Apro la finestra?", "back": "Shall I open the window?", "speak": "Shall I open the window?" },
+  { "front": "Porto io le valigie?", "back": "Shall I carry the suitcases?", "speak": "Shall I carry the suitcases?" },
+  { "front": "Chiudo la porta?", "back": "Shall I close the door?", "speak": "Shall I close the door?" },
+  { "front": "Preparo il caffè?", "back": "Shall I make the coffee?", "speak": "Shall I make the coffee?" },
+
+  { "front": "Cominciamo?", "back": "Shall we start?", "speak": "Shall we start?" },
+  { "front": "Prendiamo un taxi?", "back": "Shall we take a taxi?", "speak": "Shall we take a taxi?" },
+  { "front": "Torniamo dopo?", "back": "Shall we come back later?", "speak": "Shall we come back later?" },
+  { "front": "Facciamo una passeggiata in centro?", "back": "Shall we go for a walk in the city centre?", "speak": "Shall we go for a walk in the city centre?" },
+
+  { "front": "Facciamo una pausa!", "back": "Let’s take a break!", "speak": "Let’s take a break!" },
+  { "front": "Andiamo!", "back": "Let’s go!", "speak": "Let’s go!" },
+  { "front": "Riproviamo!", "back": "Let’s try again!", "speak": "Let’s try again!" },
+  { "front": "Facciamo un riassunto della situazione!", "back": "Let’s make a summary of the situation!", "speak": "Let’s make a summary of the situation!" },
+
+  { "front": "Non compro questo computer: costa troppo", "back": "I will not buy this computer; it costs too much", "speak": "I will not buy this computer - it costs too much" },
+  { "front": "Offro io il caffè a tutti", "back": "I will pay for everyone’s coffee", "speak": "I will pay for everyone’s coffee" },
+  { "front": "Non vi lascio mai da soli", "back": "I will never leave you on your own", "speak": "I will never leave you on your own" },
+
+  { "front": "Lunedì prendo io la decisione finale", "back": "I will make the final decision on Monday", "speak": "I will make the final decision on Monday" },
+  { "front": "Non raccontiamo a nessuno il tuo segreto", "back": "We will not tell anyone your secret", "speak": "We will not tell anyone your secret" },
+  { "front": "Non credo di poter arrivare in tempo per la riunione", "back": "I don’t think I will be able to arrive in time for the meeting", "speak": "I don’t think I will be able to arrive in time for the meeting" },
+
+  { "front": "Ti regalo io questo libro per il tuo compleanno", "back": "I will give you this book for your birthday", "speak": "I will give you this book for your birthday" },
+
+  { "front": "Non mangio niente stasera: ho già cenato", "back": "I will not eat anything tonight; I have already had dinner", "speak": "I will not eat anything tonight - I have already had dinner" },
+  { "front": "Non te lo dico", "back": "I won’t tell you", "speak": "I won’t tell you" },
+
+  { "front": "Non credo di parlare con lui prima di domani", "back": "I don’t think I will speak to him before tomorrow", "speak": "I don’t think I will speak to him before tomorrow" },
+  { "front": "Rispondi tu al telefono?", "back": "Will you answer the phone?", "speak": "Will you answer the phone?" },
+  { "front": "Vieni con noi alla festa di sabato?", "back": "Will you come with us to the party on Saturday?", "speak": "Will you come with us to the party on Saturday?" },
+  { "front": "Chi prepara la cena di Natale quest’anno?", "back": "Who will prepare the Christmas dinner this year?", "speak": "Who will prepare the Christmas dinner this year?" },
+
+  { "front": "Se mi aspettate qui, vado a cercare le chiavi", "back": "If you wait for me here, I will go and look for the keys", "speak": "If you wait for me here - I will go and look for the keys" },
+  { "front": "Non appena finirò, ti mando il file", "back": "As soon as I finish, I will send you the file", "speak": "As soon as I finish - I will send you the file" },
+  { "front": "Quando saremo tutti, iniziamo la riunione", "back": "We will start the meeting when all of us are here", "speak": "We will start the meeting when all of us are here" },
+  { "front": "Quando tornerò a casa, ti chiamo", "back": "When I get back home, I will call you", "speak": "When I get back home - I will call you" },
+  { "front": "Se troverò parcheggio, sarò da te verso le 16", "back": "I will be at your place around 4 if I find a parking space", "speak": "I will be at your place around four if I find a parking space" },
+  { "front": "Finché non arriverà il tecnico, dobbiamo aspettare qui", "back": "We will have to wait here until the technician arrives", "speak": "We will have to wait here until the technician arrives" },
+  { "front": "Continuerò a lavorare finché non avrò 70 anni", "back": "I will continue working until I am 70 years old", "speak": "I will continue working until I am seventy years old" },
+  { "front": "Non appena avrò notizie, ti faccio sapere", "back": "As soon as I have news, I will let you know", "speak": "As soon as I have news - I will let you know" }
+],
+
+
+4: [
+  { "front": "Studio francese da 5 mesi", "back": "I’ve been studying French for 5 months", "speak": "I’ve been studying French for five months" },
+  { "front": "È da una vita che lavoriamo a questo progetto!", "back": "We’ve been working on this project for ages!", "speak": "We’ve been working on this project for ages!" },
+  { "front": "Alleno questa squadra da 4 anni", "back": "I’ve been coaching this team for 4 years", "speak": "I’ve been coaching this team for four years" },
+  { "front": "Sono cinque giorni che aspetto una risposta", "back": "I have been waiting five days for an answer", "speak": "I have been waiting five days for an answer" },
+  { "front": "Gestisco questo ufficio da 12 anni", "back": "I’ve been managing this office for 12 years", "speak": "I’ve been managing this office for twelve years" },
+  { "front": "Sono sette mesi che sviluppo questo software", "back": "I have been developing this software for 7 months", "speak": "I have been developing this software for seven months" },
+  { "front": "Sono quattro mesi che organizzo questo evento", "back": "I’ve been organising this event for 4 months", "speak": "I’ve been organising this event for four months" },
+  { "front": "Sono due settimane che cerco un nuovo appartamento", "back": "I’ve been looking for a new flat for 2 weeks", "speak": "I’ve been looking for a new flat for two weeks" },
+  { "front": "Collaboriamo con questa azienda da 9 anni", "back": "We’ve been collaborating with this company for 9 years", "speak": "We’ve been collaborating with this company for nine years" },
+  { "front": "È da tanto che discutono questo problema", "back": "They’ve been discussing this problem for a long time", "speak": "They’ve been discussing this problem for a long time" },
+
+  { "front": "Sono almeno sei ore che piove", "back": "It’s been raining for at least 6 hours", "speak": "It’s been raining for at least six hours" },
+  { "front": "Lavoro qui dal 2018", "back": "I’ve been working here since 2018", "speak": "I’ve been working here since twenty eighteen" },
+  { "front": "Lui studia Economia dal 2021", "back": "He’s been studying Economics since 2021", "speak": "He’s been studying Economics since twenty twenty one" },
+  { "front": "È da lunedì che aspetto una risposta", "back": "I have been waiting for an answer since Monday", "speak": "I have been waiting for an answer since Monday" },
+  { "front": "Guardo questa serie da gennaio", "back": "I’ve been watching this series since January", "speak": "I’ve been watching this series since January" },
+
+  { "front": "Da quanti mesi studi polacco?", "back": "How many months have you been studying Polish?", "speak": "How many months have you been studying Polish?" },
+  { "front": "Da quanti anni vivi in questa città?", "back": "How many years have you been living in this city?", "speak": "How many years have you been living in this city?" },
+  { "front": "Da quanti giorni aspetti una risposta?", "back": "How many days have you been waiting for an answer?", "speak": "How many days have you been waiting for an answer?" },
+  { "front": "Da quante ore camminiamo?", "back": "How many hours have we been walking?", "speak": "How many hours have we been walking?" },
+  { "front": "Da quanti mesi cercate una casa?", "back": "How many months have you been looking for a house?", "speak": "How many months have you been looking for a house?" },
+
+  { "front": "Da quanti anni lei insegna in questa scuola?", "back": "How many years has she been teaching in this school?", "speak": "How many years has she been teaching in this school?" },
+  { "front": "Da quando lei gestisce questo progetto?", "back": "Since when has she been managing this project?", "speak": "Since when has she been managing this project?" },
+  { "front": "Da quanto tempo aspetti l'autobus?", "back": "How long have you been waiting for the bus?", "speak": "How long have you been waiting for the bus?" },
+
+  { "front": "Abito in questo quartiere dal 2020", "back": "I’ve been living in this neighbourhood since 2020", "speak": "I’ve been living in this neighbourhood since twenty twenty" },
+  { "front": "Da quanti anni suoni la chitarra?", "back": "How many years have you been playing the guitar?", "speak": "How many years have you been playing the guitar?" },
+  { "front": "Da quanto tempo stai con la tua fidanzata?", "back": "How long have you been with your girlfriend?", "speak": "How long have you been with your girlfriend?" },
+  { "front": "Da quante ore cerchi di risolvere questo problema?", "back": "How many hours have you been trying to solve this problem?", "speak": "How many hours have you been trying to solve this problem?" },
+
+  { "front": "Sono diverse settimane che abbiamo voglia di andare via da qualche parte", "back": "We’ve been wanting to go away somewhere for several weeks", "speak": "We’ve been wanting to go away somewhere for several weeks" },
+  { "front": "È da tanto tempo che i miei colleghi seguono questa pratica", "back": "My colleagues have been dealing with this case for a long time", "speak": "My colleagues have been dealing with this case for a long time" },
+  { "front": "È da marzo che collaboriamo con Sarah", "back": "We’ve been collaborating with Sarah since March", "speak": "We’ve been collaborating with Sarah since March" },
+  { "front": "Da quanto tempo ti alleni in palestra?", "back": "How long have you been training at the gym?", "speak": "How long have you been training at the gym?" },
+  { "front": "Lui lavora su questa pratica da settimane", "back": "He’s been working on this case for weeks", "speak": "He’s been working on this case for weeks" },
+
+  { "front": "È da gennaio che lei segue un corso di fotografia online", "back": "She’s been taking an online photography course since January", "speak": "She’s been taking an online photography course since January" },
+  { "front": "È da ieri che provo a montare questo mobile!", "back": "I’ve been trying to assemble this piece of furniture since yesterday!", "speak": "I’ve been trying to assemble this piece of furniture since yesterday!" }
+],
+
+5: [
+  { "front": "Non vedo Marco da sei settimane", "back": "I haven’t seen Marco for six weeks", "speak": "I haven’t seen Marco for six weeks" },
+  { "front": "Laura non sente sua sorella da dieci giorni", "back": "Laura hasn’t heard from her sister for ten days", "speak": "Laura hasn’t heard from her sister for ten days" },
+  { "front": "Sono dieci giorni che Paolo non parla con il direttore", "back": "He hasn’t spoken to the manager for ten days", "speak": "He hasn’t spoken to the manager for ten days" },
+  { "front": "Paolo e Laura non parlano tra loro da tre settimane", "back": "They haven’t spoken to each other for three weeks", "speak": "They haven’t spoken to each other for three weeks" },
+  { "front": "È da Natale che i vicini non parlano con noi", "back": "They haven’t spoken to us since Christmas", "speak": "They haven’t spoken to us since Christmas" },
+  { "front": "Non bevo alcol da sei mesi", "back": "I haven’t drunk alcohol for six months", "speak": "I haven’t drunk alcohol for six months" },
+  { "front": "Non mangio la pizza da tantissimo tempo", "back": "I haven’t eaten pizza for a very long time", "speak": "I haven’t eaten pizza for a very long time" },
+  { "front": "Non riceviamo una risposta da due settimane", "back": "We haven’t received an answer for two weeks", "speak": "We haven’t received an answer for two weeks" },
+  { "front": "L’azienda non cambia strategia da oltre tre anni", "back": "The company hasn’t changed its strategy for over three years", "speak": "The company hasn’t changed its strategy for over three years" },
+  { "front": "Il governo non annuncia nuove misure da aprile", "back": "The government hasn’t announced any new measures since April", "speak": "The government hasn’t announced any new measures since April" },
+
+  { "front": "Non succede niente di interessante da mesi", "back": "Nothing interesting has happened for months", "speak": "Nothing interesting has happened for months" },
+  { "front": "È quasi un anno che non vedo un film al cinema", "back": "I haven’t seen a film at the cinema for almost a year", "speak": "I haven’t seen a film at the cinema for almost a year" },
+  { "front": "Non vedo Maria dal giorno del suo compleanno", "back": "I haven’t seen Maria since her birthday", "speak": "I haven’t seen Maria since her birthday" },
+  { "front": "Non vado in vacanza dal duemiladiciannove", "back": "I haven’t been on holiday since 2019", "speak": "I haven’t been on holiday since twenty nineteen" },
+  { "front": "Mi fanno male le gambe e non vado in palestra dallo scorso mese", "back": "My legs hurt and I haven’t been to the gym since last month", "speak": "My legs hurt - and I haven’t been to the gym since last month" },
+  { "front": "È da una vita che non vado dal dentista", "back": "I haven’t been to the dentist for ages", "speak": "I haven’t been to the dentist for ages" },
+  { "front": "Non dormo bene da quando ho iniziato questo nuovo lavoro", "back": "I haven’t slept well since I started this new job", "speak": "I haven’t slept well since I started this new job" },
+  { "front": "Non gioco a tennis da quando avevo venti anni", "back": "I haven’t played tennis since I was twenty", "speak": "I haven’t played tennis since I was twenty" },
+  { "front": "A causa della sosta per la nazionale, la squadra non gioca una partita di campionato da dieci giorni", "back": "Because of the international break, the team hasn’t played a league match for ten days", "speak": "Because of the international break - the team hasn’t played a league match for ten days" },
+  { "front": "Non guido da quando ho venduto la macchina lo scorso mese", "back": "I haven’t driven since I sold my car last month", "speak": "I haven’t driven since I sold my car last month" },
+
+  { "front": "Il computer non funziona bene da quando è stato aggiornato un paio di giorni fa", "back": "The computer hasn’t worked properly since it was updated a couple of days ago", "speak": "The computer hasn’t worked properly since it was updated a couple of days ago" },
+  { "front": "È dal 2017 che non nevica da queste parti", "back": "It hasn’t snowed here since 2017", "speak": "It hasn’t snowed here since twenty seventeen" },
+  { "front": "È da tanto che non guardo una serie TV", "back": "I haven’t watched a TV series for a long time", "speak": "I haven’t watched a TV series for a long time" },
+  { "front": "Sono molti anni che non invitiamo qualcuno a cena", "back": "We haven’t invited anyone to dinner for many years", "speak": "We haven’t invited anyone to dinner for many years" },
+  { "front": "Devo ammettere che non lavo la macchina da oltre sei mesi", "back": "I must admit I haven’t washed the car for over six months", "speak": "I must admit - I haven’t washed the car for over six months" },
+  { "front": "Mia moglie non stira le camicie da quando ho iniziato a lavorare da casa", "back": "My wife hasn’t ironed shirts since I started working from home", "speak": "My wife hasn’t ironed shirts since I started working from home" },
+  { "front": "Sono anni che non faccio un giro in bici", "back": "I haven’t been for a bike ride for years", "speak": "I haven’t been for a bike ride for years" },
+  { "front": "Non uso i social da settimane", "back": "I haven’t used social media for weeks", "speak": "I haven’t used social media for weeks" },
+  { "front": "È da un po’ che non pulisco la casa", "back": "I haven’t cleaned the house for a while", "speak": "I haven’t cleaned the house for a while" },
+  { "front": "Sono mesi che non mi taglio i capelli", "back": "I haven’t had a haircut for months", "speak": "I haven’t had a haircut for months" }
+
+],
+
+6: [
+  { "front": "Da quanti anni lui non vede i suoi cugini?", "back": "How many years has it been since he last saw his cousins?", "speak": "How many years has it been since he last saw his cousins?" },
+  { "front": "Da quanto tempo lui non parla con il suo professore?", "back": "How long has it been since he last spoke with his professor?", "speak": "How long has it been since he last spoke with his professor?" },
+  { "front": "Da quanto tempo lei non mangia la pizza?", "back": "How long has it been since she last ate pizza?", "speak": "How long has it been since she last ate pizza?" },
+  { "front": "Da quanti giorni non dormi bene?", "back": "How many days has it been since you last slept well?", "speak": "How many days has it been since you last slept well?" },
+  { "front": "Da quante settimane non vai al cinema?", "back": "How many weeks has it been since you last went to the cinema?", "speak": "How many weeks has it been since you last went to the cinema?" },
+  { "front": "Da quanti mesi lei non va in palestra?", "back": "How many months has it been since she last went to the gym?", "speak": "How many months has it been since she last went to the gym?" },
+  { "front": "Da quanti anni non guidi di notte?", "back": "How many years has it been since you last drove at night?", "speak": "How many years has it been since you last drove at night?" },
+  { "front": "Da quanti anni non scrivi una lettera a mano?", "back": "How many years has it been since you last wrote a letter by hand?", "speak": "How many years has it been since you last wrote a letter by hand?" },
+  { "front": "Da quanti giorni lei non sente sua sorella?", "back": "How many days has it been since she last heard from her sister?", "speak": "How many days has it been since she last heard from her sister?" },
+  { "front": "Da quanti giorni non chiami tua madre?", "back": "How many days has it been since you last called your mother?", "speak": "How many days has it been since you last called your mother?" },
+  { "front": "Da quanti mesi non compri un libro?", "back": "How many months has it been since you last bought a book?", "speak": "How many months has it been since you last bought a book?" },
+  { "front": "Da quanti giorni non leggi un libro?", "back": "How many days has it been since you last read a book?", "speak": "How many days has it been since you last read a book?" },
+  { "front": "Da quanti mesi non viaggi all’estero?", "back": "How many months has it been since you last travelled abroad?", "speak": "How many months has it been since you last travelled abroad?" },
+  { "front": "Da quanti giorni non pulisci la tua camera?", "back": "How many days has it been since you last cleaned your room?", "speak": "How many days has it been since you last cleaned your room?" },
+  { "front": "Da quante ore non succede niente?", "back": "How many hours has it been since anything last happened?", "speak": "How many hours has it been since anything last happened?" },
+  { "front": "Da quanti giorni non ti alleni?", "back": "How many days has it been since you last trained?", "speak": "How many days has it been since you last trained?" },
+  { "front": "Da quante ore non controlli le email?", "back": "How many hours has it been since you last checked your emails?", "speak": "How many hours has it been since you last checked your emails?" },
+  { "front": "Da quanto tempo lei non guarda un film a casa?", "back": "How long has it been since she last watched a film at home?", "speak": "How long has it been since she last watched a film at home?" },
+  { "front": "Da quanto tempo non cambi l’olio della macchina?", "back": "How long has it been since you last changed the oil in your car?", "speak": "How long has it been since you last changed the oil in your car?" },
+  { "front": "Da quanti anni lui non porta una cravatta?", "back": "How many years has it been since he last wore a tie?", "speak": "How many years has it been since he last wore a tie?" },
+  { "front": "Da quanto tempo lei non usa la bici per andare al lavoro?", "back": "How long has it been since she last used her bike to go to work?", "speak": "How long has it been since she last used her bike to go to work?" },
+  { "front": "Da quante settimane non prendi un taxi?", "back": "How many weeks has it been since you last took a taxi?", "speak": "How many weeks has it been since you last took a taxi?" },
+  { "front": "Da quante settimane non piove?", "back": "How many weeks has it been since it last rained?", "speak": "How many weeks has it been since it last rained?" },
+  { "front": "Da quanti anni non succede?", "back": "How many years has it been since it last happened?", "speak": "How many years has it been since it last happened?" },
+
+  { "front": "Da quando non senti Richard?", "back": "When did you last hear from Richard?", "speak": "When did you last hear from Richard?" },
+  { "front": "Da quando non parli con il direttore di questa faccenda?", "back": "When did you last speak to the manager about this matter?", "speak": "When did you last speak to the manager about this matter?" },
+  { "front": "Da quando non giochi a tennis?", "back": "When did you last play tennis?", "speak": "When did you last play tennis?" },
+  { "front": "Da quando non guidi di notte?", "back": "When did you last drive at night?", "speak": "When did you last drive at night?" },
+  { "front": "Da quando non mangiamo pesce? Non mi ricordo", "back": "When did we last eat fish? I don’t remember", "speak": "When did we last eat fish? - I don’t remember" },
+  { "front": "Da quando non bevi il vino rosso?", "back": "When did you last drink red wine?", "speak": "When did you last drink red wine?" },
+  { "front": "Da quando non scrivi a Paul?", "back": "When did you last write to Paul?", "speak": "When did you last write to Paul?" },
+  { "front": "Da quando non vai al cinema?", "back": "When did you last go to the cinema?", "speak": "When did you last go to the cinema?" },
+  { "front": "Da quando non vedi i vostri cugini?", "back": "When did you last see your cousins?", "speak": "When did you last see your cousins?" },
+  { "front": "Da quando non vi parlate?", "back": "When did you last speak to each other?", "speak": "When did you last speak to each other?" },
+  { "front": "Da quando non succede?", "back": "When did it last happen?", "speak": "When did it last happen?" },
+  { "front": "Da quando non suoni la chitarra?", "back": "When did you last play your guitar?", "speak": "When did you last play your guitar?" },
+  { "front": "Da quando non vai in palestra?", "back": "When did you last go to the gym?", "speak": "When did you last go to the gym?" },
+  { "front": "Da quando non lavori da casa?", "back": "When did you last work from home?", "speak": "When did you last work from home?" },
+  { "front": "Da quando non leggi un giornale?", "back": "When did you last read a newspaper?", "speak": "When did you last read a newspaper?" },
+  { "front": "Da quando non viaggi all'estero?", "back": "When did you last travel abroad?", "speak": "When did you last travel abroad?" },
+  { "front": "Da quando non usciamo il sabato sera?", "back": "When did we last go out on Saturday night?", "speak": "When did we last go out on Saturday night?" },
+  { "front": "Da quando non ci sentiamo per telefono?", "back": "When did we last talk on the phone?", "speak": "When did we last talk on the phone?" },
+  { "front": "Da quando non indossi quelle scarpe?", "back": "When did you last wear those shoes?", "speak": "When did you last wear those shoes?" },
+  { "front": "Da quando non vai a correre al parco?", "back": "When did you last go running in the park?", "speak": "When did you last go running in the park?" },
+  { "front": "Da quando non guardi i telegiornali?", "back": "When did you last watch the news?", "speak": "When did you last watch the news?" },
+  { "front": "Da quando Susan non organizza una festa?", "back": "When did Susan last organise a party?", "speak": "When did Susan last organise a party?" },
+  { "front": "Da quando non aggiorni la mailing list?", "back": "When did you last update the mailing list?", "speak": "When did you last update the mailing list?" },
+  { "front": "Da quando non frequenti un corso di formazione?", "back": "When did you last attend a training course?", "speak": "When did you last attend a training course?" },
+  { "front": "Da quando non ci vengono insieme?", "back": "When did they last come here together?", "speak": "When did they last come here together?" }
+],
+
+7: [
+{"front":"Non sento Richard da lunedì","back":"I last heard from Richard on Monday","speak":"I last heard from Richard on Monday"},
+{"front":"Non parlo con il direttore di questa faccenda dalla riunione della settimana scorsa","back":"I last spoke to the manager about this matter at last week’s meeting","speak":"I last spoke to the manager - about this matter - at last week’s meeting"},
+{"front":"Lui non gioca a tennis dall’estate scorsa; è passato quasi un anno ormai","back":"He hasn’t played tennis since last summer - it’s been almost a year now","speak":"He has not played tennis since last summer - it’s been almost a year now"},
+{"front":"Non mangiamo pesce da Natale","back":"We last ate fish at Christmas","speak":"We last ate fish at Christmas"},
+{"front":"È da Capodanno che non bevo vino rosso","back":"I last drank red wine on New Year’s Day","speak":"I last drank red wine on New Year’s Day"},
+{"front":"Non scrivo a Paul da giugno","back":"I last wrote to Paul in June","speak":"I last wrote to Paul in June"},
+{"front":"Non vediamo i nostri cugini dall’inverno del 2019","back":"We last saw our cousins in the winter of 2019","speak":"We last saw our cousins in the winter of twenty nineteen"},
+{"front":"Non ci parliamo da novembre dell’anno scorso","back":"We last spoke to each other in November of last year","speak":"We last spoke to each other in November of last year"},
+{"front":"Non succede dal 2015","back":"It last happened in 2015","speak":"It last happened in twenty fifteen"},
+{"front":"È da marzo che non vado in palestra","back":"I last went to the gym in March","speak":"I last went to the gym in March"},
+{"front":"Non lavoro da casa da settembre","back":"I last worked from home in September","speak":"I last worked from home in September"},
+{"front":"Non leggo un giornale dal 2024","back":"I last read a newspaper in 2024","speak":"I last read a newspaper in twenty twenty four"},
+{"front":"Non viaggio all’estero dal 2022","back":"I last travelled abroad in 2022","speak":"I last travelled abroad in twenty twenty two"},
+{"front":"Non usciamo il sabato sera dal giorno del mio compleanno","back":"We last went out on a Saturday night on my birthday","speak":"We last went out on a Saturday night - on my birthday"},
+{"front":"Non ci sentiamo per telefono dal giorno in cui lui stava per partire per la Cina","back":"We last spoke to each other on the phone on the day he was about to leave for China","speak":"We last spoke to each other on the phone - on the day he was about to leave for China"},
+{"front":"È dall’anno scorso che non indosso queste scarpe","back":"I last wore those shoes last year","speak":"I last wore those shoes last year"},
+{"front":"Non vado a correre al parco dalla fine del mese scorso","back":"I last went running in the park at the end of last month","speak":"I last went running in the park - at the end of last month"},
+{"front":"È da sabato scorso che non guardo i telegiornali","back":"I last watched the TV news last Saturday","speak":"I last watched the TV news last Saturday"},
+{"front":"È da giugno che non aggiorniamo la nostra mailing-list","back":"We last updated our mailing list in June","speak":"We last updated our mailing list in June"},
+{"front":"Non frequento un corso di formazione dal 2021","back":"I last attended a training course in 2021","speak":"I last attended a training course in twenty twenty one"},
+
+{"front":"Sono sei anni che lui non vede i suoi cugini","back":"It has been six years since he last saw his cousins","speak":"It has been six years since he last saw his cousins"},
+{"front":"Sono circa due mesi che lei non parla con il suo professore","back":"It has been about two months since she last spoke with her professor","speak":"It has been about two months since she last spoke with her professor"},
+{"front":"È quasi un anno che non mangiamo la pizza","back":"It has been nearly a year since we last ate pizza","speak":"It has been nearly a year since we last ate pizza"},
+
+{"front":"È un mese che non vado al cinema","back":"It has been a month since I last went to the cinema","speak":"It has been a month since I last went to the cinema"},
+{"front":"Sono tre mesi che lei non va in palestra","back":"It has been three months since she last went to the gym","speak":"It has been three months since she last went to the gym"},
+{"front":"Sono dieci anni che non guido di notte","back":"It has been ten years since I last drove at night","speak":"It has been ten years since I last drove at night"},
+{"front":"Sono circa quindici anni che non scrivo una lettera a mano","back":"It has been about fifteen years since I last wrote a letter by hand","speak":"It has been about fifteen years since I last wrote a letter by hand"},
+{"front":"Sono due mesi che lei non sente sua sorella","back":"It has been two months since she last heard from her sister","speak":"It has been two months since she last heard from her sister"},
+{"front":"È più di una settimana che non chiamo mia madre","back":"It has been just over a week since I last called my mother","speak":"It has been just over a week since I last called my mother"},
+{"front":"Sono due anni che non compro un libro","back":"It has been two years since I last bought a book","speak":"It has been two years since I last bought a book"},
+{"front":"È quasi un anno che non viaggio all’estero","back":"It has been nearly a year since I last travelled abroad","speak":"It has been nearly a year since I last travelled abroad"},
+{"front":"È una settimana che non pulisco la mia camera","back":"It has been a week since I last cleaned my room","speak":"It has been a week since I last cleaned my room"},
+{"front":"Sono quattro ore che non succede niente","back":"It has been four hours since anything last happened","speak":"It has been four hours since anything last happened"},
+{"front":"Sono tre giorni che non mi alleno","back":"It has been three days since I last trained","speak":"It has been three days since I last trained"},
+
+{"front":"Sono sei mesi che non cambio l’olio della macchina","back":"It has been six months since I last changed the oil in my car","speak":"It has been six months since I last changed the oil in my car"},
+{"front":"Sono dodici anni che lui non porta una cravatta","back":"It has been twelve years since he last wore a tie","speak":"It has been twelve years since he last wore a tie"},
+{"front":"Sono quattro mesi che lei non usa la bici per andare al lavoro","back":"It has been four months since she last used her bike to go to work","speak":"It has been four months since she last used her bike to go to work"},
+{"front":"Sono secoli che non prendo un taxi","back":"It has been ages since I last took a taxi","speak":"It has been ages since I last took a taxi"}
+]
+
+}
+
+
+let cards = []
+let index = 0
+let currentFloor = 1
+let mode = "floor"
+let currentAudio = null
+
+let recentCards = []
+const RECENT_LIMIT = 20
+
+/* ===== DOOR LABELS ===== */
+const doorLabels = {
+  1: "DOOR 1",
+  2: "DOOR 2",
+  3: "DOOR 3",
+  4: "DOOR 4",
+  5: "DOOR 5",
+  6: "DOOR 6",
+  7: "DOOR 6+"
+}
+
+const flashcard = document.getElementById("flashcard")
+const frontText = document.getElementById("front-text")
+const backText = document.getElementById("back-text")
+const counter = document.getElementById("counter-display")
+const speakBtn = document.getElementById("speakBtn")
+const floorLabel = document.getElementById("door-label")
+
+/* ================= SHUFFLE ================= */
+
+function shuffle(arr){
+  const a = [...arr]
+  for(let i = a.length - 1; i > 0; i--){
+    let j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+/* ================= BUTTON HIGHLIGHT ================= */
+
+function activateButton(n){
+  document.querySelectorAll(".set-btn").forEach(btn=>{
+    btn.classList.remove("active")
+  })
+
+  if(mode === "test"){
+    document.getElementById("test-btn").classList.add("active")
+  } else if(n){
+    document.querySelectorAll(".set-btn")[n-1].classList.add("active")
+  }
+}
+
+/* ================= LOAD FLOOR ================= */
+
+window.loadSet = function(n){
+
+  mode = "floor"
+  currentFloor = n
+
+  let weightedPool = []
+
+  sets[n].forEach(card=>{
+    if(recentCards.includes(card)){
+      if(Math.random() < 0.3){
+        weightedPool.push(card)
+      }
+    } else {
+      weightedPool.push(card)
+    }
+  })
+
+  if(weightedPool.length < 10){
+    weightedPool = [...sets[n]]
+  }
+
+  let selected = shuffle(weightedPool).slice(0,10)
+
+  cards = selected.map(card=>{
+    let originalIndex = sets[n].indexOf(card) + 1
+    return {
+      ...card,
+      audio: `audio/floor${n}/F${n}-${String(originalIndex).padStart(3,'0')}.mp3`
+    }
+  })
+
+  recentCards = [...recentCards, ...cards].slice(-RECENT_LIMIT)
+
+  index = 0
+
+  activateButton(n)
+  updateCard()
+}
+
+/* ================= TEST MODE ================= */
+
+window.loadTest = function(){
+
+  mode = "test"
+
+  let combined = []
+
+ Object.keys(sets).forEach(i=>{
+
+  if(Number(i) === 7) return // skip Door 6+
+
+    sets[i].forEach((card, idx)=>{
+      combined.push({
+        ...card,
+        floor: Number(i), // FIX
+        audio: `audio/floor${i}/F${i}-${String(idx+1).padStart(3,'0')}.mp3`
+      })
+    })
+  })
+
+  cards = shuffle(combined).slice(0,20)
+
+  index = 0
+
+  activateButton()
+  updateCard()
+}
+
+/* ================= REFRESH ================= */
+
+window.refreshCurrentSet = function(){
+  if(mode === "floor"){
+    loadSet(currentFloor)
+  } else {
+    loadTest()
+  }
+}
+
+/* ================= UPDATE CARD ================= */
+
+function updateCard(){
+
+  if(!cards.length) return
+
+  flashcard.classList.remove("flipped")
+
+  // RESTORE NORMAL CARD STYLING
+  frontText.style.color = "";
+  frontText.style.textAlign = "center";
+  frontText.style.fontSize = "1.08rem";
+  frontText.style.lineHeight = "1.28";
+  frontText.style.padding = "";
+
+  const c = cards[index]
+
+  frontText.innerText = c.front.toUpperCase()
+  backText.innerText = c.back.toUpperCase()
+
+  if(mode === "floor"){
+    floorLabel.innerText = doorLabels[currentFloor] || ("DOOR " + currentFloor)
+  } else {
+    floorLabel.innerText = doorLabels[c.floor] || ("DOOR " + c.floor)
+  }
+
+  counter.innerText = (index + 1) + " / " + cards.length
+}
+
+/* ================= NAVIGATION ================= */
+
+window.nextCard = function(){
+  index = (index + 1) % cards.length
+  updateCard()
+}
+
+window.prevCard = function(){
+  index = (index - 1 + cards.length) % cards.length
+  updateCard()
+}
+
+/* ================= CARD FLIP ================= */
+
+flashcard.addEventListener("click", ()=>{
+
+  if(mode === "instructions") return
+
+  flashcard.classList.toggle("flipped")
+})
+
+/* ================= AUDIO ================= */
+
+speakBtn.addEventListener("click", (e)=>{
+
+  e.stopPropagation()
+
+  if(mode === "instructions") return
+
+  if(currentAudio){
+    currentAudio.pause()
+    currentAudio.currentTime = 0
+    currentAudio = null
+  }
+
+  currentAudio = new Audio(cards[index].audio)
+  currentAudio.play()
+})
+
+const BACK_BUTTON_URL = "https://www.acceleratedlanguagesystems.com/virtual-classroom-booster";
+
+document.getElementById("libraryBackBtn").onclick = function(){
+    window.location.href = BACK_BUTTON_URL;
+};
+
+
+
+/* ================= INITIAL LOAD ================= */
+
+window.loadInstructions = function(){
+
+  mode = "instructions";
+
+  frontText.style.color = "#061247";
+  frontText.style.textAlign = "left";
+  frontText.style.fontSize = ".82rem";
+  frontText.style.lineHeight = "1.22";
+  frontText.style.padding = "6px 10px";
+
+  // stop any flip
+  flashcard.classList.remove("flipped");
+
+  // FRONT
+  frontText.innerHTML =
+  'EACH <span style="color:darkred;">DOOR</span> HAS <span style="color:darkred;">30–40</span> EXAMPLES BUT ONLY <span style="color:darkred;">10</span> SHOW EACH TIME<br><br>' +
+
+  'YOU CAN REFRESH THE CARDS AT ANY MOMENT<br><br>' +
+
+  '<span style="color:darkred;">DOOR 6+</span> = ALTERNATIVE FORMS FOR <span style="color:darkred;">DOOR 5</span> BASED ON <span style="color:darkred;">DOOR 6</span><br><br>' +
+
+  '<span style="color:darkgreen;">TEST</span> = ALL <span style="color:darkred;">DOORS</span> MIXED (EXCEPT <span style="color:darkred;">DOOR 6+</span>) OF WHICH <span style="color:darkred;">20</span> ARE SELECTED RANDOMLY FROM <span style="color:darkred;">180</span><br><br>' +
+
+  'FIRST READ → DECIDE WHICH <span style="color:darkred;">DOOR</span> → FLIP TO CHECK<br><br>' +
+
+  '<span style="color:darkgreen;">CLICK ANY DOOR TO BEGIN →</span>';
+
+  backText.innerText = "";
+
+  // label
+  doorLabel.innerText = "INFO";
+
+  // remove counter
+  counter.innerText = "—";
+
+  // clear cards so navigation doesn't interfere
+  cards = [];
+}
+
+
+loadSet(1)
+
+</script>
+</body>
+</html>
