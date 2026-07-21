@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vocabulary B1 – Mobile Flashcards</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+  --bg-blue:#061247;
+  --card-cream:#F7F2E7;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+  --border-red:#8C0327;
+}
+
+body{
+  background:var(--bg-blue);
+  font-family:system-ui, Segoe UI, Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem;
+}
+
+/* CARD */
+.perspective{perspective:1000px;}
+.card-inner{
+  width:90vw;
+  max-width:380px;
+  height:55vw;
+  max-height:240px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:.4s;
+  cursor:pointer;
+}
+.flipped{transform:rotateY(180deg);}
+.face{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border-radius:1rem;
+}
+.back{transform:rotateY(180deg);}
+
+.corner-hint{
+  position:absolute;
+  top:.4rem;
+  right:.6rem;
+  font-size:.6rem;
+  font-weight:800;
+  color:#8C0327;
+}
+
+.it-text{
+  color:#4B0082;
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.2rem;
+}
+.en-text{
+  color:var(--en-blue);
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.2rem;
+  white-space:pre-line;
+}
+
+.listen-btn{
+  background:none;
+  border:none;
+  color:var(--en-blue);
+  font-weight:700;
+  font-size:.9rem;
+}
+
+/* NAV */
+.nav-btn{
+  font-size:1.4rem;
+  font-weight:700;
+  color:white;
+}
+
+/* SET BUTTONS */
+.set-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.4rem;
+  max-width:380px;
+  width:100%;
+}
+
+.set-btn{
+  padding:.35rem 0;
+  font-size:.75rem;
+  font-weight:800;
+  border-radius:999px;
+  background:white;
+  color:#0E065C;
+}
+
+
+.set-btn.active{
+  background:#8C0327;
+  color:white;
+}
+
+.group-btn{
+  background:#D8F5D0;
+  color:#0E065C;
+}
+
+
+.set-btn.active{
+  background:#8C0327;
+  color:white;
+}
+
+.back-btn{
+  background:cyan;
+  color:#0E065C;
+}
+
+.count{
+  color:darkred;
+}
+
+.top-bar{
+  width:100%;
+  max-width:380px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:.5rem;
+}
+
+.top-title{
+  color:white;
+  font-weight:800;
+  font-size:1.1rem;
+  margin:0;
+}
+
+.goto-container{
+  display:flex;
+  align-items:center;
+  gap:.25rem;
+  color:white;
+  font-weight:700;
+  font-size:.7rem;
+}
+
+#goto-input{
+  width:42px;
+  height:24px;
+  text-align:center;
+  border:none;
+  border-radius:6px;
+  font-weight:700;
+  color:black;
+  background:white;
+}
+
+.readme-btn{
+  background:none;
+  border:none;
+  color:gold;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.goto-text{
+  color:gold;
+}
+
+.goto-btn{
+  background:none;
+  border:none;
+  color:gold;
+  font-weight:800;
+  font-size:1rem;
+  cursor:pointer;
+  padding:0;
+}
+
+.popup-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(6,18,71,.88);
+  display:none;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:90px;
+  z-index:99999;
+  padding-left:12px;
+  padding-right:12px;
+  box-sizing:border-box;
+}
+
+.popup{
+  width:80vw;
+  max-width:360px;
+  max-height:80vh;
+  overflow-y:auto;
+  background:#fff;
+  border:4px solid darkred;
+  border-radius:16px;
+  padding:18px;
+  box-sizing:border-box;
+}
+
+.popup-text{
+  font-size:.82rem;
+  font-weight:900;
+  line-height:1.45;
+  color:#0E065C;
+  text-align:left;
+}
+
+.popup-close-text{
+  margin-top:18px;
+  display:flex;
+  justify-content:flex-end;
+  font-size:.9rem;
+  font-weight:900;
+  color:darkred;
+  cursor:pointer;
+  user-select:none;
+}
+
+
+.vertical-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:.4rem;
+  width:100%;
+  max-width:380px;
+}
+
+.library-back-btn{
+  width:100%;
+  margin:0 auto;
+  padding:.35rem 0;
+  border:2px solid white;
+  border-radius:999px;
+  background:#1A4378;
+  color:white;
+  font-size:.75rem;
+  font-weight:800;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.2s;
+  display:block;
+}
+
+.library-back-btn:hover{
+  background:#FCE7F3;
+  color:#1A4378;
+  border-color:#1A4378;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="top-bar" class="top-bar">
+
+  <div id="goto-container" class="goto-container" style="visibility:hidden;">
+  <span class="goto-text">GO TO</span>
+  <input id="goto-input" type="number" min="1">
+  <button id="goto-btn" class="goto-btn">▶</button>
+</div>
+
+  <h1 class="top-title">VOCAB CEFR B1</h1>
+
+  <button id="readme-btn" class="readme-btn">
+    READ ME
+  </button>
+
+</div>
+
+<div class="perspective">
+  <div id="flashcard" class="card-inner">
+
+    <!-- FRONT -->
+    <div class="face bg-[#F7F2E7] border-4 border-[#8C0327] flex items-center justify-center p-4">
+      <div id="front-hint" class="corner-hint">TAP TO REVEAL</div>
+      <div id="front-text" class="it-text"></div>
+    </div>
+
+    <!-- BACK -->
+    <div class="face back bg-[#F7F2E7] border-4 border-[#8C0327] flex flex-col items-center justify-center gap-3 p-4">
+      <div class="corner-hint">TAP TO RETURN</div>
+      <div id="back-text" class="en-text"></div>
+      <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px] mt-1">
+ <button id="prevBtn" class="nav-btn" onclick="prevCard(event)">◀</button>
+<span id="counter-display" class="text-white font-bold text-sm">1 / 1</span>
+<button id="nextBtn" class="nav-btn" onclick="nextCard(event)">▶</button>
+</div>
+
+<div id="button-container" class="set-grid mt-2"></div>
+<script>
+
+const groups = [
+  "VERBS",
+  "NOUNS",
+  "ADJECTIVES",
+  "ADVERBS"
+];
+
+const groupTotals = {
+  VERBS: 249,
+  NOUNS: 335,
+  ADJECTIVES: 268,
+  ADVERBS: 86
+};
+
+
+const categoryTotals = {
+
+  VERBS: {
+    "MOVEMENT": 28,
+    "PEOPLE & RELATIONSHIPS": 32,
+    "COMMUNICATION": 23,
+    "THINKING & DECISIONS": 24,
+    "WORK & TASKS": 31,
+    "DAILY LIFE": 39,
+    "HANDLING": 24,
+    "CHANGE & EVENTS": 26,
+    "GENERAL ACTIONS": 22
+},
+
+  NOUNS: {
+    "PEOPLE & JOBS": 32,
+    "BODY & HEALTH": 29,
+    "HOME & OBJECTS": 40,
+    "FOOD & DRINK": 21,
+    "PLACES & NATURE": 29,
+    "TRAVEL & PUBLIC SERVICES": 21,
+    "WORK, BUSINESS & MONEY": 36,
+    "LANGUAGE & CULTURE": 43,
+    "ACTIVITIES, EVENTS & SOCIETY": 41,
+    "ABSTRACT IDEAS": 43
+},
+
+
+  ADJECTIVES: {
+    "PERSONALITY & CHARACTER": 18,
+    "FEELINGS & EMOTIONS": 27,
+    "PEOPLE & APPEARANCE": 25,
+    "PHYSICAL PROPERTIES": 32,
+    "COLOUR & SENSES": 35,
+    "TIME, ORDER & POSITION": 39,
+    "QUALITY, VALUE & DEGREE": 40,
+    "WORK & SOCIETY": 21,
+    "LIFESTYLE & DAILY LIFE": 31
+},
+
+
+  ADVERBS: {
+  "TIME & PLACE": 25,
+  "MANNER": 23,
+  "OTHER ADVERBS": 38
+}
+
+};
+
+
+
+const categories = {
+
+ VERBS: [
+    "MOVEMENT",
+    "PEOPLE & RELATIONSHIPS",
+    "COMMUNICATION",
+    "THINKING & DECISIONS",
+    "WORK & TASKS",
+    "DAILY LIFE",
+    "HANDLING",
+    "CHANGE & EVENTS",
+    "GENERAL ACTIONS"
+],
+
+  NOUNS: [
+  "PEOPLE & JOBS",
+  "BODY & HEALTH",
+  "HOME & OBJECTS",
+  "FOOD & DRINK",
+  "PLACES & NATURE",
+  "TRAVEL & PUBLIC SERVICES",
+  "WORK, BUSINESS & MONEY",
+  "LANGUAGE & CULTURE",
+  "ACTIVITIES, EVENTS & SOCIETY",
+  "ABSTRACT IDEAS"
+],
+
+  ADJECTIVES: [
+  "PERSONALITY & CHARACTER",
+  "FEELINGS & EMOTIONS",
+  "PEOPLE & APPEARANCE",
+  "PHYSICAL PROPERTIES",
+  "COLOUR & SENSES",
+  "TIME, ORDER & POSITION",
+  "QUALITY, VALUE & DEGREE",
+  "WORK & SOCIETY",
+  "LIFESTYLE & DAILY LIFE"
+],
+
+  ADVERBS: [
+  "TIME & PLACE",
+  "MANNER",
+  "OTHER ADVERBS"
+]
+
+};
+
+
+const vocabulary = {
+
+  VERBS: {
+    "MOVEMENT": [
+{it:"AVVICINARSI", en:"APPROACH", speak:["approach"]},
+{it:"ARRIVARE A", en:"ARRIVE AT / GET TO", speak:["arrive at, OR get to"]},
+{it:"FRENARE", en:"BRAKE", speak:["brake"]},
+{it:"PASSARE A PRENDERE", en:"CALL FOR / PICK UP", speak:["call for, OR pick up"]},
+{it:"ARRAMPICARSI", en:"CLIMB", speak:["climb"]},
+{it:"PARTIRE / ANDARSENE", en:"DEPART / LEAVE / SET OFF", speak:["depart, OR leave, OR set off"]},
+{it:"TRASCINARE", en:"DRAG", speak:["drag"]},
+{it:"ANDARE A PRENDERE", en:"FETCH", speak:["fetch"]},
+{it:"ANDARE VIA", en:"GO AWAY / LEAVE", speak:["go away, OR leave"]},
+{it:"ANDARE AVANTI", en:"GO FORWARD / GO AHEAD", speak:["go forward, OR go ahead"]},
+{it:"RIENTRARE", en:"GET BACK", speak:["get back"]},
+{it:"SALIRE (IN MACCHINA)", en:"GET IN", speak:["get in"]},
+{it:"SCENDERE (DAI MEZZI)", en:"GET OFF", speak:["get off"]},
+{it:"SALIRE (SU UN MEZZO)", en:"GET ON", speak:["get on"]},
+{it:"SCENDERE (DALLA MACCHINA)", en:"GET OUT", speak:["get out"]},
+{it:"UNIRSI A", en:"JOIN", speak:["join"]},
+{it:"SPOSTARSI", en:"MOVE", speak:["move"]},
+{it:"SUPERARE (UN OSTACOLO)", en:"OVERCOME", speak:["overcome"]},
+{it:"PRENDERE DA BASSO", en:"PICK UP", speak:["pick up"]},
+{it:"RAGGIUNGERE", en:"REACH", speak:["reach"]},
+{it:"RACCOMANDARE", en:"RECOMMEND", speak:["recommend"]},
+{it:"AFFONDARE", en:"SINK", speak:["sink"]},
+{it:"SCIVOLARE", en:"SLIP", speak:["slip"]},
+{it:"PRESENTARSI", en:"SHOW UP / ARRIVE", speak:["show up, OR arrive"]},
+{it:"RESTARE INDIETRO", en:"STAY BEHIND", speak:["stay behind"]},
+{it:"FERMARSI", en:"STOP", speak:["stop"]},
+{it:"DECOLLARE", en:"TAKE OFF", speak:["take off"]},
+{it:"TRASFERIRE", en:"TRANSFER", speak:["transfer"]}
+],
+
+    "PEOPLE & RELATIONSHIPS": [
+{it:"ACCOMPAGNARE", en:"ACCOMPANY", speak:["accompany"]},
+{it:"CONSIGLIARE", en:"ADVISE", speak:["advise"]},
+{it:"PERMETTERE", en:"ALLOW / LET", speak:["allow, OR let"]},
+{it:"INFASTIDIRE", en:"ANNOY / BOTHER", speak:["annoy, OR bother"]},
+{it:"SCUSARSI", en:"APOLOGISE", speak:["apologise"]},
+{it:"LITIGARE", en:"ARGUE / QUARREL", speak:["argue, OR quarrel"]},
+{it:"ATTACCARE", en:"ATTACK", speak:["attack"]},
+{it:"DARE LA COLPA", en:"BLAME", speak:["blame"]},
+{it:"DISTURBARE", en:"BOTHER / DISTURB", speak:["bother, OR disturb"]},
+{it:"CONVINCERE", en:"CONVINCE / PERSUADE", speak:["convince, OR persuade"]},
+{it:"DIFENDERE", en:"DEFEND", speak:["defend"]},
+{it:"ASSUMERE", en:"EMPLOY", speak:["employ"]},
+{it:"INCORAGGIARE / SCORAGGIARE", en:"ENCOURAGE / DISCOURAGE", speak:["encourage, OR discourage"]},
+{it:"INTRATTENERE", en:"ENTERTAIN", speak:["entertain"]},
+{it:"SCUSARE", en:"EXCUSE", speak:["excuse"]},
+{it:"LICENZIARE", en:"LAY OFF / FIRE / SACK", speak:["lay off, OR fire, OR sack"]},
+{it:"PERDONARE", en:"FORGIVE", speak:["forgive"]},
+{it:"SPAVENTARE", en:"FRIGHTEN / SCARE", speak:["frighten, OR scare"]},
+{it:"ANDARE D'ACCORDO CON", en:"GET ALONG / ON (WITH)", speak:["get along, OR get on"]},
+{it:"ARRENDERSI", en:"GIVE IN / GIVE UP", speak:["give in, OR give up"]},
+{it:"SALUTARE", en:"GREET", speak:["greet"]},
+{it:"PASSARE IL TEMPO (CON GLI AMICI)", en:"HANG OUT", speak:["hang out"]},
+{it:"ODIARE", en:"HATE", speak:["hate"]},
+{it:"ASSISTERE QUALCUNO", en:"HELP / ASSIST", speak:["help, OR assist"]},
+{it:"PRESENTARE (UNA PERSONA)", en:"INTRODUCE", speak:["introduce"]},
+{it:"GIUDICARE", en:"JUDGE", speak:["judge"]},
+{it:"UBBIDIRE", en:"OBEY", speak:["obey"]},
+{it:"PUNIRE", en:"PUNISH", speak:["punish"]},
+{it:"RIFIUTARE", en:"REFUSE", speak:["refuse"]},
+{it:"SOSTENERE / APPOGGIARE", en:"SUPPORT / BACK", speak:["support, OR back"]},
+{it:"TRATTARE", en:"TREAT", speak:["treat"]},
+{it:"RIFIUTARE", en:"TURN DOWN", speak:["turn down"]}
+],
+
+    "COMMUNICATION": [
+{it:"APPROVARE", en:"APPROVE", speak:["approve"]},
+{it:"CHIEDERE", en:"ASK", speak:["ask"]},
+{it:"FARE DUE CHIACCHIERE", en:"CHAT", speak:["chat"]},
+{it:"CHIARIRE", en:"CLEAR", speak:["clear"]},
+{it:"COMMENTARE", en:"COMMENT", speak:["comment"]},
+{it:"LAMENTARSI / PROTESTARE", en:"COMPLAIN", speak:["complain"]},
+{it:"COMUNICARE", en:"COMMUNICATE", speak:["communicate"]},
+{it:"COMPORRE UN NUMERO", en:"DIAL", speak:["dial"]},
+{it:"RICHIEDERE / ESIGERE", en:"DEMAND", speak:["demand"]},
+{it:"DIMOSTRARE", en:"DEMONSTRATE", speak:["demonstrate"]},
+{it:"DICHIARARE", en:"DECLARE / STATE", speak:["declare, OR state"]},
+{it:"RIVOLGERSI", en:"ENQUIRE ABOUT", speak:["enquire about"]},
+{it:"CONFERMARE", en:"CONFIRM", speak:["confirm"]},
+{it:"RIAGGANCIARE (IL TELEFONO)", en:"HANG UP", speak:["hang up"]},
+{it:"BUSSARE", en:"KNOCK", speak:["knock"]},
+{it:"ELENCARE", en:"LIST", speak:["list"]},
+{it:"MENZIONARE", en:"MENTION", speak:["mention"]},
+{it:"DIMOSTRARE (CHE È VERO)", en:"PROVE", speak:["prove"]},
+{it:"RICHIEDERE", en:"REQUEST", speak:["request"]},
+{it:"RIFERIRE", en:"REPORT", speak:["report"]},
+{it:"RISPONDERE", en:"REPLY / ANSWER", speak:["reply, OR answer"]},
+{it:"RACCONTARE", en:"TELL", speak:["tell"]},
+{it:"ANNOTARE / METTERE PER ISCRITTO", en:"WRITE DOWN", speak:["write down"]}
+],
+
+
+    "THINKING & DECISIONS": [
+{it:"ACCETTARE", en:"ACCEPT / AGREE TO", speak:["accept, OR agree to"]},
+{it:"AMMETTERE", en:"ADMIT", speak:["admit"]},
+{it:"EVITARE", en:"AVOID (DOING)", speak:["avoid"]},
+{it:"SCEGLIERE", en:"CHOOSE / SELECT", speak:["choose, OR select"]},
+{it:"PARAGONARE", en:"COMPARE", speak:["compare"]},
+{it:"CONCENTRARSI SU", en:"CONCENTRATE ON / FOCUS ON", speak:["concentrate on, OR focus on"]},
+{it:"MERITARE", en:"DESERVE", speak:["deserve"]},
+{it:"ASPETTARSI", en:"EXPECT", speak:["expect"]},
+{it:"AVERE VOGLIA DI FARE", en:"FANCY / FEEL LIKE DOING", speak:["fancy, OR feel like doing"]},
+{it:"RINUNCIARE", en:"GIVE UP", speak:["give up"]},
+{it:"ESITARE", en:"HESITATE", speak:["hesitate"]},
+{it:"IDENTIFICARE", en:"IDENTIFY", speak:["identify"]},
+{it:"IGNORARE", en:"IGNORE", speak:["ignore"]},
+{it:"INTENDERE / AVERE INTENZIONE DI", en:"INTEND (DOING)", speak:["intend"]},
+{it:"CERCARE QUALCOSA", en:"LOOK FOR / SEARCH FOR", speak:["look for, OR search for"]},
+{it:"NON VEDERE L'ORA", en:"LOOK FORWARD TO (DOING)", speak:["look forward to"]},
+{it:"ESAMINARE", en:"LOOK INTO / EXAMINE", speak:["look into, OR examine"]},
+{it:"NOTARE / FAR CASO", en:"NOTICE", speak:["notice"]},
+{it:"IMPEDIRE", en:"PREVENT / STOP FROM", speak:["prevent, OR stop from"]},
+{it:"RENDERSI CONTO", en:"REALISE", speak:["realise"]},
+{it:"FARE AFFIDAMENTO SU", en:"RELY ON", speak:["rely on"]},
+{it:"SELEZIONARE", en:"SELECT", speak:["select"]},
+{it:"CERCARE (DI FARE)", en:"TRY (TO DO)", speak:["try"]},
+{it:"CHIEDERSI", en:"WONDER", speak:["wonder"]}
+],
+
+
+    "WORK & TASKS": [
+{it:"PUBBLICIZZARE", en:"ADVERTISE", speak:["advertise"]},
+{it:"FARE DOMANDA (PER UN LAVORO, ECC.)", en:"APPLY", speak:["apply"]},
+{it:"ORGANIZZARE", en:"ARRANGE / ORGANISE", speak:["arrange, OR organise"]},
+{it:"ALLEGARE", en:"ATTACH", speak:["attach"]},
+{it:"FREQUENTARE", en:"ATTEND", speak:["attend"]},
+{it:"COSTRUIRE", en:"BUILD / CONSTRUCT", speak:["build, OR construct"]},
+{it:"ESEGUIRE (UN COMPITO)", en:"CARRY OUT", speak:["carry out"]},
+{it:"COMPETERE", en:"COMPETE", speak:["compete"]},
+{it:"COMPLETARE", en:"COMPLETE", speak:["complete"]},
+{it:"COLLEGARE / CONNETTERE", en:"CONNECT", speak:["connect"]},
+{it:"CONTARE", en:"COUNT", speak:["count"]},
+{it:"CREARE", en:"CREATE", speak:["create"]},
+{it:"CANCELLARE", en:"DELETE / CANCEL", speak:["delete, OR cancel"]},
+{it:"SVILUPPARE", en:"DEVELOP", speak:["develop"]},
+{it:"ISCRIVERSI (UN CORSO)", en:"ENROL", speak:["enrol"]},
+{it:"CANDIDARSI (PER UN LAVORO, ECC.)", en:"GO FOR / APPLY FOR", speak:["go for, OR apply for"]},
+{it:"GESTIRE / OCCUPARSI DI", en:"HANDLE / MANAGE", speak:["handle, OR manage"]},
+{it:"EVIDENZIARE", en:"HIGHLIGHT", speak:["highlight"]},
+{it:"EMETTERE (DOCUMENTI)", en:"ISSUE", speak:["issue"]},
+{it:"ETICHETTARE", en:"LABEL", speak:["label"]},
+{it:"COLLEGARE", en:"LINK", speak:["link"]},
+{it:"PIANIFICARE / PROGETTARE", en:"PLAN", speak:["plan"]},
+{it:"PROMUOVERE", en:"PROMOTE", speak:["promote"]},
+{it:"PUBBLICARE", en:"PUBLISH", speak:["publish"]},
+{it:"FARE RICERCHE", en:"RESEARCH", speak:["research"]},
+{it:"REGISTRARSI", en:"REGISTER", speak:["register"]},
+{it:"RIPASSARE", en:"REVISE", speak:["revise"]},
+{it:"FIRMARE", en:"SIGN", speak:["sign"]},
+{it:"ISCRIVERSI (NEWSLETTER)", en:"SIGN UP", speak:["sign up"]},
+{it:"FONDARE", en:"SET UP / FOUND", speak:["set up, OR found"]},
+{it:"AGGIORNARE", en:"UPDATE", speak:["update"]}
+],
+
+   "DAILY LIFE": [
+{it:"PRENOTARE", en:"BOOK / RESERVE", speak:["book, OR reserve"]},
+{it:"SPAZZOLARE", en:"BRUSH", speak:["brush"]},
+{it:"BRUCIARE", en:"BURN", speak:["burn"]},
+{it:"FESTEGGIARE", en:"CELEBRATE", speak:["celebrate"]},
+{it:"RILASSARSI", en:"CHILL OUT / RELAX", speak:["chill out, OR relax"]},
+{it:"BATTERE LE MANI", en:"CLAP", speak:["clap"]},
+{it:"PETTINARE", en:"COMB", speak:["comb"]},
+{it:"RAFFREDDARE / RINFRESCARE", en:"COOL", speak:["cool"]},
+{it:"CURARE", en:"CURE / TREAT", speak:["cure, OR treat"]},
+{it:"ADDOBBARE / PITTURARE", en:"DECORATE", speak:["decorate"]},
+{it:"DIVERTIRSI", en:"ENJOY / HAVE FUN", speak:["enjoy, OR have fun"]},
+{it:"ALLACCIARE", en:"FASTEN", speak:["fasten"]},
+{it:"RIEMPIRE", en:"FILL", speak:["fill"]},
+{it:"FARE IL PIENO", en:"FILL UP", speak:["fill up"]},
+{it:"CONGELARE", en:"FREEZE", speak:["freeze"]},
+{it:"FRIGGERE", en:"FRY", speak:["fry"]},
+{it:"RIMETTERSI IN FORMA", en:"GET FIT", speak:["get fit"]},
+{it:"ACCENDERSI (LUCI, RISCALDAMENTO)", en:"GO ON", speak:["go on"]},
+{it:"SPEGNERSI (LUCI, RISCALDAMENTO)", en:"GO OFF", speak:["go off"]},
+{it:"ALZARSI", en:"GET UP / STAND UP (DA SEDUTO)", speak:["get up, OR stand up"]},
+{it:"APPENDERE", en:"HANG", speak:["hang"]},
+{it:"ACCENDERE (FUOCO)", en:"LIGHT", speak:["light"]},
+{it:"CHIUDERE / APRIRE A CHIAVE", en:"LOCK / UNLOCK", speak:["lock, OR unlock"]},
+{it:"MESCOLARE", en:"MIX / STIR", speak:["mix, OR stir"]},
+{it:"IMBALLARE", en:"PACK / PACKAGE / BOX", speak:["pack, OR package, OR box"]},
+{it:"SBUCCIARE", en:"PEEL", speak:["peel"]},
+{it:"FOTOGRAFARE", en:"PHOTOGRAPH", speak:["photograph"]},
+{it:"LUCIDARE", en:"POLISH", speak:["polish"]},
+{it:"NOLEGGIARE", en:"RENT / HIRE", speak:["rent, OR hire"]},
+{it:"RIPOSARSI", en:"REST", speak:["rest"]},
+{it:"CUCIRE", en:"SEW", speak:["sew"]},
+{it:"VERSARE", en:"SPILL", speak:["spill"]},
+{it:"ACCENDERE / SPEGNERE", en:"SWITCH ON / OFF", speak:["switch on, OR switch off"]},
+{it:"PRENDERSI CURA DI", en:"TAKE CARE OF / LOOK AFTER", speak:["take care of, OR look after"]},
+{it:"METTERE IN ORDINE", en:"TIDY UP", speak:["tidy up"]},
+{it:"TRATTARE", en:"TREAT", speak:["treat"]},
+{it:"ACCENDERE (TV)", en:"TURN ON", speak:["turn on"]},
+{it:"ALZARE / ABBASSARE (VOLUME, ECC.)", en:"TURN UP / TURN DOWN", speak:["turn up, OR turn down"]},
+{it:"DISIMBALLARE / DISFARE LE VALIGIE", en:"UNPACK", speak:["unpack"]}
+],
+
+    "HANDLING": [
+{it:"MORDERE", en:"BITE", speak:["bite"]},
+{it:"RACCOGLIERE", en:"COLLECT", speak:["collect"]},
+{it:"COLORARE", en:"COLOUR", speak:["colour"]},
+{it:"TAGLIARE A PEZZI", en:"CUT UP", speak:["cut up"]},
+{it:"DISTRUGGERE", en:"DESTROY", speak:["destroy"]},
+{it:"MOSTRARE / ESIBIRE", en:"DISPLAY / SHOW", speak:["display, OR show"]},
+{it:"SCAMBIARE", en:"EXCHANGE / SWAP", speak:["exchange, OR swap"]},
+{it:"RESTITUIRE", en:"GIVE BACK", speak:["give back"]},
+{it:"AFFERRARE", en:"GRAB / SEIZE", speak:["grab, OR seize"]},
+{it:"COLPIRE", en:"HIT / STRIKE", speak:["hit, OR strike"]},
+{it:"TENERE FERMO", en:"HOLD STILL", speak:["hold still"]},
+{it:"TENERE", en:"KEEP / HOLD", speak:["keep, OR hold"]},
+{it:"BUTTARE GIÙ", en:"KNOCK DOWN", speak:["knock down"]},
+{it:"SOLLEVARE / ALZARE", en:"LIFT", speak:["lift"]},
+{it:"ABBASSARE", en:"LOWER", speak:["lower"]},
+{it:"PERFORARE", en:"PIERCE", speak:["pierce"]},
+{it:"PIANTARE", en:"PLANT", speak:["plant"]},
+{it:"PREMERE", en:"PRESS / PUSH", speak:["press, OR push"]},
+{it:"SOSTITUIRE", en:"REPLACE / SUBSTITUTE", speak:["replace, OR substitute"]},
+{it:"DERUBARE", en:"ROB", speak:["rob"]},
+{it:"SPARARE", en:"SHOOT", speak:["shoot"]},
+{it:"RUBARE", en:"STEAL", speak:["steal"]},
+{it:"ATTACCARE / INCOLLARE", en:"STICK", speak:["stick"]},
+{it:"STRAPPARE", en:"TEAR / RIP", speak:["tear, OR rip"]}
+],
+
+
+    "CHANGE & EVENTS": [
+{it:"RAGGIUNGERE (UN OBIETTIVO)", en:"ACHIEVE", speak:["achieve"]},
+{it:"ADATTARSI A", en:"FIT / ADAPT TO", speak:["fit, OR adapt to"]},
+{it:"ESSERE FINITO", en:"BE OVER", speak:["be over"]},
+{it:"FAR CRESCERE (BAMBINO)", en:"BRING UP", speak:["bring up"]},
+{it:"DIMINUIRE / CALARE", en:"DECREASE / FALL", speak:["decrease, OR fall"]},
+{it:"MORIRE", en:"DIE", speak:["die"]},
+{it:"FINIRE PER", en:"END UP", speak:["end up"]},
+{it:"SUPERARE (LIMITI)", en:"EXCEED", speak:["exceed"]},
+{it:"ESPLODERE", en:"EXPLODE", speak:["explode"]},
+{it:"FALLIRE", en:"FAIL", speak:["fail"]},
+{it:"MIGLIORARE", en:"GET BETTER / IMPROVE", speak:["get better, OR improve"]},
+{it:"ABITUARSI", en:"GET USED TO", speak:["get used to"]},
+{it:"CRESCERE (COLTIVARE)", en:"GROW", speak:["grow"]},
+{it:"CRESCERE (DIVENTARE ADULTO)", en:"GROW UP", speak:["grow up"]},
+{it:"SUCCEDERE", en:"HAPPEN", speak:["happen"]},
+{it:"AUMENTARE", en:"INCREASE / RISE", speak:["increase, OR rise"]},
+{it:"MANTENERE (UN LIVELLO)", en:"KEEP UP", speak:["keep up"]},
+{it:"SCIOGLIERSI", en:"MELT", speak:["melt"]},
+{it:"SUPERARE (ESAME)", en:"PASS", speak:["pass"]},
+{it:"RIDURRE", en:"REDUCE", speak:["reduce"]},
+{it:"SUPERARE (MALATTIA)", en:"RECOVER / GET OVER", speak:["recover, OR get over"]},
+{it:"ANDARE IN PENSIONE", en:"RETIRE", speak:["retire"]},
+{it:"SMETTERE", en:"QUIT / STOP", speak:["quit, OR stop"]},
+{it:"AVERE LUOGO", en:"TAKE PLACE", speak:["take place"]},
+{it:"SVANIRE", en:"VANISH / FADE", speak:["vanish, OR fade"]},
+{it:"VARIARE", en:"VARY", speak:["vary"]}
+],
+
+   "GENERAL ACTIONS": [
+{it:"ATTRARRE", en:"ATTRACT", speak:["attract"]},
+{it:"SOFFIARE", en:"BLOW", speak:["blow"]},
+{it:"PRENDERE (RAFFREDDORE, UN MEZZO)", en:"CATCH", speak:["catch"]},
+{it:"CONTENERE", en:"CONTAIN / HOLD", speak:["contain, OR hold"]},
+{it:"CONTINUARE", en:"GO ON / CONTINUE / CARRY ON", speak:["go on, OR continue, OR carry on"]},
+{it:"CONTROLLARE / TENERE SOTTO CONTROLLO", en:"CONTROL", speak:["control"]},
+{it:"DIPENDERE DA", en:"DEPEND ON", speak:["depend on"]},
+{it:"ESISTERE", en:"EXIST", speak:["exist"]},
+{it:"FARE ATTENZIONE (A)", en:"WATCH OUT / LOOK OUT (FOR)", speak:["watch out, OR look out for"]},
+{it:"FORNIRE", en:"PROVIDE", speak:["provide"]},
+{it:"CAVARSELA", en:"GET BY", speak:["get by"]},
+{it:"INTRODURRE", en:"INTRODUCE", speak:["introduce"]},
+{it:"LOCALIZZARE", en:"LOCATE", speak:["locate"]},
+{it:"SCAMBIARE (IDENTITÀ)", en:"MISTAKE (FOR)", speak:["mistake for"]},
+{it:"NECESSITARE", en:"REQUIRE", speak:["require"]},
+{it:"POSSEDERE", en:"OWN", speak:["own"]},
+{it:"METTERE IN PAUSA", en:"PAUSE", speak:["pause"]},
+{it:"REAGIRE", en:"REACT", speak:["react"]},
+{it:"SALVARE", en:"RESCUE / SAVE", speak:["rescue, OR save"]},
+{it:"BRILLARE / SPLENDERE", en:"SHINE", speak:["shine"]},
+{it:"FARE CON CALMA", en:"TAKE ONE'S TIME (DOING)", speak:["take one's time"]},
+{it:"UTILIZZARE", en:"USE", speak:["use"]}
+]
+  },
+
+  NOUNS: {
+ "PEOPLE & JOBS": [
+{it:"COMMERCIALISTA", en:"ACCOUNTANT", speak:["accountant"]},
+{it:"DESTINATARIO", en:"ADDRESSEE", speak:["addressee"]},
+{it:"AIUTANTE", en:"HELPER", speak:["helper"]},
+{it:"ATLETA", en:"ATHLETE", speak:["athlete"]},
+{it:"AUTORE", en:"AUTHOR", speak:["author"]},
+{it:"BANCHIERE", en:"BANKER", speak:["banker"]},
+{it:"BARBIERE", en:"BARBER", speak:["barber"]},
+{it:"CAPO", en:"BOSS", speak:["boss"]},
+{it:"SPOSA", en:"BRIDE", speak:["bride"]},
+{it:"DIPENDENTE", en:"EMPLOYEE", speak:["employee"]},
+{it:"DATORE DI LAVORO", en:"EMPLOYER", speak:["employer"]},
+{it:"ASSISTENTE DI VOLO", en:"FLIGHT ATTENDANT", speak:["flight attendant"]},
+{it:"STRANIERO", en:"FOREIGNER", speak:["foreigner"]},
+{it:"GENIO", en:"GENIUS", speak:["genius"]},
+{it:"GUARDIA", en:"GUARD", speak:["guard"]},
+{it:"VACANZIERO", en:"HOLIDAYMAKER", speak:["holidaymaker"]},
+{it:"OSPITE (CHI OSPITA)", en:"HOST", speak:["host"]},
+{it:"GIUDICE", en:"JUDGE", speak:["judge"]},
+{it:"DIRIGENTE", en:"MANAGER", speak:["manager"]},
+{it:"MEMBRO", en:"MEMBER", speak:["member"]},
+{it:"PARTECIPANTE", en:"PARTICIPANT", speak:["participant"]},
+{it:"FOTOGRAFO", en:"PHOTOGRAPHER", speak:["photographer"]},
+{it:"POETA", en:"POET", speak:["poet"]},
+{it:"PRIGIONIERO", en:"PRISONER", speak:["prisoner"]},
+{it:"PRODUTTORE", en:"PRODUCER", speak:["producer"]},
+{it:"LETTORE", en:"READER", speak:["reader"]},
+{it:"MARINAIO", en:"SAILOR", speak:["sailor"]},
+{it:"ASSISTENTE DI NEGOZIO / COMMESSO", en:"SHOP ASSISTANT", speak:["shop assistant"]},
+{it:"ORATORE", en:"SPEAKER", speak:["speaker"]},
+{it:"UTENTE", en:"USER", speak:["user"]},
+{it:"VINCITORE", en:"WINNER", speak:["winner"]},
+{it:"SCRITTORE", en:"WRITER", speak:["writer"]}
+],
+
+ "BODY & HEALTH": [
+{it:"CAVIGLIA", en:"ANKLE", speak:["ankle"]},
+{it:"BENDAGGIO / FASCIATURA", en:"BANDAGE / DRESSING", speak:["bandage, OR dressing"]},
+{it:"SANGUE", en:"BLOOD", speak:["blood"]},
+{it:"CORPO", en:"BODY", speak:["body"]},
+{it:"OSSO", en:"BONE", speak:["bone"]},
+{it:"CERVELLO", en:"BRAIN", speak:["brain"]},
+{it:"RESPIRO", en:"BREATH", speak:["breath"]},
+{it:"POLPACCIO", en:"CALF", speak:["calf"]},
+{it:"CURA / ASSISTENZA", en:"CARE", speak:["care"]},
+{it:"GUANCIA", en:"CHEEK", speak:["cheek"]},
+{it:"COMODITÀ", en:"COMFORT", speak:["comfort"]},
+{it:"PROFONDITÀ", en:"DEPTH", speak:["depth"]},
+{it:"ESAURIMENTO", en:"EXHAUSTION", speak:["exhaustion"]},
+{it:"FEBBRE", en:"FEVER", speak:["fever"]},
+{it:"FORMA FISICA", en:"FITNESS", speak:["fitness"]},
+{it:"SALUTE", en:"HEALTH", speak:["health"]},
+{it:"CUORE", en:"HEART", speak:["heart"]},
+{it:"CALORE", en:"HEAT / WARMTH", speak:["heat, OR warmth"]},
+{it:"ALTEZZA", en:"HEIGHT", speak:["height"]},
+{it:"MALATTIA", en:"ILLNESS", speak:["illness"]},
+{it:"PUNTURA D'INSETTO", en:"INSECT BITE", speak:["insect bite"]},
+{it:"COLLO", en:"NECK", speak:["neck"]},
+{it:"INTERVENTO (CHIRURGICO)", en:"OPERATION", speak:["operation"]},
+{it:"DOLORE", en:"PAIN / ACHE", speak:["pain, OR ache"]},
+{it:"GUARIGIONE", en:"RECOVERY", speak:["recovery"]},
+{it:"FORZA", en:"STRENGTH", speak:["strength"]},
+{it:"SOFFERENZA", en:"SUFFERING", speak:["suffering"]},
+{it:"POLLICE", en:"THUMB", speak:["thumb"]},
+{it:"DEBOLEZZA", en:"WEAKNESS", speak:["weakness"]}
+],
+
+  "HOME & OBJECTS": [
+{it:"ARIA CONDIZIONATA", en:"AIR CONDITIONING", speak:["air conditioning"]},
+{it:"OGGETTO D'ANTIQUARIATO", en:"ANTIQUE", speak:["antique"]},
+{it:"ZAINO", en:"BACKPACK / RUCKSACK", speak:["backpack, OR rucksack"]},
+{it:"BALCONE", en:"BALCONY", speak:["balcony"]},
+{it:"BACINELLA / CATINO", en:"BASIN", speak:["basin"]},
+{it:"CESTO / CESTINO", en:"BASKET", speak:["basket"]},
+{it:"CAMPANELLO / CAMPANA", en:"BELL", speak:["bell"]},
+{it:"SECCHIO", en:"BUCKET", speak:["bucket"]},
+{it:"CAVO", en:"CABLE", speak:["cable"]},
+{it:"CALCOLATRICE", en:"CALCULATOR", speak:["calculator"]},
+{it:"CARTONE", en:"CARDBOARD", speak:["cardboard"]},
+{it:"CASSETTIERA", en:"CHEST OF DRAWERS", speak:["chest of drawers"]},
+{it:"MONETA", en:"COIN", speak:["coin"]},
+{it:"COLLETTO", en:"COLLAR", speak:["collar"]},
+{it:"CONTENITORE", en:"CONTAINER", speak:["container"]},
+{it:"CONTENUTO (DI UN CONTENITORE)", en:"CONTENT", speak:["content"]},
+{it:"DISPOSITIVO", en:"DEVICE", speak:["device"]},
+{it:"ASCENSORE", en:"ELEVATOR / LIFT", speak:["elevator, OR lift"]},
+{it:"ATTREZZATURA", en:"EQUIPMENT", speak:["equipment"]},
+{it:"FORCHETTA", en:"FORK", speak:["fork"]},
+{it:"CORNICE", en:"FRAME", speak:["frame"]},
+{it:"MOBILI", en:"FURNITURE", speak:["furniture"]},
+{it:"CANCELLO", en:"GATE", speak:["gate"]},
+{it:"TASTIERA", en:"KEYBOARD", speak:["keyboard"]},
+{it:"RETE", en:"NET / NETWORK", speak:["net, OR network"]},
+{it:"APPUNTO", en:"NOTE", speak:["note"]},
+{it:"TUBO", en:"PIPE", speak:["pipe"]},
+{it:"TASCA", en:"POCKET", speak:["pocket"]},
+{it:"MANIFESTO", en:"POSTER", speak:["poster"]},
+{it:"RIPARAZIONE", en:"REPAIR", speak:["repair"]},
+{it:"RIGA", en:"ROW", speak:["row"]},
+{it:"LENZUOLO", en:"SHEET", speak:["sheet"]},
+{it:"FORMA", en:"SHAPE", speak:["shape"]},
+{it:"FETTA", en:"SLICE", speak:["slice"]},
+{it:"MANICA", en:"SLEEVE", speak:["sleeve"]},
+{it:"CARTOLERIA", en:"STATIONERY", speak:["stationery"]},
+{it:"STRUTTURA", en:"STRUCTURE", speak:["structure"]},
+{it:"SUPERFICIE", en:"SURFACE", speak:["surface"]},
+{it:"FILO", en:"THREAD", speak:["thread"]},
+{it:"ATTREZZO", en:"TOOL", speak:["tool"]}
+],
+
+  "FOOD & DRINK": [
+{it:"BISCOTTO", en:"BISCUIT / COOKIE", speak:["biscuit, OR cookie"]},
+{it:"BOTTIGLIA", en:"BOTTLE", speak:["bottle"]},
+{it:"CIOTOLA", en:"BOWL", speak:["bowl"]},
+{it:"COLAZIONE", en:"BREAKFAST", speak:["breakfast"]},
+{it:"CAVOLO", en:"CABBAGE", speak:["cabbage"]},
+{it:"PATATINA", en:"CHIP", speak:["chip"]},
+{it:"MERLUZZO", en:"COD", speak:["cod"]},
+{it:"CENA", en:"DINNER", speak:["dinner"]},
+{it:"BEVANDA", en:"DRINK", speak:["drink"]},
+{it:"SAPORE", en:"FLAVOUR", speak:["flavour"]},
+{it:"PADELLA", en:"FRYING PAN", speak:["frying pan"]},
+{it:"ERBA AROMATICA", en:"HERB", speak:["herb"]},
+{it:"INGREDIENTE", en:"INGREDIENT", speak:["ingredient"]},
+{it:"MARMELLATA", en:"JAM", speak:["jam"]},
+{it:"PRANZO", en:"LUNCH", speak:["lunch"]},
+{it:"PORTATA PRINCIPALE (CIBO)", en:"MAIN COURSE", speak:["main course"]},
+{it:"PASTO", en:"MEAL", speak:["meal"]},
+{it:"PORZIONE", en:"PORTION / SERVING", speak:["portion, OR serving"]},
+{it:"RICETTA", en:"RECIPE", speak:["recipe"]},
+{it:"SALE", en:"SALT", speak:["salt"]},
+{it:"GUSTO", en:"TASTE", speak:["taste"]}
+],
+
+  "PLACES & NATURE": [
+{it:"ATTRAZIONE (LUOGO D'INTERESSE)", en:"ATTRACTION / SIGHT", speak:["attraction, OR sight"]},
+{it:"BAIA", en:"BAY", speak:["bay"]},
+{it:"BLOCCO / ISOLATO", en:"BLOCK", speak:["block"]},
+{it:"CONFINE / FRONTIERA", en:"BORDER", speak:["border"]},
+{it:"FARMACIA", en:"CHEMIST / PHARMACY", speak:["chemist, OR pharmacy"]},
+{it:"SCOGLIERA", en:"CLIFF", speak:["cliff"]},
+{it:"CAMBIAMENTO CLIMATICO", en:"CLIMATE CHANGE", speak:["climate change"]},
+{it:"ANGOLO", en:"CORNER", speak:["corner"]},
+{it:"CONSIGLIO COMUNALE", en:"COUNCIL", speak:["council"]},
+{it:"DESERTO", en:"DESERT", speak:["desert"]},
+{it:"QUARTIERE", en:"DISTRICT", speak:["district"]},
+{it:"INGRESSO", en:"DOORWAY / ENTRANCE", speak:["doorway, OR entrance"]},
+{it:"SICCITÀ", en:"DROUGHT", speak:["drought"]},
+{it:"BORDO", en:"EDGE", speak:["edge"]},
+{it:"CAMPO", en:"FIELD", speak:["field"]},
+{it:"PIANO (DI UN EDIFICIO)", en:"FLOOR / STOREY", speak:["floor, OR storey"]},
+{it:"FORESTA / BOSCO", en:"FOREST / WOODS", speak:["forest, OR woods"]},
+{it:"BURRASCA", en:"GALE", speak:["gale"]},
+{it:"SUOLO / TERRENO", en:"GROUND", speak:["ground"]},
+{it:"URAGANO", en:"HURRICANE", speak:["hurricane"]},
+{it:"PAESAGGIO", en:"LANDSCAPE / SCENERY", speak:["landscape, OR scenery"]},
+{it:"AUTOSTRADA", en:"MOTORWAY / HIGHWAY", speak:["motorway, OR highway"]},
+{it:"CENTRO COMMERCIALE", en:"SHOPPING CENTRE / MALL", speak:["shopping centre, OR mall"]},
+{it:"LUOGO", en:"SITE", speak:["site"]},
+{it:"SPAZIO", en:"SPACE", speak:["space"]},
+{it:"PIAZZA", en:"SQUARE", speak:["square"]},
+{it:"LUCE DEL SOLE", en:"SUNSHINE", speak:["sunshine"]},
+{it:"TENDA (DA CAMPEGGIO)", en:"TENT", speak:["tent"]},
+{it:"VISUALE / VISTA", en:"VIEW", speak:["view"]}
+],
+
+  "TRAVEL & PUBLIC SERVICES": [
+{it:"ACCESSO", en:"ACCESS", speak:["access"]},
+{it:"ALLOGGIO / SISTEMAZIONE", en:"ACCOMMODATION", speak:["accommodation"]},
+{it:"AERONAUTICA MILITARE", en:"AIR FORCE", speak:["air force"]},
+{it:"COMPAGNIA AEREA", en:"AIRLINE", speak:["airline"]},
+{it:"AMBULANZA", en:"AMBULANCE", speak:["ambulance"]},
+{it:"ARRIVO", en:"ARRIVAL", speak:["arrival"]},
+{it:"BANCOMAT", en:"ATM / CASH MACHINE", speak:["A T M, OR cash machine"]},
+{it:"BAGAGLIO", en:"BAGGAGE / LUGGAGE", speak:["baggage, OR luggage"]},
+{it:"CONTO CORRENTE", en:"BANK ACCOUNT", speak:["bank account"]},
+{it:"CARTA D'IMBARCO", en:"BOARDING PASS", speak:["boarding pass"]},
+{it:"PRENOTAZIONE", en:"BOOKING / RESERVATION", speak:["booking, OR reservation"]},
+{it:"FRENO", en:"BRAKE", speak:["brake"]},
+{it:"CONSEGNA", en:"DELIVERY", speak:["delivery"]},
+{it:"DESTINAZIONE", en:"DESTINATION", speak:["destination"]},
+{it:"USCITA", en:"EXIT", speak:["exit"]},
+{it:"GUIDA TURISTICA", en:"GUIDEBOOK", speak:["guidebook"]},
+{it:"ASSICURAZIONE", en:"INSURANCE", speak:["insurance"]},
+{it:"ITINERARIO", en:"ITINERARY", speak:["itinerary"]},
+{it:"COLLEGAMENTO", en:"LINK / CONNECTION", speak:["link, OR connection"]},
+{it:"PERCORSO", en:"ROUTE", speak:["route"]},
+{it:"TRASPORTO", en:"TRANSPORT", speak:["transport"]}
+],
+
+
+ "WORK, BUSINESS & MONEY": [
+{it:"SUCCESSO / TRAGUARDO", en:"ACHIEVEMENT", speak:["achievement"]},
+{it:"ANTICIPO (PAGAMENTO)", en:"ADVANCE / DEPOSIT", speak:["advance, OR deposit"]},
+{it:"VANTAGGIO", en:"ADVANTAGE / BENEFIT", speak:["advantage, OR benefit"]},
+{it:"AGENZIA", en:"AGENCY", speak:["agency"]},
+{it:"DOMANDA (DI LAVORO)", en:"APPLICATION", speak:["application"]},
+{it:"ACCORDO", en:"ARRANGEMENT / DEAL", speak:["arrangement, OR deal"]},
+{it:"AFFARE", en:"BARGAIN / DEAL", speak:["bargain, OR deal"]},
+{it:"BENEFICIO", en:"BENEFIT / ADVANTAGE", speak:["benefit, OR advantage"]},
+{it:"MARCHIO", en:"BRAND", speak:["brand"]},
+{it:"CARRIERA", en:"CAREER", speak:["career"]},
+{it:"BENEFICENZA", en:"CHARITY", speak:["charity"]},
+{it:"RECLAMO", en:"COMPLAINT", speak:["complaint"]},
+{it:"DANNO", en:"DAMAGE", speak:["damage"]},
+{it:"SVANTAGGIO", en:"DISADVANTAGE", speak:["disadvantage"]},
+{it:"BOLLETTA DELLA LUCE", en:"ELECTRICITY BILL", speak:["electricity bill"]},
+{it:"IMPEGNO / SFORZO", en:"EFFORT", speak:["effort"]},
+{it:"IMPIEGO / OCCUPAZIONE", en:"EMPLOYMENT", speak:["employment"]},
+{it:"ISCRIZIONE (A UNA GARA)", en:"ENTRY", speak:["entry"]},
+{it:"TARIFFA", en:"FEE / RATE", speak:["fee, OR rate"]},
+{it:"GUADAGNO", en:"GAIN", speak:["gain"]},
+{it:"BENI / MERCI", en:"GOODS", speak:["goods"]},
+{it:"SOVVENZIONE", en:"GRANT", speak:["grant"]},
+{it:"REDDITO", en:"INCOME", speak:["income"]},
+{it:"AUMENTO", en:"INCREASE", speak:["increase"]},
+{it:"PRESTITO", en:"LOAN", speak:["loan"]},
+{it:"OFFERTA", en:"OFFER", speak:["offer"]},
+{it:"PAGAMENTO", en:"PAYMENT", speak:["payment"]},
+{it:"PERCENTUALE", en:"PERCENTAGE", speak:["percentage"]},
+{it:"PRESTAZIONE", en:"PERFORMANCE", speak:["performance"]},
+{it:"PROCEDIMENTO", en:"PROCESS", speak:["process"]},
+{it:"PRODOTTO", en:"PRODUCT / ITEM", speak:["product, OR item"]},
+{it:"PROFITTO / GUADAGNO", en:"PROFIT", speak:["profit"]},
+{it:"RIMBORSO", en:"REFUND", speak:["refund"]},
+{it:"RICOMPENSA", en:"REWARD", speak:["reward"]},
+{it:"SALARIO / STIPENDIO", en:"SALARY", speak:["salary"]},
+{it:"VALORE", en:"VALUE / WORTH", speak:["value, OR worth"]}
+],
+
+
+  "LANGUAGE & CULTURE": [
+{it:"ACCENTO", en:"ACCENT", speak:["accent"]},
+{it:"ARTICOLO", en:"ARTICLE", speak:["article"]},
+{it:"SFONDO", en:"BACKGROUND", speak:["background"]},
+{it:"BIOGRAFIA", en:"BIOGRAPHY", speak:["biography"]},
+{it:"CAPITOLO", en:"CHAPTER", speak:["chapter"]},
+{it:"CHIMICA", en:"CHEMISTRY", speak:["chemistry"]},
+{it:"VIRGOLA", en:"COMMA", speak:["comma"]},
+{it:"INDICE", en:"CONTENTS", speak:["contents"]},
+{it:"VOCE (DI UN ELENCO / LISTA)", en:"ENTRY / ITEM", speak:["entry, OR item"]},
+{it:"SCAMBIO", en:"EXCHANGE", speak:["exchange"]},
+{it:"ESPERIMENTO", en:"EXPERIMENT", speak:["experiment"]},
+{it:"SPIEGAZIONE", en:"EXPLANATION", speak:["explanation"]},
+{it:"FLAUTO", en:"FLUTE", speak:["flute"]},
+{it:"ORIENTAMENTO / CONSULENZA", en:"GUIDANCE", speak:["guidance"]},
+{it:"DIDASCALIA", en:"HEADLINE / CAPTION", speak:["headline, OR caption"]},
+{it:"IMMAGINE", en:"IMAGE", speak:["image"]},
+{it:"CONOSCENZA", en:"KNOWLEDGE", speak:["knowledge"]},
+{it:"RISATA", en:"LAUGHTER", speak:["laughter"]},
+{it:"LEGGE", en:"LAW", speak:["law"]},
+{it:"SIGNIFICATO", en:"MEANING", speak:["meaning"]},
+{it:"NOVITÀ", en:"NEWS", speak:["news"]},
+{it:"PARERE", en:"OPINION / VIEW", speak:["opinion, OR view"]},
+{it:"PITTURA", en:"PAINTING", speak:["painting"]},
+{it:"POESIA", en:"POEM", speak:["poem"]},
+{it:"TRAMA", en:"PLOT", speak:["plot"]},
+{it:"PUBBLICAZIONE", en:"PUBLICATION", speak:["publication"]},
+{it:"RICERCA", en:"RESEARCH", speak:["research"]},
+{it:"RECENSIONE", en:"REVIEW", speak:["review"]},
+{it:"RUOLO", en:"ROLE", speak:["role"]},
+{it:"PROGRAMMA / AGENDA", en:"SCHEDULE", speak:["schedule"]},
+{it:"SCENA", en:"SCENE", speak:["scene"]},
+{it:"SCULTURA", en:"SCULPTURE", speak:["sculpture"]},
+{it:"PALCOSCENICO", en:"STAGE", speak:["stage"]},
+{it:"STUDIO", en:"STUDY", speak:["study"]},
+{it:"SONDAGGIO", en:"SURVEY", speak:["survey"]},
+{it:"TERMINE", en:"TERM", speak:["term"]},
+{it:"TRIMESTRE / PERIODO SCOLASTICO", en:"TERM", speak:["term"]},
+{it:"TESTO", en:"TEXT", speak:["text"]},
+{it:"TEORIA", en:"THEORY", speak:["theory"]},
+{it:"TITOLO", en:"TITLE", speak:["title"]},
+{it:"VOCE", en:"VOICE", speak:["voice"]},
+{it:"AVVERTIMENTO", en:"WARNING", speak:["warning"]},
+{it:"SCRITTURA", en:"WRITING", speak:["writing"]}
+],
+
+  "ACTIVITIES, EVENTS & SOCIETY": [
+{it:"ATTIVITÀ", en:"ACTIVITY", speak:["activity"]},
+{it:"AMMISSIONE", en:"ADMISSION", speak:["admission"]},
+{it:"ANNIVERSARIO / RICORRENZA", en:"ANNIVERSARY", speak:["anniversary"]},
+{it:"ANNUNCIO", en:"ANNOUNCEMENT", speak:["announcement"]},
+{it:"SCUSA", en:"APOLOGY / EXCUSE", speak:["apology, OR excuse"]},
+{it:"APPUNTAMENTO", en:"APPOINTMENT", speak:["appointment"]},
+{it:"DISCUSSIONE / LITIGIO", en:"ARGUMENT", speak:["argument"]},
+{it:"ESERCITO", en:"ARMY", speak:["army"]},
+{it:"ATLETICA LEGGERA", en:"ATHLETICS", speak:["athletics"]},
+{it:"ATMOSFERA", en:"ATMOSPHERE", speak:["atmosphere"]},
+{it:"PUBBLICO / PLATEA", en:"AUDIENCE / THE PUBLIC", speak:["audience, OR the public"]},
+{it:"NASCITA", en:"BIRTH", speak:["birth"]},
+{it:"GIOCO DA TAVOLO", en:"BOARD GAME", speak:["board game"]},
+{it:"CAMPAGNA (POLITICA / PUBBLICITARIA)", en:"CAMPAIGN", speak:["campaign"]},
+{it:"CASO", en:"CASE", speak:["case"]},
+{it:"SCELTA", en:"CHOICE", speak:["choice"]},
+{it:"CONCORSO", en:"CONTEST", speak:["contest"]},
+{it:"DIBATTITO", en:"DEBATE", speak:["debate"]},
+{it:"DIVERTIMENTO", en:"ENTERTAINMENT", speak:["entertainment"]},
+{it:"FUGA", en:"ESCAPE", speak:["escape"]},
+{it:"FAVORE", en:"FAVOUR", speak:["favour"]},
+{it:"INFLUENZA", en:"INFLUENCE", speak:["influence"]},
+{it:"COLLOQUIO", en:"INTERVIEW", speak:["interview"]},
+{it:"INVITO", en:"INVITATION", speak:["invitation"]},
+{it:"TEMPO LIBERO", en:"LEISURE / SPARE TIME", speak:["leisure, OR spare time"]},
+{it:"MATRIMONIO", en:"MARRIAGE", speak:["marriage"]},
+{it:"MISSIONE", en:"MISSION", speak:["mission"]},
+{it:"MOSSA", en:"MOVE", speak:["move"]},
+{it:"OBIETTIVO", en:"OBJECTIVE / GOAL", speak:["objective, OR goal"]},
+{it:"PRATICA", en:"PRACTICE", speak:["practice"]},
+{it:"GARA", en:"RACE", speak:["race"]},
+{it:"REAZIONE", en:"REACTION", speak:["reaction"]},
+{it:"REGOLA", en:"RULE", speak:["rule"]},
+{it:"PUNTEGGIO", en:"SCORE", speak:["score"]},
+{it:"SICUREZZA", en:"SECURITY", speak:["security"]},
+{it:"SOCIETÀ", en:"SOCIETY", speak:["society"]},
+{it:"DICHIARAZIONE", en:"STATEMENT", speak:["statement"]},
+{it:"STATO", en:"STATUS", speak:["status"]},
+{it:"SORPRESA", en:"SURPRISE", speak:["surprise"]},
+{it:"TENDENZA", en:"TREND", speak:["trend"]},
+{it:"ALLENAMENTO", en:"WORKOUT / TRAINING SESSION", speak:["workout, OR training session"]}
+],
+
+  "ABSTRACT IDEAS": [
+{it:"AVVENTURA", en:"ADVENTURE", speak:["adventure"]},
+{it:"AMBIZIONE", en:"AMBITION", speak:["ambition"]},
+{it:"QUANTITÀ", en:"AMOUNT / QUANTITY", speak:["amount, OR quantity"]},
+{it:"ASPETTO", en:"APPEARANCE / LOOK", speak:["appearance, OR look"]},
+{it:"VALORE MEDIO / MEDIA", en:"AVERAGE", speak:["average"]},
+{it:"INFANZIA", en:"CHILDHOOD", speak:["childhood"]},
+{it:"CORAGGIO", en:"COURAGE", speak:["courage"]},
+{it:"PAURA", en:"FEAR", speak:["fear"]},
+{it:"LIBERTÀ", en:"FREEDOM", speak:["freedom"]},
+{it:"DIVARIO", en:"GAP", speak:["gap"]},
+{it:"GESTO", en:"GESTURE", speak:["gesture"]},
+{it:"SPERANZA", en:"HOPE", speak:["hope"]},
+{it:"MIGLIORAMENTO", en:"IMPROVEMENT", speak:["improvement"]},
+{it:"GIUDIZIO", en:"JUDGEMENT / JUDGMENT", speak:["judgement, OR judgment"]},
+{it:"GENTILEZZA", en:"KINDNESS", speak:["kindness"]},
+{it:"LUNGHEZZA", en:"LENGTH", speak:["length"]},
+{it:"FORTUNA", en:"LUCK", speak:["luck"]},
+{it:"LUSSO", en:"LUXURY", speak:["luxury"]},
+{it:"MAGIA", en:"MAGIC", speak:["magic"]},
+{it:"MODO / MANIERA", en:"MANNER / WAY", speak:["manner, OR way"]},
+{it:"QUESTIONE / FACCENDA", en:"MATTER / ISSUE", speak:["matter, OR issue"]},
+{it:"MISURA", en:"MEASURE", speak:["measure"]},
+{it:"MENTE", en:"MIND", speak:["mind"]},
+{it:"ERRORE", en:"MISTAKE / ERROR", speak:["mistake, OR error"]},
+{it:"UMORE", en:"MOOD", speak:["mood"]},
+{it:"BISOGNO", en:"NEED", speak:["need"]},
+{it:"RUMORE", en:"NOISE", speak:["noise"]},
+{it:"PIACERE", en:"PLEASURE", speak:["pleasure"]},
+{it:"PUNTO", en:"POINT", speak:["point"]},
+{it:"POTERE", en:"POWER", speak:["power"]},
+{it:"PRESSIONE", en:"PRESSURE", speak:["pressure"]},
+{it:"MOTIVO", en:"REASON", speak:["reason"]},
+{it:"RIFLESSIONE", en:"REFLECTION", speak:["reflection"]},
+{it:"SOLLIEVO", en:"RELIEF", speak:["relief"]},
+{it:"RAPPORTO", en:"RELATIONSHIP", speak:["relationship"]},
+{it:"FORMA", en:"SHAPE", speak:["shape"]},
+{it:"ANIMA", en:"SOUL", speak:["soul"]},
+{it:"SUONO", en:"SOUND", speak:["sound"]},
+{it:"DISPETTO", en:"SPITE / DISRESPECT", speak:["spite, OR disrespect"]},
+{it:"STRESS", en:"STRESS", speak:["stress"]},
+{it:"PENSIERO", en:"THOUGHT", speak:["thought"]},
+{it:"TRUCCO", en:"TRICK", speak:["trick"]},
+{it:"UNITÀ", en:"UNIT", speak:["unit"]}
+]
+  },
+
+
+  ADJECTIVES: {
+ "PERSONALITY & CHARACTER": [
+{it:"AUDACE", en:"BOLD", speak:["bold"]},
+{it:"PREPOTENTE", en:"BOSSY", speak:["bossy"]},
+{it:"SICURO DI SÉ", en:"CONFIDENT", speak:["confident"]},
+{it:"CURIOSO", en:"CURIOUS", speak:["curious"]},
+{it:"DISTRATTO", en:"DISTRACTED", speak:["distracted"]},
+{it:"ALLA MANO", en:"EASYGOING", speak:["easygoing"]},
+{it:"ESPERTO", en:"EXPERIENCED", speak:["experienced"]},
+{it:"RICONOSCENTE", en:"GRATEFUL / THANKFUL", speak:["grateful, OR thankful"]},
+{it:"COLPEVOLE", en:"GUILTY", speak:["guilty"]},
+{it:"FIDUCIOSO", en:"HOPEFUL", speak:["hopeful"]},
+{it:"INTELLIGENTE", en:"INTELLIGENT / CLEVER / SMART", speak:["intelligent, OR clever, OR smart"]},
+{it:"APPASSIONATO", en:"KEEN / PASSIONATE", speak:["keen, OR passionate"]},
+{it:"MITE", en:"MILD", speak:["mild"]},
+{it:"ESTROVERSO", en:"OUTGOING / EXTROVERT", speak:["outgoing, OR extrovert"]},
+{it:"SENSATO", en:"SENSIBLE", speak:["sensible"]},
+{it:"SEVERO", en:"STRICT", speak:["strict"]},
+{it:"DISPOSTO", en:"WILLING", speak:["willing"]},
+{it:"SAGGIO", en:"WISE", speak:["wise"]}
+],
+
+  "FEELINGS & EMOTIONS": [
+{it:"STUPITO", en:"AMAZED", speak:["amazed"]},
+{it:"INFASTIDITO", en:"ANNOYED", speak:["annoyed"]},
+{it:"ANSIOSO", en:"ANXIOUS", speak:["anxious"]},
+{it:"VERGOGNOSO", en:"ASHAMED", speak:["ashamed"]},
+{it:"CONFUSO", en:"CONFUSED", speak:["confused"]},
+{it:"CONFONDENTE", en:"CONFUSING", speak:["confusing"]},
+{it:"STRAFELICE", en:"DELIGHTED", speak:["delighted"]},
+{it:"DEPRESSO", en:"DEPRESSED", speak:["depressed"]},
+{it:"DELUSO", en:"DISAPPOINTED", speak:["disappointed"]},
+{it:"DELUDENTE", en:"DISAPPOINTING", speak:["disappointing"]},
+{it:"NOIOSO", en:"DULL / BORING", speak:["dull, OR boring"]},
+{it:"IMBARAZZATO", en:"EMBARRASSED", speak:["embarrassed"]},
+{it:"IMBARAZZANTE", en:"EMBARRASSING", speak:["embarrassing"]},
+{it:"PIACEVOLE", en:"ENJOYABLE", speak:["enjoyable"]},
+{it:"ESAUSTO", en:"EXHAUSTED / TIRED OUT", speak:["exhausted, OR tired out"]},
+{it:"CORRETTO (COMPORTAMENTO)", en:"FAIR", speak:["fair"]},
+{it:"SPAVENTOSO", en:"FRIGHTENING / SCARY", speak:["frightening, OR scary"]},
+{it:"SENZA SPERANZA", en:"HOPELESS", speak:["hopeless"]},
+{it:"INTERESSANTE", en:"INTERESTING", speak:["interesting"]},
+{it:"CONTENTO / LIETO", en:"PLEASED", speak:["pleased"]},
+{it:"RILASSATO", en:"RELAXED / CALM", speak:["relaxed, OR calm"]},
+{it:"SOLLEVATO", en:"RELIEVED", speak:["relieved"]},
+{it:"SPAVENTATO", en:"SCARED / FRIGHTENED", speak:["scared, OR frightened"]},
+{it:"SOCIEVOLE", en:"SOCIABLE", speak:["sociable"]},
+{it:"STRESSANTE", en:"STRESSFUL", speak:["stressful"]},
+{it:"TERRORIZZATO", en:"TERRIFIED", speak:["terrified"]},
+{it:"INSODDISFATTO", en:"UNSATISFIED", speak:["unsatisfied"]}
+],
+
+
+  "PEOPLE & APPEARANCE": [
+{it:"ADULTO", en:"ADULT", speak:["adult"]},
+{it:"INVECCHIATO", en:"AGED", speak:["aged"]},
+{it:"ADDORMENTATO", en:"ASLEEP", speak:["asleep"]},
+{it:"SVEGLIO", en:"AWAKE", speak:["awake"]},
+{it:"CALVO", en:"BALD", speak:["bald"]},
+{it:"CIECO", en:"BLIND", speak:["blind"]},
+{it:"RICCIO", en:"CURLY", speak:["curly"]},
+{it:"SORDO", en:"DEAF", speak:["deaf"]},
+{it:"DISABILE", en:"DISABLED", speak:["disabled"]},
+{it:"VESTITO", en:"DRESSED", speak:["dressed"]},
+{it:"ANZIANO", en:"ELDER / ELDERLY", speak:["elder, OR elderly"]},
+{it:"FIDANZATO", en:"ENGAGED", speak:["engaged"]},
+{it:"FEMMINILE", en:"FEMALE", speak:["female"]},
+{it:"DI BELL'ASPETTO", en:"GOOD-LOOKING", speak:["good-looking"]},
+{it:"BELLO (UOMO)", en:"HANDSOME / GOOD-LOOKING", speak:["handsome, OR good-looking"]},
+{it:"UMANO", en:"HUMAN", speak:["human"]},
+{it:"MANCINO", en:"LEFT-HANDED", speak:["left-handed"]},
+{it:"MASCHILE", en:"MALE", speak:["male"]},
+{it:"DI MEZZA ETÀ", en:"MIDDLE-AGED", speak:["middle-aged"]},
+{it:"PALLIDO", en:"PALE", speak:["pale"]},
+{it:"INCINTA", en:"PREGNANT", speak:["pregnant"]},
+{it:"DESTRIMANO", en:"RIGHT-HANDED", speak:["right-handed"]},
+{it:"SONNOLENTO", en:"SLEEPY", speak:["sleepy"]},
+{it:"BRUTTO (ASPETTO)", en:"UGLY", speak:["ugly"]},
+{it:"BENESTANTE", en:"WEALTHY", speak:["wealthy"]}
+],
+
+
+  "PHYSICAL PROPERTIES": [
+{it:"(IN)DIRETTO", en:"(IN)DIRECT", speak:["direct, OR indirect"]},
+{it:"AMARO", en:"BITTER", speak:["bitter"]},
+{it:"VUOTO (SPAZIO)", en:"BLANK", speak:["blank"]},
+{it:"BOLLITO", en:"BOILED", speak:["boiled"]},
+{it:"PARTE INFERIORE", en:"BOTTOM", speak:["bottom"]},
+{it:"NUOVO DI ZECCA", en:"BRAND NEW", speak:["brand new"]},
+{it:"BREVE", en:"BRIEF / SHORT", speak:["brief, OR short"]},
+{it:"LARGO", en:"BROAD / WIDE", speak:["broad, OR wide"]},
+{it:"ROVENTE", en:"BURNING", speak:["burning"]},
+{it:"DI CARTONE", en:"CARDBOARD", speak:["cardboard"]},
+{it:"CREMOSO", en:"CREAMY", speak:["creamy"]},
+{it:"DANNEGGIATO", en:"DAMAGED", speak:["damaged"]},
+{it:"POLVEROSO", en:"DUSTY", speak:["dusty"]},
+{it:"ENORME", en:"ENORMOUS / HUGE", speak:["enormous, OR huge"]},
+{it:"GELIDO", en:"FREEZING", speak:["freezing"]},
+{it:"FRESCO", en:"FRESH", speak:["fresh"]},
+{it:"CONGELATO / SURGELATO", en:"FROZEN", speak:["frozen"]},
+{it:"LUNGO", en:"LONG", speak:["long"]},
+{it:"MASSIMO", en:"MAXIMUM", speak:["maximum"]},
+{it:"MEDIO", en:"MEDIUM / AVERAGE", speak:["medium, OR average"]},
+{it:"MINIMO", en:"MINIMUM", speak:["minimum"]},
+{it:"DOLOROSO", en:"PAINFUL", speak:["painful"]},
+{it:"CRUDO", en:"RAW", speak:["raw"]},
+{it:"RIDOTTO", en:"REDUCED", speak:["reduced"]},
+{it:"LUCIDO", en:"SHINY", speak:["shiny"]},
+{it:"CHIUSO", en:"SHUT / CLOSED", speak:["shut, OR closed"]},
+{it:"DOLORANTE", en:"SORE / PAINFUL", speak:["sore, OR painful"]},
+{it:"PICCANTE", en:"SPICY", speak:["spicy"]},
+{it:"RIPIDO", en:"STEEP", speak:["steep"]},
+{it:"DOLCE", en:"SWEET", speak:["sweet"]},
+{it:"PARTE SUPERIORE", en:"UPPER", speak:["upper"]},
+{it:"SELVAGGIO", en:"WILD", speak:["wild"]}
+],
+
+
+  "COLOUR & SENSES": [
+{it:"DIVERTENTE", en:"AMUSING / FUNNY", speak:["amusing, OR funny"]},
+{it:"ARANCIONE", en:"ORANGE", speak:["orange"]},
+{it:"FANTASTICO", en:"AWESOME / AMAZING / FANTASTIC", speak:["awesome, OR amazing, OR fantastic"]},
+{it:"TERRIBILE", en:"AWFUL", speak:["awful"]},
+{it:"NERO", en:"BLACK", speak:["black"]},
+{it:"BRILLANTE", en:"BRILLIANT / SHINY", speak:["brilliant, OR shiny"]},
+{it:"MARRONE", en:"BROWN", speak:["brown"]},
+{it:"AFFASCINANTE", en:"CHARMING / FASCINATING", speak:["charming, OR fascinating"]},
+{it:"COMICO", en:"COMIC / FUNNY", speak:["comic, OR funny"]},
+{it:"COLORATO", en:"COLOURFUL", speak:["colourful"]},
+{it:"CARINO", en:"CUTE / NICE / LOVELY", speak:["cute, OR nice, OR lovely"]},
+{it:"DELIZIOSO", en:"DELIGHTFUL", speak:["delightful"]},
+{it:"DISGUSTOSO", en:"DISGUSTING", speak:["disgusting"]},
+{it:"D'ORO (COLORE)", en:"GOLDEN", speak:["golden"]},
+{it:"MOZZAFIATO", en:"GORGEOUS / STUNNING", speak:["gorgeous, OR stunning"]},
+{it:"ORRIBILE", en:"HORRIBLE / AWFUL", speak:["horrible, OR awful"]},
+{it:"MAGNIFICO", en:"MAGNIFICENT", speak:["magnificent"]},
+{it:"MERAVIGLIOSO", en:"MARVELLOUS", speak:["marvellous"]},
+{it:"BLU MARINA / SCURO", en:"NAVY BLUE", speak:["navy blue"]},
+{it:"RUMOROSO", en:"NOISY", speak:["noisy"]},
+{it:"CARINO / GRAZIOSO", en:"PRETTY", speak:["pretty"]},
+{it:"VIOLA", en:"PURPLE", speak:["purple"]},
+{it:"ROSSASTRO", en:"REDDISH", speak:["reddish"]},
+{it:"D'ARGENTO", en:"SILVER", speak:["silver"]},
+{it:"SILENZIOSO", en:"SILENT", speak:["silent"]},
+{it:"BLU CELESTE", en:"SKY BLUE", speak:["sky blue"]},
+{it:"COSÌ COSÌ", en:"SO-SO", speak:["so-so"]},
+{it:"ACIDO", en:"SOUR", speak:["sour"]},
+{it:"FRIZZANTE", en:"SPARKLING", speak:["sparkling"]},
+{it:"PICCANTE", en:"SPICY", speak:["spicy"]},
+{it:"SORPRENDENTE", en:"SURPRISING", speak:["surprising"]},
+{it:"SAPORITO", en:"TASTY / DELICIOUS", speak:["tasty, OR delicious"]},
+{it:"ROSA", en:"PINK", speak:["pink"]},
+{it:"ROSASTRO", en:"PINKISH", speak:["pinkish"]},
+{it:"VIOLA CHIARO", en:"VIOLET", speak:["violet"]}
+],
+
+  "TIME, ORDER & POSITION": [
+{it:"ASSENTE", en:"ABSENT", speak:["absent"]},
+{it:"DA SOLO", en:"ALONE", speak:["alone"]},
+{it:"PARTE POSTERIORE", en:"BACK", speak:["back"]},
+{it:"CENTRALE", en:"CENTRAL / MIDDLE", speak:["central, OR middle"]},
+{it:"QUOTIDIANO", en:"DAILY", speak:["daily"]},
+{it:"IN RITARDO", en:"DELAYED", speak:["delayed"]},
+{it:"DOVUTO", en:"DUE", speak:["due"]},
+{it:"ORIENTALE", en:"EASTERN", speak:["eastern"]},
+{it:"FACCIA A FACCIA", en:"FACE-TO-FACE", speak:["face-to-face"]},
+{it:"FINALE", en:"FINAL / LAST", speak:["final, OR last"]},
+{it:"SUCCESSIVO", en:"FOLLOWING / NEXT", speak:["following, OR next"]},
+{it:"PRECEDENTE", en:"FORMER / PREVIOUS", speak:["former, OR previous"]},
+{it:"PIÙ LONTANO", en:"FURTHER / FARTHER", speak:["further, OR farther"]},
+{it:"STORICO (IMPORTANTE, MOMENTOSO)", en:"HISTORIC", speak:["historic"]},
+{it:"STORICO", en:"HISTORICAL", speak:["historical"]},
+{it:"AL CHIUSO", en:"INDOOR", speak:["indoor"]},
+{it:"INTERMEDIO", en:"INTERMEDIATE", speak:["intermediate"]},
+{it:"IL PIÙ RECENTE", en:"LATEST", speak:["latest"]},
+{it:"SINISTRO", en:"LEFT", speak:["left"]},
+{it:"LIMITATO", en:"LIMITED", speak:["limited"]},
+{it:"DAL VIVO", en:"LIVE", speak:["live"]},
+{it:"MENSILE", en:"MONTHLY", speak:["monthly"]},
+{it:"SCOMPARSO", en:"MISSING", speak:["missing"]},
+{it:"MANCANTE", en:"MISSING", speak:["missing"]},
+{it:"VICINO (+ SOST.)", en:"NEARBY", speak:["nearby"]},
+{it:"SETTENTRIONALE", en:"NORTHERN", speak:["northern"]},
+{it:"ALL'APERTO", en:"OUTDOOR", speak:["outdoor"]},
+{it:"ESTERNO", en:"OUTSIDE", speak:["outside"]},
+{it:"DURANTE LA NOTTE", en:"OVERNIGHT", speak:["overnight"]},
+{it:"PASSATO", en:"PAST", speak:["past"]},
+{it:"SECONDARIO", en:"SECONDARY", speak:["secondary"]},
+{it:"SITUATO", en:"SITUATED", speak:["situated"]},
+{it:"MERIDIONALE", en:"SOUTHERN", speak:["southern"]},
+{it:"IMPROVVISO", en:"SUDDEN", speak:["sudden"]},
+{it:"IL PIÙ LONTANO", en:"THE FURTHEST / THE FARTHEST", speak:["the furthest, OR the farthest"]},
+{it:"TIPICO", en:"TYPICAL", speak:["typical"]},
+{it:"UNIFORME", en:"UNIFORM / REGULAR", speak:["uniform, OR regular"]},
+{it:"OCCIDENTALE", en:"WESTERN", speak:["western"]},
+{it:"MONDIALE", en:"WORLDWIDE", speak:["worldwide"]}
+],
+
+  "QUALITY, VALUE & DEGREE": [
+{it:"(IN)CAPACE", en:"(UN)ABLE", speak:["able, OR unable"]},
+{it:"(IN)ACCETTABILE", en:"(UN)ACCEPTABLE", speak:["acceptable, OR unacceptable"]},
+{it:"AVANZATO", en:"ADVANCED", speak:["advanced"]},
+{it:"PRECISO", en:"ACCURATE / PRECISE", speak:["accurate, OR precise"]},
+{it:"DI BASE", en:"BASIC", speak:["basic"]},
+{it:"MEGLIO DI", en:"BETTER THAN", speak:["better than"]},
+{it:"CERTO", en:"CERTAIN / SURE", speak:["certain, OR sure"]},
+{it:"IMPEGNATIVO", en:"CHALLENGING / DEMANDING", speak:["challenging, OR demanding"]},
+{it:"CLASSICO", en:"CLASSICAL", speak:["classical"]},
+{it:"(IN)COMPLETO", en:"(IN)COMPLETE", speak:["complete, OR incomplete"]},
+{it:"COMPLICATO", en:"COMPLICATED", speak:["complicated"]},
+{it:"CORRETTO", en:"CORRECT / RIGHT", speak:["correct, OR right"]},
+{it:"(IN)DIPENDENTE", en:"(IN)DEPENDENT", speak:["dependent, OR independent"]},
+{it:"ECCELLENTE", en:"EXCELLENT / OUTSTANDING", speak:["excellent, OR outstanding"]},
+{it:"ESATTO", en:"EXACT / PRECISE", speak:["exact, OR precise"]},
+{it:"ULTERIORE", en:"EXTRA / FURTHER", speak:["extra, OR further"]},
+{it:"STRAORDINARIO", en:"EXTRAORDINARY", speak:["extraordinary"]},
+{it:"FAMILIARE", en:"FAMILIAR", speak:["familiar"]},
+{it:"GENERALE", en:"GENERAL", speak:["general"]},
+{it:"GRANDE (VALORE, STIMA)", en:"GREAT", speak:["great"]},
+{it:"(IM)PROBABILE", en:"(UN)LIKELY / (IM)PROBABLE", speak:["likely, OR unlikely, OR probable, OR improbable"]},
+{it:"OVVIO", en:"OBVIOUS / CLEAR", speak:["obvious, OR clear"]},
+{it:"UFFICIALE", en:"OFFICIAL", speak:["official"]},
+{it:"STRANO", en:"ODD / WEIRD / STRANGE", speak:["odd, OR weird, OR strange"]},
+{it:"OPPOSTO / CONTRARIO", en:"OPPOSITE", speak:["opposite"]},
+{it:"SEMPLICE / ORDINARIO", en:"PLAIN", speak:["plain"]},
+{it:"PRONTO", en:"PREPARED / READY", speak:["prepared, OR ready"]},
+{it:"APPROPRIATO", en:"PROPER", speak:["proper"]},
+{it:"QUALIFICATO", en:"QUALIFIED", speak:["qualified"]},
+{it:"RARO", en:"RARE", speak:["rare"]},
+{it:"(IR)RAGIONEVOLE", en:"(UN)REASONABLE", speak:["reasonable, OR unreasonable"]},
+{it:"(IN)AFFIDABILE", en:"(UN)RELIABLE", speak:["reliable, OR unreliable"]},
+{it:"SODDISFACENTE", en:"SATISFACTORY", speak:["satisfactory"]},
+{it:"DIVERSI", en:"SEVERAL", speak:["several"]},
+{it:"DI SUCCESSO", en:"SUCCESSFUL", speak:["successful"]},
+{it:"IL MIGLIORE", en:"THE BEST", speak:["the best"]},
+{it:"SCONOSCIUTO", en:"UNKNOWN", speak:["unknown"]},
+{it:"VARI", en:"VARIOUS", speak:["various"]},
+{it:"(IN)ADATTO", en:"(UN)SUITABLE", speak:["suitable, OR unsuitable"]},
+{it:"(IN)DEGNO", en:"(UN)WORTHY", speak:["worthy, OR unworthy"]}
+],
+
+"WORK & SOCIETY": [
+{it:"ANNUALE", en:"ANNUAL", speak:["annual"]},
+{it:"ESENTE DA TASSE", en:"DUTY-FREE / TAX-FREE", speak:["duty-free, OR tax-free"]},
+{it:"(DIS)OCCUPATO", en:"(UN)EMPLOYED", speak:["employed, OR unemployed"]},
+{it:"AMBIENTALE", en:"ENVIRONMENTAL", speak:["environmental"]},
+{it:"ECONOMICO (FINANZA)", en:"FINANCIAL", speak:["financial"]},
+{it:"VIETATO", en:"FORBIDDEN", speak:["forbidden"]},
+{it:"A TEMPO PIENO", en:"FULL-TIME", speak:["full-time"]},
+{it:"GUIDATO", en:"GUIDED", speak:["guided"]},
+{it:"LOCALE", en:"LOCAL", speak:["local"]},
+{it:"PRINCIPALE", en:"MAIN", speak:["main"]},
+{it:"A TEMPO PARZIALE", en:"PART-TIME", speak:["part-time"]},
+{it:"CONSENTITO", en:"PERMITTED / ALLOWED", speak:["permitted, OR allowed"]},
+{it:"POLITICO", en:"POLITICAL", speak:["political"]},
+{it:"VIETATO", en:"PROHIBITED", speak:["prohibited"]},
+{it:"RICICLATO", en:"RECYCLED", speak:["recycled"]},
+{it:"REALE (FAMIGLIA REALE)", en:"ROYAL", speak:["royal"]},
+{it:"REGALE", en:"ROYAL / REGAL", speak:["royal, OR regal"]},
+{it:"DI SECONDA MANO", en:"SECOND-HAND", speak:["second-hand"]},
+{it:"SEGRETO", en:"SECRET", speak:["secret"]},
+{it:"TECNICO", en:"TECHNICAL", speak:["technical"]},
+{it:"ABITUALE / SOLITO", en:"USUAL / HABITUAL", speak:["usual, OR habitual"]}
+],
+
+"LIFESTYLE & DAILY LIFE": [
+{it:"(NON)ATTRAENTE", en:"(UN)ATTRACTIVE", speak:["attractive, OR unattractive"]},
+{it:"(S)COMODO (POSIZIONE)", en:"(UN)COMFORTABLE", speak:["comfortable, OR uncomfortable"]},
+{it:"(S)COMODO (LOGISTICA, ORARIO)", en:"(IN)CONVENIENT", speak:["convenient, OR inconvenient"]},
+{it:"(IM)PAZIENTE", en:"(IM)PATIENT", speak:["patient, OR impatient"]},
+{it:"(IM)PURO", en:"(IM)PURE", speak:["pure, OR impure"]},
+{it:"ACCOGLIENTE", en:"COSY", speak:["cosy"]},
+{it:"ANTICO", en:"ANTIQUE / ANCIENT", speak:["antique, OR ancient"]},
+{it:"(DIS)ATTENTO", en:"CAREFUL / CARELESS", speak:["careful, OR careless"]},
+{it:"INFORMALE", en:"CASUAL", speak:["casual"]},
+{it:"ECONOMICO", en:"CHEAP / ECONOMICAL", speak:["cheap, OR economical"]},
+{it:"ALLEGRO", en:"CHEERFUL / MERRY", speak:["cheerful, OR merry"]},
+{it:"CARO", en:"DEAR / EXPENSIVE", speak:["dear, OR expensive"]},
+{it:"ADATTO", en:"FIT / SUITABLE", speak:["fit, OR suitable"]},
+{it:"AFFEZIONATO", en:"FOND", speak:["fond"]},
+{it:"STRANIERO", en:"FOREIGN", speak:["foreign"]},
+{it:"PORTATILE", en:"HAND-HELD / PORTABLE", speak:["hand-held, OR portable"]},
+{it:"NASCOSTO", en:"HIDDEN", speak:["hidden"]},
+{it:"UMIDO", en:"HUMID", speak:["humid"]},
+{it:"IN ZONA", en:"LOCAL", speak:["local"]},
+{it:"DISORDINATO", en:"MESSY / UNTIDY", speak:["messy, OR untidy"]},
+{it:"ORDINATO", en:"NEAT / TIDY", speak:["neat, OR tidy"]},
+{it:"VECCHIO STILE", en:"OLD-FASHIONED", speak:["old-fashioned"]},
+{it:"PROPRIO", en:"OWN", speak:["own"]},
+{it:"TRANQUILLO", en:"PEACEFUL / TRANQUIL / CALM", speak:["peaceful, OR tranquil, OR calm"]},
+{it:"SALATO", en:"SALTY", speak:["salty"]},
+{it:"SENZA MANICHE", en:"SLEEVELESS", speak:["sleeveless"]},
+{it:"ALLA MODA / DI MODA", en:"STYLISH / FASHIONABLE / TRENDY", speak:["stylish, OR fashionable, OR trendy"]},
+{it:"LUNGO (CHE RICHIEDE TEMPO)", en:"TIME-CONSUMING", speak:["time-consuming"]},
+{it:"(IN)UTILE", en:"USEFUL / USELESS", speak:["useful, OR useless"]},
+{it:"LIBERO (NON OCCUPATO)", en:"VACANT", speak:["vacant"]},
+{it:"FAMOSO", en:"WELL-KNOWN / FAMOUS", speak:["well-known, OR famous"]}
+]
+
+},
+
+  ADVERBS: {
+ "TIME & PLACE": [
+{it:"ATTRAVERSO", en:"ACROSS", speak:["across"]},
+{it:"ALL'IMPROVVISO", en:"ALL OF A SUDDEN", speak:["all of a sudden"]},
+{it:"SEPARATAMENTE", en:"APART", speak:["apart"]},
+{it:"A LUNGO", en:"AT LENGTH", speak:["at length"]},
+{it:"SUBITO", en:"AT ONCE / STRAIGHT AWAY", speak:["at once, OR straight away"]},
+{it:"INDIETRO", en:"BACK", speak:["back"]},
+{it:"AL CONTRARIO", en:"BACK TO FRONT", speak:["back to front"]},
+{it:"PER CASO", en:"BY CHANCE", speak:["by chance"]},
+{it:"FACCIA A FACCIA", en:"FACE TO FACE", speak:["face to face"]},
+{it:"DI TANTO IN TANTO", en:"FROM TIME TO TIME / NOW AND THEN", speak:["from time to time, OR now and then"]},
+{it:"A TEMPO PIENO", en:"FULL TIME", speak:["full time"]},
+{it:"A METÀ (STRADA)", en:"HALFWAY", speak:["halfway"]},
+{it:"IN FRETTA", en:"IN A HURRY / IN A RUSH", speak:["in a hurry, OR in a rush"]},
+{it:"NEL FRATTEMPO", en:"IN THE MEANTIME / MEANWHILE", speak:["in the meantime, OR meanwhile"]},
+{it:"ULTIMAMENTE", en:"LATELY / RECENTLY / OF LATE", speak:["lately, OR recently, OR of late"]},
+{it:"VICINO", en:"NEAR / CLOSE TO", speak:["near, OR close to"]},
+{it:"NON PIÙ", en:"NO LONGER", speak:["no longer"]},
+{it:"DA UN GIORNO ALL'ALTRO", en:"OVERNIGHT", speak:["overnight"]},
+{it:"IN SECONDO LUOGO", en:"SECONDLY", speak:["secondly"]},
+{it:"DI SECONDA MANO", en:"SECOND-HAND", speak:["second-hand"]},
+{it:"A BREVE", en:"SHORTLY", speak:["shortly"]},
+{it:"CONTEMPORANEAMENTE", en:"SIMULTANEOUSLY", speak:["simultaneously"]},
+{it:"PRIMA O POI", en:"SOONER OR LATER / EVENTUALLY", speak:["sooner or later, OR eventually"]},
+{it:"DAPPERTUTTO", en:"THROUGHOUT", speak:["throughout"]},
+{it:"A TESTA IN GIÙ", en:"UPSIDE DOWN", speak:["upside down"]}
+],
+
+  "MANNER": [
+{it:"AD ALTA VOCE", en:"ALOUD", speak:["aloud"]},
+{it:"ALLO STESSO MODO", en:"ALIKE", speak:["alike"]},
+{it:"IN ALTERNATIVA", en:"ALTERNATIVELY", speak:["alternatively"]},
+{it:"ANSIOSAMENTE / CON ANSIA", en:"ANXIOUSLY", speak:["anxiously"]},
+{it:"AUTOMATICAMENTE", en:"AUTOMATICALLY", speak:["automatically"]},
+{it:"CON CAUTELA", en:"CAUTIOUSLY", speak:["cautiously"]},
+{it:"CURIOSAMENTE", en:"CURIOUSLY", speak:["curiously"]},
+{it:"PROFONDAMENTE", en:"DEEPLY", speak:["deeply"]},
+{it:"DIRETTAMENTE", en:"DIRECTLY / STRAIGHT", speak:["directly, OR straight"]},
+{it:"EFFICACEMENTE", en:"EFFECTIVELY", speak:["effectively"]},
+{it:"LIBERAMENTE", en:"FREELY", speak:["freely"]},
+{it:"GRADUALMENTE / MAN MANO", en:"GRADUALLY", speak:["gradually"]},
+{it:"ONESTAMENTE", en:"HONESTLY", speak:["honestly"]},
+{it:"INAVVERTITAMENTE", en:"INADVERTENTLY", speak:["inadvertently"]},
+{it:"RECIPROCAMENTE", en:"MUTUALLY", speak:["mutually"]},
+{it:"DI PROPOSITO", en:"ON PURPOSE / DELIBERATELY", speak:["on purpose, OR deliberately"]},
+{it:"IN MODO CORRETTO", en:"PROPERLY / CORRECTLY", speak:["properly, OR correctly"]},
+{it:"(IR)RAGIONEVOLMENTE", en:"(UN)REASONABLY", speak:["reasonably, OR unreasonably"]},
+{it:"IN SICUREZZA", en:"SAFELY", speak:["safely"]},
+{it:"DOLCEMENTE", en:"SOFTLY", speak:["softly"]},
+{it:"SPECIALMENTE", en:"SPECIALLY", speak:["specially"]},
+{it:"ACCURATAMENTE (CON ATTENZIONE)", en:"THOROUGHLY", speak:["thoroughly"]},
+{it:"URGENTEMENTE / CON URGENZA", en:"URGENTLY", speak:["urgently"]}
+],
+
+"OTHER ADVERBS": [
+{it:"ASSOLUTAMENTE", en:"ABSOLUTELY", speak:["absolutely"]},
+{it:"COMPLESSIVAMENTE", en:"ALTOGETHER / ALL UP", speak:["altogether, OR all up"]},
+{it:"APPROSSIMATIVAMENTE", en:"APPROXIMATELY / ROUGHLY", speak:["approximately, OR roughly"]},
+{it:"INOLTRE", en:"BESIDES / MOREOVER", speak:["besides, OR moreover"]},
+{it:"NEL COMPLESSO", en:"BY AND LARGE / OVERALL", speak:["by and large, OR overall"]},
+{it:"CERTAMENTE", en:"CERTAINLY / FOR CERTAIN", speak:["certainly, OR for certain"]},
+{it:"COMPLETAMENTE", en:"COMPLETELY / FULLY", speak:["completely, OR fully"]},
+{it:"DI CONSEGUENZA", en:"CONSEQUENTLY", speak:["consequently"]},
+{it:"INTERAMENTE", en:"ENTIRELY / WHOLLY", speak:["entirely, OR wholly"]},
+{it:"IN PIÙ", en:"EXTRA", speak:["extra"]},
+{it:"ESTREMAMENTE", en:"EXTREMELY", speak:["extremely"]},
+{it:"PER ESEMPIO", en:"FOR INSTANCE / FOR EXAMPLE", speak:["for instance, OR for example"]},
+{it:"ULTERIORMENTE", en:"FURTHER", speak:["further"]},
+{it:"A MALAPENA", en:"HARDLY / BARELY / SCARCELY", speak:["hardly, OR barely, OR scarcely"]},
+{it:"INCREDIBILMENTE", en:"INCREDIBLY", speak:["incredibly"]},
+{it:"IN EFFETTI / DAVVERO", en:"INDEED", speak:["indeed"]},
+{it:"INEVITABILMENTE", en:"INEVITABLY", speak:["inevitably"]},
+{it:"(S)FORTUNATAMENTE", en:"(UN)LUCKILY / (UN)FORTUNATELY", speak:["luckily, OR unluckily, OR fortunately, OR unfortunately"]},
+{it:"PRINCIPALMENTE", en:"MAINLY", speak:["mainly"]},
+{it:"SOLAMENTE / SEMPLICEMENTE", en:"MERELY", speak:["merely"]},
+{it:"PREVALENTEMENTE", en:"MOSTLY", speak:["mostly"]},
+{it:"OVVIAMENTE", en:"OBVIOUSLY / EVIDENTLY", speak:["obviously, OR evidently"]},
+{it:"ORIGINARIAMENTE / IN ORIGINE", en:"ORIGINALLY", speak:["originally"]},
+{it:"AD ALTA VOCE", en:"OUT LOUD", speak:["out loud"]},
+{it:"PARZIALMENTE / IN PARTE", en:"PARTLY", speak:["partly"]},
+{it:"PARTICOLARMENTE", en:"PARTICULARLY", speak:["particularly"]},
+{it:"PERFETTAMENTE", en:"PERFECTLY", speak:["perfectly"]},
+{it:"PERSONALMENTE", en:"PERSONALLY", speak:["personally"]},
+{it:"PIUTTOSTO", en:"PRETTY / RATHER", speak:["pretty, OR rather"]},
+{it:"GROSSOLANAMENTE", en:"ROUGHLY", speak:["roughly"]},
+{it:"LEGGERMENTE (DI INTENSITÀ)", en:"SLIGHTLY", speak:["slightly"]},
+{it:"IN QUALCHE MODO", en:"SOMEHOW", speak:["somehow"]},
+{it:"PIUTTOSTO", en:"SOMEWHAT / RATHER", speak:["somewhat, OR rather"]},
+{it:"SICURAMENTE", en:"SURELY / FOR SURE", speak:["surely, OR for sure"]},
+{it:"TERRIBILMENTE", en:"TERRIBLY", speak:["terribly"]},
+{it:"PERTANTO", en:"THEREFORE / SO", speak:["therefore, OR so"]},
+{it:"TOTALMENTE", en:"TOTALLY / COMPLETELY", speak:["totally, OR completely"]},
+{it:"PURTROPPO", en:"UNLUCKILY / UNFORTUNATELY", speak:["unluckily, OR unfortunately"]}
+]
+}
+};
+
+ 
+
+
+let appState = "GROUP_SELECTION";
+
+let currentGroup = null;
+let currentCategory = null;
+
+let cards = [];
+let index = 0;
+
+const flashcard=document.getElementById("flashcard");
+const frontText=document.getElementById("front-text");
+const backText=document.getElementById("back-text");
+const counter=document.getElementById("counter-display");
+const speakBtn=document.getElementById("speakBtn");
+const buttonContainer=document.getElementById("button-container");
+const gotoInput=document.getElementById("goto-input");
+const gotoBtn=document.getElementById("goto-btn");
+const prevBtn=document.getElementById("prevBtn");
+const nextBtn=document.getElementById("nextBtn");
+
+function updateCard(){
+
+ document.getElementById("front-hint").style.visibility = "visible";
+
+ flashcard.classList.remove("flipped");
+
+ setTimeout(()=>{
+  frontText.innerText=cards[index].it;
+  backText.innerHTML = cards[index].en;
+  counter.innerText=`${index+1} / ${cards.length}`;
+ },120);
+
+}
+
+function nextCard(e){
+  e.stopPropagation();
+
+  if(appState !== "FLASHCARD_VIEW"){
+    return;
+  }
+
+  index = (index + 1) % cards.length;
+  updateCard();
+}
+
+function prevCard(e){
+  e.stopPropagation();
+
+  if(appState !== "FLASHCARD_VIEW"){
+    return;
+  }
+
+  index = (index - 1 + cards.length) % cards.length;
+  updateCard();
+}
+
+flashcard.onclick=()=>flashcard.classList.toggle("flipped");
+
+
+window.addEventListener("DOMContentLoaded", function(){
+
+  document.getElementById("readme-btn").onclick = function(){
+    document.getElementById("popupOverlay").style.display = "flex";
+  };
+
+  document.getElementById("closePopup").onclick = function(){
+    document.getElementById("popupOverlay").style.display = "none";
+  };
+
+  document.getElementById("popupOverlay").onclick = function(e){
+    if(e.target === this){
+      this.style.display = "none";
+    }
+  };
+
+});
+
+
+gotoBtn.onclick = gotoCard;
+
+speakBtn.onclick=e=>{
+
+ e.stopPropagation();
+ const t = cards[index].speak.join(", ").replace(/, OR /g, ". . ");
+ const u=new SpeechSynthesisUtterance(t);
+ u.lang="en-GB";
+ speechSynthesis.cancel();
+ speechSynthesis.speak(u);
+};
+
+function selectGroup(group){
+
+  currentGroup = group;
+  appState = "CATEGORY_SELECTION";
+
+  document.querySelectorAll(".set-btn").forEach(button => {
+    button.classList.remove("active");
+  });
+
+  event.target.classList.add("active");
+
+  frontText.innerText = "SELECT A CATEGORY";
+  backText.innerText = "";
+
+  document.getElementById("front-hint").style.visibility = "hidden";
+
+
+  flashcard.classList.remove("flipped");
+
+  setTimeout(() => {
+
+  if(categories[currentGroup].length === 1){
+    selectCategory(categories[currentGroup][0]);
+  } else {
+    showCategories();
+  }
+
+}, 150);
+
+}
+
+function selectCategory(category){
+
+  currentCategory = category;
+  appState = "FLASHCARD_VIEW";
+
+console.log("FLASHCARD_VIEW");
+console.log(prevBtn);
+console.log(nextBtn);
+console.log(prevBtn.style.visibility);
+console.log(nextBtn.style.visibility);
+
+  prevBtn.style.visibility = "visible";
+  nextBtn.style.visibility = "visible";
+
+  document.getElementById("goto-container").style.visibility = "visible";
+
+  cards = [...vocabulary[currentGroup][currentCategory]];
+  index = 0;
+
+  if(categories[currentGroup].length === 1){
+
+  buttonContainer.className = "vertical-buttons mt-2";
+
+  buttonContainer.innerHTML = `
+    <button class="set-btn active">${currentGroup}</button>
+    <button class="set-btn back-btn" onclick="showGroups()">BACK TO GROUPS</button>
+  `;
+
+} else {
+
+  buttonContainer.className = "vertical-buttons mt-2";
+
+  buttonContainer.innerHTML = `
+    <button class="set-btn active">${category}</button>
+    <button class="set-btn back-btn" onclick="showCategories()">BACK TO CATEGORIES</button>
+  `;
+
+}
+
+  if(cards.length > 0){
+  updateCard();
+} else {
+  frontText.innerText = "NO WORDS YET";
+  backText.innerText = "";
+  counter.innerText = "0 / 0";
+}
+
+}
+
+function showGroups(){
+
+  appState = "GROUP_SELECTION";
+  currentGroup = null;
+  currentCategory = null;
+  cards = [];
+  index = 0;
+
+  prevBtn.style.visibility = "hidden";
+  nextBtn.style.visibility = "hidden";
+
+  document.getElementById("goto-container").style.visibility = "hidden";
+
+  frontText.innerText = "SELECT YOUR GROUP";
+  backText.innerText = "";
+  counter.innerText = "";
+ 
+  document.getElementById("front-hint").style.visibility = "hidden";
+
+
+  flashcard.classList.remove("flipped");
+
+  buttonContainer.className = "vertical-buttons mt-2";
+  buttonContainer.innerHTML = "";
+
+  groups.forEach(group => {
+
+  const button = document.createElement("button");
+
+  button.className = "set-btn group-btn";
+  button.innerHTML =
+  `${group} <span class="count">(${groupTotals[group]})</span>`;
+
+  button.onclick = () => selectGroup(group);
+
+  if(group === currentGroup){
+    button.classList.add("active");
+  }
+
+  buttonContainer.appendChild(button);
+
+});
+
+/* ===== BACK BUTTON ===== */
+
+const BACK_BUTTON_URL = "https://www.acceleratedlanguagesystems.com/vocabulary-booster";
+
+const libraryButton = document.createElement("button");
+
+libraryButton.className = "library-back-btn";
+
+libraryButton.innerHTML = "⬅ BACK TO VOCABULARY BOOSTER MENU";
+
+libraryButton.onclick = () => {
+    window.location.href = BACK_BUTTON_URL;
+};
+
+buttonContainer.appendChild(libraryButton);
+
+
+
+}
+
+
+  function showCategories(){
+
+  appState = "CATEGORY_SELECTION";
+  currentCategory = null;
+  cards = [];
+  index = 0;
+
+  document.getElementById("goto-container").style.visibility = "hidden";
+
+ frontText.innerText = "SELECT A CATEGORY";
+backText.innerText = "";
+counter.innerText = "";
+
+prevBtn.style.visibility = "hidden";
+nextBtn.style.visibility = "hidden";
+
+  buttonContainer.className = "vertical-buttons mt-2";
+  buttonContainer.innerHTML = "";
+
+  categories[currentGroup].forEach(category => {
+
+    const button = document.createElement("button");
+
+    button.className = "set-btn";
+    button.innerHTML =
+  `${category} <span class="count">(${categoryTotals[currentGroup][category]})</span>`;
+
+if(category === currentCategory){
+  button.classList.add("active");
+}
+
+button.onclick = () => selectCategory(category);
+
+buttonContainer.appendChild(button);
+
+  });
+
+  const backButton = document.createElement("button");
+
+  backButton.className = "set-btn back-btn";
+  backButton.innerText = "BACK TO GROUPS";
+  backButton.onclick = showGroups;
+
+  buttonContainer.appendChild(backButton);
+
+}
+
+function gotoCard(){
+
+  let n = parseInt(gotoInput.value);
+
+  if(isNaN(n)){
+    return;
+  }
+
+  if(n < 1){
+    n = 1;
+  }
+
+  if(n > cards.length){
+    n = cards.length;
+  }
+
+  index = n - 1;
+
+updateCard();
+
+gotoInput.value = "";
+gotoInput.blur();
+
+}
+
+
+function shuffle(array){
+  for(let i = array.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+frontText.innerText = "SELECT YOUR GROUP";
+backText.innerText = "";
+counter.innerText = "";
+
+showGroups();
+
+</script>
+
+<div class="popup-overlay" id="popupOverlay">
+
+  <div class="popup">
+
+    <div class="popup-text">
+
+THIS SERIES OF FLASHCARDS PRACTISES <span style="color:darkred;">CEFR B1</span> VOCABULARY<br><br>
+
+THERE ARE NEARLY <span style="color:darkred;">950 ENTRIES</span> COVERING DIVERSE PARTS OF SPEECH, <span style="color:#0070C0;">VERBS</span>, <span style="color:#0070C0;">NOUNS</span>, <span style="color:#0070C0;">ADJECTIVES</span>, <span style="color:#0070C0;">ADVERBS</span><br><br>
+
+SIMPLY <span style="color:darkred;">CHOOSE YOUR GROUP</span> AND SELECT ANY CATEGORY WITHIN THAT GROUP. YOU CAN RETURN TO THE MENUS JUST BY SELECTING THE <span style="color:darkred;">GO BACK</span> BUTTON AT THE BOTTOM<br><br>
+
+EACH GROUP / CATEGORY INDICATES HOW MANY WORDS ARE WITHIN EACH ONE<br><br>
+
+IF YOU PREFER NOT TO START <span style="color:darkred;">FROM Nº1</span> EACH TIME, YOU CAN <span style="color:darkred;">ENTER ANY NUMBER</span> WHERE YOU WOULD LIKE TO START ONCE YOU ARE INSIDE THAT CATEGORY<br><br>
+
+<span style="color:darkred;">CEFR B1</span> PRESUPPOSES A KNOWLEDGE OF ALL <span style="color:darkred;">A2 VOCABULARY</span>, SO BE SURE TO REVIEW THE <span style="color:darkred;">VOCABULARY A2</span> FLASHCARDS.<br><br>
+
+SPENDING JUST <span style="color:darkred;">10-15 MINUTES</span> A DAY WILL MAKE A BIG DIFFERENCE NOT ONLY TO YOUR LEARNING BUT, <span style="color:darkred;">ABOVE ALL</span>, TO YOUR REMEMBERING!
+
+    </div>
+
+    <div id="closePopup" class="popup-close-text">
+      <span style="color:darkgreen;">CLOSE</span>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+</body>
+</html>
