@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PVIE3 – Lessons 25–36</title>
 <!-- update -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -42,7 +43,7 @@ body{
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:clamp(.82rem, 3.2vw, 1.25rem);
+  font-size:clamp(1.2rem,4.5vw,1.5rem);
   line-height:1.25;
   word-break:break-word;
   overflow-wrap:break-word;
@@ -91,6 +92,19 @@ body{
   color:#061247;
 }
 
+.back-btn{
+  background:#C46A1A;
+  color:white;
+  border:none;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.back-btn:hover{
+  background:#FFF3A3;
+  color:darkred;
+}
+
 .extras-btn{
   background:#0FF268;
   color:#061247;
@@ -118,7 +132,7 @@ body{
 <body>
 
 <h2 class="text-white text-lg font-extrabold tracking-widest text-center">
-STAGE THREE
+STAGE THREE <span style="color:#FFF3A3;">(B2/C1)</span>
 </h2>
 
 <div class="perspective mt-4">
@@ -163,8 +177,16 @@ STAGE THREE
 <button class="set-btn inactive-btn">LESSON 34</button>
 <button class="set-btn inactive-btn">LESSON 35</button>
 <button class="set-btn inactive-btn">LESSON 36</button>
-<button class="set-btn global-btn" onclick="loadGlobal()">TEST 25-36</button>
-</div>
+<button class="set-btn global-btn" onclick="loadGlobal()">
+  TEST 25-36
+</button>
+
+<div></div>
+
+<button id="libraryBackBtn"
+        class="set-btn back-btn">
+  ◀ BACK
+</button></div>
 <script>
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -518,11 +540,14 @@ function activateButton(folder){
   buttons[map[folder]].classList.add("active");
 }
 
+document.getElementById("libraryBackBtn").addEventListener("click", function () {
+  window.location.href = "https://www.acceleratedlanguagesystems.com/idiomatic-expressions-booster";
+});
+
 /* INITIAL LOAD */
 loadSet("pvie3.1");
 
-}); 
-
+});
 </script>
 </body>
 </html>
