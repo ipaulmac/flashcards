@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Survival Level (A1)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+  --bg-blue:#061247;
+  --card-cream:#F7F2E7;
+  --it-red:#8C0327;
+  --en-blue:#0E065C;
+  --border-red:#8C0327;
+}
+
+body{
+  background:var(--bg-blue);
+  font-family:system-ui, Segoe UI, Arial;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:1rem;
+}
+
+/* CARD */
+.perspective{perspective:1000px;}
+.card-inner{
+  width:90vw;
+  max-width:380px;
+  height:55vw;
+  max-height:240px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:.4s;
+  cursor:pointer;
+}
+.flipped{transform:rotateY(180deg);}
+.face{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border-radius:1rem;
+}
+.back{transform:rotateY(180deg);}
+
+.corner-hint{
+  position:absolute;
+  top:.4rem;
+  right:.6rem;
+  font-size:.6rem;
+  font-weight:800;
+  color:#8C0327;
+}
+
+.it-text{
+  color:#4B0082;
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.1rem;
+}
+.en-text{
+  color:var(--en-blue);
+  font-weight:800;
+  text-transform:uppercase;
+  text-align:center;
+  font-size:1.15rem;
+  white-space:pre-line;
+}
+
+.listen-btn{
+  background:none;
+  border:none;
+  color:#8C0327;
+  font-weight:700;
+  font-size:.9rem;
+}
+
+.clock-svg{
+  width:35vw;
+  max-width:140px;
+  aspect-ratio:1 / 1;
+  display:block;
+  margin:0 auto;
+}
+
+/* NAV */
+.nav-btn{
+  font-size:1.4rem;
+  font-weight:700;
+  color:white;
+}
+
+/* SET BUTTONS */
+.set-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.4rem;
+  max-width:380px;
+  width:100%;
+}
+
+.set-btn{
+  padding:.35rem 0;
+  font-size:.75rem;
+  font-weight:800;
+  border-radius:999px;
+  background:white;
+  color:#0E065C;
+}
+
+
+.group-btn{
+  background:#D8F5D0;
+  color:#0E065C;
+}
+
+
+.set-btn.active{
+  background:#8C0327;
+  color:white;
+}
+
+.back-btn{
+  background:cyan;
+  color:#0E065C;
+}
+
+.count{
+  color:darkred;
+}
+
+.top-bar{
+  width:100%;
+  max-width:380px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:.5rem;
+}
+
+.top-title{
+  color:white;
+  font-weight:800;
+  font-size:1.2rem;
+  margin:0;
+}
+
+
+.readme-btn{
+  background:none;
+  border:none;
+  color:gold;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.popup-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(6,18,71,.88);
+  display:none;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:90px;
+  z-index:99999;
+  padding-left:12px;
+  padding-right:12px;
+  box-sizing:border-box;
+}
+
+.popup{
+  width:80vw;
+  max-width:360px;
+  max-height:80vh;
+  overflow-y:auto;
+  background:#fff;
+  border:4px solid darkred;
+  border-radius:16px;
+  padding:18px;
+  box-sizing:border-box;
+}
+
+.popup-text{
+  font-size:.82rem;
+  font-weight:900;
+  line-height:1.45;
+  color:#0E065C;
+  text-align:left;
+}
+
+.popup-close-text{
+  margin-top:18px;
+  display:flex;
+  justify-content:flex-end;
+  font-size:.9rem;
+  font-weight:900;
+  color:darkred;
+  cursor:pointer;
+  user-select:none;
+}
+
+.popup-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:16px;
+}
+
+.popup-footer .popup-close-text{
+  margin:0;
+}
+
+
+
+.vertical-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:.4rem;
+  width:100%;
+  max-width:380px;
+}
+
+.library-back-btn{
+  width:100%;
+  margin:0 auto;
+  padding:.35rem 0;
+  border:2px solid white;
+  border-radius:999px;
+  background:#1A4378;
+  color:white;
+  font-size:.75rem;
+  font-weight:800;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.2s;
+  display:block;
+}
+
+.library-back-btn:hover{
+  background:#FCE7F3;
+  color:#1A4378;
+  border-color:#1A4378;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div id="top-bar" class="top-bar">
+
+ 
+  <h1 class="top-title">SURVIVAL LEVEL <span style="color:#FFF3A3;">(A1+)</span></h1>
+
+  <button id="readme-btn" class="readme-btn">
+    READ ME
+  </button>
+
+</div>
+
+<div class="perspective">
+  <div id="flashcard" class="card-inner">
+
+    <!-- FRONT -->
+    <div class="face bg-[#F7F2E7] border-4 border-[#8C0327] flex items-center justify-center p-4">
+      <div id="front-hint" class="corner-hint">TAP TO REVEAL</div>
+      <div id="front-text" class="it-text"></div>
+    </div>
+
+    <!-- BACK -->
+    <div class="face back bg-[#F7F2E7] border-4 border-[#8C0327] flex flex-col items-center justify-center gap-3 p-4">
+      <div class="corner-hint">TAP TO RETURN</div>
+      <div id="back-text" class="en-text"></div>
+      <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="flex justify-between items-center w-full max-w-[380px] mt-1">
+ <button id="prevBtn" class="nav-btn" onclick="prevCard(event)">◀</button>
+<span id="counter-display" class="text-white font-bold text-sm">1 / 1</span>
+<button id="nextBtn" class="nav-btn" onclick="nextCard(event)">▶</button>
+</div>
+
+<div id="button-container" class="set-grid mt-2"></div>
+<script>
+
+
+const vocabulary = {
+
+ COMMON_VERBS: {
+ SET_1: [
+    {it:"ANDARE",en:"GO – WENT – GONE",speak:["go","went","gone"]},
+    {it:"VENIRE",en:"COME – CAME – COME",speak:["come","came","come"]},
+    {it:"CAMMINARE / ANDARE A PIEDI",en:"WALK",speak:["walk"]},
+    {it:"CORRERE",en:"RUN – RAN – RUN",speak:["run","ran","run"]},
+    {it:"ENTRARE",en:"ENTER",speak:["enter"]},
+    {it:"USCIRE",en:"GO OUT – WENT OUT – GONE OUT",speak:["go out","went out","gone out"]},
+    {it:"ARRIVARE",en:"ARRIVE",speak:["arrive"]},
+    {it:"PARTIRE",en:"LEAVE – LEFT – LEFT",speak:["leave","left","left"]},
+    {it:"RIMANERE / RESTARE",en:"STAY / REMAIN",speak:["stay","remain"]},
+    {it:"GIRARE",en:"TURN",speak:["turn"]},
+    {it:"SENTIRSI / PROVARE",en:"FEEL – FELT – FELT",speak:["feel","felt","felt"]},
+    {it:"FERMARSI",en:"STOP",speak:["stop"]},
+    {it:"CADERE",en:"FALL – FELL – FALLEN",speak:["fall","fell","fallen"]},
+    {it:"PORTARE (QUI)",en:"BRING – BROUGHT – BROUGHT",speak:["bring","brought","brought"]},
+    {it:"PORTARE (LÌ)",en:"TAKE – TOOK – TAKEN",speak:["take","took","taken"]},
+    {it:"SEGUIRE",en:"FOLLOW",speak:["follow"]},
+    {it:"INCONTRARE",en:"MEET – MET – MET",speak:["meet","met","met"]}
+  ],
+
+  SET_2: [
+    {it:"FARE",en:"DO – DID – DONE\nMAKE – MADE – MADE",speak:["do","did","done","or","make","made","made"]},
+    {it:"DIRE (QUALCOSA)",en:"SAY – SAID – SAID",speak:["say","sed","sed"]},
+    {it:"DIRE (A QUALCUNO)",en:"TELL – TOLD – TOLD",speak:["tell","told","told"]},
+    {it:"PARLARE",en:"SPEAK – SPOKE – SPOKEN",speak:["speak","spoke","spoken"]},
+    {it:"CHIEDERE",en:"ASK",speak:["ask"]},
+    {it:"RISPONDERE",en:"ANSWER",speak:["answer"]},
+    {it:"CHIAMARE",en:"CALL",speak:["call"]},
+    {it:"USARE",en:"USE",speak:["use"]},
+    {it:"SCOPRIRE",en:"DISCOVER",speak:["discover"]},
+    {it:"DIMENTICARE",en:"FORGET – FORGOT – FORGOTTEN",speak:["forget","forgot","forgotten"]},
+    {it:"TROVARE",en:"FIND – FOUND – FOUND",speak:["find","found","found"]},
+    {it:"PERDERE",en:"LOSE – LOST – LOST",speak:["lose","lost","lost"]},
+    {it:"TENERE",en:"KEEP – KEPT – KEPT",speak:["keep","kept","kept"]},
+    {it:"PRENDERE (DA)",en:"TAKE FROM – TOOK – TAKEN",speak:["take from","took","taken"]},
+    {it:"DARE",en:"GIVE – GAVE – GIVEN",speak:["give","gave","given"]},
+    {it:"RICEVERE",en:"RECEIVE",speak:["receive"]},
+    {it:"AIUTARE",en:"HELP",speak:["help"]}
+  ],
+
+  SET_3: [
+    {it:"VIVERE / ABITARE",en:"LIVE",speak:["live"]},
+    {it:"MANGIARE",en:"EAT – ATE – EATEN",speak:["eat","ate","eaten"]},
+    {it:"BERE",en:"DRINK – DRANK – DRUNK",speak:["drink","drank","drunk"]},
+    {it:"DORMIRE",en:"SLEEP – SLEPT – SLEPT",speak:["sleep","slept","slept"]},
+    {it:"SVEGLIARSI",en:"WAKE UP – WOKE UP – WOKEN UP",speak:["wake up","woke up","woken up"]},
+    {it:"SEDERSI",en:"SIT – SAT – SAT",speak:["sit","sat","sat"]},
+    {it:"ALZARSI IN PIEDI",en:"STAND UP – STOOD UP – STOOD UP",speak:["stand up","stood up","stood up"]},
+    {it:"GUARDARE",en:"LOOK",speak:["look"]},
+    {it:"INDOSSARE",en:"WEAR – WORE – WORN",speak:["wair","wore","worn"]},
+    {it:"VEDERE",en:"SEE – SAW – SEEN",speak:["see","saw","seen"]},
+    {it:"ASCOLTARE (LA MUSICA)",en:"LISTEN TO (MUSIC)",speak:["listen to music"]},
+    {it:"SENTIRE",en:"HEAR – HEARD – HEARD",speak:["hear","herd","herd"]},
+    {it:"PENSARE",en:"THINK – THOUGHT – THOUGHT",speak:["think","thought","thought"]},
+    {it:"SAPERE / CONOSCERE",en:"KNOW – KNEW – KNOWN",speak:["no","new","knowen"]},
+    {it:"CAPIRE",en:"UNDERSTAND – UNDERSTOOD – UNDERSTOOD",speak:["understand","understood","understood"]},
+    {it:"RICORDARE",en:"REMEMBER",speak:["remember"]},
+    {it:"IMPARARE",en:"LEARN – LEARNT – LEARNT",speak:["lurn","lurnt","lurnt"]}
+  ],
+
+  SET_4: [
+    {it:"INIZIARE (REGOLARE)",en:"START",speak:["start"]},
+    {it:"INIZIARE (IRREGOLARE)",en:"BEGIN – BEGAN – BEGUN",speak:["begin","began","begun"]},
+    {it:"CONTINUARE",en:"CONTINUE",speak:["continue"]},
+    {it:"CAMBIARE",en:"CHANGE",speak:["change"]},
+    {it:"SCEGLIERE",en:"CHOOSE – CHOSE – CHOSEN",speak:["choose","chose","chosen"]},
+    {it:"DECIDERE",en:"DECIDE",speak:["decide"]},
+    {it:"PROVARE",en:"TRY",speak:["try"]},
+    {it:"RIUSCIRE",en:"BE ABLE TO – WAS ABLE TO – BEEN ABLE TO",speak:["be able two","was able two","been able two"]},
+    {it:"FALLIRE",en:"FAIL",speak:["fail"]},
+    {it:"LAVARE",en:"WASH",speak:["wosh"]},
+    {it:"MIGLIORARE",en:"IMPROVE",speak:["improve"]},
+    {it:"AUMENTARE",en:"INCREASE",speak:["increase"]},
+    {it:"VINCERE",en:"WIN – WON – WON",speak:["win","won","won"]},
+    {it:"CONTROLLARE",en:"CHECK",speak:["check"]},
+    {it:"PERMETTERE",en:"ALLOW",speak:["allow"]},
+    {it:"SPIEGARE",en:"EXPLAIN",speak:["explain"]},
+    {it:"SIGNIFICARE",en:"MEAN – MEANT – MEANT",speak:["mean","ment","ment"]}
+  ],
+
+  SET_5: [
+    {it:"VOLERE",en:"WANT TO",speak:["want to"]},
+    {it:"AVER BISOGNO DI",en:"NEED",speak:["need"]},
+    {it:"PREFERIRE",en:"PREFER",speak:["prefer"]},
+    {it:"PIACERE",en:"LIKE",speak:["like"]},
+    {it:"SPERARE",en:"HOPE",speak:["hope"]},
+    {it:"CREDERE",en:"BELIEVE",speak:["believe"]},
+    {it:"COMPORTARSI",en:"BEHAVE",speak:["behave"]},
+    {it:"ASPETTARE",en:"WAIT FOR",speak:["wait for"]},
+    {it:"CERCARE QUALCOSA",en:"LOOK FOR\nSEARCH FOR",speak:["look for","search for"]},
+    {it:"COMPRARE",en:"BUY – BOUGHT – BOUGHT",speak:["buy","bought","bought"]},
+    {it:"PAGARE",en:"PAY – PAID – PAID",speak:["pay","paid","paid"]},
+    {it:"VENDERE",en:"SELL – SOLD – SOLD",speak:["sell","sold","sold"]},
+    {it:"SPENDERE",en:"SPEND – SPENT – SPENT",speak:["spend","spent","spent"]},
+    {it:"RISPARMIARE",en:"SAVE",speak:["save"]},
+    {it:"GUADAGNARE",en:"EARN",speak:["earn"]},
+    {it:"PERDERE (TRENO)",en:"MISS",speak:["miss"]}
+  ],
+
+  SET_6: [
+    {it:"APRIRE",en:"OPEN",speak:["open"]},
+    {it:"CHIUDERE",en:"CLOSE",speak:["close"]},
+    {it:"AVER RAGIONE",en:"BE RIGHT",speak:["be right"]},
+    {it:"AVER TORTO",en:"BE WRONG",speak:["be wrong"]},
+    {it:"COSTRUIRE",en:"BUILD – BUILT – BUILT",speak:["build","built","built"]},
+    {it:"ROMPERE",en:"BREAK – BROKE – BROKEN",speak:["break","broke","broken"]},
+    {it:"AGGIUSTARE / RIPARARE",en:"REPAIR",speak:["repair"]},
+    {it:"SBAGLIARE",en:"MAKE A MISTAKE",speak:["make a mistake"]},
+    {it:"MUOVERE",en:"MOVE",speak:["move"]},
+    {it:"SMETTERE (DI FARE)",en:"STOP DOING",speak:["stop doing"]},
+    {it:"GUIDARE",en:"DRIVE – DROVE – DRIVEN",speak:["drive","drove","driven"]},
+    {it:"VIAGGIARE",en:"TRAVEL",speak:["travel"]},
+    {it:"CUCINARE",en:"COOK",speak:["cook"]},
+    {it:"PULIRE",en:"CLEAN",speak:["clean"]},
+    {it:"LAVORARE",en:"WORK",speak:["work"]},
+    {it:"FUNZIONARE",en:"WORK",speak:["work"]}
+  ]
+
+},
+    
+ COMMON_NOUNS: {
+
+  SET_1: [
+    {it:"ACQUA",en:"WATER",speak:["water"]},
+    {it:"ALBERO",en:"TREE",speak:["tree"]},
+    {it:"AMICO",en:"FRIEND",speak:["friend"]},
+    {it:"ANNO",en:"YEAR",speak:["year"]},
+    {it:"STRISCE PEDONALI",en:"ZEBRA CROSSING",speak:["zebra crossing"]},
+    {it:"AZIENDA",en:"COMPANY",speak:["company"]},
+    {it:"BAGNO",en:"BATHROOM",speak:["bathroom"]},
+    {it:"BICICLETTA / MOTO",en:"BIKE",speak:["bike"]},
+    {it:"BOTTIGLIA",en:"BOTTLE",speak:["bottle"]},
+    {it:"BAMBINO / BAMBINI",en:"CHILD / CHILDREN",speak:["child","children"]},
+    {it:"BICCHIERE",en:"GLASS",speak:["glass"]},
+    {it:"CANE",en:"DOG",speak:["dog"]},
+    {it:"CAPPOTTO / GIUBBOTTO",en:"COAT",speak:["coat"]},
+    {it:"CASA",en:"HOUSE / HOME",speak:["house","home"]},
+    {it:"CAMERA",en:"ROOM",speak:["room"]},
+    {it:"CENA",en:"DINNER",speak:["dinner"]},
+    {it:"CITTÀ",en:"CITY / TOWN",speak:["city","town"]}
+  ],
+
+  SET_2: [
+    {it:"CHIESA",en:"CHURCH",speak:["church"]},
+    {it:"COLAZIONE",en:"BREAKFAST",speak:["breakfast"]},
+    {it:"MONETA",en:"COIN",speak:["coin"]},
+    {it:"CONTANTI",en:"CASH",speak:["cash"]},
+    {it:"CORPO",en:"BODY",speak:["body"]},
+    {it:"CUGINO",en:"COUSIN",speak:["cousin"]},
+    {it:"CUOCO",en:"COOK",speak:["cook"]},
+    {it:"CUCINA",en:"KITCHEN",speak:["kitchen"]},
+    {it:"CINTURA DI SICUREZZA",en:"SEAT BELT",speak:["seat belt"]},
+    {it:"CORRIERE",en:"COURIER",speak:["courier"]},
+    {it:"DOCCIA",en:"SHOWER",speak:["shower"]},
+    {it:"ENTRATA",en:"ENTRANCE",speak:["entrance"]},
+    {it:"ERRORE",en:"MISTAKE",speak:["mistake"]},
+    {it:"ESAME",en:"EXAM",speak:["exam"]},
+    {it:"ESERCIZIO",en:"EXERCISE",speak:["exercise"]},
+    {it:"FESTA",en:"PARTY",speak:["party"]},
+    {it:"FINE",en:"END",speak:["end"]}
+  ],
+
+  SET_3: [
+    {it:"FINESTRA",en:"WINDOW",speak:["window"]},
+    {it:"FIRMA",en:"SIGNATURE",speak:["signature"]},
+    {it:"FRATELLO",en:"BROTHER",speak:["brother"]},
+    {it:"FAMIGLIA",en:"FAMILY",speak:["family"]},
+    {it:"FATTORIA",en:"FARM",speak:["farm"]},
+    {it:"FIUME",en:"RIVER",speak:["river"]},
+    {it:"ASCENSORE",en:"LIFT",speak:["lift"]},
+    {it:"GIARDINO",en:"GARDEN",speak:["garden"]},
+    {it:"GIORNALE",en:"NEWSPAPER",speak:["newspaper"]},
+    {it:"GIORNO",en:"DAY",speak:["day"]},
+    {it:"GOVERNO",en:"GOVERNMENT",speak:["government"]},
+    {it:"INSEGNANTE",en:"TEACHER",speak:["teacher"]},
+    {it:"LETTO",en:"BED",speak:["bed"]},
+    {it:"LUCE",en:"LIGHT",speak:["light"]},
+    {it:"LAGO",en:"LAKE",speak:["lake"]},
+    {it:"LIBRO",en:"BOOK",speak:["book"]},
+    {it:"COMPITI",en:"HOMEWORK",speak:["homework"]}
+  ],
+
+  SET_4: [
+    {it:"LICEO",en:"HIGH SCHOOL",speak:["high school"]},
+    {it:"RIVISTA",en:"MAGAZINE",speak:["magazine"]},
+    {it:"MANO",en:"HAND",speak:["hand"]},
+    {it:"MADRE",en:"MOTHER",speak:["mother"]},
+    {it:"MERCATO",en:"MARKET",speak:["market"]},
+    {it:"MATTINA",en:"MORNING",speak:["morning"]},
+    {it:"METEO",en:"WEATHER",speak:["weather"]},
+    {it:"MESE",en:"MONTH",speak:["month"]},
+    {it:"MURO / PARETE",en:"WALL",speak:["wall"]},
+    {it:"NOTTE",en:"NIGHT",speak:["night"]},
+    {it:"OSPEDALE",en:"HOSPITAL",speak:["hospital"]},
+    {it:"OSPITE",en:"GUEST",speak:["guest"]},
+    {it:"ORA",en:"HOUR",speak:["hour"]},
+    {it:"OROLOGIO",en:"CLOCK",speak:["clock"]},
+    {it:"PAGINA",en:"PAGE",speak:["page"]},
+    {it:"PARCHEGGIO",en:"CAR PARK",speak:["car park"]},
+    {it:"PADRE",en:"FATHER",speak:["father"]}
+  ],
+
+  SET_5: [
+    {it:"PIANO",en:"PLAN",speak:["plan"]},
+    {it:"PIATTO",en:"PLATE",speak:["plate"]},
+    {it:"PONTE",en:"BRIDGE",speak:["bridge"]},
+    {it:"POMERIGGIO",en:"AFTERNOON",speak:["afternoon"]},
+    {it:"POLIZIOTTO",en:"POLICEMAN",speak:["policeman"]},
+    {it:"PORTA",en:"DOOR",speak:["door"]},
+    {it:"QUADERNO",en:"NOTEBOOK",speak:["notebook"]},
+    {it:"FRASE",en:"SENTENCE",speak:["sentence"]},
+    {it:"STRADA",en:"STREET / ROAD",speak:["street","road"]},
+    {it:"SEMAFORI",en:"TRAFFIC LIGHTS",speak:["traffic lights"]},
+    {it:"SPIAGGIA",en:"BEACH",speak:["beach"]},
+    {it:"TAVOLO",en:"TABLE",speak:["table"]},
+    {it:"TEMPO",en:"TIME",speak:["time"]},
+    {it:"TRENO",en:"TRAIN",speak:["train"]},
+    {it:"VALIGIA",en:"SUITCASE",speak:["suitcase"]},
+    {it:"VIAGGIO",en:"TRIP",speak:["trip"]}
+  ],
+
+  SET_6: [
+    {it:"VEICOLO",en:"VEHICLE",speak:["vehicle"]},
+    {it:"UOMO",en:"MAN",speak:["man"]},
+    {it:"UOMINI",en:"MEN",speak:["men"]},
+    {it:"DONNA",en:"WOMAN",speak:["woman"]},
+    {it:"DONNE",en:"WOMEN",speak:["women"]},
+    {it:"VICINO DI CASA",en:"NEIGHBOUR",speak:["neighbour"]},
+    {it:"VACANZA",en:"HOLIDAY",speak:["holiday"]},
+    {it:"SOLE",en:"SUN",speak:["sun"]},
+    {it:"PAROLA",en:"WORD",speak:["word"]},
+    {it:"PANTALONI",en:"TROUSERS",speak:["trousers"]},
+    {it:"STAMPANTE",en:"PRINTER",speak:["printer"]},
+    {it:"PULSANTE",en:"BUTTON",speak:["button"]},
+    {it:"TASTO",en:"KEY",speak:["key"]},
+    {it:"CAVO",en:"CABLE",speak:["cable"]},
+    {it:"SCARPA",en:"SHOE",speak:["shoe"]},
+    {it:"ARMADIO",en:"WARDROBE",speak:["wardrobe"]}
+  ]
+
+},
+
+
+  COMMON_ADJECTIVES: {
+
+  SET_1: [
+    {it:"BUONO", en:"GOOD", speak:["good"]},
+    {it:"MALE / CATTIVO", en:"BAD", speak:["bad"]},
+    {it:"GRANDE", en:"BIG / LARGE", speak:["big","large"]},
+    {it:"PICCOLO", en:"SMALL / LITTLE", speak:["small","little"]},
+    {it:"LUNGO", en:"LONG", speak:["long"]},
+    {it:"CORTO", en:"SHORT", speak:["short"]},
+    {it:"ALTO", en:"HIGH / TALL", speak:["high","tall"]},
+    {it:"BASSO", en:"LOW / SHORT", speak:["low","short"]},
+    {it:"FACILE", en:"EASY", speak:["easy"]},
+    {it:"DIFFICILE", en:"DIFFICULT", speak:["difficult"]},
+    {it:"BLOCCATO", en:"STUCK", speak:["stuck"]},
+    {it:"VELOCE", en:"FAST / QUICK", speak:["fast","quick"]},
+    {it:"LENTO", en:"SLOW", speak:["slow"]},
+    {it:"VECCHIO", en:"OLD", speak:["old"]},
+    {it:"NUOVO", en:"NEW", speak:["new"]}
+  ],
+
+  SET_2: [
+    {it:"MOLTO CALDO", en:"HOT", speak:["hot"]},
+    {it:"FREDDO", en:"COLD", speak:["cold"]},
+    {it:"PIENO", en:"FULL", speak:["full"]},
+    {it:"VUOTO", en:"EMPTY", speak:["empty"]},
+    {it:"DIVERSO", en:"DIFFERENT", speak:["different"]},
+    {it:"STESSO", en:"SAME", speak:["same"]},
+    {it:"GIUSTO", en:"RIGHT", speak:["right"]},
+    {it:"SBAGLIATO", en:"WRONG", speak:["wrong"]},
+    {it:"UTILE", en:"USEFUL", speak:["useful"]},
+    {it:"INUTILE", en:"USELESS", speak:["useless"]},
+    {it:"NECESSARIO", en:"NECESSARY", speak:["necessary"]},
+    {it:"COMODO", en:"COMFORTABLE", speak:["comfortable"]},
+    {it:"SCOMODO", en:"UNCOMFORTABLE", speak:["uncomfortable"]},
+    {it:"VERO", en:"TRUE", speak:["true"]},
+    {it:"FALSO", en:"FALSE", speak:["false"]}
+  ],
+
+  SET_3: [
+    {it:"FELICE", en:"HAPPY", speak:["happy"]},
+    {it:"TRISTE", en:"SAD", speak:["sad"]},
+    {it:"ARRABBIATO", en:"ANGRY", speak:["angry"]},
+    {it:"STANCO", en:"TIRED", speak:["tired"]},
+    {it:"AFFAMATO", en:"HUNGRY", speak:["hungry"]},
+    {it:"ASSETATO", en:"THIRSTY", speak:["thirsty"]},
+    {it:"FRESCO (CIBO)", en:"FRESH", speak:["fresh"]},
+    {it:"OCCUPATO / IMPEGNATO", en:"BUSY", speak:["busy"]},
+    {it:"LIBERO", en:"FREE", speak:["free"]},
+    {it:"GENTILE", en:"KIND", speak:["kind"]},
+    {it:"CARINO", en:"NICE", speak:["nice"]},
+    {it:"AMICHEVOLE", en:"FRIENDLY", speak:["friendly"]},
+    {it:"ANTIPATICO", en:"UNFRIENDLY", speak:["unfriendly"]},
+    {it:"ONESTO", en:"HONEST", speak:["honest"]},
+    {it:"SPAVENTATO", en:"AFRAID", speak:["afraid"]}
+  ],
+
+  SET_4: [
+    {it:"SICURO / CERTO", en:"SURE", speak:["sure"]},
+    {it:"SICURO (PROTETTO)", en:"SAFE", speak:["safe"]},
+    {it:"SERIO", en:"SERIOUS", speak:["serious"]},
+    {it:"INTERESSANTE", en:"INTERESTING", speak:["interesting"]},
+    {it:"NOIOSO", en:"BORING", speak:["boring"]},
+    {it:"ECCITANTE / EMOZIONANTE", en:"EXCITING", speak:["exciting"]},
+    {it:"DIVERTENTE", en:"FUN", speak:["fun"]},
+    {it:"STRANO / INSOLITO", en:"STRANGE", speak:["strange"]},
+    {it:"CHIARO", en:"CLEAR", speak:["clear"]},
+    {it:"CONFUSO", en:"CONFUSING", speak:["confusing"]},
+    {it:"DISORDINATO", en:"UNTIDY", speak:["untidy"]},
+    {it:"SEMPLICE", en:"SIMPLE", speak:["simple"]},
+    {it:"DISPONIBILE", en:"AVAILABLE", speak:["available"]},
+    {it:"PRONTO", en:"READY", speak:["ready"]},
+    {it:"INTERO", en:"WHOLE", speak:["whole"]}
+  ],
+
+  SET_5: [
+    {it:"SMUSSATO / SPUNTATO", en:"BLUNT", speak:["blunt"]},
+    {it:"PROFONDO", en:"DEEP", speak:["deep"]},
+    {it:"POCO PROFONDO", en:"SHALLOW", speak:["shallow"]},
+    {it:"MOLTO", en:"MUCH", speak:["much"]},
+    {it:"MOLTI", en:"MANY", speak:["many"]},
+    {it:"POCO", en:"LITTLE", speak:["little"]},
+    {it:"POCHI", en:"FEW", speak:["few"]},
+    {it:"FORTE", en:"STRONG", speak:["strong"]},
+    {it:"DEBOLE", en:"WEAK", speak:["weak"]},
+    {it:"PESANTE", en:"HEAVY", speak:["heavy"]},
+    {it:"LEGGERO", en:"LIGHT", speak:["light"]},
+    {it:"EDUCATO", en:"POLITE", speak:["polite"]},
+    {it:"MALEDUCATO", en:"IMPOLITE", speak:["impolite"]},
+    {it:"TRASANDATO", en:"SCRUFFY", speak:["scruffy"]},
+    {it:"AFFOLLATO", en:"CROWDED", speak:["crowded"]}
+  ],
+
+  SET_6: [
+    {it:"RICCO", en:"RICH", speak:["rich"]},
+    {it:"POVERO", en:"POOR", speak:["poor"]},
+    {it:"BLOCCATO", en:"STUCK", speak:["stuck"]},
+    {it:"NUVOLOSO", en:"CLOUDY", speak:["cloudy"]},
+    {it:"VENTOSO", en:"WINDY", speak:["windy"]},
+    {it:"NERO", en:"BLACK", speak:["black"]},
+    {it:"VERDE", en:"GREEN", speak:["green"]},
+    {it:"BIANCO", en:"WHITE", speak:["white"]},
+    {it:"ORDINATO", en:"TIDY", speak:["tidy"]},
+    {it:"APPICCICOSO", en:"STICKY", speak:["sticky"]},
+    {it:"DI LEGNO", en:"WOODEN", speak:["wooden"]},
+    {it:"STRETTO (ABITI)", en:"TIGHT", speak:["tight"]},
+    {it:"LARGO / SCIOLTO (ABITI)", en:"LOOSE", speak:["loose"]},
+    {it:"LARGO (SPAZIO)", en:"WIDE", speak:["wide"]},
+    {it:"STRETTO (SPAZIO)", en:"NARROW", speak:["narrow"]}
+  ]
+
+},
+
+  COMMON_ADVERBS: {
+
+  SET_1: [
+    {it:"ADESSO", en:"NOW", speak:["now"]},
+    {it:"POI / ALLORA", en:"THEN", speak:["then"]},
+    {it:"OGGI", en:"TODAY", speak:["today"]},
+    {it:"DOMANI", en:"TOMORROW", speak:["tomorrow"]},
+    {it:"IERI", en:"YESTERDAY", speak:["yesterday"]},
+    {it:"SEMPRE", en:"ALWAYS", speak:["always"]},
+    {it:"DI SOLITO", en:"USUALLY", speak:["usually"]},
+    {it:"SPESSO", en:"OFTEN", speak:["often"]},
+    {it:"QUALCHE VOLTA", en:"SOMETIMES", speak:["sometimes"]},
+    {it:"MAI (Negativo)", en:"NEVER", speak:["never"]},
+    {it:"GIÀ", en:"ALREADY", speak:["already"]},
+    {it:"ANCORA", en:"STILL", speak:["still"]},
+    {it:"COSÌ / QUINDI", en:"THEREFORE", speak:["therefore"]},
+    {it:"TUTTAVIA / PERÒ", en:"HOWEVER", speak:["however"]}
+  ],
+
+  SET_2: [
+    {it:"(NON) ANCORA", en:"YET", speak:["yet"]},
+    {it:"PRESTO / FRA POCO", en:"SOON", speak:["soon"]},
+    {it:"TARDI", en:"LATE", speak:["late"]},
+    {it:"PRESTO", en:"EARLY", speak:["early"]},
+    {it:"BENE", en:"WELL", speak:["well"]},
+    {it:"MALE", en:"BADLY", speak:["badly"]},
+    {it:"VELOCEMENTE", en:"FAST / QUICKLY", speak:["fast","quickly"]},
+    {it:"A QUANTO PARE", en:"APPARENTLY", speak:["apparently"]},
+    {it:"LENTAMENTE", en:"SLOWLY", speak:["slowly"]},
+    {it:"DURAMENTE / SODO", en:"HARD", speak:["hard"]},
+    {it:"FACILMENTE", en:"EASILY", speak:["easily"]},
+    {it:"ATTENTAMENTE", en:"CAREFULLY", speak:["carefully"]},
+    {it:"QUINDI / PERCIO''", en:"THEREFORE", speak:["therefore"]},
+    {it:"PRIMA / PRECEDENTEMENTE", en:"EARLIER", speak:["earlier"]}
+  ],
+
+  SET_3: [
+    {it:"MOLTO / TANTO", en:"A LOT", speak:["a lot"]},
+    {it:"TROPPO", en:"TOO MUCH", speak:["too much"]},
+    {it:"ABBASTANZA", en:"ENOUGH", speak:["enough"]},
+    {it:"PIUTTOSTO", en:"RATHER", speak:["rather"]},
+    {it:"QUASI", en:"ALMOST / NEARLY", speak:["almost","nearly"]},
+    {it:"APPENA / SOLO", en:"JUST", speak:["just"]},
+    {it:"DI QUI", en:"HERE", speak:["here"]},
+    {it:"DI LÀ", en:"THERE", speak:["there"]},
+    {it:"VICINO", en:"NEAR", speak:["there"]},
+    {it:"LONTANO", en:"FAR / A LONG WAY", speak:["far","a long way"]},
+    {it:"OVUNQUE / DAPPERTUTTO", en:"EVERYWHERE", speak:["everywhere"]},
+    {it:"DA QUALCHE PARTE", en:"SOMEWHERE", speak:["somewhere"]},
+    {it:"PIÙ", en:"MORE", speak:["more"]},
+    {it:"DI NUOVO", en:"AGAIN", speak:["again"]},
+    {it:"PIÙ TARDI / DOPO", en:"LATER", speak:["later"]}
+  ],
+
+  SET_4: [
+    {it:"IN QUALSIASI LUOGO / DOVUNQUE", en:"ANYWHERE", speak:["anywhere"]},
+    {it:"DENTRO / ALL’INTERNO", en:"INSIDE", speak:["inside"]},
+    {it:"FUORI / ALL’ESTERNO", en:"OUTSIDE", speak:["outside"]},
+    {it:"VIA", en:"AWAY", speak:["away"]},
+    {it:"INDIETRO / DI RITORNO", en:"BACK", speak:["back"]},
+    {it:"SOLO / SOLTANTO", en:"ONLY", speak:["only"]},
+    {it:"ANCHE", en:"ALSO", speak:["also"]},
+    {it:"PERSINO / ANCHE", en:"EVEN", speak:["even"]},
+    {it:"IN REALTA'", en:"ACTUALLY", speak:["actually"]},
+    {it:"ESATTAMENTE", en:"EXACTLY", speak:["exactly"]},
+    {it:"DAVVERO / VERAMENTE", en:"REALLY", speak:["really"]},
+    {it:"INTORNO / IN GIRO", en:"AROUND", speak:["around"]},
+    {it:"IN AVANTI", en:"FORWARDS", speak:["forwards"]},
+    {it:"INDIETRO", en:"BACKWARDS", speak:["backwards"]}
+  ],
+
+  SET_5: [
+    {it:"PROBABILMENTE", en:"PROBABLY", speak:["probably"]},
+    {it:"FORSE", en:"MAYBE / PERHAPS", speak:["maybe","perhaps"]},
+    {it:"CHIARAMENTE", en:"CLEARLY", speak:["clearly"]},
+    {it:"PER FORTUNA", en:"FORTUNATELY", speak:["fortunately"]},
+    {it:"ALL'IMPROVVISO", en:"SUDDENLY", speak:["suddenly"]},
+    {it:"SERIAMENTE / SUL SERIO", en:"SERIOUSLY", speak:["seriously"]},
+    {it:"INSIEME", en:"TOGETHER", speak:["together"]},
+    {it:"A PARTE", en:"APART", speak:["apart"]},
+    {it:"VERSO L’ALTO", en:"UP", speak:["up"]},
+    {it:"VERSO IL BASSO", en:"DOWN", speak:["down"]},
+    {it:"FINALMENTE / INFINE", en:"FINALLY", speak:["finally"]},
+    {it:"PIÙ TARDI", en:"LATER", speak:["later"]},
+    {it:"VOLENTIERI", en:"WILLINGLY", speak:["willingly"]},
+    {it:"A MALA PENA", en:"HARDLY", speak:["hardly"]}
+  ]
+
+},
+
+PRONOUNS: {
+
+  SET_1: [
+    {it:"QUALCUNO", en:"SOMEONE", speak:["someone"]},
+    {it:"CHIUNQUE", en:"ANYONE", speak:["anyone"]},
+    {it:"QUALCOSA", en:"SOMETHING", speak:["something"]},
+    {it:"NIENTE / NULLA", en:"NOTHING", speak:["nothing"]},
+    {it:"NESSUN LUOGO / DA NESSUNA PARTE", en:"NOWHERE", speak:["nowhere"]},
+    {it:"UNA VOLTA", en:"ONCE", speak:["once"]},
+    {it:"DUE VOLTE", en:"TWICE", speak:["twice"]},
+    {it:"QUALSIASI COSA / QUALUNQUE COSA", en:"WHATEVER", speak:["whatever"]},
+    {it:"QUALSIASI (TRA PIÙ OPZIONI)", en:"WHICHEVER", speak:["whichever"]},
+    {it:"INVECE", en:"INSTEAD", speak:["instead"]},
+    {it:"ALTRIMENTI", en:"OTHERWISE", speak:["otherwise"]}
+  ],
+
+  SET_2: [
+    {it:"CHE (PER PERSONE)", en:"WHO", speak:["who"]},
+    {it:"(CON) CUI", en:"(WITH) WHOM", speak:["with whom"]},
+    {it:"QUALE", en:"WHICH", speak:["which"]},
+    {it:"DI CUI", en:"WHOSE", speak:["whose"]},
+    {it:"QUESTO", en:"THIS", speak:["this"]},
+    {it:"QUESTI", en:"THESE", speak:["these"]},
+    {it:"QUELLO", en:"THAT", speak:["that"]},
+    {it:"QUELLI", en:"THOSE", speak:["those"]},
+    {it:"CHIUNQUE", en:"WHOEVER", speak:["whoever"]},
+    {it:"OGNI VOLTA / QUANDO", en:"WHENEVER", speak:["whenever"]},
+    {it:"OVUNQUE / DOVUNQUE", en:"WHEREVER", speak:["wherever"]}
+  ],
+
+  SET_3: [
+    {it:"QUALSIASI COSA", en:"ANYTHING", speak:["anything"]},
+    {it:"TUTTI / OGNUNO", en:"EVERYONE", speak:["everyone"]},
+    {it:"TUTTO / OGNI COSA", en:"EVERYTHING", speak:["everything"]},
+    {it:"O (L'UNO) O (L'ALTRO)", en:"EITHER (ONE) OR (THE OTHER)", speak:["either one","or","the other"]},
+    {it:"NÉ (L’UNO) NÉ (L’ALTRO)", en:"NEITHER (ONE) NOR (THE OTHER)", speak:["neither one","nor","the other"]},
+    {it:"ALTRO", en:"ANOTHER", speak:["another"]},
+    {it:"L'UN L'ALTRO", en:"EACH OTHER", speak:["each other"]},
+    {it:"MOLTO / TANTO", en:"A LOT", speak:["a lot"]},
+    {it:"POCO / UN PO’", en:"A LITTLE", speak:["a little"]},
+    {it:"NESSUNO", en:"NO ONE", speak:["no one"]},
+    {it:"CIASCUNO / CADAUNO", en:"EACH", speak:["each"]},
+    {it:"ENTRAMBI / TUTTI E DUE", en:"BOTH", speak:["both"]},
+    {it:"SENZ'ALTRO", en:"DEFINITELY", speak:["definitely"]}
+  ]
+
+},
+
+PREPOSITIONS: {
+
+  SET_1: [
+    {it:"IN / DENTRO", en:"IN", speak:["in"]},
+    {it:"SU", en:"ON", speak:["on"]},
+    {it:"ATTACCATO", en:"ON", speak:["on"]},
+    {it:"A / PRESSO", en:"AT", speak:["at"]},
+    {it:"A / VERSO", en:"TO", speak:["to"]},
+    {it:"DA", en:"FROM", speak:["from"]},
+    {it:"DENTRO / IN", en:"INTO", speak:["into"]},
+    {it:"FUORI DA", en:"OUT OF", speak:["out of"]},
+    {it:"SOPRA / OLTRE", en:"OVER", speak:["over"]},
+    {it:"SOTTO", en:"UNDER", speak:["under"]}
+  ],
+
+  SET_2: [
+    {it:"AL DI SOPRA", en:"ABOVE", speak:["above"]},
+    {it:"AL DI SOTTO", en:"BELOW", speak:["below"]},
+    {it:"TRA (due cose o persone)", en:"BETWEEN", speak:["between"]},
+    {it:"TRA (più di due cose o persone)", en:"AMONG", speak:["among"]},
+    {it:"VICINO A", en:"NEAR", speak:["near"]},
+    {it:"PRIMA DI", en:"BEFORE", speak:["before"]},
+    {it:"DOPO", en:"AFTER", speak:["after"]},
+    {it:"DURANTE", en:"DURING", speak:["during"]},
+    {it:"PER", en:"FOR", speak:["for"]},
+    {it:"DA (QUANDO)", en:"SINCE", speak:["since"]}
+  ],
+
+  SET_3: [
+    {it:"DA (QUANTO)", en:"FOR", speak:["for"]},
+    {it:"FINO A / FINCHÉ NON", en:"UNTIL", speak:["until"]},
+    {it:"DI", en:"OF", speak:["of"]},
+    {it:"CON", en:"WITH", speak:["with"]},
+    {it:"SENZA", en:"WITHOUT", speak:["without"]},
+    {it:"RIGUARDO A / A PROPOSITO", en:"ABOUT", speak:["about"]},
+    {it:"DA / CON / PER MEZZO DI", en:"BY", speak:["by"]},
+    {it:"A CAUSA DI", en:"BECAUSE OF", speak:["because of"]},
+    {it:"ATTRAVERSO (IL LIBRO))", en:"THROUGH", speak:["through"]},
+    {it:"ATTRAVERSO (DA UN LATO ALL’ALTRO)", en:"ACROSS", speak:["across"]}
+  ],
+
+  SET_4: [
+    {it:"CONTRO", en:"AGAINST", speak:["against"]},
+    {it:"VERSO (IL CENTRO)", en:"TOWARDS", speak:["towards"]},
+    {it:"SECONDO (ME)", en:"ACCORDING TO (ME)", speak:["according to me"]},
+    {it:"SU / VERSO L’ALTO", en:"UP", speak:["up"]},
+    {it:"GIÙ / VERSO IL BASSO", en:"DOWN", speak:["down"]},
+    {it:"DA / VIA DA", en:"OFF", speak:["off"]},
+    {it:"SU (IN MOVIMENTO)", en:"ONTO", speak:["onto"]},
+    {it:"ALL’INTERNO DI", en:"WITHIN", speak:["within"]},
+    {it:"ENTRO (QUANTO)", en:"WITHIN", speak:["within"]},
+    {it:"ENTRO (QUANDO)", en:"BY", speak:["by"]}
+  ]
+
+},
+
+VERBS_PLUS_ADVERBS: {
+
+  SET_1: [
+    {it:"LUI LAVORA SEMPRE LA DOMENICA", en:"HE ALWAYS WORKS ON SUNDAYS", speak:["HE ALWAYS WORKS ON SUNDAYS"]},
+    {it:"MIO INSEGNANTE NON PARLA MAI IN MODO CHIARO", en:"MY TEACHER NEVER SPEAKS CLEARLY", speak:["MY TEACHER, NEVER SPEAKS CLEARLY"]},
+    {it:"LEI ARRIVA PRESTO LA MATTINA", en:"SHE ARRIVES EARLY IN THE MORNING", speak:["SHE ARRIVES, EARLY IN THE MORNING"]},
+    {it:"VIVIAMO INSIEME", en:"WE LIVE TOGETHER", speak:["WE LIVE TOGETHER"]},
+    {it:"LORO RISPONDONO SUBITO SEMPRE", en:"THEY ALWAYS ANSWER IMMEDIATELY", speak:["THEY ALWAYS ANSWER IMMEDIATELY"]},
+    {it:"IO STUDIO ATTENTAMENTE", en:"I STUDY CAREFULLY", speak:["I STUDY CAREFULLY"]},
+    {it:"ESSO SI MUOVE LENTAMENTE", en:"IT MOVES SLOWLY", speak:["IT MOVES SLOWLY"]},
+    {it:"IO CAPISCO FACILMENTE", en:"I UNDERSTAND EASILY", speak:["I UNDERSTAND EASILY"]},
+    {it:"QUALCHE VOLTA, NOI ABBIAMO BISOGNO DI CONTROLLARLO", en:"SOMETIMES, WE NEED TO CHECK IT", speak:["SOMETIMES, WE NEED TO CHECK IT"]},
+    {it:"ASPETTIAMO DA QUALCHE PARTE!", en:"LET’S WAIT SOMEWHERE!", speak:["LET’S WAIT SOMEWHERE!"]},
+    {it:"LUI LAVORA SODO", en:"HE WORKS HARD", speak:["HE WORKS HARD"]},
+    {it:"IO PARLO SEMPRE SUL SERIO", en:"I ALWAYS SPEAK SERIOUSLY", speak:["I ALWAYS SPEAK SERIOUSLY"]},
+    {it:"ESSO FUNZIONA BENE", en:"IT WORKS WELL", speak:["IT WORKS WELL"]},
+    {it:"A QUANTO PARE, IERI NON HO MANGIATO ABBASTANZA", en:"APPARENTLY, I DIDN’T EAT ENOUGH YESTERDAY", speak:["APPARENTLY, I DIDN’T EAT ENOUGH YESTERDAY"]},
+    {it:"LEI GUIDA VELOCEMENTE", en:"SHE DRIVES FAST", speak:["SHE DRIVES FAST"]}
+  ],
+
+  SET_2: [
+    {it:"ACCADE RARAMENTE", en:"IT RARELY HAPPENS", speak:["IT RARELY HAPPENS"]},
+    {it:"TU DEVI PROVARE DI NUOVO", en:"YOU HAVE TO TRY AGAIN", speak:["you haff to try, again"]},
+    {it:"DOBBIAMO RIMANERE DENTRO", en:"WE HAVE TO STAY INSIDE", speak:["WE HAFF TO STAY, INSIDE"]},
+    {it:"LORO NON ESCONO FUORI MAI QUANDO PIOVE", en:"THEY NEVER GO OUTSIDE WHEN IT RAINS", speak:["THEY NEVER GO OUTSIDE, WHEN IT RAINS"]},
+    {it:"È TARDI; DOBBIAMO TORNARE INDIETRO", en:"IT’S LATE; WE HAVE TO GO BACK", speak:["IT’S LATE; WE HAVE TO GO BACK"]},
+    {it:"RESTA QUI!", en:"STAY HERE!", speak:["STAY HERE!"]},
+    {it:"POSSO LASCIARE TUTTO QUI?", en:"CAN I LEAVE EVERYTHING HERE?", speak:["CAN I LEAVE EVERYTHING HERE?"]},
+    {it:"LUI NON GUARDA MAI INTORNO", en:"HE NEVER LOOKS AROUND", speak:["HE NEVER LOOKS AROUND"]},
+    {it:"ANDIAMO AVANTI!", en:"LET’S GO FORWARDS!", speak:["LET’S GO FORWARDS!"]},
+    {it:"SI MUOVE AVANTI E INDIETRO", en:"IT MOVES FORWARDS AND BACKWARDS", speak:["IT MOVES FORWARDS, AND BACKWARDS"]},
+    {it:"LUI HA REAGITO MALE", en:"HE REACTED BADLY", speak:["HE REACTED BADLY"]},
+    {it:"SUONA MEGLIO QUANDO LO DICI ALL’INDIETRO", en:"IT SOUNDS BETTER WHEN YOU SAY IT BACKWARDS", speak:["IT SOUNDS BETTER, WHEN YOU SAY IT BACKWARDS"]},
+    {it:"FINALMENTE, LORO CAPISCONO", en:"THEY FINALLY UNDERSTAND", speak:["THEY FINALLY UNDERSTAND"]},
+    {it:"LUI BEVE POCO", en:"HE DRINKS LITTLE", speak:["HE DRINKS LITTLE"]},
+    {it:"LUI PARLA TROPPO", en:"HE SPEAKS TOO MUCH", speak:["HE SPEAKS TOO MUCH"]}
+  ],
+
+  SET_3: [
+    {it:"IO DORMO MALE", en:"I SLEEP BADLY", speak:["I SLEEP BADLY"]},
+    {it:"LEI STUDIA MOLTO", en:"SHE STUDIES A LOT", speak:["she studies a lot"]},
+    {it:"LORO VIVONO LONTANO DA QUI", en:"THEY LIVE A LONG WAY FROM HERE", speak:["THEY LIVE, A LONG WAY FROM HERE"]},
+    {it:"IO NON VOGLIO ARRIVARE TARDI", en:"I DON’T WANT TO ARRIVE LATE", speak:["I DON’T WANT TO ARRIVE LATE"]},
+    {it:"PERCHÉ RISPONDI SEMPRE CON ‘FORSE’?", en:"WHY DO YOU ALWAYS ANSWER WITH ‘MAYBE’?", speak:["WHY DO YOU ALWAYS ANSWER WITH, ‘MAYBE’?"]},
+    {it:"PER FORTUNA, LEI MI ASCOLTA ATTENTAMENTE", en:"FORTUNATELY, SHE LISTENS TO ME CAREFULLY", speak:["FORTUNATELY, SHE LISTENS TO ME CAREFULLY"]},
+    {it:"HANNO VINTO TANTO MA NON ABBASTANZA", en:"THEY WON A LOT BUT NOT ENOUGH", speak:["THEY WON A LOT, BUT NOT ENOUGH"]},
+    {it:"LUI SI È ALZATO IN PIEDI RAPIDAMENTE", en:"HE STOOD UP QUICKLY", speak:["HE STOOD UP QUICKLY"]},
+    {it:"POSSO CAMBIARLO FACILMENTE", en:"I CAN CHANGE IT EASILY", speak:["I CAN CHANGE IT EASILY"]},
+    {it:"LUI SI COMPORTA SERIAMENTE AL LAVORO", en:"HE BEHAVES SERIOUSLY AT WORK", speak:["HE BEHAVES SERIOUSLY AT WORK"]},
+    {it:"LEI NON SBAGLA MAI", en:"SHE NEVER MAKES A MISTAKE", speak:["She never makes a mistake"]},
+    {it:"CREDO CHE SIA VICINO", en:"I BELIEVE IT IS NEAR", speak:["I BELIEVE IT IS NEAR,"]},
+    {it:"CI VEDIAMO SPESSO", en:"WE SEE EACH OTHER OFTEN", speak:["WE SEE EACH OTHER OFTEN"]},
+    {it:"ALL’IMPROVVISO, HA COMINCIATO A PIOVERE", en:"IT SUDDENLY BEGAN TO RAIN", speak:["IT SUDDENLY BEGAN TO RAIN"]},
+    {it:"FUNZIONA DAVVERO", en:"IT REALLY WORKS", speak:["IT REALLY WORKS"]}
+  ],
+
+  SET_4: [
+    {it:"HO QUASI FINITO", en:"I ALMOST FINISHED", speak:["I ALMOST FINISHED"]},
+    {it:"LUI MI SEGUE SEMPRE", en:"HE ALWAYS FOLLOWS ME", speak:["He always follows me"]},
+    {it:"LUI CI CREDE ANCORA", en:"HE STILL BELIEVES IT", speak:["HE STILL BELIEVES IT"]},
+    {it:"PREFERISCONO RESTARE FUORI", en:"THEY PREFER TO STAY OUTSIDE", speak:["THEY PREFER TO STAY OUTSIDE"]},
+    {it:"SI SEPARANO FACILMENTE", en:"THEY SEPARATE EASILY", speak:["they seperate easily"]},
+    {it:"MI AIUTA VOLENTIERI", en:"HE HELPS ME WILLINGLY", speak:["HE HELPS ME WILLINGLY"]},
+    {it:"LEI CHIEDE SEMPRE EDUCATAMENTE", en:"SHE ALWAYS ASKS POLITELY", speak:["SHE ALWAYS ASKS POLITELY"]},
+    {it:"SPERIAMO DI COMPRARLO DOMANI", en:"WE HOPE TO BUY IT TOMORROW", speak:["WE HOPE TO BUY IT TOMORROW"]},
+    {it:"CERCHIAMO SEMPRE DI TORNARE PRESTO", en:"WE ALWAYS TRY TO RETURN EARLY", speak:["WE ALWAYS TRY TO RETURN EARLY"]},
+    {it:"SIGNIFICA TANTO", en:"IT MEANS A LOT", speak:["it means a lot"]},
+    {it:"IN REALTÀ, NON LO SO", en:"ACTUALLY, I DON’T KNOW", speak:["ACTUALLY, I DON’T KNOW"]},
+    {it:"HO PAGATO TROPPO", en:"I PAID TOO MUCH", speak:["I PAID TOO MUCH"]},
+    {it:"SUCCEDE DAPPERTUTTO", en:"IT HAPPENS EVERYWHERE", speak:["IT HAPPENS EVERYWHERE"]},
+    {it:"PROBABILMENTE, HAI RAGIONE", en:"YOU ARE PROBABLY RIGHT", speak:["YOU ARE PROBABLY RIGHT"]},
+    {it:"DI SOLITO, LUI PENSA COME ME", en:"HE USUALLY THINKS LIKE ME", speak:["he usually thinks like me."]}
+  ]
+
+},
+
+ADJECTIVES_PLUS_NOUNS: {
+
+  SET_1: [
+    {it:"UN BICCHIERE DI ACQUA FREDDA", en:"A GLASS OF COLD WATER", speak:["a glass of cold water"]},
+    {it:"UN VECCHIO AMICO", en:"AN OLD FRIEND", speak:["an old friend"]},
+    {it:"UN FELICE ANNO NUOVO", en:"A HAPPY NEW YEAR", speak:["a happy new year"]},
+    {it:"UNA STRISCIA PEDONALE PERICOLOSA", en:"A DANGEROUS ZEBRA CROSSING", speak:["a dangerous zebra crossing"]},
+    {it:"UNA GRANDE AZIENDA INTERNAZIONALE", en:"A BIG INTERNATIONAL COMPANY", speak:["a big international company"]},
+    {it:"UN BIGLIETTO GRATUITO", en:"A FREE TICKET", speak:["a free ticket"]},
+    {it:"UNA BICICLETTA VELOCE", en:"A FAST BIKE", speak:["a fast bike"]},
+    {it:"UNA BOTTIGLIA VUOTA", en:"AN EMPTY BOTTLE", speak:["an empty bottle"]},
+    {it:"BAMBINI FELICI", en:"HAPPY CHILDREN", speak:["happy children"]},
+    {it:"UN PRANZO LEGGERO", en:"A LIGHT LUNCH", speak:["a light lunch"]},
+    {it:"UN ANIMALE FORTE", en:"A STRONG ANIMAL", speak:["a strong animal"]},
+    {it:"UN CAPOTTO PESANTE", en:"A HEAVY COAT", speak:["a heavy coat"]},
+    {it:"UNA BELLA CASA", en:"A NICE HOUSE", speak:["a nice house"]},
+    {it:"UNA PICCOLA CAMERA", en:"A SMALL ROOM", speak:["a small room"]},
+    {it:"UNA BUONA CENA", en:"A GOOD DINNER", speak:["a good dinner"]},
+    {it:"UNA GRANDE CITTÀ", en:"A LARGE CITY", speak:["a large city"]}
+  ],
+
+  SET_2: [
+    {it:"UNA CHIESA INTERESSANTE", en:"AN INTERESTING CHURCH", speak:["an interesting church"]},
+    {it:"UNA COLAZIONE ABBONDANTE", en:"A LARGE BREAKFAST", speak:["a large breakfast"]},
+    {it:"UNA MONETA VECCHIA", en:"AN OLD COIN", speak:["an old coin"]},
+    {it:"INFORMAZIONI UTILI", en:"USEFUL INFORMATION", speak:["useful information"]},
+    {it:"UN CORPO FORTE", en:"A STRONG BODY", speak:["a strong body"]},
+    {it:"UN VICINO DI CASA GENTILE", en:"A KIND NEIGHBOUR", speak:["a kind neighbour"]},
+    {it:"UN CUOCO ESPERTO", en:"AN EXPERT COOK", speak:["an expert cook"]},
+    {it:"UNA CUCINA GRANDE", en:"A BIG KITCHEN", speak:["a big kitchen"]},
+    {it:"UNA STRADA SICURA", en:"A SAFE ROAD", speak:["a safe road"]},
+    {it:"UN CORRIERE VELOCE", en:"A FAST COURIER", speak:["a fast courier"]},
+    {it:"UNA DOCCIA CALDA", en:"A HOT SHOWER", speak:["a hot shower"]},
+    {it:"UN CIELO SERENO", en:"A CLEAR SKY", speak:["a clear sky"]},
+    {it:"UN ERRORE GRAVE", en:"A BAD MISTAKE", speak:["a bad mistake"]},
+    {it:"UN ESAME DIFFICILE", en:"A DIFFICULT EXAM", speak:["a difficult exam"]},
+    {it:"UN ESERCIZIO FACILE", en:"AN EASY EXERCISE", speak:["an easy exercise"]},
+    {it:"UNA FESTA DIVERTENTE", en:"A FUN PARTY", speak:["a fun party"]}
+  ],
+
+  SET_3: [
+    {it:"UNA FINE TRISTE", en:"A SAD END", speak:["a sad end"]},
+    {it:"UNA FINESTRA PULITA", en:"A CLEAN WINDOW", speak:["a clean window"]},
+    {it:"UNA STORIA VERA", en:"A TRUE STORY", speak:["a true story"]},
+    {it:"UN FRATELLO MAGGIORE", en:"AN ELDER BROTHER", speak:["an elder brother"]},
+    {it:"UNA FAMIGLIA NUMEROSA", en:"A BIG FAMILY", speak:["a big family"]},
+    {it:"UNA RAGAZZA GIOVANE", en:"A YOUNG GIRL", speak:["a young girl"]},
+    {it:"UN FIUME LARGO", en:"A WIDE RIVER", speak:["a wide river"]},
+    {it:"UN APPUNTAMENTO DISPONIBILE", en:"AN AVAILABLE APPOINTMENT", speak:["an available appointment"]},
+    {it:"UN GIARDINO ORDINATO", en:"A TIDY GARDEN", speak:["a tidy garden"]},
+    {it:"UN GIORNALE VECCHIO", en:"AN OLD NEWSPAPER", speak:["an old newspaper"]},
+    {it:"UNA GIORNATA LUNGA", en:"A LONG DAY", speak:["a long day"]},
+    {it:"UN DIRIGENTE IMPEGNATO", en:"A BUSY MANAGER", speak:["a busy manager"]},
+    {it:"UN LETTO COMODO", en:"A COMFORTABLE BED", speak:["a comfortable bed"]},
+    {it:"UNA LUCE INTENSA", en:"A STRONG LIGHT", speak:["an intense light"]},
+    {it:"IL MARE PROFONDO E BLU", en:"THE DEEP BLUE SEA", speak:["the deep blue sea"]},
+    {it:"COMPITI NOIOSI", en:"BORING HOMEWORK", speak:["boring homework"]}
+  ],
+
+  SET_4: [
+    {it:"UNA RIVISTA RECENTE", en:"A RECENT MAGAZINE", speak:["a recent magazine"]},
+    {it:"LE MANI SINISTRA E DESTRA", en:"LEFT AND RIGHT HANDS", speak:["left and right hands"]},
+    {it:"UN MERCATO AFFOLLATO", en:"A CROWDED MARKET", speak:["a crowded market"]},
+    {it:"UNA MATTINA FREDDA", en:"A COLD MORNING", speak:["a cold morning"]},
+    {it:"IL TEMPO BRUTTO", en:"BAD WEATHER", speak:["bad weather"]},
+    {it:"UN MESE CORTO", en:"A SHORT MONTH", speak:["a short month"]},
+    {it:"UN MURO ALTO", en:"A HIGH WALL", speak:["a high wall"]},
+    {it:"UN GOVERNO INUTILE", en:"A USELESS GOVERNMENT", speak:["a useless government"]},
+    {it:"UNA NOTTE BUIA", en:"A DARK NIGHT", speak:["a dark night"]},
+    {it:"UNA CAMERA VUOTA", en:"AN EMPTY ROOM", speak:["an empty room"]},
+    {it:"UN PARCHEGGIO PIENO", en:"A FULL CAR PARK", speak:["a full car park"]},
+    {it:"UNA SITUAZIONE SERIA", en:"A SERIOUS SITUATION", speak:["a serious situation"]},
+    {it:"UN PIANO INTELLIGENTE", en:"AN INTELLIGENT PLAN", speak:["an intelligent plan"]},
+    {it:"UN POMERIGGIO LIBERO", en:"A FREE AFTERNOON", speak:["a free afternoon"]},
+    {it:"UN'IDEA NUOVA", en:"A NEW IDEA", speak:["a new idea"]},
+    {it:"UNO STRUMENTO UTILE", en:"A USEFUL TOOL", speak:["a useful tool"]}
+  ],
+
+  SET_5: [
+    {it:"UN TRENO VELOCE", en:"A FAST TRAIN", speak:["a fast train"]},
+    {it:"UNA VALIGIA PESANTE", en:"A HEAVY SUITCASE", speak:["a heavy suitcase"]},
+    {it:"UN VIAGGIO EMOZIONANTE", en:"AN EXCITING TRIP", speak:["an exciting trip"]},
+    {it:"UN UOMO ALTO", en:"A TALL MAN", speak:["a tall man"]},
+    {it:"UNA SIGNORA BASSA", en:"A SHORT WOMAN", speak:["a short woman"]},
+    {it:"UNA VACANZA BELLA", en:"A GOOD HOLIDAY", speak:["a good holiday"]},
+    {it:"UN SOLE CALDO", en:"A HOT SUN", speak:["a hot sun"]},
+    {it:"UN ARMADIO GRANDE", en:"A BIG WARDROBE", speak:["a big wardrobe"]},
+    {it:"UNA DOMANDA SEMPLICE", en:"A SIMPLE QUESTION", speak:["a simple question"]},
+    {it:"L'INTERA GIORNATA", en:"THE WHOLE DAY", speak:["the whole day"]},
+    {it:"ACQUA POCO PROFONDA", en:"SHALLOW WATER", speak:["shallow water"]},
+    {it:"UN ESERCIZIO UTILE", en:"A USEFUL EXERCISE", speak:["a useful exercise"]},
+    {it:"AVEVO PAURA", en:"I WAS AFRAID", speak:["i was afraid"]},
+    {it:"SONO PRONTI", en:"THEY ARE READY", speak:["they are ready"]},
+    {it:"PERSONE MALEDUCATE", en:"IMPOLITE PEOPLE", speak:["impolite people"]},
+    {it:"TANTA DIFFICOLTÀ", en:"A LOT OF DIFFICULTY", speak:["a lot of difficulty"]}
+  ]
+
+},
+
+TIME_EXPRESSIONS: {
+
+  TIME: [
+
+  {
+    renderer:"clock",
+    it:"",
+    h:11,
+    m:0,
+    l:"11.00",
+    en:"IT'S ELEVEN O'CLOCK (IN THE MORNING)",
+    speak:["It's eleven o'clock in the morning."]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:16,
+    m:30,
+    l:"16.30",
+    en:"IT'S HALF PAST FOUR (IN THE AFTERNOON)<br><br>IT'S FOUR THIRTY",
+    speak:["It's half past four in the afternoon","or","it's four thirty"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:21,
+    m:10,
+    l:"21.10",
+    en:"IT'S TEN PAST NINE (IN THE EVENING)<br><br>IT'S NINE TEN",
+    speak:["It's ten past nine in the evening","or","it's nine ten"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:7,
+    m:40,
+    l:"07.40",
+    en:"IT'S TWENTY TO EIGHT (IN THE MORNING)<br><br>IT'S SEVEN FORTY",
+    speak:["It's twenty to eight in the morning","or","it's seven forty"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:12,
+    m:50,
+    l:"12.50",
+    en:"IT'S TEN TO ONE<br><br>IT'S TWELVE FIFTY",
+    speak:["It's ten to one","or","it's twelve fifty"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:22,
+    m:37,
+    l:"22.37",
+    en:"IT'S TWENTY-THREE MINUTES TO ELEVEN (IN THE EVENING)<br><br>IT'S TEN THIRTY-SEVEN",
+    speak:["It's twenty-three minutes to eleven in the evening","or","it's ten thirty-seven"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:12,
+    m:0,
+    l:"12.00 / 24.00",
+    en:"IT'S MIDDAY<br><br>IT'S MIDNIGHT",
+    speak:["It's midday","or","it's midnight"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:13,
+    m:7,
+    l:"13.07",
+    en:"IT'S SEVEN MINUTES PAST ONE (IN THE AFTERNOON)",
+    speak:["It's seven minutes past one in the afternoon."]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:6,
+    m:52,
+    l:"06.52",
+    en:"IT'S EIGHT MINUTES TO SEVEN (IN THE MORNING)<br><br>IT'S SIX FIFTY-TWO",
+    speak:["It's eight minutes to seven in the morning","or","it's six fifty-two"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:14,
+    m:15,
+    l:"14.15",
+    en:"IT'S A QUARTER PAST TWO (IN THE AFTERNOON)<br><br>IT'S TWO FIFTEEN",
+    speak:["It's a quarter past two in the afternoon","or","it's two fifteen"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:17,
+    m:45,
+    l:"17.45",
+    en:"IT'S A QUARTER TO SIX (IN THE EVENING)<br><br>IT'S FIVE FORTY-FIVE",
+    speak:["It's a quarter to six in the evening","or","it's five forty-five"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:8,
+    m:35,
+    l:"08.35",
+    en:"IT'S TWENTY-FIVE TO NINE (IN THE MORNING)<br><br>IT'S EIGHT THIRTY-FIVE",
+    speak:["It's twenty-five to nine in the morning","or","it's eight thirty-five"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:15,
+    m:20,
+    l:"15.20",
+    en:"IT'S TWENTY PAST THREE (IN THE AFTERNOON)<br><br>IT'S THREE TWENTY",
+    speak:["It's twenty past three in the afternoon","or","it's three twenty"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:10,
+    m:25,
+    l:"10.25",
+    en:"IT'S TWENTY-FIVE PAST TEN (IN THE MORNING)<br><br>IT'S TEN TWENTY-FIVE",
+    speak:["It's twenty-five past ten in the morning","or","it's ten twenty-five"]
+  },
+
+  {
+    renderer:"clock",
+    it:"",
+    h:11,
+    m:55,
+    l:"11.55",
+    en:"IT'S FIVE MINUTES TO MIDDAY<br><br>IT'S ELEVEN FIFTY-FIVE",
+    speak:["It's five minutes to midday","or","it's eleven fifty-five"]
+  }
+
+],
+
+  DAYS: [
+
+    {
+      it:"CI SONO SETTE GIORNI IN UNA SETTIMANA",
+      en:"THERE ARE SEVEN DAYS IN A WEEK",
+      speak:["there are seven days","in a week"]
+    },
+
+    {
+      it:"È GIÀ LUNEDÌ!",
+      en:"IT'S MONDAY ALREADY!",
+      speak:["it's monday already"]
+    },
+
+    {
+      it:"CI ANDRÒ IL PROSSIMO MARTEDÌ",
+      en:"I WILL GO THERE NEXT TUESDAY",
+      speak:["i will go there","next tuesday"]
+    },
+
+    {
+      it:"È SUCCESSO LO SCORSO MERCOLEDÌ",
+      en:"IT HAPPENED LAST WEDNESDAY",
+      speak:["it happened","last wednesday"]
+    },
+
+    {
+      it:"VIENE SOLO IL GIOVEDÌ",
+      en:"HE ONLY COMES ON THURSDAYS",
+      speak:["he only comes","on thursdays"]
+    },
+
+    {
+      it:"VENERDÌ FINIRÒ ALLE 16:30",
+      en:"I WILL FINISH AT 4.30 ON FRIDAY",
+      speak:["i will finish at four thirty","on friday"]
+    },
+
+    {
+      it:"SARANNO VIA IL PROSSIMO SABATO",
+      en:"THEY WILL BE AWAY NEXT SATURDAY",
+      speak:["they will be away","next saturday"]
+    },
+
+    {
+      it:"LAVORA DA LUNEDÌ A GIOVEDÌ",
+      en:"HE WORKS MONDAYS TO THURSDAYS",
+      speak:["he works","mondays to thursdays"]
+    },
+
+    {
+      it:"SARÀ QUI MARTEDÌ POMERIGGIO",
+      en:"HE WILL BE HERE TUESDAY AFTERNOON",
+      speak:["he will be here","tuesday afternoon"]
+    },
+
+    {
+      it:"HO UNA RIUNIONE MERCOLEDÌ MATTINA ALLE 10:00",
+      en:"I HAVE A MEETING ON WEDNESDAY MORNING AT 10.00",
+      speak:["i have a meeting on wednesday morning","at ten o'clock"]
+    },
+
+    {
+      it:"VERRANNO VENERDÌ SERA",
+      en:"THEY ARE COMING FRIDAY EVENING",
+      speak:["they are coming","friday evening"]
+    },
+
+    {
+      it:"È USCITA LO SCORSO SABATO SERA",
+      en:"SHE WENT OUT LAST SATURDAY NIGHT",
+      speak:["she went out","last saturday night"]
+    },
+
+    {
+      it:"CHE GIORNO È OGGI? – GIOVEDÌ",
+      en:"WHAT DAY IS IT TODAY? – THURSDAY",
+      speak:["what day is it today","thursday"]
+    },
+
+    {
+      it:"MENO MALE CHE È VENERDÌ!",
+      en:"THANK GOD IT'S FRIDAY!",
+      speak:["thank god it's friday"]
+    },
+
+    {
+      it:"È CHIUSO IL LUNEDÌ",
+      en:"IT'S CLOSED ON MONDAYS",
+      speak:["it's closed","on mondays"]
+    }
+
+  ],
+
+  MONTHS: [
+
+    {
+      it:"UN ANNO È COMPOSTO DI DODICI MESI",
+      en:"THERE ARE TWELVE MONTHS IN A YEAR",
+      speak:["there are twelve months","in a year"]
+    },
+
+    {
+      it:"GENNAIO HA 31 GIORNI",
+      en:"JANUARY HAS THIRTY-ONE DAYS",
+      speak:["january has","thirty-one days"]
+    },
+
+    {
+      it:"FEBBRAIO HA 28 GIORNI",
+      en:"FEBRUARY HAS TWENTY-EIGHT DAYS",
+      speak:["february has","twenty-eight days"]
+    },
+
+    {
+      it:"PASQUA VIENE O A MARZO O AD APRILE",
+      en:"EASTER IS EITHER IN MARCH OR IN APRIL",
+      speak:["easter is","either in march","or","in april"]
+    },
+
+    {
+      it:"IL MIO COMPLEANNO È A MAGGIO",
+      en:"MY BIRTHDAY IS IN MAY",
+      speak:["my birthday is in may"]
+    },
+
+    {
+      it:"L’ESTATE INIZIA A GIUGNO",
+      en:"SUMMER BEGINS IN JUNE",
+      speak:["summer begins in june"]
+    },
+
+    {
+      it:"VADO IN VACANZA A LUGLIO",
+      en:"I GO ON HOLIDAY IN JULY",
+      speak:["i go on holiday in july"]
+    },
+
+    {
+      it:"AD AGOSTO FA MOLTO CALDO",
+      en:"THE WEATHER IS VERY HOT IN AUGUST",
+      speak:["the weather is very hot in august"]
+    },
+
+    {
+      it:"L’AUTUNNO INIZIA IN OTTOBRE",
+      en:"AUTUMN BEGINS IN OCTOBER",
+      speak:["autumn begins in october"]
+    },
+
+    {
+      it:"A NOVEMBRE PIOVE MOLTO",
+      en:"IT RAINS A LOT IN NOVEMBER",
+      speak:["it rains a lot in november"]
+    },
+
+    {
+      it:"NATALE È IL VENTICINQUE DICEMBRE",
+      en:"CHRISTMAS IS ON THE TWENTY-FIFTH OF DECEMBER (DECEMBER 25TH)",
+      speak:["christmas","is on the twenty-fifth of december","or","december the twenty-fifth"]
+    },
+
+    {
+      it:"LA PROSSIMA PARTITA SARÀ DOMENICA, 12 FEBBRAIO",
+      en:"THE NEXT MATCH WILL BE ON SUNDAY, THE TWELFTH OF FEBRUARY",
+      speak:["the next match will be on sunday","the twelfth of february"]
+    },
+
+    {
+      it:"OGGI È IL PRIMO GIUGNO",
+      en:"TODAY IS THE FIRST OF JUNE (JUNE 1ST)",
+      speak:["today is","the first of june","or","june the first"]
+    },
+
+    {
+      it:"IERI ERA IL TRENTUNO MAGGIO",
+      en:"YESTERDAY WAS THE THIRTY-FIRST OF MAY (MAY 31ST)",
+      speak:["yesterday was","the thirty-first of may","or","may the thirty-first"]
+    },
+
+    {
+      it:"DOMANI SARÀ IL DUE GIUGNO",
+      en:"TOMORROW WILL BE THE SECOND OF JUNE (JUNE 2ND)",
+      speak:["tomorrow will be","the second of june","or","june the second"]
+    },
+
+    {
+      it:"DOPODOMANI SARÀ IL TRE GIUGNO",
+      en:"THE DAY AFTER TOMORROW WILL BE THE THIRD OF JUNE (JUNE 3RD)",
+      speak:["the day after tomorrow will be","the third of june","or","june the third"]
+    }
+
+  ],
+
+  YEARS: [
+
+    {
+      it:"UN ANNO HA O 365 O 366 GIORNI",
+      en:"A YEAR HAS EITHER 365 OR 366 DAYS",
+      speak:["a year has","either three hundred and sixty-five","or","three hundred and sixty-six days"]
+    },
+
+    {
+      it:"L’ANNO BISESTILE SI VERIFICA OGNI QUATTRO ANNI",
+      en:"A LEAP YEAR HAPPENS EVERY FOUR YEARS",
+      speak:["a leap year happens","every four years"]
+    },
+
+    {
+      it:"IN UN ANNO BISESTILE FEBBRAIO HA 29 GIORNI",
+      en:"IN A LEAP YEAR, FEBRUARY HAS 29 DAYS",
+      speak:["in a leap year","february has twenty-nine days"]
+    },
+
+    {
+      it:"SONO NATO NEL 1978",
+      en:"I WAS BORN IN 1978",
+      speak:["i was born","in nineteen seventy-eight"]
+    },
+
+    {
+      it:"MIA MOGLIE È NATA NEL 1981",
+      en:"MY WIFE WAS BORN IN 1981",
+      speak:["my wife was born","in nineteen eighty-one"]
+    },
+
+    {
+      it:"MIA FIGLIA È NATA NEL 2002",
+      en:"MY DAUGHTER WAS BORN IN 2002",
+      speak:["my daughter was born","in two thousand and two"]
+    },
+
+    {
+      it:"MIO FIGLIO È NATO ANCHE NEL PRIMO DECENNIO DI QUESTO SECOLO",
+      en:"MY SON WAS ALSO BORN IN THE FIRST DECADE OF THIS CENTURY",
+      speak:["my son was also born","in the first decade","of this century"]
+    },
+
+    {
+      it:"I MIEI GENITORI SI SONO SPOSATI NEL 1967",
+      en:"MY PARENTS GOT MARRIED IN 1967",
+      speak:["my parents got married","in nineteen sixty-seven"]
+    },
+
+    {
+      it:"MIO NIPOTE HA INIZIATO L’UNIVERSITÀ NEL 2018",
+      en:"MY NEPHEW STARTED UNIVERSITY IN 2018",
+      speak:["my nephew started university","in twenty eighteen"]
+    },
+
+    {
+      it:"MIA NIPOTE SI È LAUREATA NEL 2022",
+      en:"MY NIECE GRADUATED IN 2022",
+      speak:["my niece graduated","in twenty twenty-two"]
+    },
+
+    {
+      it:"AMO LA MUSICA DEGLI ANNI 80",
+      en:"I LOVE THE MUSIC OF THE 80s",
+      speak:["i love the music","of the eighties"]
+    },
+
+    {
+      it:"ODIO LA MODA DEGLI ANNI 90",
+      en:"I HATE THE FASHION OF THE 90s",
+      speak:["i hate the fashion","of the nineties"]
+    },
+
+    {
+      it:"OGGI È IL 30 APRILE 2025",
+      en:"TODAY IS THE 30TH OF APRIL 2025",
+      speak:["today","is the thirtieth of april","twenty twenty-five"]
+    },
+
+    {
+      it:"DOMANI SARÀ IL PRIMO MAGGIO 2025",
+      en:"TOMORROW WILL BE THE FIRST OF MAY 2025",
+      speak:["tomorrow","will be the first of may","twenty twenty-five"]
+    },
+
+    {
+      it:"LA PRIMA GUERRA MONDIALE È INIZIATA NEL 1914 ED È FINITA NEL 1918",
+      en:"THE FIRST WORLD WAR BEGAN IN 1914 AND ENDED IN 1918",
+      speak:["the first world war began","in nineteen fourteen and ended","in nineteen eighteen"]
+    }
+
+  ]
+
+}
+
+};
+
+
+let appState = "GROUP_SELECTION";
+
+let currentGroup = null;
+let currentSet = null;
+
+let cards = [];
+let index = 0;
+
+const flashcard=document.getElementById("flashcard");
+const frontText=document.getElementById("front-text");
+const backText=document.getElementById("back-text");
+const counter=document.getElementById("counter-display");
+const speakBtn=document.getElementById("speakBtn");
+const buttonContainer=document.getElementById("button-container");
+const prevBtn=document.getElementById("prevBtn");
+const nextBtn=document.getElementById("nextBtn");
+
+function updateCard(){
+
+  document.getElementById("front-hint").style.visibility = "visible";
+
+  flashcard.classList.remove("flipped");
+
+  const card = cards[index];
+
+  renderFront(card);
+  renderBack(card);
+
+  counter.innerText = `${index + 1} / ${cards.length}`;
+
+}
+
+function renderFront(card){
+
+  if(card.renderer){
+
+    switch(card.renderer){
+
+      case "clock":
+        renderClockFront(card);
+        return;
+
+    }
+
+  }
+
+  frontText.innerText = card.it;
+
+}
+
+function renderClockFront(card){
+
+  const hourAngle = (card.h % 12) * 30 + card.m * 0.5;
+  const minuteAngle = card.m * 6;
+
+  const numbers = [...Array(12)].map((_, i) => {
+
+    const n = i + 1;
+    const angle = (n - 3) * 30 * Math.PI / 180;
+
+    return `
+      <text
+        x="${100 + Math.cos(angle) * 70}"
+        y="${100 + Math.sin(angle) * 70}"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-size="16"
+        font-weight="800"
+        fill="#0E065C">${n}</text>
+    `;
+
+  }).join("");
+
+  frontText.innerHTML = `
+    <svg viewBox="0 0 200 200" class="clock-svg">
+
+      <circle
+        cx="100"
+        cy="100"
+        r="90"
+        fill="#F7F2E7"
+        stroke="#8C0327"
+        stroke-width="6"/>
+
+      ${numbers}
+
+      <line
+        x1="100"
+        y1="100"
+        x2="100"
+        y2="55"
+        stroke="#0E065C"
+        stroke-width="6"
+        transform="rotate(${hourAngle} 100 100)"/>
+
+      <line
+        x1="100"
+        y1="100"
+        x2="100"
+        y2="40"
+        stroke="#0E065C"
+        stroke-width="4"
+        transform="rotate(${minuteAngle} 100 100)"/>
+
+      <circle
+        cx="100"
+        cy="100"
+        r="4"
+        fill="#0E065C"/>
+
+    </svg>
+
+    <div class="it-text mt-2">${card.l}</div>
+  `;
+
+}
+
+function renderBack(card){
+
+  backText.innerHTML = card.en;
+
+}
+
+function nextCard(e){
+  e.stopPropagation();
+
+  if(appState !== "FLASHCARD_VIEW"){
+    return;
+  }
+
+  index = (index + 1) % cards.length;
+  updateCard();
+}
+
+function prevCard(e){
+  e.stopPropagation();
+
+  if(appState !== "FLASHCARD_VIEW"){
+    return;
+  }
+
+  index = (index - 1 + cards.length) % cards.length;
+  updateCard();
+}
+
+flashcard.onclick = () => {
+
+  if(appState !== "FLASHCARD_VIEW"){
+    return;
+  }
+
+  flashcard.classList.toggle("flipped");
+
+};
+
+let currentLanguage = "EN";
+
+const readmeEnglish = `
+
+WELCOME TO <span style="color:#8C0327;">SURVIVAL ENGLISH</span> FLASHCARDS!
+
+<br><br>
+
+WE HAVE CAREFULLY SELECTED <span style="color:#8C0327;">OVER 600 WORDS AND EXPRESSIONS</span> OF COMMON USE TO HELP YOU COMMUNICATE IN GENERAL, EVERYDAY SITUATIONS
+
+<br><br>
+
+EACH GROUP IS DIVIDED INTO <span style="color:#8C0327;">SETS</span> OF APPROXIMATELY <span style="color:#8C0327;">15</span> WORDS/EXPRESSIONS. WE RECOMMEND STUDYING <span style="color:#8C0327;">ONLY ONE SET</span> AT A TIME
+
+<br><br>
+
+BY PRACTISING THIS SERIES OF FLASHCARDS TOGETHER WITH THE <span style="color:#0070C0;">IRREGULAR VERBS FLASHCARDS</span>, YOU WILL DEVELOP AN IMPORTANT BASE FROM WHICH TO KICK-START YOUR LEARNING
+
+<br><br>
+
+SPENDING JUST <span style="color:#8C0327;">10-15 MINUTES A DAY</span> ON LEARNING THIS VOCABULARY WILL MAKE A HUGE DIFFERENCE NOT ONLY TO YOUR LEARNING BUT, <span style="color:#8C0327;">ABOVE ALL</span>, TO YOUR REMEMBERING!
+
+`;
+
+
+const readmeItalian = `
+
+TI DIAMO IL BENVENTO <span style="color:#8C0327;">FLASHCARD SURVIVAL ENGLISH!</span>
+
+<br><br>
+
+ABBIAMO SELEZIONATO CON CURA
+<span style="color:#8C0327;">OLTRE 600 PAROLE ED ESPRESSIONI</span>
+DI USO COMUNE PER AIUTARTI A COMUNICARE
+NELLE SITUAZIONI DI TUTTI I GIORNI
+
+<br><br>
+
+OGNI GRUPPO È SUDDIVISO IN
+<span style="color:#8C0327;">SET</span>
+DI CIRCA
+<span style="color:#8C0327;">15</span>
+PAROLE/ESPRESSIONI. TI CONSIGLIAMO DI STUDIARE
+<span style="color:#8C0327;">UN SOLO SET</span>
+ALLA VOLTA
+
+<br><br>
+
+STUDIANDO QUESTE FLASHCARD
+INSIEME A QUELLE DEI
+<span style="color:#0070C0;">FLASHCARD DEI VERBI IRREGOLARI</span>,
+COSTRUIRAI UNA SOLIDA BASE
+DA CUI INIZIARE IL TUO PERCORSO
+DI APPRENDIMENTO
+
+<br><br>
+
+BASTANO SOLTANTO
+<span style="color:#8C0327;">10–15 MINUTI AL GIORNO</span>
+PER IMPARARE QUESTO VOCABOLARIO.
+FARANNO UNA GRANDE DIFFERENZA
+NON SOLO NELL'APPRENDIMENTO MA,
+<span style="color:#8C0327;">SOPRATTUTTO</span>,
+PER FISSARLO IN MEMORIA!
+
+`;
+
+window.addEventListener("DOMContentLoaded", function(){
+
+  document.getElementById("readme-btn").onclick = function(){
+
+  document.getElementById("popupText").innerHTML = readmeEnglish;
+
+  currentLanguage = "EN";
+
+  document.getElementById("toggleLanguage").innerText = "ITALIANO";
+
+  document.getElementById("popupOverlay").style.display = "flex";
+
+};
+
+  document.getElementById("closePopup").onclick = function(){
+    document.getElementById("popupOverlay").style.display = "none";
+  };
+
+  document.getElementById("popupOverlay").onclick = function(e){
+    if(e.target === this){
+      this.style.display = "none";
+    }
+  };
+
+document.getElementById("toggleLanguage").onclick = function(){
+
+  if(currentLanguage === "EN"){
+
+    document.getElementById("popupText").innerHTML = readmeItalian;
+
+    currentLanguage = "IT";
+
+    this.innerText = "ENGLISH >";
+
+  }else{
+
+    document.getElementById("popupText").innerHTML = readmeEnglish;
+
+    currentLanguage = "EN";
+
+    this.innerText = "ITALIANO >";
+
+  }
+
+};
+
+});
+
+
+speakBtn.onclick = e => {
+
+  e.stopPropagation();
+
+  if(appState !== "FLASHCARD_VIEW" || !cards.length){
+    return;
+  }
+
+  const t = cards[index].speak.join(", ").replace(/, OR /g, ". . ");
+
+  const u = new SpeechSynthesisUtterance(t);
+
+  u.lang = "en-GB";
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+
+};
+
+function selectGroup(group){
+
+  currentGroup = group;
+  appState = "SET_SELECTION";
+
+  frontText.innerText = "SELECT A SET";
+  backText.innerText = "";
+  counter.innerText = "";
+
+  document.getElementById("front-hint").style.visibility = "hidden";
+
+  flashcard.classList.remove("flipped");
+
+  prevBtn.style.visibility = "hidden";
+  nextBtn.style.visibility = "hidden";
+
+ 
+  showSets();
+
+}
+
+
+function selectSet(setName){
+
+  currentSet = setName;
+
+
+ cards = [...vocabulary[currentGroup][currentSet]];
+
+
+  index = 0;
+
+  appState = "FLASHCARD_VIEW";
+
+  prevBtn.style.visibility = "visible";
+  nextBtn.style.visibility = "visible";
+
+  showSets(currentSet);
+
+  updateCard();
+
+}
+
+function showGroups(){
+
+  appState = "GROUP_SELECTION";
+
+ currentGroup = null;
+ currentCategory = null;
+
+  cards = [];
+  index = 0;
+
+  prevBtn.style.visibility = "hidden";
+  nextBtn.style.visibility = "hidden";
+
+
+  frontText.innerText = "SELECT YOUR GROUP";
+  backText.innerText = "";
+  counter.innerText = "";
+
+  document.getElementById("front-hint").style.visibility = "hidden";
+
+  flashcard.classList.remove("flipped");
+
+  buttonContainer.className = "vertical-buttons mt-2";
+  buttonContainer.innerHTML = "";
+
+  Object.keys(vocabulary).forEach(group => {
+
+    const total = Object.values(vocabulary[group])
+      .reduce((sum, set) => sum + set.length, 0);
+
+    const button = document.createElement("button");
+
+    button.className = "set-btn group-btn";
+
+    button.innerHTML =
+  `${group.replace(/_/g, " ")} <span class="count">(${total})</span>`;
+
+    button.onclick = () => selectGroup(group);
+
+    buttonContainer.appendChild(button);
+
+  });
+
+const libraryButton = document.createElement("button");
+
+libraryButton.className = "library-back-btn";
+
+libraryButton.innerHTML = "⬅ BACK TO VOCABULARY BOOSTER MENU";
+
+/* ===== BACK BUTTON ===== */
+
+const BACK_BUTTON_URL = "https://www.acceleratedlanguagesystems.com/vocabulary-booster";
+
+libraryButton.onclick = () => {
+    window.location.href = BACK_BUTTON_URL;
+};
+buttonContainer.appendChild(libraryButton);
+
+}
+
+
+function showSets(activeSet = null){
+
+  buttonContainer.className = "vertical-buttons mt-2";
+  buttonContainer.innerHTML = "";
+
+  const sets = Object.keys(vocabulary[currentGroup]);
+
+  sets.forEach(setName => {
+
+    const button = document.createElement("button");
+
+    button.className = "set-btn";
+
+    if(setName === activeSet){
+      button.classList.add("active");
+    }
+
+    button.innerHTML =
+  `${setName.replace(/_/g, " ")} <span class="count">(${vocabulary[currentGroup][setName].length})</span>`;
+
+    button.onclick = () => selectSet(setName);
+
+    buttonContainer.appendChild(button);
+
+  });
+
+  const backButton = document.createElement("button");
+
+  backButton.className = "set-btn back-btn";
+  backButton.innerText = "BACK TO GROUPS";
+  backButton.onclick = showGroups;
+
+  buttonContainer.appendChild(backButton);
+
+}
+
+function shuffle(array){
+  for(let i = array.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+frontText.innerText = "SELECT YOUR GROUP";
+backText.innerText = "";
+counter.innerText = "";
+
+showGroups();
+
+</script>
+
+<div class="popup-overlay" id="popupOverlay">
+
+  <div class="popup">
+
+    <div class="popup-text" id="popupText"></div>
+
+    <div class="popup-footer">
+
+  <span id="toggleLanguage"
+      class="popup-close-text"
+      style="color:#C71585;cursor:pointer;">
+    ITALIANO > 
+  </span>
+
+  <span id="closePopup" class="popup-close-text">
+
+    <span style="color:darkgreen;">CLOSE</span>
+
+  </span>
+
+</div>
+
+  </div>
+
+</div>
+
+
+
+
+</body>
+</html>
