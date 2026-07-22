@@ -1,0 +1,4320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WHICH FLOOR?</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+letter-spacing:.08em;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+}
+
+.top-controls{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.88rem;
+letter-spacing:.03em;
+cursor:pointer;
+user-select:none;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+max-height:80vh;
+overflow-y:auto;
+background:#fff;
+border:4px solid var(--red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.78rem;
+font-weight:900;
+line-height:1.45;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkred;
+cursor:pointer;
+user-select:none;
+}
+
+/* FLIP CARD */
+
+.flip-card{
+width:92vw;
+max-width:380px;
+height:250px;
+perspective:1200px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+transform:rotateY(180deg);
+}
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:10px 14px;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+.front{
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.question{
+font-size:1.05rem;
+font-weight:900;
+line-height:1.18;
+color:#0E065C;
+text-transform:uppercase;
+}
+
+.back{
+transform:rotateY(180deg);
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:center;
+padding:14px 18px 18px;
+box-sizing:border-box;
+}
+
+#floorLabel{
+width:100%;
+text-align:center;
+font-size:.9rem;
+font-weight:900;
+color:darkgreen;
+margin-bottom:40px;
+letter-spacing:.03em;
+}
+
+
+#flipContent{
+width:100%;
+font-family:Arial,sans-serif;
+font-size:1rem;
+font-weight:900;
+line-height:1.35;
+color:#0E065C;
+text-align:center;
+margin-top:14px;
+}
+
+#flipContent span{
+color:darkred;
+}
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0 12px;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+.next-btn{
+background:#00cfd5;
+color:#061247;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:.5;
+pointer-events:none;
+}
+
+.compare-control-btn{
+background:darkred;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+display:none;
+}
+
+/* ANSWERS */
+
+.answers{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+}
+
+.answer-btn{
+height:42px;
+background:#eef2f7;
+color:var(--purple);
+font-weight:900;
+border-radius:10px;
+border:1px solid #cbd5e1;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:.85rem;
+}
+
+.correct{
+background:#22c55e;
+color:#fff;
+}
+
+.wrong{
+background:#ef4444;
+color:#fff;
+}
+
+.empty-slot{
+visibility:hidden;
+height:42px;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+.library-back-container{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin:12px auto 0;
+}
+
+.library-back-btn{
+background:#930000;
+color:#ffffff;
+border:2px solid #ffffff;
+border-radius:10px;
+width:110px;
+height:42px;
+font-size:.84rem;
+font-weight:900;
+cursor:pointer;
+transition:background .2s,color .2s;
+}
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:#061247;
+}
+
+.library-back-btn:active{
+transform:scale(.97);
+}
+
+
+
+
+</style>
+</head>
+
+<body>
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<div class="top-bar">
+
+<div class="top-title">
+WHICH FLOOR? <span style="color:#FFF3A3;">(B2)</span>
+</div>
+
+<div class="top-controls">
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
+</div>
+</div>
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+THIS QUIZ PRACTISES ALL THE <span style="color:darkred;">11 FLOORS</span> OF THE <span style="color:darkred;">ITALIAN IMPERFECT</span><br><br>
+
+THERE ARE <span style="color:darkred;">15 QUESTIONS</span> SELECTED FROM A TOTAL OF <span style="color:darkred;">335</span><br><br>
+
+<span style="color:#00B050;">A QUICK REMINDER OF THE FLOORS</span><br><br>
+
+<span style="color:#C000C0;">1</span> – WAS/WERE DOING<br>
+<span style="color:#C000C0;">2</span> – USED TO DO<br>
+<span style="color:#C000C0;">3</span> – WOULD DO<br>
+<span style="color:#C000C0;">4</span> – I (OFTEN) DID<br>
+<span style="color:#C000C0;">5</span> – HAD BEEN DOING FOR/SINCE<br>
+<span style="color:#C000C0;">6</span> – HAD NOT DONE FOR/SINCE<br>
+<span style="color:#C000C0;">7</span> – HOW LONG HAD IT BEEN SINCE ... LAST DID?<br>
+<span style="color:#C000C0;">8</span> – IF I HAD DONE<br>
+<span style="color:#C000C0;">9</span> – IF I HAD BEEN DOING<br>
+<span style="color:#C000C0;">10</span> – I WOULD HAVE DONE<br>
+<span style="color:#C000C0;">11</span> – I WOULD HAVE BEEN DOING<br><br>
+
+ONLY IF YOU ANSWER CORRECTLY WILL THE CARD FLIP TO REVEAL THE TRANSLATION
+
+<br><br>
+
+YOU CAN REFER TO THIS POP-UP AT ANY POINT DURING THE QUIZ. JUST SELECT <span style="color:darkred;">READ ME</span>.
+
+</div>
+<div id="closePopup" class="popup-close-text">
+<span style="color:darkgreen;">CLOSE</span>
+</div>
+
+</div>
+</div>
+
+<div class="flip-card" id="flipCard">
+
+<div class="flip-inner">
+
+<div class="card-face front">
+<div class="question" id="question"></div>
+</div>
+
+<div class="card-face back">
+
+<div id="floorLabel"></div>
+
+<div id="flipContent"></div>
+
+</div>
+
+</div>
+</div>
+
+<div class="info-row">
+
+<div id="progress">1 / 15</div>
+
+<div style="display:flex; gap:8px;">
+
+<button id="nextBtn" class="next-btn">
+NEXT
+</button>
+
+<button id="compareBtn" class="compare-control-btn">
+COMPARE
+</button>
+
+</div>
+
+<div id="score" class="right">0 / 15</div>
+
+</div>
+
+<div id="answers" class="answers"></div>
+
+<div class="library-back-container">
+    <button id="libraryBackBtn" class="library-back-btn">
+        BACK
+    </button>
+</div>
+
+<script>
+
+/* SAMPLE QUESTIONS */
+
+const questions = [
+
+{
+question:`<span style="color:darkred;">FACEVO</span> COLAZIONE QUANDO È ARRIVATO IL POSTINO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I <span style="color:darkred;">WAS HAVING</span> BREAKFAST WHEN THE POSTMAN ARRIVED
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">PARLAVA</span> CON IL CLIENTE MENTRE IO <span style="color:darkred;">CONTROLLAVO</span> I DOCUMENTI`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+SHE <span style="color:darkred;">WAS SPEAKING</span> WITH THE CLIENT WHILE I <span style="color:darkred;">WAS CHECKING</span> THE DOCUMENTS
+`
+},
+
+{
+question:`<span style="color:darkred;">ASPETTAVAMO</span> L’AUTOBUS QUANDO HA INIZIATO A PIOVERE`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WE <span style="color:darkred;">WERE WAITING</span> FOR THE BUS WHEN IT STARTED RAINING
+`
+},
+
+{
+question:`MENTRE FUORI <span style="color:darkred;">PIOVEVA</span>, LEI <span style="color:darkred;">LEGGEVA</span> SUL DIVANO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHILE IT <span style="color:darkred;">WAS RAINING</span> OUTSIDE, SHE <span style="color:darkred;">WAS READING</span> ON THE SOFA
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">PREPARAVA</span> LA CENA MENTRE LEI <span style="color:darkred;">APPARECCHIAVA</span> LA TAVOLA`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+HE <span style="color:darkred;">WAS PREPARING</span> DINNER WHILE SHE <span style="color:darkred;">WAS LAYING</span> THE TABLE
+`
+},
+
+{
+question:`<span style="color:darkred;">FACEVO</span> COLAZIONE QUANDO MI HAI CHIAMATO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I <span style="color:darkred;">WAS HAVING</span> BREAKFAST WHEN YOU CALLED ME
+`
+},
+
+{
+question:`COSA <span style="color:darkred;">CERCAVA</span> KAREN QUANDO SIETE ENTRATI POCO FA?`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHAT <span style="color:darkred;">WAS</span> KAREN <span style="color:darkred;">LOOKING</span> FOR WHEN YOU CAME IN JUST NOW?
+`
+},
+
+{
+question:`MA NON <span style="color:darkred;">LAVORAVANO</span> GIÀ QUANDO È ARRIVATO IL DIRETTORE?`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+<span style="color:darkred;">WEREN’T</span> THEY ALREADY <span style="color:darkred;">WORKING</span> WHEN THE MANAGER ARRIVED?
+`
+},
+
+{
+question:`GIOCAVO CON IL TELEFONO MENTRE LA <span style="color:darkred;">ASPETTAVO</span> FUORI`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I <span style="color:darkred;">WAS PLAYING</span> ON MY PHONE WHILE I <span style="color:darkred;">WAS WAITING</span> OUTSIDE FOR HER
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">GUARDAVA</span> UN FILM IN TV QUANDO, ALL'IMPROVVISO, È SUONATO IL TELEFONO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+SHE <span style="color:darkred;">WAS WATCHING</span> A FILM ON TV WHEN THE PHONE SUDDENLY RANG
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">DORMIVA</span> PROFONDAMENTE QUANDO LA SVEGLIA HA SUONATO ALLE 6.30`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+HE <span style="color:darkred;">WAS SLEEPING</span> SOUNDLY WHEN THE ALARM CLOCK WENT OFF AT SIX THIRTY
+`
+},
+
+{
+question:`<span style="color:darkred;">CANTAVI</span> SOTTO LA DOCCIA QUANDO SONO TORNATO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+YOU <span style="color:darkred;">WERE SINGING</span> IN THE SHOWER WHEN I CAME BACK
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">STUDIAVA</span> IN BIBLIOTECA QUANDO È ARRIVATO UN SUO AMICO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+HE <span style="color:darkred;">WAS STUDYING</span> IN THE LIBRARY WHEN A FRIEND OF HIS TURNED UP
+`
+},
+
+{
+question:`PERCHÉ ERI COSÌ DISTRATTO MENTRE IL PROFESSORE <span style="color:darkred;">PARLAVA</span>?`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHY WERE YOU SO DISTRACTED WHILE THE TEACHER <span style="color:darkred;">WAS SPEAKING</span>?
+`
+},
+
+{
+question:`<span style="color:darkred;">CERCAVO</span> DI FARE UNA TORTA QUANDO SI È ROTTO IL FORNO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I <span style="color:darkred;">WAS TRYING</span> TO BAKE A CAKE WHEN THE OVEN BROKE
+`
+},
+
+{
+question:`<span style="color:darkred;">TORNAVO</span> A CASA IN MACCHINA QUANDO È INIZIATO IL TEMPORALE`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I <span style="color:darkred;">WAS DRIVING</span> BACK HOME WHEN THE STORM STARTED
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">ERA</span> ANCORA LÌ A SCRIVERE L’EMAIL NONOSTANTE L’URGENZA`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+SHE <span style="color:darkred;">WAS</span> STILL THERE <span style="color:darkred;">WRITING</span> THE EMAIL DESPITE THE URGENCY
+`
+},
+
+{
+question:`<span style="color:darkred;">CAMMINAVAMO</span> NEL PARCO QUANDO ABBIAMO SENTITO UN RUMORE DAVVERO FORTE`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WE <span style="color:darkred;">WERE WALKING</span> IN THE PARK WHEN WE HEARD A REALLY LOUD NOISE
+`
+},
+
+{
+question:`SCUSAMI, MA NON <span style="color:darkred;">SEGUIVO</span> LA SPIEGAZIONE. <span style="color:darkred;">PENSAVO</span> AD ALTRO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I’M SORRY, BUT <span style="color:darkred;">WASN’T FOLLOWING</span> THE EXPLANATION. I <span style="color:darkred;">WAS THINKING</span> ABOUT SOMETHING ELSE
+`
+},
+
+{
+question:`MENTRE IO <span style="color:darkred;">TENEVO</span> LA TORCIA, LUI <span style="color:darkred;">RIPARAVA</span> LA BICICLETTA`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHILE I <span style="color:darkred;">WAS HOLDING</span> THE TORCH, HE <span style="color:darkred;">WAS REPAIRING</span> THE BICYCLE
+`
+},
+
+{
+question:`PER CASO, <span style="color:darkred;">PREPARAVATE</span> GIÀ I BAGAGLI QUANDO VI HO TELEFONATO?`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+<span style="color:darkred;">WERE</span> YOU, BY CHANCE, ALREADY <span style="color:darkred;">PACKING</span> WHEN I PHONED YOU?
+`
+},
+
+{
+question:`HO NOTATO CHE LEI <span style="color:darkred;">PROVAVA</span> QUEL VESTITO PER LA SECONDA VOLTA. LEI SEMBRAVA MOLTO INDECISA`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I NOTICED THAT SHE <span style="color:darkred;">WAS TRYING ON</span> THAT DRESS FOR THE SECOND TIME. SHE SEEMED VERY UNDECIDED
+`
+},
+
+{
+question:`PERCHÉ NON CI <span style="color:darkred;">ASPETTAVATE</span> FUORI COME CONCORDATO?`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHY <span style="color:darkred;">WEREN’T</span> YOU <span style="color:darkred;">WAITING</span> FOR US OUTSIDE AS AGREED?
+`
+},
+
+{
+question:`DOVE <span style="color:darkred;">ANDAVI</span> QUANDO TI HO VISTO?`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHERE <span style="color:darkred;">WERE</span> YOU <span style="color:darkred;">GOING</span> WHEN I SAW YOU?
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">TENEVA</span> I POSTI MENTRE <span style="color:darkred;">COMPRAVO</span> I BIGLIETTI`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+HE <span style="color:darkred;">WAS KEEPING</span> THE SEATS WHILE I <span style="color:darkred;">WAS BUYING</span> THE TICKETS
+`
+},
+
+{
+question:`<span style="color:darkred;">PIOVEVA</span> QUANDO SONO USCITO DI CASA`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+IT <span style="color:darkred;">WAS RAINING</span> WHEN I LEFT HOME
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">CORREVA</span> AL PARCO QUANDO HA INIZIATO A GRANDINARE`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+SHE <span style="color:darkred;">WAS RUNNING</span> IN THE PARK WHEN IT STARTED TO HAIL
+`
+},
+
+{
+question:`TI POSSO ASSICURARE CHE NON <span style="color:darkred;">GUIDAVO</span> IO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I CAN ASSURE YOU THAT I <span style="color:darkred;">WASN’T DRIVING</span>
+`
+},
+
+{
+question:`LUI ERA GIÀ ANDATO VIA MENTRE GLI ALTRI <span style="color:darkred;">CERCAVANO</span> DI FINIRE IL PROGETTO PER IL GIORNO DOPO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+HE HAD ALREADY LEFT WHILE THE OTHERS <span style="color:darkred;">WERE TRYING</span> TO FINISH THE PROJECT FOR THE NEXT DAY
+`
+},
+
+{
+question:`VOLEVO DIRTELO IERI SERA MENTRE <span style="color:darkred;">LAVAVI</span> I PIATTI`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I WANTED TO TELL YOU LAST NIGHT WHILE YOU <span style="color:darkred;">WERE DOING</span> THE WASHING UP
+`
+},
+
+{
+question:`DAVVERO NON MI RICORDO COSA <span style="color:darkred;">INDOSSAVA</span> LEI ALLA FESTA`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I REALLY DON’T REMEMBER WHAT SHE <span style="color:darkred;">WAS WEARING</span> AT THE PARTY
+`
+},
+
+{
+question:`<span style="color:darkred;">PITTURAVANO</span> IL SALOTTO QUANDO, ALL'IMPROVVISO, È ANDATA VIA LA LUCE`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+THEY <span style="color:darkred;">WERE PAINTING</span> THE LIVING ROOM WHEN THE POWER SUDDENLY WENT OUT
+`
+},
+
+{
+question:`MENTRE LUI <span style="color:darkred;">SISTEMAVA</span> I LIBRI, IO <span style="color:darkred;">CERCAVO</span> ANCORA I MIEI OCCHIALI`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHILE HE <span style="color:darkred;">WAS PUTTING</span> THE BOOKS AWAY, I <span style="color:darkred;">WAS</span> STILL <span style="color:darkred;">SEARCHING</span> FOR MY GLASSES
+`
+},
+
+{
+question:`MENTRE LEI <span style="color:darkred;">ORGANIZZAVA</span> LA RIUNIONE, IO <span style="color:darkred;">PREPARAVO</span> GLI APPUNTI`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHILE SHE <span style="color:darkred;">WAS ORGANISING</span> THE MEETING, I <span style="color:darkred;">WAS GETTING</span> THE NOTES READY
+`
+},
+
+{
+question:`<span style="color:darkred;">PROVAVO</span> IL NUOVO PROGRAMMA QUANDO IL COMPUTER SI È BLOCCATO PER L'ENNESIMA VOLTA`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I <span style="color:darkred;">WAS TRYING OUT</span> THE NEW PROGRAMME WHEN THE COMPUTER FROZE FOR THE UMPTEENTH TIME
+`
+},
+
+{
+question:`MI SA CHE LUI <span style="color:darkred;">CERCAVA</span> UN PARCHEGGIO QUANDO L’HO VISTO`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I THINK HE <span style="color:darkred;">WAS LOOKING FOR</span> A PARKING SPACE WHEN I SAW HIM
+`
+},
+
+{
+question:`PERCHÉ LEI <span style="color:darkred;">CONTINUAVA</span> A CUCINARE SE AVEVATE GIÀ ORDINATO LA PIZZA?`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WHY <span style="color:darkred;">WAS</span> SHE <span style="color:darkred;">CONTINUING</span> TO COOK IF YOU HAD ALREADY ORDERED PIZZA?
+`
+},
+
+{
+question:`NON SO PERCHÉ MA, MENTRE IO <span style="color:darkred;">PARLAVO</span>, LEI <span style="color:darkred;">RIDEVA</span>`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+I DON’T KNOW WHY, BUT WHILE I <span style="color:darkred;">WAS SPEAKING</span>, SHE <span style="color:darkred;">WAS LAUGHING</span>
+`
+},
+
+{
+question:`<span style="color:darkred;">PARLAVAMO</span> DEL TUO PIANO DURANTE LA PAUSA CAFFÈ`,
+answer:`1`,
+flip:`
+FLOOR 1
+
+WE <span style="color:darkred;">WERE TALKING</span> ABOUT YOUR PLAN DURING THE COFFEE BREAK
+`
+},
+
+{
+question:`NON <span style="color:darkred;">FREQUENTAVI</span> UNA VOLTA QUELLA PALESTRA VICINO ALLA STAZIONE?`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+DIDN’T YOU <span style="color:darkred;">USE TO GO</span> TO THAT GYM NEAR THE STATION?
+`
+},
+
+{
+question:`COME <span style="color:darkred;">ANDAVI</span> A SCUOLA QUANDO ERI PICCOLO?`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+HOW DID YOU <span style="color:darkred;">USE TO GET</span> TO SCHOOL WHEN YOU WERE A CHILD?
+`
+},
+
+{
+question:`TRENT’ANNI FA <span style="color:darkred;">ABITAVANO</span> IN UNA PICCOLA CASA VICINO AL MARE`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+THEY <span style="color:darkred;">USED TO LIVE</span> IN A SMALL HOUSE NEAR THE SEA
+`
+},
+
+{
+question:`DA BAMBINO MI <span style="color:darkred;">PIACEVA</span> AIUTARE MIA MADRE IN CUCINA`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+I <span style="color:darkred;">USED TO LIKE</span> HELPING MY MOTHER IN THE KITCHEN
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">SUONAVA</span> LA CHITARRA IN UNA BAND LOCALE`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+HE <span style="color:darkred;">USED TO PLAY</span> THE GUITAR IN A LOCAL BAND
+`
+},
+
+{
+question:`QUANTO <span style="color:darkred;">PAGAVI</span> DI AFFITTO IN QUEL PERIODO?`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+HOW MUCH DID YOU <span style="color:darkred;">USE TO PAY</span> FOR RENT DURING THAT TIME?
+`
+},
+
+{
+question:`DA PICCOLO <span style="color:darkred;">TENEVO</span> SEMPRE UN DIARIO SEGRETO`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+I <span style="color:darkred;">USED TO KEEP</span> A SECRET DIARY
+`
+},
+
+{
+question:`UNA VOLTA NON MI <span style="color:darkred;">PIACEVA</span> IL PESCE, MA ADESSO LO ADORO`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+I DIDN’T <span style="color:darkred;">USE TO LIKE</span> FISH, BUT NOW I LOVE IT
+`
+},
+
+{
+question:`UNA VOLTA <span style="color:darkred;">ERA</span> NECESSARIO PRENOTARE CON SETTIMANE DI ANTICIPO`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+IT <span style="color:darkred;">USED TO BE</span> NECESSARY TO BOOK WEEKS IN ADVANCE
+`
+},
+
+{
+question:`PRIMA NON <span style="color:darkred;">ERA</span> MAI COSÌ. CHISSÀ COSA È SUCCESSO`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+IT NEVER <span style="color:darkred;">USED TO BE</span> LIKE THIS. I WONDER WHAT HAPPENED.
+`
+},
+
+{
+question:`DA PICCOLO <span style="color:darkred;">LAVORAVO</span> CON LUI OGNI ESTATE`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+I <span style="color:darkred;">USED TO WORK</span> WITH HIM EVERY SUMMER
+`
+},
+
+{
+question:`QUANDO ERO PICCOLO, LA DOMENICA <span style="color:darkred;">ANDAVO</span> SPESSO AL LAGO CON MIO PADRE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">USED TO GO</span> TO THE LAKE WITH MY FATHER ON SUNDAYS
+`
+},
+
+{
+question:`UNA VOLTA <span style="color:darkred;">FACEVAMO</span> COLAZIONE INSIEME, MA ORMAI LEI ESCE TROPPO PRESTO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">USED TO HAVE</span> BREAKFAST TOGETHER, BUT NOW SHE GOES OUT TOO EARLY
+`
+},
+
+{
+question:`IN PASSATO <span style="color:darkred;">LAVORAVO</span> ANCHE IL SABATO MATTINA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">USED TO WORK</span> ON SATURDAY MORNINGS AS WELL
+`
+},
+
+{
+question:`DA GIOVANE, LEI <span style="color:darkred;">SCRIVEVA</span> POESIE NEI SUOI QUADERNI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">USED TO WRITE</span> POEMS IN HER NOTEBOOKS
+`
+},
+
+{
+question:`DURANTE L’INVERNO NON <span style="color:darkred;">USCIVAMO</span> MOLTO LA SERA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE DIDN’T <span style="color:darkred;">USE TO GO OUT</span> VERY MUCH IN THE EVENINGS DURING THE WINTER
+`
+},
+
+{
+question:`ANNI FA, LUI <span style="color:darkred;">COLLEZIONAVA</span> VECCHIE MONETE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE <span style="color:darkred;">USED TO COLLECT</span> OLD COINS
+`
+},
+
+{
+question:`QUANDO VIVEVAMO A LONDRA, <span style="color:darkred;">MANGIAVAMO</span> SPESSO IN QUEL PICCOLO RISTORANTE ALL'ANGOLO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">USED TO EAT</span> IN THAT SMALL RESTAURANT ON THE CORNER
+`
+},
+
+{
+question:`UNA VOLTA NON <span style="color:darkred;">BEVEVO</span> MAI IL CAFFÈ DOPO CENA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I NEVER <span style="color:darkred;">USED TO DRINK</span> COFFEE AFTER DINNER
+`
+},
+
+{
+question:`DA PICCOLO <span style="color:darkred;">GIOCAVO</span> SPESSO NEL GIARDINO DEI NONNI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">USED TO PLAY</span> IN MY GRANDPARENTS’ GARDEN
+`
+},
+
+{
+question:`IN PASSATO LEI NON <span style="color:darkred;">VOLEVA</span> MAI ANDARE IN VACANZA IN MONTAGNA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE NEVER <span style="color:darkred;">WANTED</span> TO GO ON HOLIDAY TO THE MOUNTAINS
+`
+},
+
+{
+question:`DA GIOVANE <span style="color:darkred;">FACEVAMO</span> SPORT OGNI FINE SETTIMANA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">USED TO DO</span> SPORT EVERY WEEKEND
+`
+},
+
+{
+question:`È VERO CHE DA BAMBINO NON <span style="color:darkred;">MANGIAVI</span> MAI LE VERDURE?`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+DIDN’T YOU <span style="color:darkred;">USE TO EAT</span> VEGETABLES WHEN YOU WERE A CHILD?
+`
+},
+
+{
+question:`DA ADOLESCENTE <span style="color:darkred;">PORTAVO</span> SEMPRE I CAPELLI LUNGHI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">USED TO WEAR</span> MY HAIR LONG
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">PASSAVA</span> LE ESTATI A CASA DEI NONNI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">USED TO SPEND</span> HER SUMMERS AT HER GRANDPARENTS’ HOUSE
+`
+},
+
+{
+question:`NON <span style="color:darkred;">GUARDAVAMO</span> MAI LA TV DOPO CENA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE NEVER <span style="color:darkred;">USED TO WATCH</span> TV AFTER DINNER
+`
+},
+
+{
+question:`<span style="color:darkred;">ANDAVI</span> SPESSO AL CINEMA CON I TUOI AMICI?`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+DID YOU <span style="color:darkred;">USE TO GO</span> TO THE CINEMA WITH YOUR FRIENDS?
+`
+},
+
+{
+question:`LEI NON <span style="color:darkred;">USCIVA</span> MAI DA SOLA LA SERA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE NEVER <span style="color:darkred;">USED TO GO OUT</span> ALONE IN THE EVENINGS
+`
+},
+
+{
+question:`<span style="color:darkred;">RIDEVAMO</span> SEMPRE PER LE SUE BATTUTE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">USED TO LAUGH</span> AT HIS JOKES
+`
+},
+
+{
+question:`LUI SPESSO <span style="color:darkred;">DISEGNAVA</span> NEL TEMPO LIBERO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE <span style="color:darkred;">USED TO DRAW</span> IN HIS FREE TIME
+`
+},
+
+{
+question:`LA SERA LEI NON <span style="color:darkred;">RISPONDEVA</span> MAI AL TELEFONO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE NEVER <span style="color:darkred;">USED TO ANSWER</span> THE PHONE IN THE EVENING
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">ARRIVAVA</span> SEMPRE PRESTO ALLE RIUNIONI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE <span style="color:darkred;">USED TO ARRIVE</span> EARLY FOR MEETINGS
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">NUOTAVA</span> OGNI MATTINA PRIMA DI ANDARE AL LAVORO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">USED TO SWIM</span> EVERY MORNING BEFORE GOING TO WORK
+`
+},
+
+{
+question:`IN QUEL PERIODO <span style="color:darkred;">PRENDEVO</span> SEMPRE IL TRENO DELLE 7`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">USED TO TAKE</span> THE 7 O’CLOCK TRAIN
+`
+},
+
+{
+question:`DA GIOVANE <span style="color:darkred;">GUIDAVO</span> OVUNQUE, MA ORA PREFERISCO CAMMINARE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">USED TO DRIVE</span> EVERYWHERE, BUT NOW I PREFER WALKING
+`
+},
+
+{
+question:`DA BAMBINO <span style="color:darkred;">LEGGEVO</span> SEMPRE PRIMA DI DORMIRE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">USED TO READ</span> BEFORE GOING TO SLEEP
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">FUMAVA</span> TROPPO QUANDO LAVORAVA IN BANCA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE <span style="color:darkred;">USED TO SMOKE</span> TOO MUCH WHEN HE WORKED IN A BANK
+`
+},
+
+{
+question:`DA PICCOLO <span style="color:darkred;">LAVORAVO</span> CON LUI OGNI ESTATE`,
+answer:`2`,
+flip:`
+FLOOR 2
+
+I <span style="color:darkred;">USED TO WORK</span> WITH HIM EVERY SUMMER
+`
+},
+
+{
+question:`<span style="color:darkred;">SUCCEDEVA</span> SPESSO?`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+DID THAT <span style="color:darkred;">USE TO HAPPEN</span> OFTEN?
+`
+},
+
+{
+question:`OGNI ESTATE <span style="color:darkred;">ANDAVAMO</span> SEMPRE AL MARE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">WOULD</span> ALWAYS <span style="color:darkred;">GO</span> TO THE SEASIDE EVERY SUMMER
+`
+},
+
+{
+question:`DI SOLITO <span style="color:darkred;">LEGGEVA</span> UN LIBRO PRIMA DI DORMIRE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">WOULD</span> USUALLY <span style="color:darkred;">READ</span> A BOOK BEFORE GOING TO SLEEP
+`
+},
+
+{
+question:`QUANDO PIOVEVA, <span style="color:darkred;">RESTAVAMO</span> SEMPRE IN CASA A GIOCARE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN IT WAS RAINING, WE <span style="color:darkred;">WOULD</span> ALWAYS <span style="color:darkred;">STAY</span> AT HOME AND PLAY
+`
+},
+
+{
+question:`LA DOMENICA <span style="color:darkred;">PREPARAVA</span> DI SOLITO LA COLAZIONE PER TUTTA LA FAMIGLIA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+ON SUNDAYS, HE <span style="color:darkred;">WOULD</span> USUALLY <span style="color:darkred;">PREPARE</span> BREAKFAST FOR THE ENTIRE FAMILY
+`
+},
+
+{
+question:`DOPO SCUOLA <span style="color:darkred;">ANDAVO</span> DI SOLITO DIRETTAMENTE AL PARCO A GIOCARE A CALCIO CON I MIEI AMICI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+AFTER SCHOOL, I <span style="color:darkred;">WOULD</span> USUALLY <span style="color:darkred;">GO</span> STRAIGHT TO THE PARK AND PLAY FOOTBALL WITH MY FRIENDS
+`
+},
+
+{
+question:`OGNI INVERNO <span style="color:darkred;">ANDAVO</span> A SCIARE IN MONTAGNA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+EVERY WINTER I <span style="color:darkred;">WOULD</span> <span style="color:darkred;">GO</span> SKIING IN THE MOUNTAINS
+`
+},
+
+{
+question:`<span style="color:darkred;">STUDIAVA</span> SEMPRE IN BIBLIOTECA IL POMERIGGIO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE <span style="color:darkred;">WOULD</span> ALWAYS <span style="color:darkred;">STUDY</span> IN THE LIBRARY IN THE AFTERNOONS
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">GUARDAVANO</span> QUEL PROGRAMMA NON <span style="color:darkred;">SMETTEVANO</span> MAI DI RIDERE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN THEY <span style="color:darkred;">WERE WATCHING</span> THAT PROGRAMME, THEY <span style="color:darkred;">WOULD</span> NEVER <span style="color:darkred;">STOP</span> LAUGHING
+`
+},
+
+{
+question:`QUANDO ERAVAMO ADOLESCENTI <span style="color:darkred;">FACEVAMO</span> SPESSO TARDI CON GLI AMICI IL SABATO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN WE WERE TEENAGERS, WE <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">STAY</span> OUT LATE WITH FRIENDS ON SATURDAYS
+`
+},
+
+{
+question:`SPESSO <span style="color:darkred;">USCIVAMO</span> A BERE QUALCOSA DOPO IL LAVORO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">GO</span> OUT FOR A DRINK AFTER WORK
+`
+},
+
+{
+question:`DA BAMBINO <span style="color:darkred;">AIUTAVO</span> SPESSO MIO PADRE CON IL GIARDINAGGIO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">HELP</span> MY FATHER WITH THE GARDENING
+`
+},
+
+{
+question:`OGNI MATTINA, PRIMA DI ANDARE IN PENSIONE, LUI <span style="color:darkred;">PRENDEVA</span> ESATTAMENTE LO STESSO TRENO PER ANDARE AL LAVORO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+EVERY MORNING, BEFORE HE RETIRED, HE <span style="color:darkred;">WOULD</span> <span style="color:darkred;">TAKE</span> THE EXACT SAME TRAIN TO GO TO WORK
+`
+},
+
+{
+question:`DURANTE LE LEZIONI LUI SI <span style="color:darkred;">SEDEVA</span> DI SOLITO VERSO IL FONDO DELL’AULA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+DURING THE LESSONS, HE <span style="color:darkred;">WOULD</span> USUALLY <span style="color:darkred;">SIT</span> NEAR THE BACK OF THE CLASSROOM
+`
+},
+
+{
+question:`QUANDO ERAVAMO PICCOLI <span style="color:darkred;">GIOCAVAMO</span> SEMPRE A NASCONDINO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN WE WERE LITTLE, WE <span style="color:darkred;">WOULD</span> ALWAYS <span style="color:darkred;">PLAY</span> HIDE AND SEEK
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">CAMMINAVA</span> SEMPRE LUNGO IL FIUME INVECE DI PRENDERE LA STRADA PRINCIPALE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">WOULD</span> ALWAYS <span style="color:darkred;">WALK</span> ALONG THE RIVER INSTEAD OF TAKING THE MAIN ROAD
+`
+},
+
+{
+question:`QUANDO FACEVA BEL TEMPO, DI SOLITO <span style="color:darkred;">ANDAVAMO</span> A FARE UNA LUNGA PASSEGGIATA IN CAMPAGNA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN THE WEATHER WAS NICE, WE <span style="color:darkred;">WOULD</span> NORMALLY <span style="color:darkred;">GO</span> FOR A LONG WALK IN THE COUNTRYSIDE
+`
+},
+
+{
+question:`D’INVERNO LUI <span style="color:darkred;">INDOSSAVA</span> RARAMENTE CAPPELLI E GUANTI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE <span style="color:darkred;">WOULD</span> RARELY <span style="color:darkred;">WEAR</span> HATS AND GLOVES IN WINTER
+`
+},
+
+{
+question:`SPESSO <span style="color:darkred;">PASSAVAMO</span> LE SERATE AL CAMPEGGIO CANTANDO INTORNO AL FUOCO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">SPEND</span> OUR EVENINGS AT THE CAMPSITE SINGING AROUND A FIRE
+`
+},
+
+{
+question:`<span style="color:darkred;">COMPRAVA</span> FIORI AL MERCATO OGNI SABATO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">WOULD</span> <span style="color:darkred;">BUY</span> FLOWERS AT THE MARKET EVERY SATURDAY
+`
+},
+
+{
+question:`<span style="color:darkred;">VIAGGIAVAMO</span> SPESSO IN PRIMA CLASSE QUANDO VENIVAMO MANDATI IN TRASFERTA PER LAVORO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">TRAVEL</span> FIRST CLASS WHEN WE WERE SENT ON BUSINESS TRIPS
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">ASCOLTAVA</span> LE NOTIZIE SOLO ALLA RADIO E NON LE <span style="color:darkred;">GUARDAVA</span> MAI IN TV`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">WOULD</span> ONLY EVER <span style="color:darkred;">LISTEN</span> TO THE NEWS ON THE RADIO AND NEVER <span style="color:darkred;">WATCH</span> IT ON TV
+`
+},
+
+{
+question:`QUANDO NEVICAVA <span style="color:darkred;">FACEVAMO</span> SPESSO UN PUPAZZO DI NEVE IN GIARDINO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN IT WAS SNOWING, WE <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">MAKE</span> A SNOWMAN IN THE GARDEN
+`
+},
+
+{
+question:`NON <span style="color:darkred;">MANGIAVA</span> MAI TRA UN PASTO E L’ALTRO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE <span style="color:darkred;">WOULD</span> NEVER <span style="color:darkred;">EAT</span> BETWEEN MEALS
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">ANNAFFIAVA</span> LE PIANTE SUL BALCONE OGNI MATTINA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">WOULD</span> <span style="color:darkred;">WATER</span> THE PLANTS ON THE BALCONY EVERY MORNING
+`
+},
+
+
+{
+question:`I MIEI GENITORI <span style="color:darkred;">SPENDEVANO</span> QUASI SEMPRE MOLTI SOLDI IN VACANZA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+MY PARENTS <span style="color:darkred;">WOULD</span> NEARLY ALWAYS <span style="color:darkred;">SPEND</span> A LOT OF MONEY ON HOLIDAY
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">PRENDEVA</span> SEMPRE UNA TAZZA DI TÈ ALLE CINQUE DEL POMERIGGIO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE <span style="color:darkred;">WOULD</span> ALWAYS <span style="color:darkred;">HAVE</span> A CUP OF TEA AT FIVE IN THE AFTERNOON
+`
+},
+
+{
+question:`<span style="color:darkred;">TORNAVANO</span> DI SOLITO MOLTO TARDI LA SERA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+THEY <span style="color:darkred;">WOULD</span> USUALLY <span style="color:darkred;">GET BACK</span> VERY LATE IN THE EVENING
+`
+},
+
+{
+question:`DA PICCOLO NON <span style="color:darkred;">CHIEDEVO</span> MAI AI MIEI GENITORI AIUTO PER I COMPITI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">WOULD</span> NEVER <span style="color:darkred;">ASK</span> MY PARENTS FOR HELP WITH MY HOMEWORK
+`
+},
+
+{
+question:`DOPO SCUOLA <span style="color:darkred;">ASPETTAVO</span> MIA SORELLA FUORI E, POI, <span style="color:darkred;">TORNAVAMO</span> A CASA INSIEME`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">WOULD</span> <span style="color:darkred;">WAIT</span> FOR MY SISTER OUTSIDE AND THEN WE’D <span style="color:darkred;">GO BACK</span> HOME TOGETHER
+`
+},
+
+{
+question:`OGNI TANTO <span style="color:darkred;">ANDAVO</span> A CORRERE LUNGO IL FIUME LA MATTINA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">WOULD</span> OCCASIONALLY <span style="color:darkred;">GO</span> RUNNING ALONG THE RIVER IN THE MORNING
+`
+},
+
+{
+question:`LA DOMENICA I MIEI GENITORI <span style="color:darkred;">VENIVANO</span> SPESSO A PRANZO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+MY PARENTS <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">COME ROUND</span> FOR LUNCH
+`
+},
+
+{
+question:`D’ESTATE <span style="color:darkred;">CENAVAMO</span> SPESSO IN GIARDINO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">HAVE</span> DINNER IN THE GARDEN
+`
+},
+
+{
+question:`QUANDO PIOVEVA COSÌ FORTE <span style="color:darkred;">USCIVAMO</span> RARAMENTE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN IT WAS RAINING REALLY HARD, WE <span style="color:darkred;">WOULD</span> HARDLY EVER <span style="color:darkred;">GO OUT</span>
+`
+},
+
+{
+question:`DOPO CENA <span style="color:darkred;">LEGGEVO</span> SEMPRE QUALCHE PAGINA DI UN LIBRO PRIMA DI DORMIRE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I <span style="color:darkred;">WOULD</span> ALWAYS <span style="color:darkred;">READ</span> A FEW PAGES OF A BOOK BEFORE GOING TO SLEEP
+`
+},
+
+{
+question:`SEBBENE MIA SORELLA VIVESSE IN GERMANIA, <span style="color:darkred;">TORNAVA</span> SEMPRE A CASA PER NATALE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+ALTHOUGH MY SISTER LIVED IN GERMANY, SHE <span style="color:darkred;">WOULD</span> ALWAYS <span style="color:darkred;">COME BACK</span> HOME FOR CHRISTMAS
+`
+},
+
+{
+question:`QUANDO ERO ALL’UNIVERSITÀ, LA DOMENICA <span style="color:darkred;">DORMIVO</span> SPESSO FINO A TARDI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN I WAS AT UNIVERSITY, I <span style="color:darkred;">WOULD</span> OFTEN <span style="color:darkred;">SLEEP</span> UNTIL LATE ON SUNDAYS
+`
+},
+
+{
+question:`QUANDO ERO IN MALESIA, <span style="color:darkred;">PIOVEVA</span> QUASI SEMPRE NEL POMERIGGIO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+IT <span style="color:darkred;">WOULD</span> NEARLY ALWAYS <span style="color:darkred;">RAIN</span> IN THE AFTERNOONS
+`
+},
+
+{
+question:`MIO PADRE <span style="color:darkred;">BEVEVA</span> SPESSO UN BICCHIERE DI BIRRA PRIMA DI PRANZO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+MY FATHER <span style="color:darkred;">WOULD</span> FREQUENTLY <span style="color:darkred;">HAVE</span> A GLASS OF BEER BEFORE LUNCH
+`
+},
+
+{
+question:`QUANDO MIO FRATELLO ERA PIÙ GIOVANE, NON SI <span style="color:darkred;">LAVAVA</span> MAI LE MANI PRIMA DI MANGIARE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN MY BROTHER WAS YOUNGER, HE <span style="color:darkred;">WOULD</span> NEVER <span style="color:darkred;">WASH</span> HIS HANDS BEFORE EATING
+`
+},
+
+{
+question:`QUANDO ERO PICCOLO, <span style="color:darkred;">GIOCAVO</span> SPESSO NEL CORTILE DOPO SCUOLA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I OFTEN <span style="color:darkred;">PLAYED</span> IN THE COURTYARD AFTER SCHOOL
+`
+},
+
+{
+question:`<span style="color:darkred;">ANDAVAMO</span> SPESSO A CORRERE LUNGO IL FIUME LA MATTINA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE OFTEN <span style="color:darkred;">WENT</span> RUNNING ALONG THE RIVER IN THE MORNING
+`
+},
+
+{
+question:`<span style="color:darkred;">PREPARAVO</span> SEMPRE IL PRANZO PER TUTTA LA FAMIGLIA LA DOMENICA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I ALWAYS <span style="color:darkred;">COOKED</span> LUNCH FOR THE WHOLE FAMILY ON SUNDAYS
+`
+},
+
+{
+question:`QUANDO ERA STUDENTESSA, <span style="color:darkred;">TRADUCEVA</span> SPESSO ARTICOLI PER ESERCITARSI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE OFTEN <span style="color:darkred;">TRANSLATED</span> ARTICLES TO PRACTISE
+`
+},
+
+{
+question:`D’ESTATE <span style="color:darkred;">CENAVAMO</span> QUASI SEMPRE IN GIARDINO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE ALMOST ALWAYS <span style="color:darkred;">HAD</span> DINNER IN THE GARDEN
+`
+},
+
+{
+question:`NON <span style="color:darkred;">USCIVAMO</span> QUASI MAI DURANTE I MESI INVERNALI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE HARDLY EVER <span style="color:darkred;">WENT OUT</span> DURING THE WINTER MONTHS
+`
+},
+
+{
+question:`DA PICCOLO <span style="color:darkred;">LEGGEVO</span> SEMPRE QUALCHE PAGINA DI UN ROMANZO PRIMA DI ADDORMENTARMI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I ALWAYS <span style="color:darkred;">READ</span> A FEW PAGES OF A NOVEL BEFORE GOING TO SLEEP
+`
+},
+
+{
+question:`<span style="color:darkred;">ANDAVI</span> SPESSO A PESCARE CON TUO ZIO?`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+DID YOU OFTEN <span style="color:darkred;">GO</span> FISHING WITH YOUR UNCLE?
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">LAVORAVO</span> IN ALBERGO, <span style="color:darkred;">INIZIAVO</span> SEMPRE MOLTO PRESTO LA MATTINA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN I <span style="color:darkred;">WORKED</span> IN A HOTEL, I ALWAYS <span style="color:darkred;">STARTED</span> VERY EARLY IN THE MORNING
+`
+},
+
+{
+question:`FINO A DIECI ANNI FA <span style="color:darkred;">PASSAVAMO</span> SPESSO I FINE SETTIMANA IN MONTAGNA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE OFTEN <span style="color:darkred;">SPENT</span> WEEKENDS IN THE MOUNTAINS
+`
+},
+
+{
+question:`IN PASSATO NON <span style="color:darkred;">COMPRAVO</span> QUASI MAI I SURGELATI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I HARDLY EVER <span style="color:darkred;">BOUGHT</span> FROZEN FOOD
+`
+},
+
+{
+question:`DA GIOVANE LEI <span style="color:darkred;">SUONAVA</span> SPESSO IL PIANOFORTE LA SERA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE OFTEN <span style="color:darkred;">PLAYED</span> THE PIANO IN THE EVENING
+`
+},
+
+{
+question:`DI TANTO IN TANTO <span style="color:darkred;">INCONTRAVAMO</span> GLI AMICI AL BAR DOPO LAVORO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE <span style="color:darkred;">MET</span> FRIENDS AT THE BAR AFTER WORK
+`
+},
+
+{
+question:`NON <span style="color:darkred;">PRENDEVO</span> QUASI MAI L’AUTOBUS PER ANDARE IN UFFICIO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I HARDLY EVER <span style="color:darkred;">TOOK</span> THE BUS TO GO TO THE OFFICE
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">STUDIAVO</span> LEGGE, <span style="color:darkred;">USAVO</span> SPESSO UN LIBRO CHE MIO NONNO MI AVEVA REGALATO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN I <span style="color:darkred;">WAS STUDYING</span> LAW, I OFTEN <span style="color:darkred;">USED</span> A BOOK MY GRANDFATHER HAD GIVEN ME
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">VIVEVO</span> A TORINO, <span style="color:darkred;">PRENDEVO</span> SPESSO IL TRAM NUMERO NOVE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN I <span style="color:darkred;">LIVED</span> IN TURIN, I OFTEN <span style="color:darkred;">TOOK</span> THE NUMBER NINE TRAM
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">STUDIAVAMO</span> INSIEME, <span style="color:darkred;">DISCUTEVAMO</span> SPESSO DI POLITICA DOPO LE LEZIONI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN WE <span style="color:darkred;">STUDIED</span> TOGETHER, WE OFTEN <span style="color:darkred;">DISCUSSED</span> POLITICS AFTER OUR LESSONS
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">LAVORAVA</span> IN QUEL NEGOZIO, LEI <span style="color:darkred;">CONSIGLIAVA</span> SEMPRE I CLIENTI PIÙ INDECISI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN SHE <span style="color:darkred;">WORKED</span> IN THAT SHOP, SHE ALWAYS <span style="color:darkred;">ADVISED</span> THE MORE INDECISIVE CUSTOMERS
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">PREPARAVO</span> GLI ESAMI, <span style="color:darkred;">RIPETEVO</span> SEMPRE GLI APPUNTI AD ALTA VOCE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN I <span style="color:darkred;">WAS PREPARING</span> FOR MY EXAMS, I ALWAYS <span style="color:darkred;">WENT OVER</span> MY NOTES OUT LOUD
+`
+},
+
+{
+question:`DOPO CHE CI SIAMO SPOSATI, NON <span style="color:darkred;">USCIVAMO</span> QUASI MAI DURANTE LA SETTIMANA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE HARDLY EVER <span style="color:darkred;">WENT OUT</span> DURING THE WEEK
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">LAVORAVO</span> FINO A TARDI, <span style="color:darkred;">COMPRAVO</span> SPESSO QUALCOSA DA MANGIARE AL BAR ACCANTO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WHEN I <span style="color:darkred;">WORKED</span> LATE, I OFTEN <span style="color:darkred;">BOUGHT</span> SOMETHING TO EAT AT THE BAR NEXT DOOR
+`
+},
+
+{
+question:`DA PICCOLO <span style="color:darkred;">GIOCAVO</span> SPESSO NEL GIARDINO DEI NONNI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I OFTEN <span style="color:darkred;">PLAYED</span> IN MY GRANDPARENTS’ GARDEN AS A CHILD
+`
+},
+
+{
+question:`IN PASSATO LEI NON <span style="color:darkred;">ANDAVA</span> MAI IN VACANZA IN MONTAGNA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE NEVER <span style="color:darkred;">WENT</span> ON HOLIDAY TO THE MOUNTAINS
+`
+},
+
+{
+question:`DA GIOVANI <span style="color:darkred;">FACEVAMO</span> DI SOLITO SPORT OGNI FINE SETTIMANA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE USUALLY <span style="color:darkred;">DID</span> SPORT EVERY WEEKEND WHEN WE WERE YOUNG
+`
+},
+
+{
+question:`DA VENTENNE NON <span style="color:darkred;">MANGIAVO</span> MAI LE VERDURE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I NEVER <span style="color:darkred;">ATE</span> VEGETABLES IN MY TWENTIES
+`
+},
+
+{
+question:`DA ADOLESCENTE <span style="color:darkred;">PORTAVO</span> SEMPRE I CAPELLI LUNGHI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I ALWAYS <span style="color:darkred;">WORE</span> MY HAIR LONG WHEN I WAS A TEENAGER
+`
+},
+
+{
+question:`DA BAMBINO <span style="color:darkred;">AIUTAVO</span> SEMPRE MIA MADRE IN CUCINA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I ALWAYS <span style="color:darkred;">HELPED</span> MY MOTHER IN THE KITCHEN AS A CHILD
+`
+},
+
+{
+question:`IN QUEL PERIODO LUI <span style="color:darkred;">SUONAVA</span> SPESSO LA CHITARRA IN UNA BAND LOCALE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE OFTEN <span style="color:darkred;">PLAYED</span> THE GUITAR IN A LOCAL BAND
+`
+},
+
+{
+question:`DURANTE L’ESTATE LEI <span style="color:darkred;">PASSAVA</span> SEMPRE LE GIORNATE A CASA DEI NONNI`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE ALWAYS <span style="color:darkred;">SPENT</span> HER DAYS AT HER GRANDPARENTS’ HOUSE
+`
+},
+
+{
+question:`NON <span style="color:darkred;">GUARDAVAMO</span> MAI LA TV DOPO CENA - ERA VIETATO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE NEVER <span style="color:darkred;">WATCHED</span> TV AFTER DINNER - IT WAS FORBIDDEN
+`
+},
+
+{
+question:`OGNI MATTINA, PRIMA DI ANDARE IN PENSIONE, <span style="color:darkred;">PRENDEVA</span> SEMPRE ESATTAMENTE LO STESSO TRENO PER ANDARE AL LAVORO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE ALWAYS <span style="color:darkred;">TOOK</span> THE EXACT SAME TRAIN TO GO TO WORK
+`
+},
+
+{
+question:`LA DOMENICA I MIEI GENITORI <span style="color:darkred;">VENIVANO</span> SPESSO A PRANZO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+MY PARENTS OFTEN <span style="color:darkred;">CAME ROUND</span> FOR LUNCH
+`
+},
+
+{
+question:`<span style="color:darkred;">PRENDEVA</span> SEMPRE UNA TAZZA DI TÈ ALLE CINQUE DEL POMERIGGIO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+SHE ALWAYS <span style="color:darkred;">HAD</span> A CUP OF TEA AT FIVE IN THE AFTERNOON
+`
+},
+
+{
+question:`QUANDO FACEVA BEL TEMPO, DI SOLITO <span style="color:darkred;">ANDAVAMO</span> A FARE LUNGHE PASSEGGIATE IN CAMPAGNA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+WE NORMALLY <span style="color:darkred;">WENT</span> FOR LONG WALKS IN THE COUNTRYSIDE
+`
+},
+
+{
+question:`ANCHE SE MIA SORELLA <span style="color:darkred;">VIVEVA</span> IN GERMANIA, <span style="color:darkred;">TORNAVA</span> SEMPRE A CASA PER NATALE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+ALTHOUGH MY SISTER <span style="color:darkred;">LIVED</span> IN GERMANY, SHE ALWAYS <span style="color:darkred;">CAME</span> HOME FOR CHRISTMAS
+`
+},
+
+{
+question:`QUANDO ERO ALL’UNIVERSITÀ, <span style="color:darkred;">DORMIVO</span> SPESSO FINO A TARDI LA DOMENICA`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+I OFTEN <span style="color:darkred;">SLEPT</span> UNTIL LATE ON SUNDAYS
+`
+},
+
+{
+question:`QUANDO ERO IN MALESIA, <span style="color:darkred;">PIOVEVA</span> QUASI SEMPRE NEL POMERIGGIO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+IT NEARLY ALWAYS <span style="color:darkred;">RAINED</span> IN THE AFTERNOONS
+`
+},
+
+{
+question:`MIO PADRE <span style="color:darkred;">BEVEVA</span> FREQUENTEMENTE UN BICCHIERE DI BIRRA PRIMA DI PRANZO`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+MY FATHER FREQUENTLY <span style="color:darkred;">HAD</span> A GLASS OF BEER BEFORE LUNCH
+`
+},
+
+{
+question:`QUANDO MIO FRATELLO ERA PIÙ GIOVANE, NON SI <span style="color:darkred;">LAVAVA</span> MAI LE MANI PRIMA DI MANGIARE`,
+answer:`2-4`,
+flip:`
+FLOORS 2–4
+
+HE NEVER <span style="color:darkred;">WASHED</span> HIS HANDS BEFORE EATING
+`
+},
+
+{
+question:`ERA DA ORE E ORE CHE <span style="color:darkred;">STUDIAVO</span> PRIMA DI CAPIRE FINALMENTE LO SCOPO DELL’ESERCIZIO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">I’D BEEN STUDYING</span> FOR HOURS ON END BEFORE I FINALLY UNDERSTOOD THE PURPOSE OF THE EXERCISE
+`
+},
+
+{
+question:`ERA DA QUASI MEZZ’ORA CHE <span style="color:darkred;">ASPETTAVAMO</span> L’AUTOBUS QUANDO È FINALMENTE ARRIVATO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">WE’D BEEN WAITING</span> ALMOST HALF AN HOUR FOR THE BUS WHEN IT FINALLY ARRIVED
+`
+},
+
+{
+question:`ERA DA ALMENO CINQUE SETTIMANE CHE <span style="color:darkred;">LAVORAVA</span> SU QUEL PROGETTO QUANDO IL CLIENTE HA CAMBIATO IDEA ALL’IMPROVVISO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">HE’D BEEN WORKING</span> ON THAT PROJECT FOR AT LEAST FIVE WEEKS WHEN THE CLIENT UNEXPECTEDLY CHANGED HIS MIND
+`
+},
+
+{
+question:`<span style="color:darkred;">CAMMINAVAMO</span> DA VENTI MINUTI QUANDO MI SONO RESO CONTO DI AVER LASCIATO GLI OCCHIALI A CASA`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">WE’D BEEN WALKING</span> FOR TWENTY MINUTES WHEN I REALISED I’D LEFT MY GLASSES AT HOME
+`
+},
+
+{
+question:`ERA DA TUTTA LA MATTINA CHE <span style="color:darkred;">PREPARAVA</span> LA PRESENTAZIONE QUANDO IL COMPUTER SI È BLOCCATO ALL’IMPROVVISO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">SHE’D BEEN PREPARING</span> THE PRESENTATION ALL MORNING WHEN THE COMPUTER SUDDENLY FROZE
+`
+},
+
+{
+question:`<span style="color:darkred;">GUIDAVO</span> DA OLTRE CINQUE ORE QUANDO ALLA FINE MI SONO FERMATO A FARE BENZINA`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">I’D BEEN DRIVING</span> FOR OVER FIVE HOURS WHEN I EVENTUALLY STOPPED TO GET SOME PETROL
+`
+},
+
+{
+question:`DA QUANTO TEMPO <span style="color:darkred;">ASPETTAVI</span> FUORI QUANDO FINALMENTE QUALCUNO TI HA FATTO ENTRARE?`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+HOW LONG <span style="color:darkred;">HAD YOU BEEN WAITING</span> OUTSIDE BEFORE SOMEBODY FINALLY LET YOU IN?
+`
+},
+
+{
+question:`DA QUANTE SETTIMANE <span style="color:darkred;">CERCAVA</span> UN POSTO DOVE VIVERE PRIMA DI TROVARE QUELLO GIUSTO?`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+HOW MANY WEEKS <span style="color:darkred;">HAD HE BEEN SEARCHING</span> FOR A PLACE TO LIVE BEFORE HE FOUND THE RIGHT ONE?
+`
+},
+
+{
+question:`ERA DA QUASI MEZZ’ORA CHE <span style="color:darkred;">GUARDAVA</span> FUORI DALLA FINESTRA QUANDO I SUOI PENSIERI SONO STATI INTERROTTI DAL SUONO DEL TELEFONO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">SHE HAD BEEN GAZING</span> OUT OF THE WINDOW FOR ALMOST HALF AN HOUR WHEN HER THOUGHTS WERE INTERRUPTED BY THE RINGING OF THE PHONE
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">LAVORAVA</span> ALLA PRESENTAZIONE DALLE 8:30 QUANDO È ARRIVATO IL CAPO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">HE HAD BEEN WORKING</span> ON THE PRESENTATION SINCE EIGHT THIRTY WHEN THE BOSS ARRIVED
+`
+},
+
+{
+question:`DA QUANTO TEMPO <span style="color:darkred;">STUDIAVI</span> IL CINESE PRIMA DI TRASFERIRTI A PECHINO?`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+HOW LONG <span style="color:darkred;">HAD YOU BEEN STUDYING</span> CHINESE BEFORE YOU MOVED TO BEIJING?
+`
+},
+
+{
+question:`ERA DA QUASI DUE ORE CHE <span style="color:darkred;">PIOVEVA</span> QUANDO FINALMENTE HA SMESSO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">IT HAD BEEN RAINING</span> FOR ALMOST TWO HOURS WHEN IT FINALLY STOPPED
+`
+},
+
+{
+question:`ERA DA UN BEL PO’ CHE <span style="color:darkred;">PARLAVANO</span> DEL PROBLEMA PRIMA DI TROVARE UNA SOLUZIONE`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">THEY HAD BEEN TALKING</span> ABOUT THE PROBLEM FOR QUITE A WHILE BEFORE THEY FOUND A SOLUTION
+`
+},
+
+{
+question:`ERA DA MESI CHE <span style="color:darkred;">RISPARMIAVA</span> PER COMPRARSI UNA MACCHINA NUOVA`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">HE HAD BEEN SAVING</span> FOR MONTHS TO BUY HIMSELF A NEW CAR
+`
+},
+
+{
+question:`<span style="color:darkred;">CORREVO</span> DA PIÙ DI UN’ORA QUANDO FINALMENTE HO DECISO DI FERMARMI`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">I’D BEEN RUNNING</span> FOR OVER AN HOUR WHEN I FINALLY DECIDED TO STOP
+`
+},
+
+{
+question:`ERA DA TUTTO IL POMERIGGIO CHE <span style="color:darkred;">LITIGAVANO</span> QUANDO ALLA FINE QUALCUNO È INTERVENUTO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">THEY’D BEEN ARGUING</span> ALL AFTERNOON WHEN SOMEBODY FINALLY STEPPED IN
+`
+},
+
+{
+question:`ERA DA GIORNI CHE NON <span style="color:darkred;">DORMIVA</span> BENE`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">HE HADN’T BEEN SLEEPING</span> WELL FOR DAYS
+`
+},
+
+{
+question:`DA QUANTO TEMPO <span style="color:darkred;">ASPETTAVATE</span> QUELLA RISPOSTA?`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+HOW LONG <span style="color:darkred;">HAD YOU BEEN WAITING</span> FOR THAT ANSWER?
+`
+},
+
+{
+question:`ERA DA TUTTA LA MATTINA CHE <span style="color:darkred;">LAVORAVAMO</span> IN GIARDINO QUANDO HA COMINCIATO A PIOVERE`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">WE’D BEEN WORKING</span> IN THE GARDEN ALL MORNING WHEN IT STARTED TO RAIN
+`
+},
+
+{
+question:`ERA DA ORE CHE <span style="color:darkred;">TENTAVA</span> DI CONTATTARLA SENZA SUCCESSO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">HE HAD BEEN TRYING</span> TO CONTACT HER FOR HOURS WITHOUT SUCCESS
+`
+},
+
+{
+question:`ERA DA TROPPO TEMPO CHE <span style="color:darkred;">IGNORAVANO</span> IL PROBLEMA`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">THEY HAD BEEN IGNORING</span> THE PROBLEM FOR FAR TOO LONG
+`
+},
+
+{
+question:`NON <span style="color:darkred;">MANGIAVA</span> BENE DA SETTIMANE PRIMA DI ANDARE DAL MEDICO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">HE HADN’T BEEN EATING</span> WELL FOR WEEKS BEFORE GOING TO THE DOCTOR
+`
+},
+
+{
+question:`ERA DA MESI CHE <span style="color:darkred;">PENSAVO</span> DI CAMBIARE LAVORO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">I’D BEEN THINKING</span> OF CHANGING JOBS FOR MONTHS
+`
+},
+
+{
+question:`ERA DA UN SACCO DI TEMPO CHE <span style="color:darkred;">NON CI VEDEVAMO</span>`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">WE HADN’T BEEN SEEING</span> EACH OTHER FOR AGES
+`
+},
+
+{
+question:`ERA DA UN PO’ CHE <span style="color:darkred;">PENSAVAMO</span> DI TRASFERIRCI ALL’ESTERO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">WE’D BEEN THINKING</span> OF MOVING ABROAD FOR A WHILE
+`
+},
+
+{
+question:`ERA DA TUTTO IL GIORNO CHE <span style="color:darkred;">SI SENTIVA</span> MALE`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">SHE HAD BEEN FEELING</span> ILL ALL DAY
+`
+},
+
+{
+question:`ERA DA MESI CHE <span style="color:darkred;">NON PIOVEVA</span> COSÌ TANTO`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">IT HADN’T BEEN RAINING</span> THIS HEAVILY FOR MONTHS
+`
+},
+
+{
+question:`DA QUANTO TEMPO <span style="color:darkred;">LAVORAVATE</span> INSIEME PRIMA DI APRIRE L’AZIENDA?`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+HOW LONG <span style="color:darkred;">HAD YOU BEEN WORKING</span> TOGETHER BEFORE YOU STARTED THE COMPANY?
+`
+},
+
+{
+question:`ERA DA TUTTA LA SETTIMANA CHE <span style="color:darkred;">ASPETTAVANO</span> QUELLA TELEFONATA`,
+answer:`5`,
+flip:`
+FLOOR 5
+
+<span style="color:darkred;">THEY’D BEEN WAITING</span> FOR THAT PHONE CALL ALL WEEK
+`
+},
+
+{
+question:`ERA DA QUANDO SI ERANO TRASFERITI IN CANADA CHE LEI NON <span style="color:darkred;">VEDEVA</span> I SUOI CUGINI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+SHE <span style="color:darkred;">HADN’T SEEN</span> HER COUSINS SINCE THEY MOVED TO CANADA
+`
+},
+
+{
+question:`ERANO TRE SETTIMANE CHE NON <span style="color:darkred;">PARLAVAMO</span> CON IL PROFESSORE`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T SPOKEN</span> TO THE PROFESSOR FOR THREE WEEKS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">USCIVAMO</span> CON GLI AMICI DA QUASI DUE MESI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T GONE OUT</span> WITH OUR FRIENDS FOR ALMOST TWO MONTHS
+`
+},
+
+{
+question:`ERANO GIORNI CHE LUI NON <span style="color:darkred;">CONTROLLAVA</span> LA POSTA IN ARRIVO`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+HE <span style="color:darkred;">HADN’T CHECKED</span> HIS INBOX FOR DAYS
+`
+},
+
+{
+question:`ERANO QUASI TRE ANNI CHE NON <span style="color:darkred;">PRENDEVAMO</span> UN TAXI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T TAKEN</span> A TAXI FOR ALMOST THREE YEARS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">DORMIVO</span> BENE DA DUE SETTIMANE`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T SLEPT</span> WELL FOR TWO WEEKS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">VEDEVAMO</span> GIULIA DA QUANDO AVEVA CAMBIATO LAVORO`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T SEEN</span> GIULIA SINCE SHE CHANGED JOBS
+`
+},
+
+{
+question:`LUI NON <span style="color:darkred;">LEGGEVA</span> UN GIORNALE DA PARECCHI MESI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+HE <span style="color:darkred;">HADN’T READ</span> A NEWSPAPER FOR SEVERAL MONTHS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">CUCINAVO</span> NIENTE DA QUATTRO GIORNI ED ERO SFINITO`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T COOKED</span> ANYTHING FOR FOUR DAYS AND I WAS TIRED OUT
+`
+},
+
+{
+question:`ERANO DIECI MESI CHE NON <span style="color:darkred;">ANDAVAMO</span> AL CINEMA`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T BEEN</span> TO THE CINEMA FOR TEN MONTHS
+`
+},
+
+{
+question:`LUI NON <span style="color:darkred;">PARLAVA</span> CON IL VICINO DA QUANDO AVEVANO LITIGATO TRE ANNI PRIMA`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+HE <span style="color:darkred;">HADN’T SPOKEN</span> TO HIS NEIGHBOUR SINCE THEY FELL OUT THREE YEARS EARLIER
+`
+},
+
+{
+question:`PRIMA DI PARTIRE PER IL GIAPPONE IL MESE SCORSO, NON <span style="color:darkred;">METTEVAMO</span> PIEDE IN UN AEROPORTO DA SEI ANNI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+BEFORE FLYING OUT TO JAPAN LAST MONTH, WE <span style="color:darkred;">HADN’T SEEN</span> THE INSIDE OF AN AIRPORT FOR SIX YEARS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">GUIDAVO</span> DI NOTTE DA QUASI UN ANNO`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T DRIVEN</span> AT NIGHT FOR ALMOST A YEAR
+`
+},
+
+{
+question:`ERANO DUE SETTIMANE CHE LEI NON <span style="color:darkred;">APRIVA</span> IL PORTATILE`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+SHE <span style="color:darkred;">HADN’T OPENED</span> HER LAPTOP FOR TWO WEEKS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">VEDEVANO</span> I NONNI DA CINQUE MESI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+THEY <span style="color:darkred;">HADN’T SEEN</span> THEIR GRANDPARENTS FOR FIVE MONTHS
+`
+},
+
+{
+question:`ERANO DA SECOLI CHE LEI NON <span style="color:darkred;">ASCOLTAVA</span> QUEL DISCO`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+SHE <span style="color:darkred;">HADN’T LISTENED</span> TO THAT RECORD FOR AGES
+`
+},
+
+{
+question:`ERANO CINQUE ANNI CHE NON <span style="color:darkred;">PRENOTAVAMO</span> UNA VACANZA`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T BOOKED</span> A HOLIDAY FOR FIVE YEARS
+`
+},
+
+{
+question:`PRIMA DELLA TELEFONATA DI IERI, NON <span style="color:darkred;">PARLAVO</span> CON MARTA DA QUATTRO SETTIMANE`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+BEFORE YESTERDAY’S PHONE CALL, I <span style="color:darkred;">HADN’T SPOKEN</span> TO MARTA FOR FOUR WEEKS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">MANGIAVANO</span> FUORI DA UN BEL PO’ DI TEMPO`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+THEY <span style="color:darkred;">HADN’T EATEN OUT</span> FOR QUITE A WHILE
+`
+},
+
+{
+question:`NON <span style="color:darkred;">PRENDEVO</span> UN GIORNO LIBERO DA QUASI TRE MESI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T TAKEN</span> A DAY OFF FOR ALMOST THREE MONTHS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">VEDEVAMO</span> IL DIRETTORE DA DUE SETTIMANE. ERA STATO FUORI IN VACANZA`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T SEEN</span> THE MANAGER FOR TWO WEEKS. HE HAD BEEN AWAY ON HOLIDAY
+`
+},
+
+{
+question:`FINO A IERI SERA, NON <span style="color:darkred;">CANTAVO</span> IN PUBBLICO DA QUINDICI ANNI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+UNTIL YESTERDAY EVENING, I <span style="color:darkred;">HADN’T SUNG</span> IN PUBLIC FOR FIFTEEN YEARS
+`
+},
+
+{
+question:`ERA DAL 2014 CHE NON CI <span style="color:darkred;">SENTIVAMO</span>`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T HEARD</span> FROM EACH OTHER SINCE 2014
+`
+},
+
+{
+question:`ERANO MESI CHE NON <span style="color:darkred;">MANGIAVO</span> COSÌ BENE`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T EATEN</span> SO WELL FOR MONTHS
+`
+},
+
+{
+question:`NON MI <span style="color:darkred;">SENTIVO</span> COSÌ STANCO DA SETTIMANE`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T FELT</span> THAT TIRED FOR WEEKS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">TORNAVAMO</span> IN QUEL RISTORANTE DA QUANDO È CAMBIATA LA GESTIONE`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T BEEN BACK</span> TO THAT RESTAURANT SINCE IT CHANGED MANAGEMENT
+`
+},
+
+{
+question:`ERA DA TANTO CHE NON <span style="color:darkred;">RIDEVAMO</span> COSÌ TANTO`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+WE <span style="color:darkred;">HADN’T LAUGHED</span> SO MUCH FOR A LONG TIME
+`
+},
+
+{
+question:`NON <span style="color:darkred;">PRENDEVO</span> PARTE A UNA RIUNIONE COSÌ IMPORTANTE DA ANNI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T TAKEN PART</span> IN SUCH AN IMPORTANT MEETING FOR YEARS
+`
+},
+
+{
+question:`NON LO <span style="color:darkred;">VEDEVO</span> DA QUANDO È PARTITO PER LONDRA`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T SEEN</span> HIM SINCE HE LEFT FOR LONDON
+`
+},
+
+{
+question:`ERA DA UNA VITA CHE NON <span style="color:darkred;">PIOVEVA</span> COSÌ FORTE`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+IT <span style="color:darkred;">HADN’T RAINED</span> SO HARD FOR AGES
+`
+},
+
+{
+question:`NON SI <span style="color:darkred;">PARLAVANO</span> DA QUANDO HANNO LITIGATO ALLA MIA FESTA`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+THEY <span style="color:darkred;">HADN’T SPOKEN</span> TO EACH OTHER EVER SINCE THEY FELL OUT AT MY PARTY
+`
+},
+
+{
+question:`ERANO ANNI CHE NON CI <span style="color:darkred;">PENSAVO</span>`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T THOUGHT</span> ABOUT IT FOR YEARS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">DORMIVO</span> COSÌ BENE DA MESI`,
+answer:`6`,
+flip:`
+FLOOR 6
+
+I <span style="color:darkred;">HADN’T SLEPT</span> SO WELL FOR MONTHS
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">VEDEVI</span> MARCO?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">SAW</span> MARCO?
+`
+},
+
+{
+question:`DA QUANTI MESI NON <span style="color:darkred;">INDOSSAVI</span> QUEL COMPLETO?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY MONTHS HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">WORE</span> THAT SUIT?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">ANDAVI</span> A TROVARE I TUOI NONNI?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">WENT</span> TO SEE YOUR GRANDPARENTS?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON <span style="color:darkred;">PRENDEVI</span> LA MACCHINA PER ANDARE AL LAVORO?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY DAYS HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">DROVE</span> TO WORK?
+`
+},
+
+{
+question:`DA QUANTI ANNI NON SI <span style="color:darkred;">PARLAVANO</span>?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY YEARS HAD IT BEEN SINCE THEY LAST <span style="color:darkred;">SPOKE</span> TO EACH OTHER?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">USCIVATE</span> INSIEME?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">WENT OUT</span> TOGETHER?
+`
+},
+
+{
+question:`DA QUANTI MESI LUI NON <span style="color:darkred;">LAVORAVA</span> DA CASA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY MONTHS HAD IT BEEN SINCE HE LAST <span style="color:darkred;">WORKED</span> FROM HOME?
+`
+},
+
+{
+question:`DA QUANTO TEMPO LEI NON <span style="color:darkred;">TORNAVA</span> A CASA DOPO MEZZANOTTE?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE SHE LAST <span style="color:darkred;">CAME</span> HOME AFTER MIDNIGHT?
+`
+},
+
+{
+question:`DA QUANTI ANNI NON <span style="color:darkred;">ANDAVANO</span> ALL’ESTERO?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY YEARS HAD IT BEEN SINCE THEY LAST <span style="color:darkred;">WENT</span> ABROAD?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">FACEVI</span> UNA VERA PAUSA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">HAD</span> A PROPER BREAK?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON CI <span style="color:darkred;">VEDEVAMO</span> DI PERSONA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE WE LAST <span style="color:darkred;">SAW</span> EACH OTHER IN PERSON?
+`
+},
+
+{
+question:`DA QUANTI MESI NON <span style="color:darkred;">LEGGEVI</span> UN LIBRO?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY MONTHS HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">READ</span> A BOOK?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">PENSAVI</span> A QUELLA COSA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">THOUGHT</span> ABOUT IT?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON <span style="color:darkred;">DORMIVI</span> BENE?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY DAYS HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">SLEPT</span> WELL?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">FACEVI</span> COLAZIONE SUL BALCONE?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">HAD</span> BREAKFAST ON THE BALCONY?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">FACEVAMO</span> UNA PASSEGGIATA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE WE LAST <span style="color:darkred;">WENT</span> FOR A WALK?
+`
+},
+
+{
+question:`DA QUANTI MESI NON <span style="color:darkred;">MANGIAVANO</span> FUORI?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY MONTHS HAD IT BEEN SINCE THEY LAST <span style="color:darkred;">ATE OUT</span>?
+`
+},
+
+{
+question:`DA QUANTE SETTIMANE NON <span style="color:darkred;">LAVAVI</span> LA MACCHINA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY WEEKS HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">WASHED</span> THE CAR?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">PRENDEVI</span> LA MACCHINA PER ANDARE AL LAVORO?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">DROVE</span> TO WORK?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">USCIVAMO</span> TUTTI INSIEME COME FAMIGLIA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE WE LAST <span style="color:darkred;">WENT OUT</span> TOGETHER AS A FAMILY?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON <span style="color:darkred;">CUCINAVI</span> UN PASTO SERIO?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY DAYS HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">COOKED</span> A PROPER MEAL?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">SENTIVI</span> TUO CUGINO PETER?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">HEARD FROM</span> YOUR COUSIN PETER?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON <span style="color:darkred;">FACEVI</span> UNA CONVERSAZIONE INTERESSANTE?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY DAYS HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">HAD</span> AN INTERESTING CONVERSATION?
+`
+},
+
+{
+question:`DA QUANTO TEMPO LEI NON <span style="color:darkred;">ANDAVA</span> DAL DENTISTA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE SHE LAST <span style="color:darkred;">SAW</span> HER DENTIST?
+`
+},
+
+{
+question:`DA QUANTI MESI LUI NON <span style="color:darkred;">ANDAVA</span> DAL MEDICO?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY MONTHS HAD IT BEEN SINCE HE LAST <span style="color:darkred;">SAW</span> A DOCTOR?
+`
+},
+
+{
+question:`DA QUANTI ANNI NON <span style="color:darkred;">SUCCEDEVA</span> NULLA DEL GENERE?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY YEARS HAD IT BEEN SINCE SOMETHING LIKE THAT LAST <span style="color:darkred;">HAPPENED</span>?
+`
+},
+
+{
+question:`DA QUANTI MESI QUALCUNO NON CI <span style="color:darkred;">INVITAVA</span> A CENA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY MONTHS HAD IT BEEN SINCE SOMEBODY LAST <span style="color:darkred;">INVITED</span> US FOR DINNER?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">ANDAVI</span> A TROVARE I TUOI GENITORI?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW LONG HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">WENT</span> TO SEE YOUR PARENTS?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON TI <span style="color:darkred;">FACEVI</span> LA BARBA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY DAYS HAD IT BEEN SINCE YOU LAST <span style="color:darkred;">HAD</span> A SHAVE?
+`
+},
+
+{
+question:`DA QUANTI ANNI NON <span style="color:darkred;">AVEVANO</span> QUESTO PROBLEMA?`,
+answer:`7`,
+flip:`
+FLOOR 7
+
+HOW MANY YEARS HAD IT BEEN SINCE THEY LAST <span style="color:darkred;">HAD</span> THIS PROBLEM?
+`
+},
+
+{
+question:`SE <span style="color:darkred;">C’ERO</span> IO, NON SAREBBE SUCCESSO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF I <span style="color:darkred;">HAD BEEN</span> HERE, IT WOULDN’T HAVE HAPPENED
+`
+},
+
+{
+question:`SE <span style="color:darkred;">CONTROLLAVO</span> MEGLIO I DATI, NON AVREMMO PERSO MEZZ’ORA`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF I <span style="color:darkred;">HAD CHECKED</span> THE DATA MORE CAREFULLY, WE WOULDN’T HAVE LOST HALF AN HOUR
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">FERMAVO</span> JAMES IN TEMPO, AVREBBE RIVELATO TUTTO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T STOPPED</span> JAMES IN TIME, HE’D HAVE REVEALED EVERYTHING
+`
+},
+
+{
+question:`SE <span style="color:darkred;">COMPRAVAMO</span> I BIGLIETTI IERI, AVREMMO PAGATO MOLTO MENO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">WE’D BOUGHT</span> THE TICKETS YESTERDAY, WE WOULD HAVE PAID MUCH LESS
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">AVVISAVO</span> EMILY, SAREBBE ARRIVATA TROPPO TARDI`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T WARNED</span> EMILY, SHE’D HAVE ARRIVED TOO LATE
+`
+},
+
+{
+question:`SE <span style="color:darkred;">PROVAVO</span> PRIMA QUELLE SCARPE, NON AVREI COMPRATO IL NUMERO SBAGLIATO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I’D TRIED</span> THOSE SHOES FIRST, I WOULDN’T HAVE BOUGHT THE WRONG SIZE
+`
+},
+
+{
+question:`SE <span style="color:darkred;">SPEGNEVO</span> IL COMPUTER, NON AVREBBE CONSUMATO TUTTA LA BATTERIA`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HAD SWITCHED OFF</span> THE COMPUTER, IT WOULDN’T HAVE USED UP ALL THE BATTERY POWER
+`
+},
+
+{
+question:`SE GLIELO <span style="color:darkred;">SPIEGAVO</span> CON PIÙ CALMA, AVREBBE CAPITO SUBITO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HAD EXPLAINED</span> IT MORE CALMLY, HE WOULD HAVE UNDERSTOOD IMMEDIATELY
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">SALVAVO</span> IL DOCUMENTO, AVREI PERSO TUTTO IL LAVORO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T SAVED</span> THE DOCUMENT, I’D HAVE LOST ALL THE WORK
+`
+},
+
+{
+question:`SE <span style="color:darkred;">FACEVAMO</span> UN CONFRONTO DEI PREZZI PRIMA, AVREMMO TROVATO UN’OFFERTA MIGLIORE`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">WE HAD COMPARED</span> THE PRICES FIRST, WE WOULD HAVE FOUND A BETTER DEAL
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">INVITAVO</span> DANIEL, SI SAREBBE OFFESO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T INVITED</span> DANIEL, HE WOULD HAVE BEEN OFFENDED
+`
+},
+
+{
+question:`SE <span style="color:darkred;">ORGANIZZAVANO</span> MEGLIO LA SERATA, SAREBBE STATA MOLTO PIÙ DIVERTENTE`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">THEY’D ORGANISED</span> THE EVENING BETTER, IT WOULD HAVE BEEN MUCH MORE ENJOYABLE
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">NOTAVO</span> QUELL’ERRORE, NESSUNO SE NE SAREBBE ACCORTO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T NOTICED</span> THAT MISTAKE, NOBODY WOULD’VE REALISED
+`
+},
+
+{
+question:`SE <span style="color:darkred;">TRADUCEVI</span> QUEL PASSAGGIO CON PIÙ ATTENZIONE, L’AVRESTI CAPITO MEGLIO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">YOU HAD TRANSLATED</span> THAT PASSAGE MORE CAREFULLY, YOU’D HAVE UNDERSTOOD IT BETTER
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">BLOCCAVO</span> QUELL’UOMO ALL’INGRESSO, SAREBBE ENTRATO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T STOPPED</span> THAT MAN AT THE ENTRANCE, HE WOULD HAVE GOT IN
+`
+},
+
+{
+question:`SE <span style="color:darkred;">PRENOTAVAMO</span> IL TAVOLO ONLINE, AVREMMO AVUTO UNO SCONTO DEL 20%`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">WE HAD BOOKED</span> THE TABLE ONLINE, WE WOULD HAVE GOT A 20% DISCOUNT
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">RICORDAVO</span> IO LA SCADENZA, L’AVREBBERO DIMENTICATA TUTTI`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T REMEMBERED</span> THE DEADLINE, EVERYONE WOULD HAVE FORGOTTEN IT
+`
+},
+
+{
+question:`SE <span style="color:darkred;">RISOLVEVAMO</span> IL PROBLEMA SUBITO, NON AVREBBE CAUSATO ALTRI GUAI`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">WE HAD SOLVED</span> THE PROBLEM IMMEDIATELY, IT WOULDN’T HAVE CAUSED MORE PROBLEMS
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">PORTAVO</span> CON ME IL PASSAPORTO, NON MI AVREBBERO FATTO SALIRE`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T BROUGHT</span> MY PASSPORT WITH ME, THEY WOULDN’T HAVE LET ME BOARD
+`
+},
+
+{
+question:`SE <span style="color:darkred;">RILEGGEVO</span> IL MESSAGGIO CON ATTENZIONE, AVREI CAPITO IL TONO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I’D READ</span> THE MESSAGE AGAIN CAREFULLY, I WOULD HAVE UNDERSTOOD THE TONE
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">PRENOTAVAMO</span> L’ALBERGO IN ANTICIPO, NON AVREMMO TROVATO POSTO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">WE HADN’T BOOKED</span> THE HOTEL IN ADVANCE, WE WOULDN’T HAVE FOUND A ROOM
+`
+},
+
+{
+question:`SE <span style="color:darkred;">PARLAVO</span> DIRETTAMENTE CON IL DIRETTORE, MI AVREBBE SPIEGATO TUTTO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HAD SPOKEN</span> DIRECTLY WITH THE MANAGER, HE WOULD HAVE EXPLAINED EVERYTHING TO ME
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">PROPONEVO</span> QUELL’IDEA, NESSUNO CI AVREBBE PENSATO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T SUGGESTED</span> THAT IDEA, NOBODY WOULD HAVE THOUGHT OF IT
+`
+},
+
+{
+question:`SE <span style="color:darkred;">CAMBIAVI</span> STRATEGIA SUBITO, IL PROGETTO SAREBBE ANDATO MEGLIO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">YOU HAD CHANGED</span> STRATEGY IMMEDIATELY, THE PROJECT WOULD HAVE GONE BETTER
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">METTEVO</span> QUEI SOLDI DA PARTE, LI AVREI SPESI TUTTI`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HADN’T PUT</span> THAT MONEY ASIDE, I WOULD HAVE SPENT IT ALL
+`
+},
+
+{
+question:`SE <span style="color:darkred;">PRENDEVO</span> UN TAXI, SAREI ARRIVATO IN ORARIO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">I HAD TAKEN</span> A TAXI, I WOULD HAVE ARRIVED ON TIME
+`
+},
+
+{
+question:`SE <span style="color:darkred;">LEGGEVI</span> LE ISTRUZIONI, NON AVRESTI FATTO QUELL’ERRORE`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">YOU HAD READ</span> THE INSTRUCTIONS, YOU WOULDN’T HAVE MADE THAT MISTAKE
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">LASCIAVI</span> LA PORTA APERTA, IL CANE NON SAREBBE SCAPPATO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">YOU HADN’T LEFT</span> THE DOOR OPEN, THE DOG WOULDN’T HAVE RUN AWAY
+`
+},
+
+{
+question:`SE <span style="color:darkred;">SCEGLIEVAMO</span> UN’ALTRA STRADA, NON SAREMMO RIMASTI BLOCCATI NEL TRAFFICO`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">WE HAD CHOSEN</span> ANOTHER ROUTE, WE WOULDN’T HAVE GOT STUCK IN TRAFFIC
+`
+},
+
+{
+question:`SE <span style="color:darkred;">ACCETTAVI</span> L’OFFERTA SUBITO, AVRESTI OTTENUTO CONDIZIONI MIGLIORI`,
+answer:`8`,
+flip:`
+FLOOR 8
+
+IF <span style="color:darkred;">YOU HAD ACCEPTED</span> THE OFFER STRAIGHT AWAY, YOU’D HAVE GOT BETTER TERMS
+`
+},
+
+{
+question:`SE <span style="color:darkred;">GUIDAVA</span> LEI, NON SI SAREBBERO PERSI`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">SHE’D BEEN DRIVING</span>, THEY WOULDN’T HAVE GOT LOST
+`
+},
+
+{
+question:`SE TI <span style="color:darkred;">ASPETTAVAMO</span> DENTRO INVECE DI FUORI, NON CI SAREMMO BAGNATI`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">WE’D BEEN WAITING</span> FOR YOU INSIDE INSTEAD OF OUTSIDE, WE WOULDN’T HAVE GOT WET
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">PARLAVI</span> AL TELEFONO, AVREI BUSSATO`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">YOU HADN’T BEEN TALKING</span> ON THE PHONE, I WOULD HAVE KNOCKED
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">LAVORAVO</span> A CASA IERI, AVREI POTUTO ACCEDERE SUBITO AI NOSTRI ARCHIVI`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">I HADN’T BEEN WORKING</span> AT HOME YESTERDAY, I COULD HAVE ACCESSED OUR ARCHIVES AT ONCE
+`
+},
+
+{
+question:`SE L’ASCENSORE <span style="color:darkred;">FUNZIONAVA</span>, NON AVREI DOVUTO FARE OTTO PIANI A PIEDI`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">THE LIFT HAD BEEN WORKING</span>, I WOULDN’T HAVE HAD TO WALK UP EIGHT FLOORS
+`
+},
+
+{
+question:`SE <span style="color:darkred;">PRESTAVI</span> PIÙ ATTENZIONE, AVRESTI VISTO LE INDICAZIONI PER L’AUTOSTRADA`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">YOU’D BEEN PAYING</span> MORE ATTENTION, YOU WOULD HAVE SEEN THE SIGNS FOR THE MOTORWAY
+`
+},
+
+{
+question:`SE MI <span style="color:darkred;">GUARDAVI</span> E NON LUI, AVRESTI SAPUTO COME FARE`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">YOU HAD BEEN WATCHING</span> ME AND NOT HIM, YOU WOULD HAVE KNOWN WHAT TO DO
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">ANDAVO</span> AL LAVORO, MI SAREI FERMATO VOLENTIERI PER CHIACCHIERARE CON TE UN PO’`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">I HADN’T BEEN GOING</span> TO WORK, I WOULD GLADLY HAVE STAYED TO CHAT WITH YOU FOR A WHILE
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">AVEVO</span> UNA RIUNIONE A MEZZOGIORNO, AVREI ACCETTATO SUBITO IL TUO INVITO`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">I HADN’T BEEN HAVING</span> A MEETING AT NOON, I WOULD HAVE ACCEPTED YOUR INVITATION STRAIGHT AWAY
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">PARTIVO</span> GIOVEDÌ PROSSIMO, SAREBBE STATO PIÙ FACILE ORGANIZZARMI PER VENIRE A TROVARTI`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">I HADN’T BEEN LEAVING</span> NEXT THURSDAY, IT WOULD HAVE BEEN EASIER TO ORGANISE MYSELF TO COME AND SEE YOU
+`
+},
+
+{
+question:`SE <span style="color:darkred;">PIOVEVA</span> A QUELL’ORA, SAREI RIMASTO A CASA`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">IT HAD BEEN RAINING</span> AT THAT TIME, I WOULD HAVE STAYED AT HOME
+`
+},
+
+{
+question:`OVVIAMENTE, SE <span style="color:darkred;">NEVICAVA</span>, SAREMMO ANDATI IN TRENO E NON IN MACCHINA`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+OBVIOUSLY, IF <span style="color:darkred;">IT HAD BEEN SNOWING</span>, WE WOULD HAVE GONE THERE BY TRAIN AND NOT BY CAR
+`
+},
+
+{
+question:`SE LUI NON <span style="color:darkred;">PORTAVA</span> LA CRAVATTA, NON SAREBBE POTUTO ENTRARE`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">HE HADN’T BEEN WEARING</span> A TIE, HE WOULDN’T HAVE BEEN ABLE TO GET IN
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">DORMIVO</span>, AVREI SENTITO SQUILLARE IL TELEFONO`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">I HADN’T BEEN SLEEPING</span>, I WOULD HAVE HEARD THE PHONE RINGING
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">MANGIAVO</span> FUORI IERI SERA, TI SAREI VENUTO A TROVARE`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">I HADN’T BEEN EATING OUT</span> LAST NIGHT, I WOULD HAVE COME TO SEE YOU
+`
+},
+
+{
+question:`SE MI <span style="color:darkred;">ASCOLTAVI</span> CON PIÙ ATTENZIONE QUANDO TE L’HO SPIEGATO, NON AVRESTI RIPETUTO LO STESSO ERRORE`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">YOU HAD BEEN LISTENING</span> TO ME MORE CAREFULLY WHEN I EXPLAINED IT, YOU WOULDN’T HAVE REPEATED THE SAME MISTAKE
+`
+},
+
+{
+question:`SE <span style="color:darkred;">GIOCAVA</span> LUI FIN DAL PRIMO MINUTO, NON AVREMMO PERSO IERI SERA DI SICURO`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">HE’D BEEN PLAYING</span> FROM THE FIRST MINUTE, WE DEFINITELY WOULDN’T HAVE LOST LAST NIGHT
+`
+},
+
+{
+question:`SE NON <span style="color:darkred;">CENAVAMO</span> DAI NOSTRI AMICI IERI SERA, VI AVREMMO FATTO VEDERE LA NUOVA CASA`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">WE HADN’T BEEN HAVING DINNER</span> AT OUR FRIENDS’ PLACE LAST NIGHT, WE WOULD HAVE SHOWN YOU AROUND OUR NEW HOUSE
+`
+},
+
+{
+question:`SE <span style="color:darkred;">PARTIVO</span> MARTEDÌ INVECE DI DOMANI, AVREI AVUTO UN GIORNO IN PIÙ PER PREPARARMI`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">I HAD BEEN LEAVING</span> ON TUESDAY INSTEAD OF TOMORROW, I WOULD HAVE HAD ONE MORE DAY TO PREPARE
+`
+},
+
+{
+question:`SE <span style="color:darkred;">VENIVANO</span> OGGI, NON AVREMMO AVUTO TEMPO DI ORGANIZZARE TUTTO PER BENE`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">THEY HAD BEEN COMING</span> TODAY, WE WOULDN’T HAVE HAD TIME TO ORGANISE EVERYTHING PROPERLY
+`
+},
+
+{
+question:`SE IL CORSO <span style="color:darkred;">INIZIAVA</span> LA SETTIMANA PROSSIMA, MI SAREI ISCRITTO ANCH’IO`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">THE COURSE HAD BEEN STARTING</span> NEXT WEEK, I WOULD HAVE ENROLLED TOO
+`
+},
+
+{
+question:`SE <span style="color:darkred;">GIOCAVANO</span> DOMANI SERA INVECE CHE SABATO, SAREI ANDATO ALLO STADIO`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">THEY HAD BEEN PLAYING</span> TOMORROW EVENING INSTEAD OF ON SATURDAY, I WOULD HAVE GONE TO THE STADIUM
+`
+},
+
+{
+question:`SE <span style="color:darkred;">FACEVANO</span> L’EVENTO VENERDÌ PROSSIMO, SAREMMO SICURAMENTE VENUTI`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">THEY HAD BEEN HOLDING</span> THE EVENT NEXT FRIDAY, WE WOULD CERTAINLY HAVE COME
+`
+},
+
+{
+question:`SE CI <span style="color:darkred;">VEDEVAMO</span> STASERA INVECE, NON SAREI RIUSCITO A PORTARTI TUTTI I SOLDI CHE TI DEVO`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">WE HAD BEEN SEEING</span> EACH OTHER THIS EVENING INSTEAD, I WOULDN’T HAVE BEEN ABLE TO BRING YOU ALL THE MONEY I OWE YOU
+`
+},
+
+{
+question:`SE <span style="color:darkred;">GUIDAVA</span> LUI QUANDO È SUCCESSO, LE COSE SAREBBERO POTUTE FINIRE MOLTO DIVERSAMENTE`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">HE HAD BEEN DRIVING</span> WHEN IT HAPPENED, THINGS MIGHT HAVE TURNED OUT VERY DIFFERENTLY
+`
+},
+
+{
+question:`SE LEI <span style="color:darkred;">STUDIAVA</span> PER UNA LAUREA IN SOCIOLOGIA, AVREBBE POTUTO STUDIARE ANCHE CRIMINOLOGIA`,
+answer:`9`,
+flip:`
+FLOOR 9
+
+IF <span style="color:darkred;">SHE HAD BEEN STUDYING</span> FOR A DEGREE IN SOCIOLOGY, SHE COULD HAVE STUDIED CRIMINOLOGY TOO
+`
+},
+
+{
+question:`<span style="color:darkred;">ASPETTAVO</span> DI PIÙ SE AVEVO PIÙ PAZIENZA`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+<span style="color:darkred;">I WOULD HAVE WAITED</span> LONGER IF I’D HAD MORE PATIENCE
+`
+},
+
+{
+question:`TI <span style="color:darkred;">CHIAMAVO</span> SUBITO SE AVESSI VISTO IL MESSAGGIO PRIMA`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+<span style="color:darkred;">I WOULD HAVE CALLED</span> YOU IMMEDIATELY IF I HAD SEEN THE MESSAGE EARLIER
+`
+},
+
+{
+question:`<span style="color:darkred;">ARRIVAVAMO</span> IN TEMPO SE AVESSIMO PRESO IL TRENO DELLE 8.15`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+<span style="color:darkred;">WE WOULD HAVE ARRIVED</span> ON TIME IF WE HAD TAKEN THE 8.15 TRAIN
+`
+},
+
+{
+question:`SE FOSSI RIMASTO A CASA IERI SERA, <span style="color:darkred;">PERDEVO</span> UNA GRANDE OCCASIONE`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF I’D STAYED HOME LAST NIGHT, <span style="color:darkred;">I WOULD HAVE MISSED</span> A BIG OPPORTUNITY
+`
+},
+
+{
+question:`SE LO AVESSERO CONTROLLATO CON PIÙ ATTENZIONE, <span style="color:darkred;">TROVAVANO</span> SUBITO L’ERRORE`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF THEY HAD CHECKED IT MORE CAREFULLY, <span style="color:darkred;">THEY WOULD HAVE FOUND</span> THE MISTAKE AT ONCE
+`
+},
+
+{
+question:`SE AVESSI SAPUTO CHE ERI ANCORA IN UFFICIO, MI <span style="color:darkred;">TRATTENEVO</span> QUALCHE MINUTO IN PIÙ`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF I’D KNOWN YOU WERE STILL IN THE OFFICE, <span style="color:darkred;">I WOULD HAVE STAYED ON</span> A FEW MORE MINUTES
+`
+},
+
+{
+question:`SE ME LO AVESSI CHIESTO DIRETTAMENTE, TI <span style="color:darkred;">DICEVO</span> LA VERITÀ`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF YOU’D ASKED ME DIRECTLY, <span style="color:darkred;">I WOULD HAVE TOLD</span> YOU THE TRUTH
+`
+},
+
+{
+question:`<span style="color:darkred;">PRENDEVAMO</span> IL TRENO SE FOSSIMO USCITI CINQUE MINUTI PRIMA`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+<span style="color:darkred;">WE WOULD HAVE TAKEN</span> THE TRAIN IF WE HAD LEFT FIVE MINUTES EARLIER
+`
+},
+
+{
+question:`SE AVEVO PIÙ SPAZIO IN VALIGIA, <span style="color:darkred;">PORTAVO</span> CON ME ANCHE LA GIACCA ROSSA`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF I’D HAD MORE SPACE IN MY SUITCASE, <span style="color:darkred;">I WOULD HAVE BROUGHT</span> MY RED JACKET WITH ME TOO
+`
+},
+
+{
+question:`SE MI AVESSERO FATTO LA STESSA OFFERTA UN ANNO FA, <span style="color:darkred;">ACCETTAVO</span> SUBITO`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF THEY HAD MADE ME THAT OFFER A YEAR AGO, <span style="color:darkred;">I WOULD HAVE ACCEPTED</span> RIGHT AWAY
+`
+},
+
+{
+question:`SE LUI NON <span style="color:darkred;">PORTAVA</span> IL CAPPELLO, LO RICONOSCEVO SUBITO`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF HE HADN’T BEEN WEARING A HAT, <span style="color:darkred;">I WOULD HAVE RECOGNISED</span> HIM AT ONCE
+`
+},
+
+{
+question:`<span style="color:darkred;">OPTAVO</span> PER QUALCOS’ALTRO SE MI DAVANO PIÙ TEMPO PER DECIDERE`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+<span style="color:darkred;">I WOULD HAVE OPTED</span> FOR SOMETHING DIFFERENT IF THEY’D GIVEN ME MORE TIME TO DECIDE
+`
+},
+
+{
+question:`SE MI AVESSI FATTO UNA DOMANDA PIÙ PRECISA, <span style="color:darkred;">RISPONDEVO</span> IN MODO DIVERSO`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF YOU HAD ASKED ME A MORE PRECISE QUESTION, <span style="color:darkred;">I WOULD HAVE ANSWERED</span> DIFFERENTLY
+`
+},
+
+{
+question:`<span style="color:darkred;">EVITAVAMO</span> UN SACCO DI PROBLEMI SE FACEVAMO PIÙ ATTENZIONE FIN DALL’INIZIO`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+<span style="color:darkred;">WE WOULD HAVE AVOIDED</span> A LOT OF PROBLEMS IF WE HAD PAID MORE ATTENTION RIGHT FROM THE START
+`
+},
+
+{
+question:`SE AVESSI SAPUTO CHE ERI IN CITTÀ, TI <span style="color:darkred;">INVITAVO</span> A CENA`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF I’D KNOWN YOU WERE IN TOWN, <span style="color:darkred;">I WOULD HAVE INVITED</span> YOU TO DINNER
+`
+},
+
+{
+question:`SE FACEVI PIÙ ATTENZIONE AI DETTAGLI, <span style="color:darkred;">VEDEVI</span> QUASI SUBITO LA DIFFERENZA`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF YOU HAD PAID MORE ATTENTION TO THE DETAILS, <span style="color:darkred;">YOU WOULD HAVE SEEN</span> THE DIFFERENCE ALMOST IMMEDIATELY
+`
+},
+
+{
+question:`A SAPERLO, <span style="color:darkred;">DICEVI</span> DI NO, VERO?`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF YOU HAD KNOWN, <span style="color:darkred;">YOU WOULD HAVE SAID</span> NO, RIGHT?
+`
+},
+
+{
+question:`SE ARRIVAVAMO CINQUE MINUTI DOPO, <span style="color:darkred;">PERDEVO</span> L’INIZIO DEL FILM`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF WE HAD ARRIVED FIVE MINUTES LATER, <span style="color:darkred;">I WOULD HAVE MISSED</span> THE BEGINNING OF THE FILM
+`
+},
+
+{
+question:`FORSE <span style="color:darkred;">SUGGERIVO</span> UN’ALTERNATIVA SE MI AVESSERO CHIESTO UN PARERE`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+MAYBE <span style="color:darkred;">I WOULD HAVE SUGGESTED</span> AN ALTERNATIVE IF THEY HAD ASKED FOR MY OPINION
+`
+},
+
+{
+question:`GRAZIE PER AVERMELO RICORDATO. SICURAMENTE LO <span style="color:darkred;">DIMENTICAVO</span>, SE NO`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+THANKS FOR REMINDING ME. <span style="color:darkred;">I WOULD DEFINITELY HAVE FORGOTTEN</span> OTHERWISE
+`
+},
+
+{
+question:`BEH, SE MI AVESSI GUARDATO NEGLI OCCHI, <span style="color:darkred;">CAPIVI</span> CHE QUALCOSA NON ANDAVA`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+WELL, IF YOU HAD LOOKED ME IN THE EYE, <span style="color:darkred;">YOU WOULD HAVE REALISED</span> THAT SOMETHING WAS WRONG
+`
+},
+
+{
+question:`CERTO CHE TI <span style="color:darkred;">PRESTAVO</span> LA MACCHINA! PERCHÉ NON ME LO HAI CHIESTO?`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+OF COURSE <span style="color:darkred;">I WOULD HAVE LENT</span> YOU THE CAR! WHY DIDN’T YOU ASK ME?
+`
+},
+
+{
+question:`SE MI FOSSI ACCORTO DEL PROBLEMA PRIMA, LI <span style="color:darkred;">AVVISAVO</span>`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF I HAD KNOWN ABOUT THE PROBLEM EARLIER, <span style="color:darkred;">I WOULD HAVE WARNED</span> THEM
+`
+},
+
+{
+question:`SE C’ERANO DEI PROBLEMI, <span style="color:darkred;">TORNAVO</span> INDIETRO`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+IF THERE HAD BEEN ANY PROBLEMS, <span style="color:darkred;">I WOULD HAVE COME BACK</span>
+`
+},
+
+{
+question:`RIPENSANDOCI, <span style="color:darkred;">SCEGLIEVO</span> UN COLORE DIVERSO`,
+answer:`10`,
+flip:`
+FLOOR 10
+
+ON SECOND THOUGHTS, <span style="color:darkred;">I WOULD HAVE CHOSEN</span> A DIFFERENT COLOUR
+`
+},
+
+{
+question:`SE NON MI FOSSI PRESO QUALCHE GIORNO DI FERIE, <span style="color:darkred;">DOVEVO</span> ANDARE IO AL CONVEGNO E NON LEI`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+IF I HAD NOT TAKEN A FEW DAYS OFF, I <span style="color:darkred;">WOULD HAVE BEEN HAVING TO GO</span> TO THE CONFERENCE AND NOT HER
+`
+},
+
+{
+question:`SENZA IL TUO MESSAGGIO, TI <span style="color:darkred;">ASPETTAVO</span> ANCORA FUORI DAL BAR`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WITHOUT YOUR MESSAGE, I <span style="color:darkred;">WOULD</span> STILL <span style="color:darkred;">HAVE BEEN WAITING</span> FOR YOU OUTSIDE THE BAR
+`
+},
+
+{
+question:`PENSA UN PO'! SENZA I PROBLEMI DI IERI, A QUEST'ORA <span style="color:darkred;">ERAVAMO</span> IN VIAGGIO PER LE SEYCHELLES`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+JUST THINK! WITHOUT YESTERDAY'S PROBLEMS, WE <span style="color:darkred;">WOULD HAVE BEEN TRAVELLING</span> TO THE SEYCHELLES AT THIS TIME
+`
+},
+
+{
+question:`IN CIRCOSTANZE NORMALI, A QUEST'ORA, <span style="color:darkred;">FACEVO</span> LA MIA LEZIONE D'INGLESE`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+IN NORMAL CIRCUMSTANCES, I <span style="color:darkred;">WOULD HAVE BEEN HAVING</span> MY ENGLISH LESSON AT THIS TIME
+`
+},
+
+{
+question:`<span style="color:darkred;">PARTIVANO</span> PER LA GRECIA A FINE MESE, MA HANNO AVUTO UN IMPREVISTO`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+THEY <span style="color:darkred;">WOULD HAVE BEEN GOING</span> TO GREECE AT THE END OF THE MONTH, BUT SOMETHING CAME UP
+`
+},
+
+{
+question:`<span style="color:darkred;">FACEVO</span> TUTTO QUESTO DA SOLA SE NON C'ERI TU`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+I <span style="color:darkred;">WOULD HAVE BEEN DOING</span> ALL THIS ON MY OWN IF YOU HADN’T BEEN HERE
+`
+},
+
+{
+question:`DOMANI <span style="color:darkred;">VEDEVO</span> UN AMICO, MA C'È UNO SCIOPERO DEI TRASPORTI`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+I <span style="color:darkred;">WOULD HAVE BEEN SEEING</span> A FRIEND TOMORROW, BUT THERE IS A TRANSPORT STRIKE
+`
+},
+
+{
+question:`<span style="color:darkred;">PARLAVA</span> ANCORA SE NON LO AVESSI INTERROTTO`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+HE <span style="color:darkred;">WOULD</span> STILL <span style="color:darkred;">HAVE BEEN SPEAKING</span> IF I HAD NOT INTERRUPTED HIM
+`
+},
+
+{
+question:`A QUEST'ORA <span style="color:darkred;">ERAVAMO</span> SDRAIATI SULLA SPIAGGIA SE NON AVESSI LASCIATO A CASA I MIEI DOCUMENTI`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WE <span style="color:darkred;">WOULD HAVE BEEN LYING</span> ON THE BEACH NOW IF I HAD NOT LEFT MY DOCUMENTS AT HOME
+`
+},
+
+{
+question:`<span style="color:darkred;">GUARDAVAMO</span> LA PARTITA INSIEME, MA GLI È STATO CHIESTO DI SOSTITUIRE UN COLLEGA AL LAVORO STASERA`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WE’D <span style="color:darkred;">HAVE BEEN WATCHING</span> THE MATCH TOGETHER, BUT HE HAS BEEN ASKED TO REPLACE A COLLEAGUE AT WORK THIS EVENING
+`
+},
+
+{
+question:`<span style="color:darkred;">STAVAMO</span> SEDUTI IN GIARDINO TUTTO IL POMERIGGIO SE IL TEMPO NON FOSSE DIVENTATO COSÌ FREDDO`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WE <span style="color:darkred;">WOULD HAVE BEEN SITTING</span> IN THE GARDEN ALL AFTERNOON IF THE WEATHER HAD NOT TURNED SO COLD
+`
+},
+
+{
+question:`DOMANI <span style="color:darkred;">ERO</span> IN VOLO PER TOKYO, MA C'È UN PROBLEMA CON IL MIO VISTO`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+I’D <span style="color:darkred;">HAVE BEEN FLYING</span> TO TOKYO TOMORROW, BUT THERE IS A PROBLEM WITH MY VISA
+`
+},
+
+{
+question:`SI <span style="color:darkred;">TRASFERIVANO</span> NELLA CASA NUOVA QUESTO FINE SETTIMANA, MA LA CASA È ANCORA SENZA LE UTENZE`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+THEY <span style="color:darkred;">WOULD HAVE BEEN MOVING</span> INTO THEIR NEW HOUSE THIS WEEKEND, BUT THE HOUSE IS STILL WITHOUT UTILITIES
+`
+},
+
+{
+question:`LEI <span style="color:darkred;">INIZIAVA</span> IL NUOVO INCARICO LUNEDÌ, MA HA DECISO DI PRENDERSI UNA SETTIMANA DI PAUSA INVECE`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+SHE <span style="color:darkred;">WOULD HAVE BEEN STARTING</span> HER NEW ROLE ON MONDAY, BUT SHE HAS DECIDED TO TAKE A WEEK OFF INSTEAD
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">LAVORAVA</span> DA CASA OGGI SENZA L'EMERGENZA IN UFFICIO`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WITHOUT THE EMERGENCY AT THE OFFICE, HE’D <span style="color:darkred;">HAVE BEEN WORKING</span> FROM HOME TODAY
+`
+},
+
+{
+question:`<span style="color:darkred;">STAVANO</span> DA NOI, MA SONO RIUSCITI A TROVARE UN B&B VICINO AL CENTRO`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+THEY <span style="color:darkred;">WOULD HAVE BEEN STAYING</span> WITH US, BUT THEY MANAGED TO FIND A BED AND BREAKFAST NEAR THE CENTRE
+`
+},
+
+{
+question:`LEI SI <span style="color:darkred;">PREPARAVA</span> PER L'ESAME FINALE TUTTA QUESTA SETTIMANA, MA È STATO SPOSTATO AL MESE PROSSIMO`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+SHE’D <span style="color:darkred;">HAVE BEEN PREPARING</span> FOR HER FINAL EXAM ALL THIS WEEK, BUT IT HAS BEEN MOVED TO NEXT MONTH
+`
+},
+
+{
+question:`<span style="color:darkred;">FESTEGGIAVAMO</span> TUTTI INSIEME IL SUO COMPLEANNO, MA HA DOVUTO TORNARE A LONDRA`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WE WOULD ALL <span style="color:darkred;">HAVE BEEN CELEBRATING</span> HIS BIRTHDAY TOGETHER, BUT HE HAS HAD TO RETURN TO LONDON
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">TENEVA</span> UNA RELAZIONE ALLA CONFERENZA DOMANI, MA HA PERSO LA VOCE`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+HE <span style="color:darkred;">WOULD HAVE BEEN GIVING</span> A TALK AT THE CONFERENCE TOMORROW, BUT HE HAS LOST HIS VOICE
+`
+},
+
+{
+question:`<span style="color:darkred;">GUARDAVAMO</span> LA PARTITA A CASA, MA FORTUNATAMENTE È RIUSCITO A TROVARE I BIGLIETTI PER LO STADIO`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WE’D <span style="color:darkred;">HAVE BEEN WATCHING</span> THE MATCH AT HOME, BUT LUCKILY HE MANAGED TO GET TICKETS TO THE STADIUM
+`
+},
+
+{
+question:`PER FORTUNA HANNO SPOSTATO LA SCADENZA DI UNA SETTIMANA, ALTRIMENTI <span style="color:darkred;">LAVORAVO</span> FINO A TARDI STASERA`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+LUCKILY, THEY HAVE PUSHED THE DEADLINE BACK A WEEK, OTHERWISE I <span style="color:darkred;">WOULD HAVE BEEN WORKING</span> UNTIL LATE THIS EVENING
+`
+},
+
+{
+question:`BEH, <span style="color:darkred;">SALIVAMO</span> SULL'AEREO PROPRIO ADESSO, MA LA COMPAGNIA HA APPENA ANNUNCIATO UN RITARDO DI TRE ORE`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WELL, WE <span style="color:darkred;">WOULD HAVE BEEN BOARDING</span> OUR FLIGHT RIGHT NOW, BUT THE AIRLINE HAS JUST ANNOUNCED A THREE-HOUR DELAY
+`
+},
+
+{
+question:`GLI SCIENZIATI <span style="color:darkred;">MONITORAVANO</span> ANCORA L'ATTIVITÀ DEL VULCANO SE NON AVESSERO INTERROTTO I FINANZIAMENTI`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+THE SCIENTISTS <span style="color:darkred;">WOULD</span> STILL <span style="color:darkred;">HAVE BEEN MONITORING</span> THE VOLCANO'S ACTIVITY IF THEY HAD NOT STOPPED THE FUNDING
+`
+},
+
+{
+question:`<span style="color:darkred;">ALLOGGIAVAMO</span> IN UN PICCOLO HOTEL SUL MARE, MA A QUANTO PARE AVEVANO PRESO TROPPE PRENOTAZIONI`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+WE <span style="color:darkred;">WOULD HAVE BEEN STAYING</span> AT A SMALL HOTEL BY THE SEA, BUT APPARENTLY THEY HAD OVERBOOKED
+`
+},
+
+{
+question:`<span style="color:darkred;">ANDAVANO</span> A TROVARE I NONNI QUESTA SETTIMANA, MA IL FIGLIO HA PRESO UN RAFFREDDORE`,
+answer:`11`,
+flip:`
+FLOOR 11
+
+THEY <span style="color:darkred;">WOULD HAVE BEEN VISITING</span> THE GRANDPARENTS THIS WEEK, BUT THEIR SON HAS COME DOWN WITH A COLD
+`
+}
+
+];
+
+
+const floors = [`1`,`2`,`2-4`,`5`,`6`,`7`,`8`,`9`,`10`,`11`];
+
+let quiz = [];
+let index = 0;
+let score = 0;
+let soundOn = true;
+let flipTimer = null;
+
+function playSound(id){
+if(!soundOn) return;
+const a = document.getElementById(id);
+if(a){
+a.currentTime = 0;
+a.play();
+}
+}
+
+document.getElementById("soundToggle").onclick = function(){
+soundOn = !soundOn;
+this.innerText = soundOn ? "🔊 ON" : "🔇 OFF";
+};
+
+function shuffle(arr){
+let copy = [...arr];
+for(let i = copy.length - 1; i > 0; i--){
+const j = Math.floor(Math.random() * (i + 1));
+[copy[i], copy[j]] = [copy[j], copy[i]];
+}
+return copy;
+}
+
+function startQuiz(){
+
+quiz = shuffle(questions).slice(0,15);
+
+index = 0;
+score = 0;
+
+showQuestion();
+}
+
+function buildButtons(){
+
+const answers = document.getElementById("answers");
+
+answers.innerHTML = "";
+
+const layout = [
+`1`,`2`,`2-4`,`5`,
+`6`,`7`,`8`,`9`,
+`10`,`11`,``,``
+];
+
+layout.forEach(floor=>{
+
+if(floor === ``){
+const empty = document.createElement("div");
+empty.className = "empty-slot";
+answers.appendChild(empty);
+return;
+}
+
+const btn = document.createElement("button");
+
+btn.className = "answer-btn";
+
+btn.innerText = floor;
+
+btn.onclick = ()=>checkAnswer(btn,floor);
+
+answers.appendChild(btn);
+
+});
+}
+
+function disableAllButtons(){
+
+document.querySelectorAll(".answer-btn").forEach(btn=>{
+btn.disabled = true;
+btn.style.pointerEvents = "none";
+});
+
+}
+
+function showQuestion(){
+
+if(flipTimer){
+
+clearTimeout(flipTimer);
+flipTimer = null;
+
+}
+
+const q = quiz[index];
+
+const flipCard = document.getElementById("flipCard");
+
+flipCard.classList.remove("flipped");
+
+const compareBtn = document.getElementById("compareBtn");
+
+compareBtn.style.display = "none";
+
+compareBtn.innerText = "COMPARE";
+
+document.getElementById("question").innerHTML = q.question;
+
+const cleaned = q.flip.trim();
+
+const lines = cleaned.split("\n").filter(line => line.trim() !== "");
+
+document.getElementById("floorLabel").innerHTML = lines[0];
+
+document.getElementById("flipContent").innerHTML = lines.slice(1).join("<br>");
+
+document.getElementById("progress").innerText =
+`${index + 1} / ${quiz.length}`;
+
+document.getElementById("score").innerText =
+`${score} / ${quiz.length}`;
+
+const nextBtn = document.getElementById("nextBtn");
+
+nextBtn.style.opacity = ".5";
+nextBtn.style.pointerEvents = "none";
+
+buildButtons();
+}
+
+function checkAnswer(button,selected){
+
+const q = quiz[index];
+
+disableAllButtons();
+
+const nextBtn = document.getElementById("nextBtn");
+
+nextBtn.style.opacity = "1";
+nextBtn.style.pointerEvents = "auto";
+
+if(selected === q.answer){
+
+button.classList.add("correct");
+
+score++;
+
+document.getElementById("score").innerText =
+`${score} / ${quiz.length}`;
+
+playSound("correctSound");
+
+flipTimer = setTimeout(()=>{
+
+document.getElementById("flipCard").classList.add("flipped");
+
+const compareBtn = document.getElementById("compareBtn");
+
+compareBtn.style.display = "inline-block";
+
+},500);
+
+}else{
+
+button.classList.add("wrong");
+
+playSound("wrongSound");
+
+}
+
+}
+
+function toggleCard(){
+
+const flipCard = document.getElementById("flipCard");
+
+flipCard.classList.toggle("flipped");
+
+const compareBtn = document.getElementById("compareBtn");
+
+if(flipCard.classList.contains("flipped")){
+compareBtn.innerText = "QUESTION";
+}else{
+compareBtn.innerText = "COMPARE";
+}
+
+}
+
+function nextQuestion(){
+
+if(index < quiz.length - 1){
+
+index++;
+
+showQuestion();
+
+}else{
+
+showFinalCard();
+
+}
+
+}
+
+function showFinalCard(){
+
+const passMark = Math.ceil(quiz.length * 0.8);
+const passed = score >= passMark;
+playSound(passed ? "passSound" : "failSound");
+
+document.getElementById("flipCard").classList.remove("flipped");
+
+document.querySelector(".front").innerHTML = `
+<div style="
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:100%;
+width:100%;
+text-align:center;
+line-height:1.35;
+">
+
+<div style="
+font-size:1.3rem;
+font-weight:900;
+color:${passed ? 'darkblue' : 'darkred'};
+margin-bottom:20px;
+">
+${passed ? 'WELL DONE! YOU\'VE PASSED!' : 'BAD LUCK! TRY AGAIN'}
+</div>
+
+<div style="
+font-size:1.05rem;
+font-weight:900;
+color:#0E065C;
+margin-bottom:8px;
+">
+YOUR SCORE
+</div>
+
+<div style="
+font-size:1.4rem;
+font-weight:900;
+color:darkgreen;
+margin-bottom:8px;
+">
+${score} / ${quiz.length}
+</div>
+
+<div style="
+font-size:.95rem;
+font-weight:900;
+color:#0E065C;
+margin-bottom:24px;
+">
+PASS MARK: ${passMark}
+</div>
+
+<button id="retryBtn" style="
+background:#561386;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:10px 24px;
+font-weight:900;
+font-size:.9rem;
+text-transform:uppercase;
+cursor:pointer;
+">
+TRY AGAIN
+</button>
+
+</div>
+`;
+
+document.getElementById("flipContent").innerHTML = "";
+document.getElementById("floorLabel").innerHTML = "";
+document.getElementById("answers").innerHTML = "";
+
+document.getElementById("progress").innerText =
+`${quiz.length} / ${quiz.length}`;
+
+document.getElementById("score").innerText =
+`${score} / ${quiz.length}`;
+
+document.getElementById("nextBtn").style.display = "none";
+document.getElementById("compareBtn").style.display = "none";
+document.getElementById("libraryBackBtn").style.display = "none";
+document.getElementById("retryBtn").onclick = ()=>{
+
+document.querySelector(".front").innerHTML = `
+<div class="question" id="question"></div>
+`;
+
+document.getElementById("nextBtn").style.display = "inline-block";
+document.getElementById("compareBtn").style.display = "none";
+document.getElementById("libraryBackBtn").style.display = "inline-block";
+
+startQuiz();
+
+};
+}
+
+document.getElementById("nextBtn").onclick = nextQuestion;
+document.getElementById("compareBtn").onclick = toggleCard;
+
+document.getElementById("libraryBackBtn").onclick = function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+};
+
+document.getElementById("readMeBtn").onclick = function(){
+document.getElementById("popupOverlay").style.display = "flex";
+};
+
+document.getElementById("closePopup").onclick = function(){
+document.getElementById("popupOverlay").style.display = "none";
+};
+
+document.getElementById("popupOverlay").onclick = function(e){
+if(e.target === this){
+this.style.display = "none";
+}
+};
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
