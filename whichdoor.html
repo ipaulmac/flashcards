@@ -1,0 +1,2902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WHICH DOOR?</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+letter-spacing:.08em;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+}
+
+.top-controls{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.88rem;
+letter-spacing:.03em;
+cursor:pointer;
+user-select:none;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+max-height:80vh;
+overflow-y:auto;
+background:#fff;
+border:4px solid var(--red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkred;
+cursor:pointer;
+user-select:none;
+}
+
+/* FLIP CARD */
+
+.flip-card{
+width:92vw;
+max-width:380px;
+height:250px;
+perspective:1200px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+transform:rotateY(180deg);
+}
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:10px 14px;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+.front{
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.question{
+font-size:1.05rem;
+font-weight:900;
+line-height:1.18;
+color:#0E065C;
+text-transform:uppercase;
+}
+
+.back{
+transform:rotateY(180deg);
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:center;
+padding:14px 18px 18px;
+box-sizing:border-box;
+}
+
+#doorLabel{
+width:100%;
+text-align:center;
+font-size:.9rem;
+font-weight:900;
+color:darkgreen;
+margin-bottom:40px;
+letter-spacing:.03em;
+}
+
+#flipContent{
+width:100%;
+font-family:Arial,sans-serif;
+font-size:1rem;
+font-weight:900;
+line-height:1.35;
+color:#0E065C;
+text-align:center;
+margin-top:14px;
+}
+
+#flipContent span{
+color:darkred;
+}
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0 12px;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+.next-btn{
+background:#00cfd5;
+color:#061247;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:.5;
+pointer-events:none;
+}
+
+.compare-control-btn{
+background:darkred;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+display:none;
+}
+
+/* ANSWERS */
+
+.answers{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+}
+
+.answer-btn{
+height:42px;
+background:#eef2f7;
+color:var(--purple);
+font-weight:900;
+border-radius:10px;
+border:1px solid #cbd5e1;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:.80rem;
+}
+
+.correct{
+background:#22c55e;
+color:#fff;
+}
+
+.wrong{
+background:#ef4444;
+color:#fff;
+}
+
+.empty-slot{
+visibility:hidden;
+height:42px;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+.library-back-container{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin:12px auto 0;
+}
+
+.library-back-btn{
+background:#930000;
+color:#ffffff;
+border:2px solid #ffffff;
+border-radius:10px;
+width:110px;
+height:42px;
+font-size:.84rem;
+font-weight:900;
+cursor:pointer;
+transition:background .2s,color .2s;
+}
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:#061247;
+}
+
+.library-back-btn:active{
+transform:scale(.97);
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<div class="top-bar">
+
+<div class="top-title">
+WHICH DOOR? <span style="color:#FFF3A3;">(B1+)</span>
+</div>
+
+<div class="top-controls">
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
+</div>
+</div>
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+THIS QUIZ PRACTISES ALL THE <span style="color:darkred;">6 DOORS</span> OF THE <span style="color:darkred;">ITALIAN SIMPLE PRESENT</span><br><br>
+
+THERE ARE <span style="color:darkred;">15 QUESTIONS</span> SELECTED RANDOMLY FROM A TOTAL OF <span style="color:darkred;">180</span><br><br>
+
+<span style="color:#00B050;">A QUICK REMINDER OF THE DOORS</span><br><br>
+
+<span style="color:#C000C0;">1</span> – I (USUALLY) DO<br>
+
+<span style="color:#C000C0;">2</span> – I AM DOING<br>
+
+<span style="color:#C000C0;">3</span> – I WILL DO/LET'S DO/SHALL WE DO?<br>
+
+<span style="color:#C000C0;">4</span> – I HAVE BEEN DOING FOR/SINCE<br>
+
+<span style="color:#C000C0;">5</span> – I HAVEN’T DONE FOR/SINCE<br>
+
+<span style="color:#C000C0;">6</span> – HOW ... HAS IT BEEN SINCE YOU LAST DID?/WHEN DID YOU LAST DO?<br><br>
+
+ONLY IF YOU ANSWER CORRECTLY WILL THE CARD FLIP TO REVEAL THE TRANSLATION
+
+<br><br>
+
+YOU CAN REFER TO THIS AT ANY POINT DURING THE QUIZ. JUST SELECT <span style="color:darkred;">READ ME</span>.
+
+</div>
+
+<div id="closePopup" class="popup-close-text">
+<span style="color:darkgreen;">CLOSE</span>
+</div>
+
+</div>
+</div>
+
+<div class="flip-card" id="flipCard">
+
+<div class="flip-inner">
+
+<div class="card-face front">
+<div class="question" id="question"></div>
+</div>
+
+<div class="card-face back">
+
+<div id="doorLabel"></div>
+
+<div id="flipContent"></div>
+
+</div>
+
+</div>
+</div>
+
+<div class="info-row">
+
+<div id="progress">1 / 15</div>
+
+<div style="display:flex; gap:8px;">
+
+<button id="nextBtn" class="next-btn">
+NEXT
+</button>
+
+<button id="compareBtn" class="compare-control-btn">
+COMPARE
+</button>
+
+</div>
+
+<div id="score" class="right">0 / 15</div>
+
+</div>
+
+<div id="answers" class="answers"></div>
+
+<div class="library-back-container">
+<button id="libraryBackBtn" class="library-back-btn">
+BACK
+</button>
+</div>
+
+<script>
+
+/* SAMPLE QUESTIONS */
+
+const questions = [
+{
+question:`NON <span style="color:darkred;">CAPISCO</span> QUESTA PARTE`,
+answer:`1`,
+flip:`
+DOOR 1
+
+I <span style="color:darkred;">DON’T UNDERSTAND</span> THIS PART
+`
+},
+
+{
+question:`LUI NON <span style="color:darkred;">LAVORA</span> IL LUNEDÌ`,
+answer:`1`,
+flip:`
+DOOR 1
+
+HE <span style="color:darkred;">DOESN’T WORK</span> ON MONDAYS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">ABBIAMO</span> ABBASTANZA TEMPO`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WE <span style="color:darkred;">DON’T HAVE</span> ENOUGH TIME
+`
+},
+
+{
+question:`A LUI NON <span style="color:darkred;">PIACE</span> IL CAFFÈ`,
+answer:`1`,
+flip:`
+DOOR 1
+
+HE <span style="color:darkred;">DOESN’T LIKE</span> COFFEE
+`
+},
+
+{
+question:`LORO NON <span style="color:darkred;">ABITANO</span> LONTANO DA QUI`,
+answer:`1`,
+flip:`
+DOOR 1
+
+THEY <span style="color:darkred;">DON’T LIVE</span> FAR FROM HERE
+`
+},
+
+{
+question:`NON MI <span style="color:darkred;">RICORDO</span> IL SUO NOME`,
+answer:`1`,
+flip:`
+DOOR 1
+
+I <span style="color:darkred;">DON’T REMEMBER</span> HIS NAME
+`
+},
+
+{
+question:`LORO NON <span style="color:darkred;">RISPONDONO</span> AL TELEFONO DOPO LE SEI`,
+answer:`1`,
+flip:`
+DOOR 1
+
+THEY <span style="color:darkred;">DON’T ANSWER</span> THE PHONE AFTER 6PM
+`
+},
+
+{
+question:`NON <span style="color:darkred;">USCIAMO</span> MOLTO SPESSO`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WE <span style="color:darkred;">DON’T GO OUT</span> VERY OFTEN
+`
+},
+
+{
+question:`LUI NON <span style="color:darkred;">SA</span> COSA DIRE`,
+answer:`1`,
+flip:`
+DOOR 1
+
+HE <span style="color:darkred;">DOESN’T KNOW</span> WHAT TO SAY
+`
+},
+
+{
+question:`LORO NON <span style="color:darkred;">SONO</span> D’ACCORDO CON LA DECISIONE`,
+answer:`1`,
+flip:`
+DOOR 1
+
+THEY <span style="color:darkred;">DON’T AGREE</span> WITH THE DECISION
+`
+},
+
+{
+question:`<span style="color:darkred;">LAVORA</span> DA CASA LUI?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DOES</span> HE <span style="color:darkred;">WORK</span> FROM HOME?
+`
+},
+
+{
+question:`<span style="color:darkred;">DOBBIAMO</span> ANDARE VIA ADESSO?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DO</span> WE <span style="color:darkred;">NEED</span> TO LEAVE NOW?
+`
+},
+
+{
+question:`LUI LO <span style="color:darkred;">SA</span>?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DOES</span> HE <span style="color:darkred;">KNOW</span> ABOUT THIS?
+`
+},
+
+{
+question:`<span style="color:darkred;">CAPISCONO</span> IL PROBLEMA?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DO</span> THEY <span style="color:darkred;">UNDERSTAND</span> THE PROBLEM?
+`
+},
+
+{
+question:`PERCHÉ NON GLI <span style="color:darkred;">DICI</span> LA VERITÀ?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WHY <span style="color:darkred;">DON’T</span> YOU <span style="color:darkred;">TELL</span> HIM THE TRUTH?
+`
+},
+
+{
+question:`PERCHÉ NON <span style="color:darkred;">VOGLIONO</span> VENIRE CON NOI?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WHY <span style="color:darkred;">DON’T</span> THEY <span style="color:darkred;">WANT</span> TO COME WITH US?
+`
+},
+
+{
+question:`PERCHÉ NON <span style="color:darkred;">INIZIAMO</span> ADESSO?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WHY <span style="color:darkred;">DON’T</span> WE <span style="color:darkred;">START</span> NOW?
+`
+},
+
+{
+question:`PERCHÉ LUI NON MI <span style="color:darkred;">ASCOLTA</span>?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WHY <span style="color:darkred;">DOESN’T</span> HE <span style="color:darkred;">LISTEN</span> TO ME?
+`
+},
+
+{
+question:`OGGI NON MI <span style="color:darkred;">SENTO</span> BENE`,
+answer:`1`,
+flip:`
+DOOR 1
+
+I <span style="color:darkred;">DON’T FEEL</span> WELL TODAY
+`
+},
+
+{
+question:`<span style="color:darkred;">FUNZIONA</span>?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DOES</span> IT <span style="color:darkred;">WORK</span>?
+`
+},
+
+{
+question:`LORO NON <span style="color:darkred;">DICONO</span> MOLTO`,
+answer:`1`,
+flip:`
+DOOR 1
+
+THEY <span style="color:darkred;">DON’T SAY</span> MUCH
+`
+},
+
+{
+question:`<span style="color:darkred;">HAI</span> BISOGNO DI AIUTO?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DO</span> YOU <span style="color:darkred;">NEED</span> ANY HELP?
+`
+},
+
+{
+question:`<span style="color:darkred;">DOBBIAMO</span> ASPETTARE?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DO</span> WE <span style="color:darkred;">HAVE</span> TO WAIT?
+`
+},
+
+{
+question:`LUI SI <span style="color:darkred;">RICORDA</span> IL LORO NUMERO?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DOES</span> HE <span style="color:darkred;">REMEMBER</span> THEIR NUMBER?
+`
+},
+
+{
+question:`NON TI <span style="color:darkred;">CREDONO</span>?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DON’T</span> THEY <span style="color:darkred;">BELIEVE</span> YOU?
+`
+},
+
+{
+question:`NON <span style="color:darkred;">PENSO</span> CHE SIA UNA BUONA IDEA`,
+answer:`1`,
+flip:`
+DOOR 1
+
+I <span style="color:darkred;">DON’T THINK</span> IT’S A GOOD IDEA
+`
+},
+
+{
+question:`LORO NON <span style="color:darkred;">PENSANO</span> CHE SIA IMPORTANTE`,
+answer:`1`,
+flip:`
+DOOR 1
+
+THEY <span style="color:darkred;">DON’T THINK</span> IT’S IMPORTANT
+`
+},
+
+{
+question:`NON CI <span style="color:darkred;">ASPETTIAMO</span> PROBLEMI`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WE <span style="color:darkred;">DON’T EXPECT</span> ANY PROBLEMS
+`
+},
+
+{
+question:`TI <span style="color:darkred;">DISPIACE</span> SE MI SIEDO QUI?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DO</span> YOU <span style="color:darkred;">MIND</span> IF I SIT HERE?
+`
+},
+
+{
+question:`COSA <span style="color:darkred;">SIGNIFICA</span>?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WHAT <span style="color:darkred;">DOES</span> IT <span style="color:darkred;">MEAN</span>?
+`
+},
+
+{
+question:`COSA TI <span style="color:darkred;">SEMBRA</span>?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WHAT <span style="color:darkred;">DOES</span> IT <span style="color:darkred;">LOOK</span> LIKE TO YOU?
+`
+},
+
+{
+question:`QUANTO <span style="color:darkred;">COSTANO</span>?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+HOW MUCH <span style="color:darkred;">DO</span> THEY <span style="color:darkred;">COST</span>?
+`
+},
+
+{
+question:`TI <span style="color:darkred;">INTERESSA</span>?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+<span style="color:darkred;">DOES</span> IT <span style="color:darkred;">INTEREST</span> YOU?
+`
+},
+
+{
+question:`A CHE ORA <span style="color:darkred;">INIZIA</span> LO SPETTACOLO?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+AT WHAT TIME <span style="color:darkred;">DOES</span> THE SHOW <span style="color:darkred;">BEGIN</span>?
+`
+},
+
+{
+question:`PERCHÉ <span style="color:darkred;">VUOI</span> SAPERLO?`,
+answer:`1`,
+flip:`
+DOOR 1
+
+WHY <span style="color:darkred;">DO</span> YOU <span style="color:darkred;">WANT</span> TO KNOW?
+`
+},
+
+{
+question:`LUI NON <span style="color:darkred;">HA</span> BISOGNO DEL TUO CONSIGLIO`,
+answer:`1`,
+flip:`
+DOOR 1
+
+HE <span style="color:darkred;">DOESN’T NEED</span> YOUR ADVICE
+`
+},
+
+{
+question:`OGGI POMERIGGIO <span style="color:darkred;">VEDO</span> UN PAIO DI CLIENTI IN CENTRO.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M SEEING</span> A COUPLE OF CLIENTS IN THE CITY CENTRE THIS AFTERNOON.
+`
+},
+
+{
+question:`DOMANI MATTINA ALLE 10.30 <span style="color:darkred;">INCONTRO</span> IL RESPONSABILE. DOBBIAMO PARLARE DEL NOSTRO PROSSIMO PROGETTO.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M MEETING</span> THE MANAGER AT 10:30 TOMORROW MORNING. WE NEED TO TALK ABOUT OUR NEXT PROJECT.
+`
+},
+
+{
+question:`STASERA <span style="color:darkred;">VADO</span> AL CINEMA CON ALCUNI AMICI MIEI.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M GOING</span> TO THE CINEMA WITH SOME FRIENDS OF MINE TONIGHT.
+`
+},
+
+{
+question:`DOMANI SERA <span style="color:darkred;">VENGONO</span> I MIEI A CENA. NON SO COSA CUCINARE.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+MY PARENTS <span style="color:darkred;">ARE COMING</span> OVER FOR DINNER TOMORROW EVENING. I DON’T KNOW WHAT TO COOK.
+`
+},
+
+{
+question:`SABATO MATTINA <span style="color:darkred;">PORTO</span> LA MACCHINA DAL MECCANICO.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M TAKING</span> THE CAR TO THE MECHANIC’S ON SATURDAY MORNING.
+`
+},
+
+{
+question:`STASERA <span style="color:darkred;">GUARDO</span> LA PARTITA A CASA.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M WATCHING</span> THE MATCH AT HOME TONIGHT.
+`
+},
+
+{
+question:`OGGI <span style="color:darkred;">LAVORO</span> DA CASA. C’È UNO SCIOPERO DEI MEZZI.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M WORKING</span> FROM HOME TODAY. THERE’S A TRANSPORT STRIKE.
+`
+},
+
+{
+question:`LO GIURO! QUESTA SETTIMANA <span style="color:darkred;">USO</span> I MEZZI E NON LA MACCHINA.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+I SWEAR! <span style="color:darkred;">I’M USING</span> PUBLIC TRANSPORT THIS WEEK AND NOT MY CAR.
+`
+},
+
+{
+question:`OGGI <span style="color:darkred;">MANGIO</span> LEGGERO PERCHÉ PUÒ DARSI CHE CENIAMO FUORI STASERA.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M EATING</span> LIGHT TODAY BECAUSE WE MIGHT BE EATING OUT TONIGHT.
+`
+},
+
+{
+question:`DOMANI MATTINA <span style="color:darkred;">PRENDO</span> IL TRENO DELLE SETTE. DEVO STARE A FIRENZE ENTRO LE 11.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M TAKING</span> THE SEVEN O’CLOCK TRAIN TOMORROW MORNING. I NEED TO BE IN FLORENCE BY 11.
+`
+},
+
+{
+question:`STASERA <span style="color:darkred;">RESTO</span> A CASA PERCHÉ DOMANI MI DEVO ALZARE PRESTO.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M STAYING</span> AT HOME TONIGHT BECAUSE I HAVE TO GET UP EARLY TOMORROW.
+`
+},
+
+{
+question:`OGGI POMERIGGIO <span style="color:darkred;">PASSO</span> IO A PRENDERE I BAMBINI A SCUOLA. MIA MOGLIE NON STA BENE.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M PICKING UP</span> THE KIDS FROM SCHOOL THIS AFTERNOON. MY WIFE ISN’T WELL.
+`
+},
+
+{
+question:`STASERA <span style="color:darkred;">PREPARO</span> QUALCOSA DI VELOCE DA MANGIARE. LA PARTITA INIZIA ALLE 20.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M MAKING</span> SOMETHING QUICK TO EAT TONIGHT. THE MATCH STARTS AT 8.
+`
+},
+
+{
+question:`DOMANI MATTINA <span style="color:darkred;">ACCOMPAGNO</span> MIA MADRE DAL MEDICO.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M TAKING</span> MY MOTHER TO THE DOCTOR TOMORROW MORNING.
+`
+},
+
+{
+question:`STASERA <span style="color:darkred;">PROVO</span> UNA RICETTA NUOVA PER LA PRIMA VOLTA.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M TRYING</span> A NEW RECIPE FOR THE FIRST TIME THIS EVENING.
+`
+},
+
+{
+question:`DOMANI POMERIGGIO SONO LIBERO, QUINDI <span style="color:darkred;">SISTEMO</span> IL GIARDINO PRIMA CHE ARRIVINO GLI OSPITI.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+I’M FREE TOMORROW AFTERNOON, SO <span style="color:darkred;">I’M TIDYING</span> THE GARDEN BEFORE THE GUESTS ARRIVE.
+`
+},
+
+{
+question:`STASERA, COME OGNI MARTEDÌ, <span style="color:darkred;">SEGUO</span> UNA LEZIONE ONLINE DI FOTOGRAFIA.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+THIS EVENING, LIKE EVERY TUESDAY, <span style="color:darkred;">I’M ATTENDING</span> AN ONLINE PHOTOGRAPHY LESSON.
+`
+},
+
+{
+question:`DOMANI SERA <span style="color:darkred;">FESTEGGIAMO</span> IL COMPLEANNO DI MIO FRATELLO.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">WE’RE CELEBRATING</span> MY BROTHER’S BIRTHDAY TOMORROW EVENING.
+`
+},
+
+{
+question:`DOMANI MATTINA <span style="color:darkred;">PASSO</span> DALL’UFFICIO POSTALE. DEVO SPEDIRE UN PACCO.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M STOPPING BY</span> THE POST OFFICE TOMORROW MORNING. I NEED TO SEND A PARCEL.
+`
+},
+
+{
+question:`<span style="color:darkred;">PASSO</span> A PRENDERLA DOMANI ALLE 8.`,
+answer:`2`,
+flip:`
+DOOR 2
+
+<span style="color:darkred;">I’M PICKING UP</span> HER AT 8 TOMORROW.
+`
+},
+
+{
+question:`FORSE LO <span style="color:darkred;">FACCIO</span> DOMANI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+MAYBE I <span style="color:darkred;">WILL DO</span> IT TOMORROW
+`
+},
+
+{
+question:`MAGARI LUI NON <span style="color:darkred;">ACCETTA</span> L’OFFERTA`,
+answer:`3`,
+flip:`
+DOOR 3
+
+MAYBE HE <span style="color:darkred;">WILL</span> NOT <span style="color:darkred;">ACCEPT</span> THE OFFER
+`
+},
+
+{
+question:`PROBABILMENTE CI <span style="color:darkred;">CHIAMANO</span> PIÙ TARDI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+THEY <span style="color:darkred;">WILL</span> PROBABLY <span style="color:darkred;">CALL</span> US LATER
+`
+},
+
+{
+question:`FORSE NON <span style="color:darkred;">RESTO</span> MOLTO`,
+answer:`3`,
+flip:`
+DOOR 3
+
+MAYBE I <span style="color:darkred;">WILL</span> NOT <span style="color:darkred;">STAY</span> LONG
+`
+},
+
+{
+question:`TRANQUILLO, <span style="color:darkred;">SISTEMO</span> IO LA FACCENDA`,
+answer:`3`,
+flip:`
+DOOR 3
+
+DON’T WORRY, <span style="color:darkred;">I’LL TAKE CARE OF</span> THE MATTER
+`
+},
+
+{
+question:`FORSE MARK <span style="color:darkred;">ARRIVA</span> PIÙ TARDI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+MAYBE MARK <span style="color:darkred;">WILL ARRIVE</span> LATER
+`
+},
+
+{
+question:`SECONDO TE, IL DIRETTORE <span style="color:darkred;">ACCETTA</span> O NON <span style="color:darkred;">ACCETTA</span> LA PROPOSTA?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+IN YOUR OPINION, <span style="color:darkred;">WILL</span> THE MANAGER <span style="color:darkred;">ACCEPT</span> THE PROPOSAL OR NOT?
+`
+},
+
+{
+question:`CI <span style="color:darkred;">PENSA</span> IL TECNICO A SISTEMARLO`,
+answer:`3`,
+flip:`
+DOOR 3
+
+THE TECHNICIAN <span style="color:darkred;">WILL REPAIR</span> IT
+`
+},
+
+{
+question:`SICURAMENTE IL TRENO <span style="color:darkred;">ARRIVA</span> IN RITARDO`,
+answer:`3`,
+flip:`
+DOOR 3
+
+THE TRAIN <span style="color:darkred;">WILL ARRIVE</span> LATE FOR SURE
+`
+},
+
+{
+question:`PROBABILMENTE <span style="color:darkred;">FINIAMO</span> PIÙ TARDI OGGI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+WE <span style="color:darkred;">WILL</span> PROBABLY <span style="color:darkred;">FINISH</span> LATER TODAY
+`
+},
+
+{
+question:`SPERO CHE IL CAMERIERE CI <span style="color:darkred;">PORTI</span> IL CONTO TRA POCO`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I HOPE THE WAITER <span style="color:darkred;">WILL BRING</span> US THE BILL SOON
+`
+},
+
+{
+question:`QUANDO <span style="color:darkred;">SUCCEDE</span>, SECONDO TE?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+WHEN <span style="color:darkred;">WILL</span> IT <span style="color:darkred;">HAPPEN</span>, DO YOU THINK?
+`
+},
+
+{
+question:`<span style="color:darkred;">APRO</span> LA FINESTRA?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">SHALL</span> I <span style="color:darkred;">OPEN</span> THE WINDOW?
+`
+},
+
+{
+question:`<span style="color:darkred;">PORTO</span> IO LE VALIGIE?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">SHALL</span> I <span style="color:darkred;">CARRY</span> THE SUITCASES?
+`
+},
+
+{
+question:`<span style="color:darkred;">CHIUDO</span> LA PORTA?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">SHALL</span> I <span style="color:darkred;">CLOSE</span> THE DOOR?
+`
+},
+
+{
+question:`<span style="color:darkred;">PREPARO</span> IL CAFFÈ?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">SHALL</span> I <span style="color:darkred;">MAKE</span> THE COFFEE?
+`
+},
+
+{
+question:`<span style="color:darkred;">COMINCIAMO</span>?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">SHALL</span> WE <span style="color:darkred;">START</span>?
+`
+},
+
+{
+question:`<span style="color:darkred;">PRENDIAMO</span> UN TAXI?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">SHALL</span> WE <span style="color:darkred;">TAKE</span> A TAXI?
+`
+},
+
+{
+question:`<span style="color:darkred;">TORNIAMO</span> DOPO?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">SHALL</span> WE <span style="color:darkred;">COME BACK</span> LATER?
+`
+},
+
+{
+question:`<span style="color:darkred;">FACCIAMO</span> UNA PASSEGGIATA IN CENTRO?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">SHALL</span> WE <span style="color:darkred;">GO</span> FOR A WALK IN THE CITY CENTRE?
+`
+},
+
+{
+question:`<span style="color:darkred;">FACCIAMO</span> UNA PAUSA!`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">LET’S TAKE</span> A BREAK!
+`
+},
+
+{
+question:`<span style="color:darkred;">ANDIAMO</span>!`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">LET’S GO</span>!
+`
+},
+
+{
+question:`<span style="color:darkred;">RIPROVIAMO</span>!`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">LET’S TRY</span> AGAIN!
+`
+},
+
+{
+question:`<span style="color:darkred;">FACCIAMO</span> UN RIASSUNTO DELLA SITUAZIONE!`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">LET’S MAKE</span> A SUMMARY OF THE SITUATION!
+`
+},
+
+{
+question:`NON <span style="color:darkred;">COMPRO</span> QUESTO COMPUTER: COSTA TROPPO`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WILL</span> NOT <span style="color:darkred;">BUY</span> THIS COMPUTER; IT COSTS TOO MUCH
+`
+},
+
+{
+question:`<span style="color:darkred;">OFFRO</span> IO IL CAFFÈ A TUTTI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WILL PAY FOR</span> EVERYONE’S COFFEE
+`
+},
+
+{
+question:`NON VI <span style="color:darkred;">LASCIO</span> MAI DA SOLI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WILL</span> NEVER <span style="color:darkred;">LEAVE</span> YOU ON YOUR OWN
+`
+},
+
+{
+question:`LUNEDÌ <span style="color:darkred;">PRENDO</span> IO LA DECISIONE FINALE`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WILL MAKE</span> THE FINAL DECISION ON MONDAY
+`
+},
+
+{
+question:`NON <span style="color:darkred;">RACCONTIAMO</span> A NESSUNO IL TUO SEGRETO`,
+answer:`3`,
+flip:`
+DOOR 3
+
+WE <span style="color:darkred;">WILL</span> NOT <span style="color:darkred;">TELL</span> ANYONE YOUR SECRET
+`
+},
+
+{
+question:`NON CREDO DI <span style="color:darkred;">POTER</span> ARRIVARE IN TEMPO PER LA RIUNIONE`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I DON’T THINK I <span style="color:darkred;">WILL BE ABLE</span> TO ARRIVE IN TIME FOR THE MEETING
+`
+},
+
+{
+question:`TI <span style="color:darkred;">REGALO</span> IO QUESTO LIBRO PER IL TUO COMPLEANNO`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WILL GIVE</span> YOU THIS BOOK FOR YOUR BIRTHDAY
+`
+},
+
+{
+question:`NON <span style="color:darkred;">MANGIO</span> NIENTE STASERA: HO GIÀ CENATO`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WILL</span> NOT <span style="color:darkred;">EAT</span> ANYTHING TONIGHT; I HAVE ALREADY HAD DINNER
+`
+},
+
+{
+question:`NON TE LO <span style="color:darkred;">DICO</span>`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WON’T TELL</span> YOU
+`
+},
+
+{
+question:`NON CREDO DI <span style="color:darkred;">PARLARE</span> CON LUI PRIMA DI DOMANI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I DON’T THINK I <span style="color:darkred;">WILL SPEAK</span> TO HIM BEFORE TOMORROW
+`
+},
+
+{
+question:`<span style="color:darkred;">RISPONDI</span> TU AL TELEFONO?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">WILL</span> YOU <span style="color:darkred;">ANSWER</span> THE PHONE?
+`
+},
+
+{
+question:`<span style="color:darkred;">VIENI</span> CON NOI ALLA FESTA DI SABATO?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+<span style="color:darkred;">WILL</span> YOU <span style="color:darkred;">COME</span> WITH US TO THE PARTY ON SATURDAY?
+`
+},
+
+{
+question:`CHI <span style="color:darkred;">PREPARA</span> LA CENA DI NATALE QUEST’ANNO?`,
+answer:`3`,
+flip:`
+DOOR 3
+
+WHO <span style="color:darkred;">WILL</span> <span style="color:darkred;">PREPARE</span> THE CHRISTMAS DINNER THIS YEAR?
+`
+},
+
+{
+question:`SE MI ASPETTATE QUI, <span style="color:darkred;">VADO</span> A CERCARE LE CHIAVI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+IF YOU WAIT FOR ME HERE, I <span style="color:darkred;">WILL GO</span> AND LOOK FOR THE KEYS
+`
+},
+
+{
+question:`NON APPENA FINIRÒ, TI <span style="color:darkred;">MANDO</span> IL FILE`,
+answer:`3`,
+flip:`
+DOOR 3
+
+AS SOON AS I FINISH, I <span style="color:darkred;">WILL SEND</span> YOU THE FILE
+`
+},
+
+{
+question:`QUANDO SAREMO TUTTI, <span style="color:darkred;">INIZIAMO</span> LA RIUNIONE`,
+answer:`3`,
+flip:`
+DOOR 3
+
+WE <span style="color:darkred;">WILL START</span> THE MEETING WHEN ALL OF US ARE HERE
+`
+},
+
+{
+question:`QUANDO TORNERÒ A CASA, TI <span style="color:darkred;">CHIAMO</span>`,
+answer:`3`,
+flip:`
+DOOR 3
+
+WHEN I GET BACK HOME, I <span style="color:darkred;">WILL CALL</span> YOU
+`
+},
+
+{
+question:`SE TROVERÒ PARCHEGGIO, <span style="color:darkred;">SARÒ</span> DA TE VERSO LE 16`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WILL BE</span> AT YOUR PLACE AROUND 4 IF I FIND A PARKING SPACE
+`
+},
+
+{
+question:`FINCHÉ NON ARRIVERÀ IL TECNICO, <span style="color:darkred;">DOBBIAMO</span> ASPETTARE QUI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+WE <span style="color:darkred;">WILL HAVE TO WAIT</span> HERE UNTIL THE TECHNICIAN ARRIVES
+`
+},
+
+{
+question:`CONTINUERÒ A <span style="color:darkred;">LAVORARE</span> FINCHÉ NON AVRÒ 70 ANNI`,
+answer:`3`,
+flip:`
+DOOR 3
+
+I <span style="color:darkred;">WILL CONTINUE</span> WORKING UNTIL I AM 70 YEARS OLD
+`
+},
+
+{
+question:`NON APPENA AVRÒ NOTIZIE, TI <span style="color:darkred;">FACCIO</span> SAPERE`,
+answer:`3`,
+flip:`
+DOOR 3
+
+AS SOON AS I HAVE NEWS, I <span style="color:darkred;">WILL LET</span> YOU KNOW
+`
+},
+
+{
+question:`<span style="color:darkred;">STUDIO</span> FRANCESE DA 5 MESI`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN STUDYING</span> FRENCH FOR 5 MONTHS
+`
+},
+
+{
+question:`È DA UNA VITA CHE <span style="color:darkred;">LAVORIAMO</span> A QUESTO PROGETTO!`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">WE’VE BEEN WORKING</span> ON THIS PROJECT FOR AGES!
+`
+},
+
+{
+question:`<span style="color:darkred;">ALLENO</span> QUESTA SQUADRA DA 4 ANNI`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN COACHING</span> THIS TEAM FOR 4 YEARS
+`
+},
+
+{
+question:`SONO CINQUE GIORNI CHE <span style="color:darkred;">ASPETTO</span> UNA RISPOSTA`,
+answer:`4`,
+flip:`
+DOOR 4
+
+I <span style="color:darkred;">HAVE BEEN WAITING</span> FOR FIVE DAYS
+`
+},
+
+{
+question:`<span style="color:darkred;">GESTISCO</span> QUESTO UFFICIO DA 12 ANNI`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN MANAGING</span> THIS OFFICE FOR 12 YEARS
+`
+},
+
+{
+question:`SONO SETTE MESI CHE <span style="color:darkred;">SVILUPPO</span> QUESTO SOFTWARE`,
+answer:`4`,
+flip:`
+DOOR 4
+
+I <span style="color:darkred;">HAVE BEEN DEVELOPING</span> THIS SOFTWARE FOR 7 MONTHS
+`
+},
+
+{
+question:`SONO QUATTRO MESI CHE <span style="color:darkred;">ORGANIZZO</span> QUESTO EVENTO`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN ORGANISING</span> THIS EVENT FOR 4 MONTHS
+`
+},
+
+{
+question:`SONO DUE SETTIMANE CHE <span style="color:darkred;">CERCO</span> UN NUOVO APPARTAMENTO`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN LOOKING FOR</span> A NEW FLAT FOR 2 WEEKS
+`
+},
+
+{
+question:`<span style="color:darkred;">COLLABORIAMO</span> CON QUESTA AZIENDA DA 9 ANNI`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">WE’VE BEEN COLLABORATING</span> WITH THIS COMPANY FOR 9 YEARS
+`
+},
+
+{
+question:`È DA TANTO CHE <span style="color:darkred;">DISCUTONO</span> QUESTO PROBLEMA`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">THEY’VE BEEN DISCUSSING</span> THIS PROBLEM FOR A LONG TIME
+`
+},
+
+{
+question:`SONO ALMENO SEI ORE CHE <span style="color:darkred;">PIOVE</span>`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">IT’S BEEN RAINING</span> FOR AT LEAST 6 HOURS
+`
+},
+
+{
+question:`<span style="color:darkred;">LAVORO</span> QUI DAL 2018`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN WORKING</span> HERE SINCE 2018
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">STUDIA</span> ECONOMIA DAL 2021`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">HE’S BEEN STUDYING</span> ECONOMICS SINCE 2021
+`
+},
+
+{
+question:`È DA LUNEDÌ CHE <span style="color:darkred;">ASPETTO</span> UNA RISPOSTA`,
+answer:`4`,
+flip:`
+DOOR 4
+
+I <span style="color:darkred;">HAVE BEEN WAITING</span> FOR AN ANSWER SINCE MONDAY
+`
+},
+
+{
+question:`<span style="color:darkred;">GUARDO</span> QUESTA SERIE DA GENNAIO`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN WATCHING</span> THIS SERIES SINCE JANUARY
+`
+},
+
+{
+question:`DA QUANTI MESI <span style="color:darkred;">STUDI</span> POLACCO?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW MANY MONTHS <span style="color:darkred;">HAVE YOU BEEN STUDYING</span> POLISH?
+`
+},
+
+{
+question:`DA QUANTI ANNI <span style="color:darkred;">VIVI</span> IN QUESTA CITTÀ?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW MANY YEARS <span style="color:darkred;">HAVE YOU BEEN LIVING</span> IN THIS CITY?
+`
+},
+
+{
+question:`DA QUANTI GIORNI <span style="color:darkred;">ASPETTI</span> UNA RISPOSTA?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW MANY DAYS <span style="color:darkred;">HAVE YOU BEEN WAITING</span> FOR AN ANSWER?
+`
+},
+
+{
+question:`DA QUANTE ORE <span style="color:darkred;">CAMMINIAMO</span>?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW MANY HOURS <span style="color:darkred;">HAVE WE BEEN WALKING</span>?
+`
+},
+
+{
+question:`DA QUANTI MESI <span style="color:darkred;">CERCATE</span> UNA CASA?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW MANY MONTHS <span style="color:darkred;">HAVE YOU BEEN LOOKING FOR</span> A HOUSE?
+`
+},
+
+{
+question:`DA QUANTI ANNI LEI <span style="color:darkred;">INSEGNA</span> IN QUESTA SCUOLA?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW MANY YEARS <span style="color:darkred;">HAS SHE BEEN TEACHING</span> IN THIS SCHOOL?
+`
+},
+
+{
+question:`DA QUANDO LEI <span style="color:darkred;">GESTISCE</span> QUESTO PROGETTO?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+SINCE WHEN <span style="color:darkred;">HAS SHE BEEN MANAGING</span> THIS PROJECT?
+`
+},
+
+{
+question:`DA QUANTO TEMPO <span style="color:darkred;">ASPETTI</span> L'AUTOBUS?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW LONG <span style="color:darkred;">HAVE YOU BEEN WAITING</span> FOR THE BUS?
+`
+},
+
+{
+question:`<span style="color:darkred;">ABITO</span> IN QUESTO QUARTIERE DAL 2020`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN LIVING</span> IN THIS NEIGHBOURHOOD SINCE 2020
+`
+},
+
+{
+question:`DA QUANTI ANNI <span style="color:darkred;">SUONI</span> LA CHITARRA?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW MANY YEARS <span style="color:darkred;">HAVE YOU BEEN PLAYING</span> THE GUITAR?
+`
+},
+
+{
+question:`DA QUANTO TEMPO <span style="color:darkred;">STAI</span> CON LA TUA FIDANZATA?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW LONG <span style="color:darkred;">HAVE YOU BEEN</span> WITH YOUR GIRLFRIEND?
+`
+},
+
+{
+question:`DA QUANTE ORE <span style="color:darkred;">CERCHI</span> DI RISOLVERE QUESTO PROBLEMA?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW MANY HOURS <span style="color:darkred;">HAVE YOU BEEN TRYING</span> TO SOLVE THIS PROBLEM?
+`
+},
+
+{
+question:`SONO DIVERSE SETTIMANE CHE ABBIAMO VOGLIA DI <span style="color:darkred;">ANDARE</span> VIA DA QUALCHE PARTE`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">WE’VE BEEN WANTING</span> TO GO AWAY SOMEWHERE FOR SEVERAL WEEKS
+`
+},
+
+{
+question:`È DA TANTO TEMPO CHE I MIEI COLLEGHI <span style="color:darkred;">SEGUONO</span> QUESTA PRATICA`,
+answer:`4`,
+flip:`
+DOOR 4
+
+MY COLLEAGUES <span style="color:darkred;">HAVE BEEN DEALING</span> WITH THIS CASE FOR A LONG TIME
+`
+},
+
+{
+question:`È DA MARZO CHE <span style="color:darkred;">COLLABORIAMO</span> CON SARAH`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">WE’VE BEEN COLLABORATING</span> WITH SARAH SINCE MARCH
+`
+},
+
+{
+question:`DA QUANTO TEMPO TI <span style="color:darkred;">ALLENI</span> IN PALESTRA?`,
+answer:`4`,
+flip:`
+DOOR 4
+
+HOW LONG <span style="color:darkred;">HAVE YOU BEEN TRAINING</span> AT THE GYM?
+`
+},
+
+{
+question:`LUI <span style="color:darkred;">LAVORA</span> SU QUESTA PRATICA DA SETTIMANE`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">HE’S BEEN WORKING</span> ON THIS CASE FOR WEEKS
+`
+},
+
+{
+question:`È DA GENNAIO CHE LEI <span style="color:darkred;">SEGUE</span> UN CORSO DI FOTOGRAFIA ONLINE`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">SHE’S BEEN TAKING</span> AN ONLINE PHOTOGRAPHY COURSE SINCE JANUARY
+`
+},
+
+{
+question:`È DA IERI CHE <span style="color:darkred;">PROVO</span> A MONTARE QUESTO MOBILE!`,
+answer:`4`,
+flip:`
+DOOR 4
+
+<span style="color:darkred;">I’VE BEEN TRYING</span> TO ASSEMBLE THIS PIECE OF FURNITURE SINCE YESTERDAY!
+`
+},
+
+{
+question:`NON <span style="color:darkred;">VEDO</span> MARCO DA SEI SETTIMANE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T SEEN</span> MARCO FOR SIX WEEKS
+`
+},
+
+{
+question:`LAURA NON <span style="color:darkred;">SENTE</span> SUA SORELLA DA DIECI GIORNI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">LAURA HASN’T HEARD FROM</span> HER SISTER FOR TEN DAYS
+`
+},
+
+{
+question:`SONO DIECI GIORNI CHE PAOLO NON <span style="color:darkred;">PARLA</span> CON IL DIRETTORE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">HE HASN’T SPOKEN</span> TO THE MANAGER FOR TEN DAYS
+`
+},
+
+{
+question:`PAOLO E LAURA NON <span style="color:darkred;">PARLANO</span> TRA LORO DA TRE SETTIMANE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">THEY HAVEN’T SPOKEN</span> TO EACH OTHER FOR THREE WEEKS
+`
+},
+
+{
+question:`È DA NATALE CHE I VICINI NON <span style="color:darkred;">PARLANO</span> CON NOI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">THEY HAVEN’T SPOKEN</span> TO US SINCE CHRISTMAS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">BEVO</span> ALCOL DA SEI MESI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T DRUNK</span> ALCOHOL FOR SIX MONTHS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">MANGIO</span> LA PIZZA DA TANTISSIMO TEMPO`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T EATEN</span> PIZZA FOR A VERY LONG TIME
+`
+},
+
+{
+question:`NON <span style="color:darkred;">RICEVIAMO</span> UNA RISPOSTA DA DUE SETTIMANE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">WE HAVEN’T RECEIVED</span> AN ANSWER FOR TWO WEEKS
+`
+},
+
+{
+question:`L’AZIENDA NON <span style="color:darkred;">CAMBIA</span> STRATEGIA DA OLTRE TRE ANNI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">THE COMPANY HASN’T CHANGED</span> ITS STRATEGY FOR OVER THREE YEARS
+`
+},
+
+{
+question:`IL GOVERNO NON <span style="color:darkred;">ANNUNCIA</span> NUOVE MISURE DA APRILE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">THE GOVERNMENT HASN’T ANNOUNCED</span> ANY NEW MEASURES SINCE APRIL
+`
+},
+
+{
+question:`NON <span style="color:darkred;">SUCCEDE</span> NIENTE DI INTERESSANTE DA MESI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+NOTHING <span style="color:darkred;">HAS HAPPENED</span> FOR MONTHS
+`
+},
+
+{
+question:`È QUASI UN ANNO CHE NON <span style="color:darkred;">VEDO</span> UN FILM AL CINEMA`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T SEEN</span> A FILM AT THE CINEMA FOR ALMOST A YEAR
+`
+},
+
+{
+question:`NON <span style="color:darkred;">VEDO</span> MARIA DAL GIORNO DEL SUO COMPLEANNO`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T SEEN</span> MARIA SINCE HER BIRTHDAY
+`
+},
+
+{
+question:`NON <span style="color:darkred;">VADO</span> IN VACANZA DAL DUEMILADICIANNOVE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T BEEN</span> ON HOLIDAY SINCE 2019
+`
+},
+
+{
+question:`MI FANNO MALE LE GAMBE E NON <span style="color:darkred;">VADO</span> IN PALESTRA DALLO SCORSO MESE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+MY LEGS HURT AND <span style="color:darkred;">I HAVEN’T BEEN</span> TO THE GYM SINCE LAST MONTH
+`
+},
+
+{
+question:`È DA UNA VITA CHE NON <span style="color:darkred;">VADO</span> DAL DENTISTA`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T BEEN</span> TO THE DENTIST FOR AGES
+`
+},
+
+{
+question:`NON <span style="color:darkred;">DORMO</span> BENE DA QUANDO HO INIZIATO QUESTO NUOVO LAVORO`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T SLEPT</span> WELL SINCE I STARTED THIS NEW JOB
+`
+},
+
+{
+question:`NON <span style="color:darkred;">GIOCO</span> A TENNIS DA QUANDO AVEVO VENTI ANNI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T PLAYED</span> TENNIS SINCE I WAS TWENTY
+`
+},
+
+{
+question:`A CAUSA DELLA SOSTA PER LA NAZIONALE, LA SQUADRA NON <span style="color:darkred;">GIOCA</span> UNA PARTITA DI CAMPIONATO DA DIECI GIORNI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+BECAUSE OF THE INTERNATIONAL BREAK, <span style="color:darkred;">THE TEAM HASN’T PLAYED</span> A LEAGUE MATCH FOR TEN DAYS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">GUIDO</span> DA QUANDO HO VENDUTO LA MACCHINA LO SCORSO MESE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T DRIVEN</span> SINCE I SOLD MY CAR LAST MONTH
+`
+},
+
+{
+question:`IL COMPUTER NON <span style="color:darkred;">FUNZIONA</span> BENE DA QUANDO È STATO AGGIORNATO UN PAIO DI GIORNI FA`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">THE COMPUTER HASN’T WORKED</span> PROPERLY SINCE IT WAS UPDATED A COUPLE OF DAYS AGO
+`
+},
+
+{
+question:`È DAL 2017 CHE NON <span style="color:darkred;">NEVICA</span> DA QUESTE PARTI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">IT HASN’T SNOWED</span> HERE SINCE 2017
+`
+},
+
+{
+question:`È DA TANTO CHE NON <span style="color:darkred;">GUARDO</span> UNA SERIE TV`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T WATCHED</span> A TV SERIES FOR A LONG TIME
+`
+},
+
+{
+question:`SONO MOLTI ANNI CHE NON <span style="color:darkred;">INVITIAMO</span> QUALCUNO A CENA`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">WE HAVEN’T INVITED</span> ANYONE TO DINNER FOR MANY YEARS
+`
+},
+
+{
+question:`DEVO AMMETTERE CHE NON <span style="color:darkred;">LAVO</span> LA MACCHINA DA OLTRE SEI MESI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+I MUST ADMIT <span style="color:darkred;">I HAVEN’T WASHED</span> THE CAR FOR OVER SIX MONTHS
+`
+},
+
+{
+question:`MIA MOGLIE NON <span style="color:darkred;">STIRA</span> LE CAMICIE DA QUANDO HO INIZIATO A LAVORARE DA CASA`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">MY WIFE HASN’T IRONED</span> SHIRTS SINCE I STARTED WORKING FROM HOME
+`
+},
+
+{
+question:`SONO ANNI CHE NON <span style="color:darkred;">FACCIO</span> UN GIRO IN BICI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T BEEN</span> FOR A BIKE RIDE FOR YEARS
+`
+},
+
+{
+question:`NON <span style="color:darkred;">USO</span> I SOCIAL DA SETTIMANE`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T USED</span> SOCIAL MEDIA FOR WEEKS
+`
+},
+
+{
+question:`È DA UN PO’ CHE NON <span style="color:darkred;">PULISCO</span> LA CASA`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T CLEANED</span> THE HOUSE FOR A WHILE
+`
+},
+
+{
+question:`SONO MESI CHE NON MI <span style="color:darkred;">TAGLIO</span> I CAPELLI`,
+answer:`5`,
+flip:`
+DOOR 5
+
+<span style="color:darkred;">I HAVEN’T HAD</span> A HAIRCUT FOR MONTHS
+`
+},
+
+{
+question:`DA QUANTI ANNI LUI NON <span style="color:darkred;">VEDE</span> I SUOI CUGINI?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY YEARS HAS IT BEEN SINCE HE LAST <span style="color:darkred;">SAW</span> HIS COUSINS?
+`
+},
+
+{
+question:`DA QUANTO TEMPO LUI NON <span style="color:darkred;">PARLA</span> CON IL SUO PROFESSORE?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW LONG HAS IT BEEN SINCE HE LAST <span style="color:darkred;">SPOKE</span> WITH HIS PROFESSOR?
+`
+},
+
+{
+question:`DA QUANTO TEMPO LEI NON <span style="color:darkred;">MANGIA</span> LA PIZZA?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW LONG HAS IT BEEN SINCE SHE LAST <span style="color:darkred;">ATE</span> PIZZA?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON <span style="color:darkred;">DORMI</span> BENE?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY DAYS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">SLEPT</span> WELL?
+`
+},
+
+{
+question:`DA QUANTE SETTIMANE NON <span style="color:darkred;">VAI</span> AL CINEMA?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY WEEKS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">WENT</span> TO THE CINEMA?
+`
+},
+
+{
+question:`DA QUANTI MESI LEI NON <span style="color:darkred;">VA</span> IN PALESTRA?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY MONTHS HAS IT BEEN SINCE SHE LAST <span style="color:darkred;">WENT</span> TO THE GYM?
+`
+},
+
+{
+question:`DA QUANTI ANNI NON <span style="color:darkred;">GUIDI</span> DI NOTTE?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY YEARS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">DROVE</span> AT NIGHT?
+`
+},
+
+{
+question:`DA QUANTI ANNI NON <span style="color:darkred;">SCRIVI</span> UNA LETTERA A MANO?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY YEARS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">WROTE</span> A LETTER BY HAND?
+`
+},
+
+{
+question:`DA QUANTI GIORNI LEI NON <span style="color:darkred;">SENTE</span> SUA SORELLA?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY DAYS HAS IT BEEN SINCE SHE LAST <span style="color:darkred;">HEARD FROM</span> HER SISTER?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON <span style="color:darkred;">CHIAMI</span> TUA MADRE?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY DAYS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">CALLED</span> YOUR MOTHER?
+`
+},
+
+{
+question:`DA QUANTI MESI NON <span style="color:darkred;">COMPRI</span> UN LIBRO?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY MONTHS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">BOUGHT</span> A BOOK?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON <span style="color:darkred;">LEGGI</span> UN LIBRO?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY DAYS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">READ</span> A BOOK?
+`
+},
+
+{
+question:`DA QUANTI MESI NON <span style="color:darkred;">VIAGGI</span> ALL’ESTERO?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY MONTHS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">TRAVELLED</span> ABROAD?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON <span style="color:darkred;">PULISCI</span> LA TUA CAMERA?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY DAYS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">CLEANED</span> YOUR ROOM?
+`
+},
+
+{
+question:`DA QUANTE ORE NON <span style="color:darkred;">SUCCEDE</span> NIENTE?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY HOURS HAS IT BEEN SINCE ANYTHING LAST <span style="color:darkred;">HAPPENED</span>?
+`
+},
+
+{
+question:`DA QUANTI GIORNI NON TI <span style="color:darkred;">ALLENI</span>?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY DAYS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">TRAINED</span>?
+`
+},
+
+{
+question:`DA QUANTE ORE NON <span style="color:darkred;">CONTROLLI</span> LE EMAIL?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY HOURS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">CHECKED</span> YOUR EMAILS?
+`
+},
+
+{
+question:`DA QUANTO TEMPO LEI NON <span style="color:darkred;">GUARDA</span> UN FILM A CASA?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW LONG HAS IT BEEN SINCE SHE LAST <span style="color:darkred;">WATCHED</span> A FILM AT HOME?
+`
+},
+
+{
+question:`DA QUANTO TEMPO NON <span style="color:darkred;">CAMBI</span> L’OLIO DELLA MACCHINA?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW LONG HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">CHANGED</span> THE OIL IN YOUR CAR?
+`
+},
+
+{
+question:`DA QUANTI ANNI LUI NON <span style="color:darkred;">PORTA</span> UNA CRAVATTA?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY YEARS HAS IT BEEN SINCE HE LAST <span style="color:darkred;">WORE</span> A TIE?
+`
+},
+
+{
+question:`DA QUANTO TEMPO LEI NON <span style="color:darkred;">USA</span> LA BICI PER ANDARE AL LAVORO?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW LONG HAS IT BEEN SINCE SHE LAST <span style="color:darkred;">USED</span> HER BIKE TO GO TO WORK?
+`
+},
+
+{
+question:`DA QUANTE SETTIMANE NON <span style="color:darkred;">PRENDI</span> UN TAXI?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY WEEKS HAS IT BEEN SINCE YOU LAST <span style="color:darkred;">TOOK</span> A TAXI?
+`
+},
+
+{
+question:`DA QUANTE SETTIMANE NON <span style="color:darkred;">PIOVE</span>?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY WEEKS HAS IT BEEN SINCE IT LAST <span style="color:darkred;">RAINED</span>?
+`
+},
+
+{
+question:`DA QUANTI ANNI NON <span style="color:darkred;">SUCCEDE</span>?`,
+answer:`6-FOR`,
+flip:`
+DOOR 6-FOR
+
+HOW MANY YEARS HAS IT BEEN SINCE IT LAST <span style="color:darkred;">HAPPENED</span>?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">SENTI</span> RICHARD?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">HEAR FROM</span> RICHARD?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">PARLI</span> CON IL DIRETTORE DI QUESTA FACCENDA?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">SPEAK</span> TO THE MANAGER ABOUT THIS MATTER?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">GIOCHI</span> A TENNIS?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">PLAY</span> TENNIS?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">GUIDI</span> DI NOTTE?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">DRIVE</span> AT NIGHT?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">MANGIAMO</span> PESCE? NON MI RICORDO`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> WE LAST <span style="color:darkred;">EAT</span> FISH? I DON’T REMEMBER
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">BEVI</span> IL VINO ROSSO?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">DRINK</span> RED WINE?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">SCRIVI</span> A PAUL?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">WRITE</span> TO PAUL?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">VAI</span> AL CINEMA?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">GO</span> TO THE CINEMA?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">VEDI</span> I VOSTRI CUGINI?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">SEE</span> YOUR COUSINS?
+`
+},
+
+{
+question:`DA QUANDO NON VI <span style="color:darkred;">PARLATE</span>?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">SPEAK</span> TO EACH OTHER?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">SUCCEDE</span>?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> IT LAST <span style="color:darkred;">HAPPEN</span>?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">SUONI</span> LA CHITARRA?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">PLAY</span> THE GUITAR?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">VAI</span> IN PALESTRA?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">GO</span> TO THE GYM?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">LAVORI</span> DA CASA?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">WORK</span> FROM HOME?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">LEGGI</span> UN GIORNALE?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">READ</span> A NEWSPAPER?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">VIAGGI</span> ALL'ESTERO?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">TRAVEL</span> ABROAD?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">USCIAMO</span> IL SABATO SERA?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> WE LAST <span style="color:darkred;">GO OUT</span> ON SATURDAY NIGHT?
+`
+},
+
+{
+question:`DA QUANDO NON CI <span style="color:darkred;">SENTIAMO</span> PER TELEFONO?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> WE LAST <span style="color:darkred;">TALK</span> ON THE PHONE?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">INDOSSI</span> QUELLE SCARPE?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">WEAR</span> THOSE SHOES?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">VAI</span> A CORRERE AL PARCO?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">GO RUNNING</span> IN THE PARK?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">GUARDI</span> I TELEGIORNALI?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">WATCH</span> THE NEWS?
+`
+},
+
+{
+question:`DA QUANDO SUSAN NON <span style="color:darkred;">ORGANIZZA</span> UNA FESTA?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> SUSAN LAST <span style="color:darkred;">ORGANISE</span> A PARTY?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">AGGIORNI</span> LA MAILING LIST?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">UPDATE</span> THE MAILING LIST?
+`
+},
+
+{
+question:`DA QUANDO NON <span style="color:darkred;">FREQUENTI</span> UN CORSO DI FORMAZIONE?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> YOU LAST <span style="color:darkred;">ATTEND</span> A TRAINING COURSE?
+`
+},
+
+{
+question:`DA QUANDO NON CI <span style="color:darkred;">VENGONO</span> INSIEME?`,
+answer:`6-SINCE`,
+flip:`
+DOOR 6-SINCE
+
+WHEN <span style="color:darkred;">DID</span> THEY LAST <span style="color:darkred;">COME</span> HERE TOGETHER?
+`
+}
+
+];
+
+const doors = [`1`,`2`,`3`,`4`,`5`,`6-FOR`,`6-SINCE`];
+
+let quiz = [];
+let index = 0;
+let score = 0;
+let soundOn = true;
+let flipTimer = null;
+
+/* SOUND */
+
+function playSound(id){
+    if(!soundOn) return;
+
+    const a = document.getElementById(id);
+
+    if(a){
+        a.currentTime = 0;
+        a.play().catch(()=>{});
+    }
+}
+
+document.getElementById("soundToggle").onclick = function(){
+    soundOn = !soundOn;
+    this.innerText = soundOn ? "🔊 ON" : "🔇 OFF";
+};
+
+/* SHUFFLE */
+
+function shuffle(arr){
+    let copy = [...arr];
+
+    for(let i = copy.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+
+    return copy;
+}
+
+/* START QUIZ */
+
+function startQuiz(){
+
+    if(!questions || questions.length === 0){
+        console.error("Questions array missing");
+        return;
+    }
+
+    quiz = shuffle(questions).slice(0,15);
+
+    index = 0;
+    score = 0;
+
+    showQuestion();
+}
+
+/* BUILD BUTTONS */
+
+function buildButtons(){
+
+    const answers = document.getElementById("answers");
+    answers.innerHTML = "";
+
+    const layout = [
+        `1`,`2`,`3`,
+        `4`,`5`,`6-FOR`,
+        `6-SINCE`
+    ];
+
+    layout.forEach(door=>{
+
+        const btn = document.createElement("button");
+
+        btn.className = "answer-btn";
+        btn.innerText = door;
+
+        btn.onclick = ()=>checkAnswer(btn,door);
+
+        answers.appendChild(btn);
+
+    });
+}
+
+/* DISABLE */
+
+function disableAllButtons(){
+
+    document.querySelectorAll(".answer-btn").forEach(btn=>{
+        btn.disabled = true;
+        btn.style.pointerEvents = "none";
+    });
+
+}
+
+/* SHOW QUESTION */
+
+function showQuestion(){
+
+    if(flipTimer){
+
+        clearTimeout(flipTimer);
+        flipTimer = null;
+
+    }
+
+    const q = quiz[index];
+    if(!q) return;
+
+    const flipCard = document.getElementById("flipCard");
+
+    flipCard.classList.remove("flipped");
+
+    const compareBtn = document.getElementById("compareBtn");
+    compareBtn.style.display = "none";
+    compareBtn.innerText = "COMPARE";
+
+    document.getElementById("question").innerHTML = q.question;
+
+    const cleaned = q.flip.trim();
+    const lines = cleaned.split("\n").filter(line => line.trim() !== "");
+
+    document.getElementById("doorLabel").innerHTML = lines[0] || "";
+    document.getElementById("flipContent").innerHTML = lines.slice(1).join("<br>");
+
+    document.getElementById("progress").innerText =
+        `${index + 1} / ${quiz.length}`;
+
+    document.getElementById("score").innerText =
+        `${score} / ${quiz.length}`;
+
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.style.opacity = "0.5";
+    nextBtn.style.pointerEvents = "none";
+
+    buildButtons();
+}
+
+/* CHECK ANSWER */
+
+function checkAnswer(button,selected){
+
+    const q = quiz[index];
+    disableAllButtons();
+
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.style.opacity = "1";
+    nextBtn.style.pointerEvents = "auto";
+
+    if(selected === q.answer){
+
+        button.classList.add("correct");
+
+        score++;
+
+        document.getElementById("score").innerText =
+            `${score} / ${quiz.length}`;
+
+        playSound("correctSound");
+
+        flipTimer = setTimeout(()=>{
+
+    document.getElementById("flipCard").classList.add("flipped");
+
+    const compareBtn = document.getElementById("compareBtn");
+    compareBtn.style.display = "inline-block";
+
+},500);
+
+    }else{
+
+        button.classList.add("wrong");
+        playSound("wrongSound");
+
+    }
+}
+
+/* FLIP */
+
+function toggleCard(){
+
+    const flipCard = document.getElementById("flipCard");
+    flipCard.classList.toggle("flipped");
+
+    const compareBtn = document.getElementById("compareBtn");
+
+    compareBtn.innerText =
+        flipCard.classList.contains("flipped")
+        ? "QUESTION"
+        : "COMPARE";
+}
+
+/* NEXT */
+
+function nextQuestion(){
+
+    if(index < quiz.length - 1){
+        index++;
+        showQuestion();
+    }else{
+        showFinalCard();
+    }
+}
+
+/* FINAL CARD */
+
+function showFinalCard(){
+
+    const passMark = Math.ceil(quiz.length * 0.8);
+    const passed = score >= passMark;
+
+    playSound(passed ? "passSound" : "failSound");
+
+    document.getElementById("flipCard").classList.remove("flipped");
+
+    document.querySelector(".front").innerHTML = `
+    <div style="
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    height:100%;
+    text-align:center;
+    ">
+
+    <div style="
+    font-size:1.3rem;
+    font-weight:900;
+    color:${passed ? "darkblue" : "darkred"};
+    margin-bottom:20px;
+    ">
+    ${passed ? "WELL DONE! YOU'VE PASSED!" : "BAD LUCK! TRY AGAIN"}
+    </div>
+
+    <div style="font-size:1.05rem;font-weight:900;color:#0E065C;">
+    YOUR SCORE
+    </div>
+
+    <div style="font-size:1.4rem;font-weight:900;color:darkgreen;margin:10px 0;">
+    ${score} / ${quiz.length}
+    </div>
+
+    <div style="font-size:.95rem;font-weight:900;color:#0E065C;margin-bottom:24px;">
+    PASS MARK: ${passMark}
+    </div>
+
+    <button id="retryBtn" style="
+    background:#561386;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    padding:10px 24px;
+    font-weight:900;
+    cursor:pointer;
+    ">
+    TRY AGAIN
+    </button>
+
+    </div>
+    `;
+
+    document.getElementById("flipContent").innerHTML = "";
+    document.getElementById("doorLabel").innerHTML = "";
+    document.getElementById("answers").innerHTML = "";
+
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("compareBtn").style.display = "none";
+    document.getElementById("libraryBackBtn").style.display = "none";
+
+    document.getElementById("retryBtn").onclick = ()=>{
+
+        document.querySelector(".front").innerHTML =
+            `<div class="question" id="question"></div>`;
+
+        document.getElementById("nextBtn").style.display = "inline-block";
+        document.getElementById("libraryBackBtn").style.display = "inline-block";
+
+startQuiz();
+
+    };
+}
+
+/* CONTROLS */
+
+document.getElementById("nextBtn").onclick = nextQuestion;
+document.getElementById("compareBtn").onclick = toggleCard;
+
+document.getElementById("libraryBackBtn").onclick = function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+};
+document.getElementById("libraryBackBtn").onclick = function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+};
+
+document.getElementById("readMeBtn").onclick = function(){
+    document.getElementById("popupOverlay").style.display = "flex";
+};
+
+document.getElementById("closePopup").onclick = function(){
+    document.getElementById("popupOverlay").style.display = "none";
+};
+
+document.getElementById("popupOverlay").onclick = function(e){
+    if(e.target === this){
+        this.style.display = "none";
+    }
+};
+
+/* INIT */
+
+window.onload = function(){
+    startQuiz();
+};
+
+
+</script>
+</body>
+</html>
