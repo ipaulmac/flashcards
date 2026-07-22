@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TO DO OR DOING?</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+  --bg-blue:#061247;
+  --front-purple:#561386;
+  --it-red:#8C0327;
+}
+
+body{
+  background:var(--bg-blue);
+  font-family:system-ui;
+  margin:0;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* TOP BAR (UNCHANGED) */
+.top-bar{
+  width:90vw;
+  max-width:380px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+
+.sound-btn{
+  background:white;
+  color:#061247;
+  font-weight:800;
+  border-radius:8px;
+  padding:4px 10px;
+  font-size:0.8rem;
+}
+
+/* TITLE (UNCHANGED) */
+h2{
+  color:white;
+  font-weight:900;
+  letter-spacing:2px;
+  margin-bottom:6px;
+}
+
+/* CARD */
+.card{
+  width:90vw;
+  max-width:380px;
+  height:40vw;
+  max-height:180px;
+  background:white;
+  border:4px solid var(--it-red);
+  border-radius:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:1rem;
+  text-align:center;
+}
+
+/* TEXT */
+.question-text{
+  width:100%;
+  text-align:center;
+}
+
+.it-text{
+  color:var(--it-red);
+  font-weight:800;
+  font-size:1.2rem;
+}
+
+.en-text{
+  margin-top:10px;
+  font-weight:900;
+  font-size:1.35rem;
+  color:var(--bg-blue);
+}
+
+/* HEADER (NOW MATCHES FILE 1) */
+.answers-header{
+  width:90vw;
+  max-width:380px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:8px;
+  margin-bottom:4px;
+}
+
+#counter{
+  color:white;
+  font-weight:800;
+  font-size:0.95rem;
+}
+
+#score{
+  color:#FFD700;
+  font-weight:800;
+  font-size:0.95rem;
+  text-align:right;
+}
+
+.next-btn{
+  background:#00cfd5;
+  color:#061247;
+  font-weight:800;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 12px;
+  font-size:0.8rem;
+}
+
+/* INSTRUCTION */
+.instruction{
+  color:#FFD54A;
+  font-weight:700;
+  font-size:0.85rem;
+  margin-top:6px;
+}
+
+/* ANSWERS */
+.answers{
+  width:90vw;
+  max-width:380px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:10px;
+}
+
+.answer-btn{
+  width:100%;
+  min-height:50px;
+  background:#eef2f7;
+  color:var(--front-purple);
+  font-weight:700;
+  border-radius:10px;
+  border:1px solid #cbd5e1;
+  padding:10px;
+}
+
+.correct{background:#22c55e;color:white;}
+.wrong{background:#ef4444;color:white;}
+
+/* SEE EXAMPLE */
+.example-btn{
+  width:90vw;
+  max-width:380px;
+  margin-top:8px;
+  background:#b6d4ff;
+  color:var(--it-red);
+  font-weight:800;
+  border-radius:8px;
+  padding:6px 14px;
+  text-align:center;
+}
+
+/* RETRY */
+
+
+.retry-btn{
+  all:unset;
+  background:var(--front-purple);
+  color:white;
+  font-weight:800;
+  border-radius:8px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 18px;
+  font-size:0.9rem;
+  cursor:pointer;
+  margin-top:12px;
+}
+
+.library-back-container{
+  width:90vw;
+  max-width:380px;
+  display:flex;
+  justify-content:center;
+  margin:14px auto 0;
+}
+
+.library-back-btn{
+  width:110px;
+  height:42px;
+  background:#930000;
+  color:#ffffff;
+  border:2px solid #ffffff;
+  border-radius:10px;
+  font-size:.84rem;
+  font-weight:900;
+  cursor:pointer;
+  transition:background .2s,color .2s;
+}
+
+.library-back-btn:hover{
+  background:#FFF3A3;
+  color:#061247;
+}
+
+.library-back-btn:active{
+  transform:scale(.97);
+}
+
+
+
+/* POPUP */
+.overlay{
+  position:fixed;
+  top:5%;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.hidden{display:none;}
+
+.popup{
+  background:#b6d4ff;
+  padding:16px;
+  border-radius:10px;
+  width:85%;
+  max-width:360px;
+  margin-top:20px;
+  text-align:center;
+}
+
+.close-btn{
+  margin-top:10px;
+  font-weight:800;
+  cursor:pointer;
+  color:var(--it-red);
+}
+
+.readme-text{
+  color:#FFD54A;
+  font-weight:900;
+  font-size:.88rem;
+  cursor:pointer;
+  user-select:none;
+}
+
+.popup-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(6,18,71,.88);
+  display:none;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:90px;
+  padding-left:12px;
+  padding-right:12px;
+  box-sizing:border-box;
+  z-index:99999;
+}
+
+.readme-popup{
+  width:80vw;
+  max-width:360px;
+  background:#fff;
+  border:4px solid var(--it-red);
+  border-radius:16px;
+  padding:18px;
+  box-sizing:border-box;
+}
+
+.popup-text{
+  font-size:.82rem;
+  font-weight:900;
+  line-height:1.45;
+  color:var(--bg-blue);
+  text-align:left;
+}
+
+.popup-close-text{
+  margin-top:18px;
+  display:flex;
+  justify-content:flex-end;
+  font-size:.95rem;
+  font-weight:900;
+  color:var(--it-red);
+  cursor:pointer;
+}
+
+
+
+
+
+</style>
+</head>
+
+<body>
+
+<div class="w-full max-w-[380px] flex justify-between items-center mb-2">
+
+  <h2 class="text-white font-extrabold tracking-normal m-0">
+    TO DO OR DOING? <span style="color:#FFF3A3;">(B1+)</span>
+  </h2>
+
+  <div style="display:flex;align-items:center;gap:18px;">
+
+    <div id="readMeBtn" class="readme-text">
+      READ ME
+    </div>
+
+    <button id="soundToggle" class="sound-btn">🔊 ON</button>
+
+  </div>
+
+</div>
+<div class="card">
+  <div id="question" class="question-text"></div>
+</div>
+
+<div class="answers-header">
+
+  <div id="counter"></div>
+
+  <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+    <button id="nextBtn" class="next-btn">NEXT</button>
+    <div id="score"></div>
+  </div>
+
+</div>
+
+<div class="instruction">CHOOSE THE CORRECT FORM</div>
+
+<div id="answers" class="answers">
+  <button class="answer-btn">TO DO</button>
+  <button class="answer-btn">DOING</button>
+  <button class="answer-btn">BOTH</button>
+</div>
+
+<button id="exampleBtn" class="example-btn" style="display:none;">
+  SEE EXAMPLE
+</button>
+
+<div class="library-back-container">
+  <button id="libraryBackBtn" class="library-back-btn">
+    BACK
+  </button>
+</div>
+
+<div id="retryContainer" class="w-full max-w-[380px] flex justify-center"></div>
+
+<div id="overlay" class="overlay hidden">
+  <div class="popup">
+    <div id="popupContent"></div>
+    <div id="popupNext" class="close-btn">NEXT ▲</div>
+  </div>
+</div>
+
+<div class="popup-overlay" id="popupOverlay">
+
+  <div class="readme-popup">
+
+    <div class="popup-text">
+
+THIS QUIZ TESTS YOUR KNOWLEDGE OF
+<span style="color:var(--it-red);">JOINING VERBS</span>
+(SEE THE POST IN THE
+<span style="color:#0066CC;">VIRTUAL CLASSROOM</span>)
+
+<br><br>
+
+YOU MUST CHOOSE WHETHER THE VERB INDICATED IS FOLLOWED BY THE
+<span style="color:var(--it-red);">TO</span>
+FORM, THE
+<span style="color:var(--it-red);">ING</span>
+FORM, OR
+<span style="color:var(--it-red);">BOTH</span>
+
+<br><br>
+
+THERE ARE OVER
+<span style="color:var(--it-red);">70</span>
+QUESTIONS, OF WHICH ONLY
+<span style="color:var(--it-red);">8</span>
+ARE SELECTED RANDOMLY
+
+<br><br>
+
+AFTER GIVING THE CORRECT ANSWER, IF YOU WISH TO SEE THE VERB IN CONTEXT, JUST TAP THE
+<span style="color:var(--it-red);">SEE EXAMPLE</span>
+BUTTON
+
+</div>
+
+    <div id="closePopup" class="popup-close-text">
+      START QUIZ →
+    </div>
+
+  </div>
+
+</div>
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<script>
+
+/* QUESTIONS */
+const questions = [
+
+{ it:"AMMETTERE DI FARE", en:"ADMIT .....", type:"doing",
+examples:[{
+  en:"I admitted making a mistake",
+  it:"Ho ammesso di aver commesso un errore"
+}] },
+
+{ it:"PREVEDERE DI FARE", en:"ANTICIPATE .....", type:"doing",
+examples:[{en:"We anticipate finishing early", it:"Prevediamo di finire presto"}] },
+
+{ it:"EVITARE DI FARE", en:"AVOID .....", type:"doing",
+examples:[{
+  en:"He avoids talking about money",
+  it:"Lui evita di parlare di soldi"
+}] },
+
+{ it:"NON POTER FARE A MENO DI FARE", en:"CAN’T HELP .....", type:"doing",
+examples:[{en:"She can’t help laughing", it:"Non può fare a meno di ridere"}] },
+
+{ it:"NON SOPPORTARE DI FARE", en:"CAN’T STAND .....", type:"doing",
+examples:[{en:"I can’t stand waiting in long queues", it:"Non sopporto aspettare in lunghe code"}] },
+
+{ it:"CONSIDERARE DI FARE", en:"CONSIDER .....", type:"doing",
+examples:[{
+  en:"They are considering moving abroad",
+  it:"Stanno considerando/valutando di trasferirsi all’estero"
+}] },
+
+{ it:"RIMANDARE DI FARE", en:"DELAY .....", type:"doing",
+examples:[{
+  en:"We delayed leaving because of the rain",
+  it:"Abbiamo rimandato di partire (la partenza) a causa della pioggia"
+}] },
+
+{ it:"NEGARE DI FARE", en:"DENY .....", type:"doing",
+examples:[{en:"He denied breaking the window", it:"Ha negato di aver rotto la finestra"}] },
+
+{ it:"DETESTARE DI FARE", en:"DISLIKE .....", type:"doing",
+examples:[{en:"She dislikes getting up early", it:"Non le piace alzarsi presto"}] },
+
+{ it:"PIACERE FARE", en:"LIKE .....", type:"both",
+examples:[
+{en:"I like reading books on holiday", it:"Mi piace leggere dei libri in vacanza"},
+{en:"I like to read in the evening", it:"Mi piace leggere la sera"}
+] },
+
+{ it:"DIVERTIRSI A FARE", en:"ENJOY .....", type:"doing",
+examples:[{en:"We enjoyed singing karaoke", it:"Ci siamo divertiti a cantare karaoke"}] },
+
+{ it:"AVERE VOGLIA DI FARE", en:"FEEL LIKE .....", type:"doing",
+examples:[{en:"I feel like going out", it:"Ho voglia di uscire"}] },
+
+{ it:"TEMERE DI FARE", en:"FEAR .....", type:"doing",
+examples:[{en:"She fears losing her job", it:"Teme di perdere il lavoro"}] },
+
+{ it:"FINIRE DI FARE", en:"FINISH .....", type:"doing",
+examples:[{en:"He finished writing the email", it:"Ha finito di scrivere l’email"}] },
+
+{ it:"IMMAGINARE DI FARE", en:"IMAGINE .....", type:"doing",
+examples:[{en:"Imagine living in New York!", it:"Immagina di vivere a New York!"}] },
+
+{ it:"CONTINUARE A FARE", en:"CONTINUE .....", type:"both",
+examples:[
+{en:"He continued walking", it:"Lui continuava a camminare"},
+{en:"She continues to have problems", it:"Lei continua ad avere problemi"}
+] },
+
+{ it:"NON DISPIACERSI DI FARE", en:"MIND .....", type:"doing",
+examples:[{en:"Do you mind opening the window", it:"Ti dispiace aprire la finestra"}] },
+
+{ it:"SENTIRE LA MANCANZA DI FARE", en:"MISS .....", type:"doing",
+examples:[{en:"I miss seeing my friends", it:"Mi manca vedere i miei amici"}] },
+
+{ it:"OMETTERE DI FARE", en:"OMIT .....", type:"doing",
+examples:[{en:"He omitted telling the truth", it:"Ha omesso di dire la verità"}] },
+
+{ it:"ESERCITARSI A FARE", en:"PRACTISE .....", type:"doing",
+examples:[{en:"She practises speaking French every day", it:"Si esercita a parlare francese ogni giorno"}] },
+
+{ it:"RICORDARE DI AVER FATTO", en:"REMEMBER .....", type:"doing",
+examples:[{en:"I remember meeting him years ago", it:"Ricordo di averlo incontrato anni fa"}] },
+
+{ it:"CONSIGLIARE DI FARE", en:"RECOMMEND .....", type:"doing",
+examples:[{en:"I recommend taking the train", it:"Consiglio di prendere il treno"}] },
+
+{ it:"RESISTERE A FARE", en:"RESIST .....", type:"doing",
+examples:[{en:"He resisted answering the question", it:"Ha resistito a rispondere alla domanda"}] },
+
+{ it:"RISCHIARE DI FARE", en:"RISK .....", type:"doing",
+examples:[{en:"You risk losing everything", it:"Rischi di perdere tutto"}] },
+
+{ it:"SMETTERE DI FARE", en:"STOP .....", type:"doing",
+examples:[{en:"She stopped smoking last year", it:"Ha smesso di fumare l’anno scorso"}] },
+
+{ it:"SUGGERIRE DI FARE", en:"SUGGEST .....", type:"doing",
+examples:[{en:"I suggest going earlier", it:"Suggerisco di andare prima"}] },
+
+{ it:"INIZIARE A FARE", en:"START/BEGIN .....", type:"both",
+examples:[
+{en:"It suddenly started raining", it:"Ha iniziato a piovere all’improvviso"},
+{en:"She began to study seriously last year", it:"Ha iniziato a studiare seriamente l’anno scorso"}
+] },
+
+{ it:"PROVARE A FARE", en:"TRY .....", type:"both",
+examples:[
+{en:"Try restarting the computer", it:"Prova a riavviare il computer"},
+{en:"I tried to open the door", it:"Ho provato ad aprire la porta"}
+] },
+
+{ it:"DIMENTICARE DI AVER FATTO", en:"FORGET .....", type:"doing",
+examples:[{en:"I completely forgot ever speaking to him", it:"Mi sono completamente dimenticato di avergli mai parlato"}] },
+
+{ it:"ACCETTARE DI FARE", en:"AGREE .....", type:"to",
+examples:[{en:"She agreed to help us", it:"Ha accettato di aiutarci"}] },
+
+{ it:"SEMBRARE DI FARE", en:"SEEM .....", type:"to",
+examples:[{en:"He seems to understand everything", it:"Lui sembra capire tutto"}] },
+
+{ it:"ORGANIZZARSI PER FARE", en:"ARRANGE .....", type:"to",
+examples:[{en:"We arranged to meet at six", it:"Ci siamo organizzati per vederci alle 18"}] },
+
+{ it:"POTERSI PERMETTERE DI FARE", en:"CAN AFFORD .....", type:"to",
+examples:[{en:"They can’t afford to buy a house", it:"Non possono permettersi di comprare casa"}] },
+
+{ it:"SCEGLIERE DI FARE", en:"CHOOSE .....", type:"to",
+examples:[{en:"She chose to stay", it:"Ha scelto di restare"}] },
+
+{ it:"SOSTENERE DI FARE", en:"CLAIM .....", type:"to",
+examples:[{en:"He claims to know the truth", it:"Sostiene di sapere la verità"}] },
+
+{ it:"DECIDERE DI FARE", en:"DECIDE .....", type:"to",
+examples:[{en:"We decided to leave early", it:"Abbiamo deciso di partire presto"}] },
+
+{ it:"PRETENDERE DI FARE", en:"DEMAND .....", type:"to",
+examples:[{en:"They demanded to speak to the manager", it:"Hanno preteso di parlare con il responsabile"}] },
+
+{ it:"MERITARE DI FARE", en:"DESERVE .....", type:"to",
+examples:[{en:"You deserve to win", it:"Meriti di vincere"}] },
+
+{ it:"ASPETTARSI DI FARE", en:"EXPECT .....", type:"to",
+examples:[{en:"I expect to hear from her soon", it:"Mi aspetto di sentirla presto"}] },
+
+{ it:"NON RIUSCIRE A FARE", en:"FAIL .....", type:"to",
+examples:[{en:"He failed to finish on time", it:"Non è riuscito a finire in tempo"}] },
+
+{ it:"AIUTARE A FARE", en:"HELP .....", type:"to",
+examples:[{en:"She helped me to carry the bags", it:"Mi ha aiutato a portare le borse"}] },
+
+{ it:"ESITARE A FARE", en:"HESITATE .....", type:"to",
+examples:[{en:"He hesitated to answer", it:"Ha esitato a rispondere"}] },
+
+{ it:"SPERARE DI FARE", en:"HOPE .....", type:"to",
+examples:[{en:"I hope to see you soon", it:"Spero di vederti presto"}] },
+
+{ it:"AVERE INTENZIONE DI FARE", en:"INTEND .....", type:"both",
+examples:[
+{en:"I intend to start a course", it:"Ho intenzione di iniziare un corso"},
+{en:"I intend looking for it later", it:"Ho intenzione di cercarlo dopo"}
+] },
+
+{ it:"IMPARARE A FARE", en:"LEARN .....", type:"to",
+examples:[{en:"She learned to drive last year", it:"Ha imparato a guidare l’anno scorso"}] },
+
+{ it:"RIUSCIRE A FARE", en:"MANAGE .....", type:"to",
+examples:[{en:"He managed to solve the problem", it:"È riuscito a risolvere il problema"}] },
+
+{ it:"INTENDERE FARE", en:"MEAN .....", type:"to",
+examples:[{en:"I didn’t mean to hurt you", it:"Non intendevo farti male"}] },
+
+{ it:"TRASCURARE DI FARE", en:"NEGLECT .....", type:"to",
+examples:[{
+  en:"He neglected to call her yesterday",
+  it:"Ha trascurato/Si è dimenticato di chiamarla ieri"
+}] },
+
+{ it:"OFFRIRSI DI FARE", en:"OFFER .....", type:"to",
+examples:[{en:"She offered to help me", it:"Si è offerta di aiutarmi"}] },
+
+{ it:"PROGETTARE DI FARE", en:"PLAN .....", type:"to",
+examples:[{en:"We plan to move abroad next year", it:"Abbiamo in programma di trasferirci all'estero l'anno prossimo"}] },
+
+{ it:"PREPARARSI A FARE", en:"PREPARE .....", type:"to",
+examples:[{en:"They prepared to leave", it:"Si sono preparati a partire"}] },
+
+{ it:"FINGERE/FARE FINTA DI FARE", en:"PRETEND .....", type:"to",
+examples:[{
+  en:"He pretended to know the answer",
+  it:"Ha finto/fatto finta di sapere la risposta"
+}] },
+
+{ it:"PROMETTERE DI FARE", en:"PROMISE .....", type:"to",
+examples:[{en:"I promise to call you", it:"Prometto di chiamarti"}] },
+
+{ it:"RIFIUTARE DI FARE", en:"REFUSE .....", type:"to",
+examples:[{en:"She refused to answer", it:"Ha rifiutato di rispondere"}] },
+
+{ it:"RISOLVERSI A FARE", en:"RESOLVE .....", type:"to",
+examples:[{en:"He resolved to ask for help", it:"Si è risolto a chiedere aiuto"}] },
+
+{ it:"FAR FATICA A FARE", en:"STRUGGLE .....", type:"to",
+examples:[{en:"I struggle to understand this topic", it:"Faccio fatica a capire questo argomento"}] },
+
+{ it:"TENDERE A FARE", en:"TEND .....", type:"to",
+examples:[{en:"I tend to forget names", it:"Tendo a dimenticare i nomi"}] },
+
+{ it:"MINACCIARE DI FARE", en:"THREATEN .....", type:"to",
+examples:[{en:"They threatened to leave", it:"Hanno minacciato di andarsene"}] },
+
+{ it:"ASPETTARE DI FARE", en:"WAIT .....", type:"to",
+examples:[{en:"We waited to hear the news", it:"Abbiamo aspettato di sentire la notizia"}] },
+
+{ it:"VOLERE FARE", en:"WANT .....", type:"to",
+examples:[{en:"I want to learn more", it:"Voglio imparare di più"}] },
+
+{ it:"DOVERE FARE", en:"HAVE .....", type:"to",
+examples:[{
+  en:"I have to finish this job",
+  it:"Devo finire questo lavoro"
+}] },
+
+{ it:"DESIDERARE FARE", en:"WISH .....", type:"to",
+examples:[{en:"I wish to speak to him", it:"Desidero parlargli"}] },
+
+{ it:"ODIEREBBE FARE", en:"WOULD HATE .....", type:"to",
+examples:[{
+  en:"I’d hate to miss the train",
+  it:"Odierei/Mi dispiacerebbe perdere il treno"
+}] },
+
+{ it:"AMEREBBE FARE", en:"WOULD LOVE .....", type:"to",
+examples:[{
+  en:"I’d love to visit Japan",
+  it:"Amerei/Mi piacerebbe molto visitare il Giappone"
+}] },
+
+{ it:"PIACEREBBE/VORREBBE FARE", en:"WOULD LIKE .....", type:"to",
+examples:[{
+  en:"I would like to ask you a question",
+  it:"Vorrei farti una domanda"
+}] },
+
+{ it:"PREFERIREBBE FARE", en:"WOULD PREFER .....", type:"to",
+examples:[{en:"I’d prefer to stay home", it:"Preferirei restare a casa"}] },
+
+{ it:"RICORDARSI DI FARE", en:"REMEMBER .....", type:"to",
+examples:[{
+  en:"Remember to lock the door!",
+  it:"Ricordati di chiudere la porta a chiave!"
+}] },
+
+{ it:"DIMENTICARE DI FARE", en:"FORGET .....", type:"to",
+examples:[{en:"I forgot to send the email", it:"Ho dimenticato di inviare l’email"}] },
+
+{ it:"TENTARE DI FARE", en:"ATTEMPT .....", type:"to",
+examples:[{en:"They attempted to escape", it:"Hanno tentato di scappare"}] },
+
+{ it:"OSARE FARE", en:"DARE .....", type:"to",
+examples:[{en:"He didn’t dare to speak", it:"Non ha osato parlare"}] },
+
+{ it:"BASTARE FARE", en:"BE ENOUGH .....", type:"to",
+examples:[{en:"This is enough to convince me", it:"Questo basta per convincermi"}] },
+
+{ it:"AVER BISOGNO DI FARE", en:"NEED .....", type:"to",
+examples:[{en:"I need to rest", it:"Ho bisogno di riposare"}] }
+
+];
+
+/* SOUND */
+let soundEnabled = true;
+
+function playSound(sound){
+  if(!soundEnabled) return;
+
+  document.querySelectorAll("audio").forEach(a=>{
+    a.pause();
+    a.currentTime = 0;
+  });
+
+  sound.play();
+}
+
+document.getElementById("soundToggle").onclick = () => {
+  soundEnabled = !soundEnabled;
+  document.getElementById("soundToggle").innerText =
+    soundEnabled ? "🔊 ON" : "🔇 OFF";
+};
+
+document.getElementById(
+"libraryBackBtn"
+).onclick = function(){
+
+window.location.href =
+"https://www.acceleratedlanguagesystems.com/quizzes-booster";
+
+};
+
+
+/* SHUFFLE */
+function shuffle(arr){
+  let newArr = [...arr];
+  for(let i = newArr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+  }
+  return newArr;
+}
+
+/* VARIABLES */
+let quiz = [];
+let index = 0;
+let score = 0;
+
+/* START QUIZ */
+function startQuiz(){
+  quiz = shuffle([...questions]).slice(0,8);
+  index = 0;
+  score = 0;
+
+  document.getElementById("answers").style.display = "flex";
+  document.getElementById("nextBtn").style.display = "flex";
+  document.getElementById("exampleBtn").style.display = "none";
+  document.getElementById("retryContainer").innerHTML = "";
+
+  // restore instruction
+  document.querySelector(".instruction").style.display = "block";
+
+  showQuestion();
+}
+
+/* SHOW QUESTION */
+function showQuestion(){
+  const q = quiz[index];
+
+  document.getElementById("question").innerHTML = `
+    <div class="it-text">${q.it}</div>
+    <div class="en-text">${q.en}</div>
+  `;
+
+  document.querySelectorAll(".answer-btn").forEach(btn=>{
+    btn.classList.remove("correct","wrong");
+    btn.disabled = false;
+  });
+
+  document.getElementById("exampleBtn").style.display = "none";
+  document.getElementById("nextBtn").disabled = true;
+
+  updateCounter();
+  updateScore();
+}
+
+/* CHECK ANSWER */
+function checkAnswer(selected){
+  const q = quiz[index];
+
+  document.querySelectorAll(".answer-btn").forEach(btn=>{
+  btn.disabled = true;
+
+  const btnType =
+    btn.innerText.includes("BOTH") ? "both" :
+    btn.innerText.includes("DOING") ? "doing" : "to";
+
+  if(btnType === selected){
+
+    if(selected === q.type){
+      btn.classList.add("correct");
+    }else{
+      btn.classList.add("wrong");
+    }
+
+  }
+});
+
+  if(selected === q.type){
+  score++;
+  playSound(document.getElementById("correctSound"));
+
+  // Only show the example after a correct answer
+  document.getElementById("exampleBtn").style.display = "block";
+
+} else {
+  playSound(document.getElementById("wrongSound"));
+
+  // Keep the example hidden after an incorrect answer
+  document.getElementById("exampleBtn").style.display = "none";
+}
+
+document.getElementById("nextBtn").disabled = false;
+}
+
+/* SEE EXAMPLE */
+document.getElementById("exampleBtn").onclick = function(){
+  const q = quiz[index];
+
+  let html = "";
+
+  q.examples.forEach(ex=>{
+    html += `
+      <div style="margin-bottom:10px;">
+        <b>${ex.en}</b><br>
+        <i>${ex.it}</i>
+      </div>
+    `;
+  });
+
+  document.getElementById("popupContent").innerHTML = html;
+  document.getElementById("overlay").classList.remove("hidden");
+};
+
+/* POPUP NEXT (AUTO MOVE ON) */
+document.getElementById("popupNext").onclick = function(){
+
+  document.getElementById("overlay").classList.add("hidden");
+
+  if(index === quiz.length - 1){
+    endQuiz();
+    return;
+  }
+
+  index++;
+  showQuestion();
+};
+
+/* NEXT BUTTON */
+document.getElementById("nextBtn").onclick = function(){
+
+  if(index === quiz.length - 1){
+    endQuiz();
+    return;
+  }
+
+  index++;
+  showQuestion();
+};
+
+/* COUNTER */
+function updateCounter(){
+  document.getElementById("counter").innerText =
+    `${index + 1} / ${quiz.length}`;
+}
+
+/* SCORE */
+function updateScore(){
+  document.getElementById("score").innerText = "";
+}
+
+/* END QUIZ */
+function endQuiz(){
+
+  const percent = (score / quiz.length) * 100;
+
+  const questionDiv = document.getElementById("question");
+  questionDiv.innerHTML = "";
+
+  const textDiv = document.createElement("div");
+  textDiv.className = "question-text";
+  textDiv.style.fontWeight = "900";
+
+ // ✅ emoji element
+const emojiDiv = document.createElement("div");
+emojiDiv.style.marginTop = "12px";
+emojiDiv.style.textAlign = "center";
+emojiDiv.style.fontSize = "3rem";
+
+if(percent >= 70){
+  textDiv.innerText = "WELL DONE! YOU'VE PASSED! 🎉";
+  emojiDiv.innerText = "😄";
+  playSound(document.getElementById("passSound"));
+} else {
+  textDiv.innerText = "BAD LUCK! TRY AGAIN ❌";
+  emojiDiv.innerText = "😢";
+  playSound(document.getElementById("failSound"));
+}
+
+// ✅ append both
+questionDiv.appendChild(textDiv);
+questionDiv.appendChild(emojiDiv);
+
+  // remove instruction
+  document.querySelector(".instruction").style.display = "none";
+
+  // hide UI
+document.getElementById("answers").style.display = "none";
+document.getElementById("nextBtn").style.display = "none";
+document.getElementById("exampleBtn").style.display = "none";
+document.getElementById("libraryBackBtn").style.display = "none";
+
+  // ✅ PUT FINAL SCORE IN HEADER (same line as 10/10)
+  document.getElementById("score").innerText =
+    `YOUR SCORE ${score}/${quiz.length}`;
+
+  // ✅ ONLY BUTTON BELOW (no extra score block)
+  document.getElementById("retryContainer").innerHTML = `
+    <div style="
+      width:90vw;
+      max-width:380px;
+      display:flex;
+      justify-content:center;
+      margin-top:10px;
+    ">
+      <button class="retry-btn">TRY AGAIN</button>
+    </div>
+  `;
+
+  document.querySelector(".retry-btn").onclick = startQuiz;
+}
+
+/* ANSWERS */
+document.querySelectorAll(".answer-btn")[0].onclick = () => checkAnswer("to");
+document.querySelectorAll(".answer-btn")[1].onclick = () => checkAnswer("doing");
+document.querySelectorAll(".answer-btn")[2].onclick = () => checkAnswer("both");
+
+/* READ ME POPUP */
+
+document.getElementById("readMeBtn").onclick = function(){
+  document.getElementById("popupOverlay").style.display = "flex";
+};
+
+document.getElementById("closePopup").onclick = function(){
+  document.getElementById("popupOverlay").style.display = "none";
+};
+
+document.getElementById("popupOverlay").onclick = function(e){
+  if(e.target === this){
+    this.style.display = "none";
+  }
+};
+
+
+
+
+
+/* INIT */
+startQuiz();
+
+
+</script>
+
+</body>
+</html>
