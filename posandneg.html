@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>POSITIVES & NEGATIVES</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+letter-spacing:.08em;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+}
+
+.top-controls{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.88rem;
+letter-spacing:.03em;
+cursor:pointer;
+user-select:none;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+max-height:80vh;
+overflow-y:auto;
+background:#fff;
+border:4px solid var(--red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkred;
+cursor:pointer;
+user-select:none;
+}
+
+/* FLIP CARD */
+
+.flip-card{
+width:92vw;
+max-width:380px;
+height:290px;
+perspective:1200px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+transform:rotateY(180deg);
+}
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:10px 14px;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+.front{
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.question{
+font-size:1.05rem;
+font-weight:900;
+line-height:1.18;
+color:#0E065C;
+text-transform:uppercase;
+}
+
+.back{
+transform:rotateY(180deg);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+padding:18px;
+box-sizing:border-box;
+}
+
+
+#flipContent{
+width:100%;
+font-family:Arial,sans-serif;
+font-size:1rem;
+font-weight:900;
+line-height:1.35;
+color:#0E065C;
+text-align:center;
+margin-top:0;
+}
+
+#flipContent span{
+color:darkred;
+}
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0 12px;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+.next-btn{
+background:#00cfd5;
+color:#061247;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:.5;
+pointer-events:none;
+}
+
+.compare-control-btn{
+background:darkred;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+display:none;
+}
+
+.answers{
+width:92vw;
+max-width:380px;
+display:grid;
+gap:8px;
+}
+
+.answer-btn{
+background:#eef2f7;
+color:var(--purple);
+font-weight:900;
+border-radius:10px;
+border:1px solid #cbd5e1;
+padding:10px;
+font-size:.80rem;
+}
+
+.correct{
+background:#22c55e;
+color:#fff;
+}
+
+.wrong{
+background:#ef4444;
+color:#fff;
+}
+
+.translate-input{
+width:100%;
+padding:10px;
+border:2px solid #cbd5e1;
+border-radius:10px;
+font-weight:900;
+text-transform:uppercase;
+}
+
+.check-btn{
+background:#22c55e;
+color:white;
+border:none;
+border-radius:10px;
+padding:10px;
+font-weight:900;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+.red{
+color:darkred;
+}
+
+.library-back-container{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin-top:14px;
+margin-bottom:6px;
+}
+
+.library-back-btn{
+background:#8C0327;
+color:white;
+border:2px solid white;
+border-radius:10px;
+padding:8px 30px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+cursor:pointer;
+transition:background .2s,color .2s;
+}
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:#8C0327;
+}
+
+.library-back-btn:active{
+transform:scale(.97);
+}
+
+
+</style>
+</head>
+
+<body>
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<div class="top-bar">
+
+<div class="top-title">
+POSITIVES & NEGATIVES
+</div>
+
+<div class="top-controls">
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
+</div>
+</div>
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+<span style="color:#0E065C;font-weight:900;">
+
+THIS QUIZ REVIEWS THE POSTS
+
+<span style="color:mediumvioletred;">POSITIVES & NEGATIVES (PARTS 1 – 3)</span>
+
+IN THE <span style="color:mediumvioletred;">VIRTUAL CLASSROOM</span>
+
+<br><br>
+
+WE SUGGEST YOU REVIEW THESE POSTS BEFORE ATTEMPTING THIS QUIZ
+
+<br><br>
+
+<span style="color:darkred;">10</span>
+
+QUESTIONS ARE SELECTED RANDOMLY FROM A TOTAL OF
+
+<span style="color:darkred;">70</span>
+
+AND WILL SHUFFLE AFTER EACH ATTEMPT
+
+<br><br>
+
+<span style="color:#16a34a;">
+QUESTION TYPES INCLUDE:
+</span>
+
+<br><br>
+
+MULTIPLE CHOICE / TRUE OR FALSE / TRANSLATION
+
+<br><br>
+
+TRANSLATION QUESTIONS ALLOW
+
+<span style="color:darkred;">TWO ATTEMPTS</span>
+
+<br><br>
+
+<span style="color:darkred;">ONLY IF</span>
+
+YOU ANSWER CORRECTLY WILL THE CARD FLIP TO REVEAL FURTHER INFORMATION
+
+BUT
+
+<span style="color:darkred;">NOT ALL</span>
+
+THE CARDS FLIP AFTER A CORRECT ANSWER
+
+<br><br>
+
+PASS MARK
+
+<span style="color:darkred;">7/10</span>
+
+</span>
+
+</div>
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:18px;
+">
+
+<span style="
+color:#15803d;
+font-weight:900;
+font-size:.88rem;
+">
+CEFR: B1+
+</span>
+
+<div id="closePopup" class="popup-close-text" style="margin-top:0;">
+START QUIZ →
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="flip-card" id="flipCard">
+
+<div class="flip-inner">
+
+<div class="card-face front">
+<div class="question" id="question"></div>
+</div>
+
+<div class="card-face back">
+<div id="flipContent"></div>
+</div>
+
+</div>
+</div>
+
+<div class="info-row">
+
+<div id="progress"></div>
+
+<div style="display:flex;gap:8px;">
+
+<button id="nextBtn" class="next-btn">
+NEXT
+</button>
+
+<button id="compareBtn" class="compare-control-btn">
+COMPARE
+</button>
+
+</div>
+
+<div id="score" class="right"></div>
+
+</div>
+
+<div id="answers" class="answers"></div>
+
+<div class="library-back-container">
+    <button id="libraryBackBtn" class="library-back-btn">
+        BACK
+    </button>
+</div>
+
+<script>
+
+
+
+const questions = [
+
+{
+type:"mcq",
+
+question:`WE SCARCELY HAD ______ TIME TO DISCUSS THE PROPOSAL BEFORE THE MEETING STARTED`,
+
+options:[
+"SOME",
+"ANY",
+"A LOT OF",
+"PLENTY OF"
+],
+
+answer:"ANY",
+
+flip:`
+WE USE <span class="red">ANY</span> BECAUSE <span style="color:mediumvioletred;">SCARCELY</span> IS A NEGATIVE ADVERB<br><br>
+WE CAN'T USE TWO NEGATIVES IN THE SAME SENTENCE
+`
+},
+
+
+{
+type:"mcq",
+
+question:`AT THIS STAGE, ______ SOLUTION WOULD BE BETTER THAN DOING NOTHING`,
+
+options:[
+"SOME",
+"SOMEONE",
+"ANY",
+"ANYTHING"
+],
+
+answer:"ANY"
+
+},
+
+{
+type:"mcq",
+
+question:`THE PARCEL HASN'T ARRIVED ______. WE'RE BEGINNING TO GET WORRIED`,
+
+options:[
+"STILL",
+"ALREADY",
+"YET",
+"EVER"
+],
+
+answer:"YET"
+
+},
+
+{
+type:"mcq",
+
+question:`ARE YOU ______ SURE THIS IS THE RIGHT ADDRESS?`,
+
+options:[
+"ENOUGH",
+"QUITE",
+"VERY MUCH",
+"RATHER ENOUGH"
+],
+
+answer:"QUITE"
+
+},
+
+{
+type:"mcq",
+
+question:`THERE ARE ______ MORE PEOPLE TODAY WHO DISAGREE WITH THE PROPOSAL THAN THERE WERE LAST WEEK`,
+
+options:[
+"STILL",
+"YET",
+"ALREADY",
+"EVER"
+],
+
+answer:"STILL"
+
+},
+
+{
+type:"mcq",
+
+question:`WE ______ HAVEN'T RECEIVED A REPLY, DESPITE US HAVING SENT THREE EMAILS!`,
+
+options:[
+"YET",
+"ALREADY",
+"STILL",
+"EVER"
+],
+
+answer:"STILL",
+
+flip:`
+<span class="red">STILL</span> PLACED <span style="color:darkgreen;">BEFORE</span> THE <span style="color:darkgreen;">AUXILIARY</span> MAKES THE SENTENCE MORE EMPHATIC<br><br>
+<span class="red">ANCORA</span> NON ABBIAMO RICEVUTO UNA RISPOSTA NONOSTANTE ABBIAMO INVIATO 3 EMAIL!
+`
+
+},
+
+{
+type:"mcq",
+
+question:`IT'S ______ COLD OUTSIDE. WE'D BETTER STAY IN`,
+
+options:[
+"ENOUGH",
+"FAR",
+"QUITE",
+"ANY"
+],
+
+answer:"QUITE"
+
+},
+
+{
+type:"mcq",
+
+question:`WE DON'T HAVE ______ INFORMATION TO MAKE A DECISION YET`,
+
+options:[
+"QUITE",
+"MANY",
+"ENOUGH",
+"A LOT"
+],
+
+answer:"ENOUGH"
+
+},
+
+{
+type:"mcq",
+
+question:`HOW ______ LUCK DID YOU HAVE FINDING A PARKING SPACE?`,
+
+options:[
+"MANY",
+"MUCH",
+"A LOT OF",
+"ENOUGH"
+],
+
+answer:"MUCH"
+
+},
+
+{
+type:"mcq",
+
+question:`HOW ______ PEOPLE CAME TO THE MEETING LAST NIGHT?`,
+
+options:[
+"MUCH",
+"MANY",
+"A LOT OF",
+"ENOUGH"
+],
+
+answer:"MANY"
+
+},
+
+{
+type:"mcq",
+
+question:`<span class="red">"I HAVEN'T DONE IT YET"</span> AND <span style="color:darkgreen;">"I STILL HAVEN'T DONE IT"</span> ARE SIMILAR, BUT WHICH SENTENCE EXPRESSES GREATER FRUSTRATION OR ANNOYANCE?`,
+
+options:[
+"I HAVEN'T DONE IT YET",
+"I STILL HAVEN'T DONE IT",
+"BOTH EXPRESS EXACTLY THE SAME EMPHASIS",
+"NEITHER"
+],
+
+answer:"I STILL HAVEN'T DONE IT",
+
+flip:`
+BY USING <span class="red">STILL</span> IN THE <span style="color:mediumvioletred;">NEGATIVE</span>, WE EXPRESS <span style="color:darkgreen;">FRUSTRATION</span> AND <span style="color:darkgreen;">ANNOYANCE</span> (FASTIDIO)<br><br>
+I <span class="red">STILL</span> HAVEN'T DONE IT = <span class="red">ANCORA</span> NON L'HO FATTO!
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE IS GRAMMATICALLY INCORRECT?`,
+
+options:[
+"I HAVE MANY THINGS TO DO THIS WEEKEND",
+"I HAVE A LOT OF THINGS TO DO THIS WEEKEND",
+"I HAVE MUCH THINGS TO DO THIS WEEKEND",
+"I HAVE ENOUGH THINGS TO DO THIS WEEKEND"
+],
+
+answer:"I HAVE MUCH THINGS TO DO THIS WEEKEND",
+
+flip:`
+<span class="red">MUCH</span> CAN ONLY BE USED WITH <span style="color:mediumvioletred;">SINGULAR NOUNS</span><br><br>
+<span class="red">MUCH</span> TIME / <span class="red">MUCH</span> MONEY / <span class="red">MUCH</span> WORK
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE SOUNDS LESS NATURAL IN EVERYDAY ENGLISH?`,
+
+options:[
+"THERE WERE MANY PEOPLE AT THE CONCERT LAST NIGHT",
+"THERE WAS A LOT OF TRAFFIC ON THE MOTORWAY THIS MORNING",
+"THERE WERE A LOT OF PEOPLE AT THE CONCERT LAST NIGHT",
+"THERE WAS MUCH TRAFFIC ON THE MOTORWAY THIS MORNING"
+],
+
+answer:"THERE WAS MUCH TRAFFIC ON THE MOTORWAY THIS MORNING",
+
+flip:`
+WE PREFER TO USE <span class="red">MUCH</span> IN <span style="color:darkgreen;">NEGATIVE</span> SENTENCES<br><br>
+AND <span class="red">A LOT OF</span> IN THE <span style="color:darkgreen;">AFFIRMATIVE</span>
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORD IN RED<br><br><span style="color:darkred;">ANY</span> IDEA AT THIS POINT WOULD BE HELPFUL`,
+
+answer:["QUALSIASI"],
+
+flip:`
+<span class="red">QUALSIASI</span> IDEA A QUESTO PUNTO SAREBBE UTILE<br><br>
+<span class="red">ANY</span> IDEA AT THIS POINT WOULD BE HELPFUL
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORD IN RED<br><br><span style="color:darkred;">ANYTHING</span> MIGHT HAPPEN. WE NEED TO BE PREPARED`,
+
+answer:["QUALSIASI COSA"],
+
+flip:`
+<span class="red">QUALSIASI COSA</span> POTREBBE SUCCEDERE. DOBBIAMO ESSERE PREPARATI<br><br>
+<span class="red">ANYTHING</span> MIGHT HAPPEN. WE NEED TO BE PREPARED
+`
+
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE CORRECT WORD<br><br>I LEFT WITHOUT ______ REALISING IT`,
+
+options:[
+"SOMEONE",
+"ANYONE",
+"NO ONE",
+"EVERYONE"
+],
+
+answer:"ANYONE",
+
+flip:`
+<span class="red">WITHOUT</span> IS A <span style="color:darkgreen;">NEGATIVE</span> PREPOSITION<br><br>
+WE MUST AVOID A DOUBLE NEGATIVE
+`
+
+},
+
+{
+type:"mcq",
+
+question:`THE PARCEL ______ HASN'T ARRIVED`,
+
+options:[
+"ALREADY",
+"STILL",
+"YET",
+"ANYMORE"
+],
+
+answer:"STILL",
+
+flip:`
+<span class="red">STILL</span> <span style="color:darkgreen;">BEFORE</span> THE <span style="color:darkgreen;">AUXILIARY</span> MAKES THE SENTENCE MORE EMPHATIC<br><br>
+THE PARCEL <span class="red">STILL</span> HASN'T ARRIVED = IL PACCO <span class="red">ANCORA</span> NON È ARRIVATO
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE EXPRESSES GREATER SURPRISE OR ANNOYANCE?`,
+
+options:[
+"THE RESTAURANT ISN'T OPEN YET",
+"THE RESTAURANT STILL ISN'T OPEN",
+"BOTH EXPRESS EXACTLY THE SAME EMPHASIS",
+"NEITHER"
+],
+
+answer:"THE RESTAURANT STILL ISN'T OPEN"
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE BEST COMPLETES THE TRANSLATION?<br><br><span class="red">È GIÀ ARRIVATO?</span>`,
+
+options:[
+"HAS HE ARRIVED ALREADY?",
+"HAS HE ARRIVED YET?",
+"HAS HE STILL ARRIVED?",
+"HAS HE ARRIVED STILL?"
+],
+
+answer:"HAS HE ARRIVED YET?",
+
+flip:`
+THE CORRECT POSITION OF <span class="red">ALREADY</span> IS <span style="color:darkgreen;">AFTER</span> AN <span style="color:darkgreen;">AUXILIARY</span> VERB<br><br>
+HAS HE <span class="red">ALREADY</span> ARRIVED?
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>RUSSIA IS <span style="color:darkred;">QUITE FAR</span> FROM HERE`,
+
+answer:[
+"ABBASTANZA LONTANA",
+"ABBASTANZA LONTANO"
+],
+
+flip:`
+LA RUSSIA È <span class="red">ABBASTANZA LONTANA</span> DA QUI<br><br>
+RUSSIA IS <span class="red">QUITE FAR</span> FROM HERE
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE IS GRAMMATICALLY INCORRECT?`,
+
+options:[
+"IS IT WARM ENOUGH?",
+"IT ISN'T BIG ENOUGH",
+"SHE ANSWERED PRECISELY ENOUGH",
+"SHE IS ENOUGH TALL TO REACH THE SHELF"
+],
+
+answer:"SHE IS ENOUGH TALL TO REACH THE SHELF",
+
+flip:`
+<span class="red">ENOUGH</span> ALWAYS <span style="color:darkgreen;">FOLLOWS</span> AN <span style="color:darkgreen;">ADJECTIVE</span> OR <span style="color:darkgreen;">ADVERB</span><br><br>
+TALL <span class="red">ENOUGH</span><br><br>
+PRECISELY <span class="red">ENOUGH</span>
+`
+
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE CORRECT EXPRESSION<br><br>I WOULD LIKE TO VISIT JAPAN ONE DAY. HOWEVER, IT'S ______ FROM ITALY`,
+
+options:[
+"FAR",
+"A LONG WAY",
+"FARTHER",
+"FAR ENOUGH"
+],
+
+answer:"A LONG WAY",
+
+flip:`
+<span class="red">FAR</span> IS NORMALLY USED IN <span style="color:darkgreen;">NEGATIVE</span> AND <span style="color:darkgreen;">INTERROGATIVE</span> SENTENCES<br><br>
+IT ISN'T FAR<br><br>
+HOW FAR IS IT?
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE IS GRAMMATICALLY INCORRECT?`,
+
+options:[
+"HOW FAR IS IT FROM HERE TO THE STATION?",
+"IT ISN'T VERY FAR",
+"IT'S QUITE FAR FROM HERE",
+"IT'S ENOUGH FAR FROM HERE"
+],
+
+answer:"IT'S ENOUGH FAR FROM HERE",
+
+flip:`
+<span class="red">ENOUGH</span> <span style="color:darkgreen;">FOLLOWS</span> AN <span style="color:darkgreen;">ADJECTIVE</span> OR <span style="color:darkgreen;">ADVERB</span><br><br>
+FAR <span class="red">ENOUGH</span><br><br>
+BIG <span class="red">ENOUGH</span><br><br>
+QUICKLY <span class="red">ENOUGH</span>
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br><span style="color:darkred;">AS FAR AS</span> WE KNOW, NOBODY HAS EVER TRIED IT BEFORE`,
+
+answer:["PER QUANTO"],
+
+flip:`
+<span class="red">PER QUANTO</span> NE SAPPIAMO, NON CI HA MAI PROVATO NESSUNO PRIMA<br><br>
+<span class="red">AS FAR AS</span> WE KNOW, NOBODY HAS EVER TRIED IT BEFORE
+`
+
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE CORRECT EXPRESSION<br><br>I'M SORRY, BUT THIS TIME YOU'VE GONE TOO ______`,
+
+options:[
+"LONG",
+"MUCH",
+"FAR",
+"SHORT"
+],
+
+answer:"FAR",
+
+flip:`
+<span class="red">GO TOO FAR</span> = ESAGERARE
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE SOUNDS LESS NATURAL IN EVERYDAY ENGLISH?`,
+
+options:[
+"I DON'T HAVE MUCH TIME TODAY",
+"THERE AREN'T MANY PEOPLE HERE",
+"I HAVE MUCH WORK TO DO BEFORE FRIDAY",
+"HOW MUCH MONEY DO YOU NEED?"
+],
+
+answer:"I HAVE MUCH WORK TO DO BEFORE FRIDAY",
+
+flip:`
+IN <span style="color:mediumvioletred;">AFFIRMATIVE</span> SENTENCES WE PREFER USING <span class="red">A LOT OF</span><br><br>
+I HAVE <span class="red">A LOT OF</span> WORK TO DO BEFORE FRIDAY
+`
+
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE CORRECT WORD OR WORDS<br><br>I CAN PASS BY ______ TOMORROW OR THE DAY AFTER`,
+
+options:[
+"NEITHER",
+"EITHER",
+"BOTH",
+"SOME TIME"
+],
+
+answer:"EITHER"
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE THE FOLLOWING SENTENCE<br><br>LEI È POCO CONCENTRATA`,
+
+answer:[
+"SHE ISN'T VERY CONCENTRATED",
+"SHE IS NOT VERY CONCENTRATED"
+],
+
+flip:`
+<span class="red">POCO + ADJECTIVE</span> = NOT VERY<br><br>
+LEI <span class="red">NON</span> È <span class="red">MOLTO</span> CONCENTRATA<br><br>
+SHE IS <span class="red">NOT VERY</span> CONCENTRATED
+`
+
+},
+
+{
+type:"translate",
+
+question:`WHAT IS THE BEST TRANSLATION OF THIS SENTENCE?<br><br>C'È POCA GENTE IN GIRO OGGI`,
+
+answer:[
+"THERE AREN'T MANY PEOPLE ABOUT TODAY",
+"THERE AREN'T MANY PEOPLE AROUND TODAY",
+"THERE ARE NOT MANY PEOPLE ABOUT TODAY",
+"THERE ARE NOT MANY PEOPLE AROUND TODAY"
+],
+
+flip:`
+THERE AREN'T MANY PEOPLE ABOUT/AROUND TODAY
+`
+
+},
+
+{
+type:"translate",
+
+question:`WHAT IS THE BEST TRANSLATION OF THIS SENTENCE?<br><br>C'È ANCORA MOLTA STRADA DA FARE`,
+
+answer:["THERE IS STILL A LONG WAY TO GO"],
+
+flip:`
+C'È ANCORA MOLTA STRADA DA FARE<br><br>
+THERE IS STILL <span class="red">A LONG WAY</span> TO GO
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>MI STAI CHIEDENDO SE SONO CONTENTO? <span style="color:darkred;">ANZI!</span> SONO ARRABBIATISSIMO!`,
+
+answer:["FAR FROM IT"],
+
+flip:`
+<span class="red">ANZI!</span> SONO ARRABBIATISSIMO!<br><br>
+ARE YOU ASKING ME IF I'M HAPPY? <span class="red">FAR FROM IT!</span> I'M VERY ANGRY!
+`
+
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE CORRECT WORD<br><br>I WOULD PREFER TO GO ______ ELSE BUT THERE, IF YOU DON'T MIND`,
+
+options:[
+"ANYWHERE",
+"NOWHERE",
+"SOMEWHERE",
+"EVERYWHERE"
+],
+
+answer:"ANYWHERE"
+
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE CORRECT WORD<br><br>IT CAN'T BE BOUGHT ______ ELSE`,
+
+options:[
+"SOMEWHERE",
+"NOWHERE",
+"ANYWHERE",
+"EVERYWHERE"
+],
+
+answer:"ANYWHERE"
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>NON SI COMPRA DA <span style="color:darkred;">NESSUNA ALTRA PARTE</span>`,
+
+answer:["ANYWHERE ELSE"],
+flip:`
+
+NON SI COMPRA <span class="red">DA NESSUNA ALTRA PARTE</span><br><br>
+IT CAN'T BE BOUGHT <span class="red">ANYWHERE ELSE</span>
+`
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE MOST SUITABLE WORD<br><br>WELL! ______ HAS TO DEAL WITH IT!`,
+
+options:[
+"ANYBODY",
+"NOBODY",
+"SOMEBODY",
+"EVERYBODY"
+],
+
+answer:"SOMEBODY"
+
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>WE DON'T NEED IT STILL`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"TRUE",
+
+flip:`
+CORRECT FORM:<br><br>
+WE DON'T NEED IT <span class="red">YET</span><br><br>
+<span class="red">STILL</span>, IN A <span style="color:darkgreen;">NEGATIVE</span> SENTENCE, <span style="color:darkgreen;">PRECEDES</span> AN AUXILIARY VERB<br><br>
+WE <span class="red">STILL</span> DON'T NEED IT
+`
+
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>WE STILL DON'T NEED IT`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"FALSE",
+
+flip:`
+IT IS CORRECT BECAUSE <span class="red">STILL</span> IS POSITIONED <span style="color:darkgreen;">BEFORE</span> THE <span style="color:darkgreen;">AUXILIARY</span> VERB<br><br>
+WE <span class="red">STILL</span> DON'T NEED IT
+`
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>THERE WEREN'T MUCH PEOPLE AT THE EVENT YESTERDAY`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"TRUE",
+
+flip:`
+<span class="red">MUCH</span> IS SINGULAR, <span class="red">PEOPLE</span> IS A PLURAL NOUN<br><br>
+CORRECT SENTENCE:<br><br>
+THERE WEREN'T <span class="red">MANY</span> PEOPLE AT THE EVENT YESTERDAY
+`
+
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>I STILL HAVEN'T NEVER BEEN TO JAPAN`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"TRUE",
+
+flip:`
+THIS SENTENCE CONTAINS THE DOUBLE NEGATIVE <span class="red">NOT / NEVER</span><br><br>
+<span style="color:darkgreen;">CORRECT FORMS</span>:<br><br>
+I STILL HAVEN'T BEEN TO JAPAN<br><br>
+I STILL HAVE NEVER BEEN TO JAPAN
+`
+},
+
+{
+type:"translate",
+
+question:`WHAT IS THE BEST TRANSLATION OF THIS SENTENCE?<br><br>HO POCO TEMPO OGGI`,
+
+answer:["I DON'T HAVE MUCH TIME TODAY"],
+
+flip:`
+WE <span style="color:mediumvioletred;">CAN</span> SAY:<br><br>
+I HAVE <span class="red">LITTLE</span> TIME TODAY<br><br>
+BUT WE PREFER USING THE <span style="color:darkgreen;">NEGATIVE</span>:<br><br>
+I <span style="color:darkgreen;">DON'T</span> HAVE <span class="red">MUCH TIME</span> TODAY
+`
+
+},
+
+{
+type:"translate",
+
+question:`WHAT IS THE BEST TRANSLATION OF THIS SENTENCE?<br><br>MANGIO POCO IN ESTATE`,
+
+answer:[
+"I DON'T EAT VERY MUCH IN SUMMER",
+"I DO NOT EAT VERY MUCH IN SUMMER"
+]
+
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>I DON'T HAVE SOME MONEY TO LEND YOU`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"TRUE",
+
+flip:`
+CORRECT FORMS:<br><br>
+I DON'T HAVE <span class="red">ANY</span> MONEY TO LEND YOU<br><br>
+I HAVE <span class="red">NO</span> MONEY TO LEND YOU
+`
+
+},
+
+{
+type:"translate",
+
+question:`WHAT IS THE BEST TRANSLATION OF THIS SENTENCE?<br><br>MANCANO POCHE ORE (ALL'INIZIO)`,
+
+answer:[
+"THERE AREN'T MANY HOURS TO GO",
+"THERE ARE NOT MANY HOURS TO GO"
+]
+
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>SHE ISN'T ENOUGH TALL TO REACH THE BOOK`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"TRUE",
+
+flip:`
+<span class="red">ENOUGH</span> MUST ALWAYS FOLLOW THE ADJECTIVE<br><br>
+<span style="color:darkgreen;">CORRECT FORM</span>:<br><br>
+SHE ISN'T TALL <span class="red">ENOUGH</span> TO REACH THE BOOK<br><br>
+<span class="red">NON</span> È <span class="red">ABBASTANZA</span> ALTA PER RAGGIUNGERE IL LIBRO
+`
+},
+
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>I HAVEN'T YET FINISHED MY HOMEWORK`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"FALSE",
+
+flip:`
+THIS SENTENCE IS CORRECT<br><br>
+I HAVEN'T <span class="red">YET</span> FINISHED MY HOMEWORK<br><br>
+<span class="red">NON</span> HO <span class="red">ANCORA</span> FINITO I COMPITI
+`
+
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>THE TRAIN HASN'T ARRIVED YET`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"FALSE",
+
+flip:`
+THIS SENTENCE IS CORRECT<br><br>
+THE TRAIN HASN'T ARRIVED <span class="red">YET</span><br><br>
+IL TRENO <span class="red">NON</span> È <span class="red">ANCORA</span> ARRIVATO
+`
+
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>SHE WAS QUITE ANGRY ABOUT THE DELAY`,
+options:[
+
+"TRUE",
+"FALSE"
+],
+
+answer:"FALSE",
+
+flip:`
+THIS SENTENCE IS CORRECT<br><br>
+SHE WAS <span class="red">QUITE</span> ANGRY ABOUT THE DELAY<br><br>
+ERA <span class="red">ABBASTANZA</span> ARRABBIATA PER IL RITARDO
+`
+
+},
+
+{
+type:"tf",
+
+question:`THERE <span class="red">IS</span> (TRUE) OR THERE <span class="red">ISN'T</span> (FALSE) A MISTAKE IN THIS SENTENCE<br><br>HOW MANY TIME DO WE HAVE LEFT?`,
+
+options:[
+"TRUE",
+"FALSE"
+],
+
+answer:"TRUE",
+
+flip:`
+<span style="color:darkgreen;">CORRECT FORM</span>:<br><br>
+HOW <span class="red">MUCH TIME</span> DO WE HAVE LEFT?<br><br>
+QUANTO TEMPO CI RIMANE?
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORD IN RED<br><br>VORREI <span style="color:darkred;">TANTO</span> RIVEDERTI`,
+
+answer:[
+"VERY MUCH"
+],
+
+flip:`
+VORREI <span class="red">TANTO</span> RIVEDERTI<br><br>
+WHEN WE PUT <span class="red">VERY MUCH</span> <span style="color:darkgreen;">AFTER</span> THE <span style="color:darkgreen;">AUXILIARY</span>, IT GIVES THE SENTENCE EMPHASIS<br><br>
+I WOULD <span class="red">VERY MUCH</span> LIKE TO SEE YOU AGAIN
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>HE SAYS HE'S MY FRIEND <span style="color:darkred;">AND YET</span> HE STILL TREATS ME BADLY`,
+
+answer:[
+"EPPURE"
+],
+
+flip:`
+HE SAYS HE'S MY FRIEND <span class="red">AND YET</span> HE STILL TREATS ME BADLY<br><br>
+LUI DICE DI ESSERE MIO AMICO <span class="red">EPPURE</span> CONTINUA A TRATTARMI MALE
+`
+
+},
+
+{
+type:"translate",
+
+question:`WHAT IS THE BEST TRANSLATION OF THIS SENTENCE?<br><br>IL MEGLIO DEVE ANCORA VENIRE!`,
+
+answer:[
+"THE BEST IS YET TO COME!"
+]
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE BEST DEMONSTRATES THE CORRECT USE OF <span class="red">ANY</span> IN AN AFFIRMATIVE STATEMENT?`,
+
+options:[
+"YOU MAY CHOOSE ANY BOOK FROM THE SHELF",
+"I HAVE ANY IDEAS ABOUT THE PROJECT",
+"THERE IS ANY MILK LEFT IN THE FRIDGE",
+"ANY PERSON CANNOT ENTER THE BUILDING WITHOUT PERMISSION"
+],
+
+answer:"YOU MAY CHOOSE ANY BOOK FROM THE SHELF",
+
+flip:`
+YOU MAY CHOOSE <span class="red">ANY</span> BOOK FROM THE SHELF<br><br>
+PUOI SCEGLIERE <span class="red">QUALSIASI</span> LIBRO DALLO SCAFFALE
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH OF THE FOLLOWING SENTENCES CORRECTLY EMPHASISES A NEGATIVE MEANING <span class="red">WITHOUT</span> USING <span class="red">ANY</span>?`,
+
+options:[
+"I HARDLY ATE NOTHING",
+"I LEFT WITHOUT ANYONE NOTICING",
+"WE SCARCELY HAD SOME TIME TO REACT",
+"THERE IS NEVER SOME EASY SOLUTION"
+],
+
+answer:"I LEFT WITHOUT ANYONE NOTICING",
+
+flip:`
+THE ADVERBS <span style="color:mediumvioletred;">HARDLY / SCARCELY / NEVER</span> HAVE A NEGATIVE MEANING<br><br>
+SO WE CAN'T USE A DOUBLE NEGATIVE<br><br>
+I LEFT WITHOUT <span class="red">ANYONE</span> NOTICING<br><br>
+ME NE SONO ANDATO SENZA CHE <span class="red">NESSUNO</span> SE NE ACCORGESSE
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE BEST EXPLAINS THE DIFFERENCE IN EMPHASIS BETWEEN <span class="red">STILL</span> AND <span class="red">YET</span>?`,
+
+options:[
+`"I STILL HAVEN'T EATEN" SUGGESTS FRUSTRATION, WHILE "I HAVEN'T EATEN YET" IS NEUTRAL`,
+`"I HAVEN'T EATEN YET" SUGGESTS FRUSTRATION, WHILE "I STILL HAVEN'T EATEN" IS NEUTRAL`,
+"BOTH SENTENCES HAVE EXACTLY THE SAME MEANING",
+`"STILL" IS ONLY USED IN AFFIRMATIVE SENTENCES, WHILE "YET" IS ONLY USED IN NEGATIVE ONES`
+],
+
+answer:`"I STILL HAVEN'T EATEN" SUGGESTS FRUSTRATION, WHILE "I HAVEN'T EATEN YET" IS NEUTRAL`,
+
+flip:`
+<span class="red">STILL</span> IN A NEGATIVE SENTENCE OFTEN SUGGESTS FRUSTRATION OR ANNOYANCE<br><br>
+I <span class="red">STILL</span> HAVEN'T EATEN, AS OPPOSED TO<br><br>
+I HAVEN'T EATEN <span class="red">YET</span>
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE INCORRECTLY USES "FAR"?`,
+
+options:[
+"THE STATION ISN'T FAR FROM HERE",
+"HOW FAR IS THE RESTAURANT?",
+"SHE COMES FROM A FAR COUNTRY",
+"IT IS FAR MORE COMPLICATED THAN I THOUGHT"
+],
+
+answer:"SHE COMES FROM A FAR COUNTRY",
+
+flip:`
+<span class="red">DISTANT</span> IS USED INSTEAD OF <span class="red">FAR</span> AS AN ADJECTIVE <span style="color:darkgreen;">BEFORE A NOUN</span><br><br>
+SHE COMES FROM A <span class="red">DISTANT</span> COUNTRY<br><br>
+NEPTUNE IS A <span class="red">DISTANT</span> PLANET
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>NON È UNA QUESTIONE IMPORTANTE. È <span style="color:darkred;">IRRILEVANTE</span>`,
+
+answer:[
+"NEITHER HERE NOR THERE"
+],
+
+flip:`
+NON È UNA QUESTIONE IMPORTANTE. È <span class="red">IRRILEVANTE</span><br><br>
+THE MATTER ISN'T IMPORTANT. IT'S <span class="red">NEITHER HERE NOR THERE</span>
+`
+
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE CORRECT EXPRESSION<br><br>HOW'S IT GOING? WELL, SO FAR, SO ______`,
+
+options:[
+"GOOD",
+"WELL",
+"FINE",
+"BETTER"
+],
+
+answer:"GOOD",
+
+flip:`
+HOW'S IT GOING? WELL, SO FAR, SO <span class="red">GOOD</span><br><br>
+COME VA? BEH, FINORA, TUTTO BENE
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>È <span style="color:darkred;">DI GRAN LUNGA</span> IL MIGLIORE GIOCATORE DELLA SQUADRA`,
+
+answer:[
+"BY FAR"
+],
+
+flip:`
+È <span class="red">DI GRAN LUNGA</span> IL MIGLIORE GIOCATORE DELLA SQUADRA<br><br>
+HE IS <span class="red">BY FAR</span> THE BEST PLAYER ON THE TEAM
+`
+
+},
+
+{
+type:"mcq",
+
+question:`WHICH SENTENCE BEST EXPLAINS THE MEANING OF <span class="red">QUITE</span> IN THE SENTENCE BELOW?<br><br>IT ISN'T <span class="red">QUITE</span> WHAT I IMAGINED`,
+
+options:[
+"COMPLETELY",
+"ENOUGH",
+"EXACTLY",
+"VERY"
+],
+
+answer:"EXACTLY",
+
+flip:`
+IT ISN'T <span class="red">QUITE</span> WHAT I IMAGINED<br><br>
+<span class="red">NON</span> È <span class="red">ESATTAMENTE</span> COME LO IMMAGINAVO
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORD IN RED<br><br><span style="color:darkred;">CHIUNQUE</span> PUÒ COMMETTERE UN ERRORE`,
+
+answer:[
+"ANYBODY",
+"ANYONE"
+],
+
+flip:`
+<span class="red">CHIUNQUE</span> PUÒ COMMETTERE UN ERRORE<br><br>
+<span class="red">ANYBODY / ANYONE</span> CAN MAKE A MISTAKE
+`
+
+},
+
+{
+type:"mcq",
+
+question:`COMPLETE THE SENTENCE WITH THE CORRECT WORDS<br><br>I HAVEN'T SPOKEN TO ______ ABOUT THE PROBLEM ______`,
+
+options:[
+"SOMEBODY / STILL",
+"ANYBODY / YET",
+"EVERYBODY / STILL",
+"NOBODY / YET"
+],
+
+answer:"ANYBODY / YET",
+
+flip:`
+I HAVEN'T SPOKEN TO <span class="red">ANYBODY</span> ABOUT THE PROBLEM <span class="red">YET</span><br><br>
+<span class="red">NON</span> HO <span class="red">ANCORA</span> PARLATO CON <span class="red">NESSUNO</span> DEL PROBLEMA
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>SIAMO ARRIVATI <span style="color:darkred;">FINO A</span> PAGINA 20`,
+
+answer:[
+"AS FAR AS"
+],
+
+flip:`
+SIAMO ARRIVATI <span class="red">FINO A</span> PAGINA 20<br><br>
+WE GOT <span class="red">AS FAR AS</span> PAGE 20
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORD IN RED<br><br>SEI <span style="color:darkred;">COMPLETAMENTE</span> SICURO?`,
+
+answer:[
+"QUITE"
+],
+
+flip:`
+SEI <span class="red">COMPLETAMENTE</span> SICURO?<br><br>
+ARE YOU <span class="red">QUITE</span> SURE?
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>È STATA UNA <span style="color:darkred;">GIORNATA ABBASTANZA COMPLICATA</span>`,
+
+answer:[
+"QUITE A COMPLICATED DAY"
+],
+
+flip:`
+È STATA <span class="red">UNA GIORNATA ABBASTANZA COMPLICATA</span><br><br>
+IT HAS BEEN <span class="red">QUITE A COMPLICATED DAY</span>
+`
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORD IN RED<br><br>È <span style="color:darkred;">ABBASTANZA</span> CALDO?`,
+
+answer:[
+"ENOUGH"
+]
+
+},
+
+{
+type:"translate",
+
+question:`TRANSLATE ONLY THE WORDS IN RED<br><br>SONO <span style="color:darkred;">TUTT'ALTRO CHE CONTENTO</span> DEI TUOI COMPORTAMENTI`,
+
+answer:[
+"FAR FROM HAPPY"
+],
+
+flip:`
+SONO <span class="red">TUTT'ALTRO CHE CONTENTO</span> DEI TUOI COMPORTAMENTI<br><br>
+I'M <span class="red">FAR FROM HAPPY</span> WITH YOUR BEHAVIOUR
+`
+
+}
+
+];
+
+let quiz = [...questions]
+.sort(() => Math.random() - 0.5)
+.slice(0,10);
+
+
+let current = 0;
+let score = 0;
+let soundOn = true;
+let translateAttempts = 0;
+let showingBack = false;
+
+const flipCard = document.getElementById("flipCard");
+const questionEl = document.getElementById("question");
+const flipContent = document.getElementById("flipContent");
+const answersEl = document.getElementById("answers");
+
+const nextBtn = document.getElementById("nextBtn");
+const compareBtn = document.getElementById("compareBtn");
+
+const progressEl = document.getElementById("progress");
+const scoreEl = document.getElementById("score");
+
+const popupOverlay = document.getElementById("popupOverlay");
+const closePopup = document.getElementById("closePopup");
+const readMeBtn = document.getElementById("readMeBtn");
+const libraryBackBtn = document.getElementById("libraryBackBtn");
+
+popupOverlay.style.display = "none";
+
+readMeBtn.onclick = () => {
+popupOverlay.style.display = "flex";
+};
+
+closePopup.onclick = () => {
+popupOverlay.style.display = "none";
+};
+
+function playSound(id){
+
+if(!soundOn) return;
+
+const audio = document.getElementById(id);
+
+if(audio){
+
+audio.currentTime = 0;
+audio.play();
+
+}
+
+}
+
+document.getElementById("soundToggle").onclick = function(){
+
+soundOn = !soundOn;
+
+this.textContent = soundOn
+? "🔊 ON"
+: "🔇 OFF";
+
+};
+
+libraryBackBtn.onclick = () => {
+
+window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+
+};
+
+
+function normalise(text){
+
+return text
+.trim()
+.toUpperCase()
+.replace(/\s+/g," ");
+
+}
+
+function updateDisplay(){
+
+progressEl.textContent =
+`${current + 1} / ${quiz.length}`;
+
+scoreEl.textContent =
+`${score} / ${quiz.length}`;
+
+}
+
+function enableNext(){
+
+nextBtn.style.opacity = 1;
+nextBtn.style.pointerEvents = "auto";
+
+}
+
+function disableNext(){
+
+nextBtn.style.opacity = .5;
+nextBtn.style.pointerEvents = "none";
+
+}
+
+function flipToAnswer(q){
+
+if(!q.flip) return;
+
+flipContent.innerHTML = q.flip;
+
+flipCard.classList.add("flipped");
+
+showingBack = true;
+
+compareBtn.style.display = "inline-block";
+
+}
+
+function markCorrect(q){
+
+score++;
+
+updateDisplay();
+
+playSound("correctSound");
+
+enableNext();
+
+if(q.flip){
+
+flipToAnswer(q);
+
+}else{
+
+answersEl.innerHTML = `
+
+<div style="
+background:#15803d;
+color:white;
+padding:12px;
+border-radius:10px;
+font-weight:900;
+text-align:center;
+">
+
+✓ CORRECT
+
+</div>
+
+`;
+
+}
+
+}
+function finishQuiz(){
+
+const passMark =
+Math.ceil(quiz.length * 0.8);
+
+const passed =
+score >= passMark;
+
+if(passed){
+playSound("passSound");
+}else{
+playSound("failSound");
+}
+
+document.getElementById("question").innerHTML = `
+
+<div style="
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:220px;
+line-height:1.6;
+">
+
+<div style="
+font-size:1.35rem;
+font-weight:900;
+margin-bottom:30px;
+">
+
+${passed
+? "WELL DONE! YOU'VE PASSED! 🎉"
+: "BAD LUCK! TRY AGAIN ❌"}
+
+</div>
+
+<div style="
+font-size:1.25rem;
+font-weight:900;
+margin-bottom:35px;
+">
+
+YOUR SCORE: ${score} / ${quiz.length}
+
+</div>
+
+<button
+onclick="location.reload()"
+style="
+background:${passed ? "#15803d" : "#b91c1c"};
+color:white;
+border:none;
+border-radius:12px;
+padding:12px 34px;
+font-weight:900;
+cursor:pointer;
+">
+
+TRY AGAIN
+
+</button>
+
+</div>
+`;
+
+answersEl.innerHTML = "";
+
+flipCard.classList.remove("flipped");
+
+questionEl.style.display = "block";
+
+compareBtn.style.display = "none";
+
+nextBtn.style.display = "none";
+
+libraryBackBtn.style.display = "none";
+
+progressEl.textContent =
+`${quiz.length} / ${quiz.length}`;
+
+scoreEl.textContent =
+`${score} / ${quiz.length}`;
+
+}
+
+function buildMCQ(q){
+
+answersEl.innerHTML = "";
+
+q.options.forEach(option => {
+
+const btn =
+document.createElement("button");
+
+btn.className =
+"answer-btn";
+
+btn.innerHTML =
+option;
+
+btn.onclick = () => {
+
+document
+.querySelectorAll(".answer-btn")
+.forEach(b => b.disabled = true);
+
+if(option === q.answer){
+
+btn.classList.add("correct");
+
+markCorrect(q);
+
+}else{
+
+btn.classList.add("wrong");
+
+playSound("wrongSound");
+
+enableNext();
+
+}
+
+};
+
+answersEl.appendChild(btn);
+
+});
+
+}
+
+function buildTF(q){
+
+answersEl.innerHTML = "";
+
+["TRUE","FALSE"].forEach(option => {
+
+const btn =
+document.createElement("button");
+
+btn.className =
+"answer-btn";
+
+btn.textContent =
+option;
+
+btn.onclick = () => {
+
+document
+.querySelectorAll(".answer-btn")
+.forEach(b => b.disabled = true);
+
+if(option === q.answer){
+
+btn.classList.add("correct");
+
+markCorrect(q);
+
+}else{
+
+btn.classList.add("wrong");
+
+playSound("wrongSound");
+
+enableNext();
+
+}
+
+};
+
+answersEl.appendChild(btn);
+
+});
+
+}
+
+function buildTranslate(q){
+
+translateAttempts = 0;
+
+answersEl.innerHTML = `
+
+<input
+id="translateInput"
+class="translate-input">
+
+<button
+id="checkBtn"
+class="check-btn">
+CHECK
+</button>
+
+`;
+
+const input =
+document.getElementById(
+"translateInput"
+);
+
+const checkBtn =
+document.getElementById(
+"checkBtn"
+);
+
+input.addEventListener("input", () => {
+
+if(translateAttempts >= 1){
+
+checkBtn.textContent = "CHECK";
+
+checkBtn.style.background =
+"#22c55e";
+
+checkBtn.style.color =
+"white";
+
+}
+
+});
+
+checkBtn.onclick = () => {
+
+const studentAnswer =
+normalise(
+input.value
+);
+
+const correct =
+q.answer.some(a =>
+normalise(a)
+=== studentAnswer
+);
+
+if(correct){
+
+markCorrect(q);
+
+return;
+
+}
+
+playSound("wrongSound");
+
+translateAttempts++;
+
+if(translateAttempts === 1){
+
+checkBtn.textContent =
+"TRY AGAIN";
+
+checkBtn.style.background =
+"#ef4444";
+
+checkBtn.style.color =
+"white";
+
+input.disabled = false;
+
+input.focus();
+
+input.select();
+
+return;
+
+}
+
+input.disabled = true;
+
+checkBtn.disabled = true;
+
+checkBtn.textContent = "INCORRECT";
+
+checkBtn.style.background = "#b91c1c";
+
+checkBtn.style.color = "white";
+
+checkBtn.style.opacity = "0.35";
+
+checkBtn.style.cursor = "default";
+enableNext();
+};
+
+}
+
+function renderQuestion(){
+
+const q =
+quiz[current];
+
+flipCard.classList.remove(
+"flipped"
+);
+
+compareBtn.style.display =
+"none";
+
+showingBack = false;
+
+disableNext();
+
+questionEl.innerHTML =
+q.question;
+
+flipContent.innerHTML =
+q.flip || "";
+
+updateDisplay();
+
+if(q.type === "mcq"){
+
+buildMCQ(q);
+
+return;
+
+}
+
+if(q.type === "tf"){
+
+buildTF(q);
+
+return;
+
+}
+
+if(q.type === "translate"){
+
+buildTranslate(q);
+
+return;
+
+}
+
+}
+
+compareBtn.onclick = () => {
+
+if(showingBack){
+
+flipCard.classList.remove(
+"flipped"
+);
+
+showingBack = false;
+
+}else{
+
+flipCard.classList.add(
+"flipped"
+);
+
+showingBack = true;
+
+}
+
+};
+
+nextBtn.onclick = () => {
+
+current++;
+
+if(current >= quiz.length){
+
+finishQuiz();
+
+return;
+
+}
+
+renderQuestion();
+
+};
+
+renderQuestion();
+
+</script>
+
+</body>
+</html>
