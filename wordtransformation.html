@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Transformation Quiz</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.9rem;
+letter-spacing:.05em;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:8px;
+padding:4px 12px;
+font-weight:900;
+font-size:.75rem;
+height:32px;
+min-height:32px;
+}
+
+.card{
+width:92vw;
+max-width:380px;
+height:230px;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:12px 18px 18px 18px;
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+text-align:center;
+}
+
+.top-line{
+font-size:.92rem;
+font-weight:900;
+color:#8C0327;
+line-height:1.25;
+margin-top:2px;
+margin-bottom:6px;
+}
+
+.base-word{
+font-size:1.25rem;
+font-weight:900;
+color:#561386;
+margin-top:10px;
+margin-bottom:28px;
+}
+
+.sentence{
+font-size:1.08rem;
+font-weight:900;
+color:#0E065C;
+line-height:1.45;
+margin-top:10px;
+}
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+.label{
+width:92vw;
+max-width:380px;
+color:#fff;
+font-weight:900;
+font-size:.92rem;
+margin:8px 0 6px;
+}
+
+input{
+width:92vw;
+max-width:380px;
+height:46px;
+padding-left:22px !important;
+padding-right:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:900 !important;
+font-family:Arial, Helvetica, sans-serif;
+box-sizing:border-box;
+outline:none;
+appearance:none;
+-webkit-appearance:none;
+text-transform:uppercase;
+color:#061247;
+letter-spacing:.02em;
+}
+
+input::placeholder{
+font-weight:900;
+}
+
+.feedback{
+width:92vw;
+max-width:380px;
+min-height:24px;
+margin:8px 0;
+font-weight:900;
+text-align:center;
+}
+
+details summary::-webkit-details-marker{
+display:none;
+}
+
+details summary{
+list-style:none;
+}
+
+
+.buttons{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:14px;
+}
+
+button{
+border:none;
+border-radius:10px;
+padding:10px 6px;
+font-size:.82rem;
+font-weight:900 !important;
+font-family:Arial Black, Arial, sans-serif;
+letter-spacing:.02em;
+text-transform:uppercase;
+display:flex;
+align-items:center;
+justify-content:center;
+appearance:none;
+-webkit-appearance:none;
+touch-action:manipulation;
+height:40px;
+}
+
+.check-btn{
+background:var(--purple);
+color:#fff;
+}
+
+.next-btn{
+background:var(--blue);
+color:#061247;
+}
+button:disabled{
+opacity:.5;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+.library-back-container{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin:22px auto 0;
+}
+
+.library-back-btn{
+background:#930000;
+color:#ffffff;
+border:2px solid #ffffff;
+border-radius:10px;
+width:110px;
+height:40px;
+font-size:.84rem;
+font-weight:900;
+cursor:pointer;
+transition:background .2s,color .2s;
+}
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:#061247;
+}
+
+.library-back-btn:active{
+transform:scale(.97);
+}
+
+
+.popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.55);
+display:none;
+justify-content:center;
+align-items:center;
+padding:18px;
+z-index:100;
+}
+
+.popup-box{
+background:#eef6ff;
+border:3px solid #8C0327;
+border-radius:14px;
+padding:18px;
+width:92%;
+max-width:340px;
+text-align:center;
+}
+
+</style>
+</head>
+
+
+<audio id="correctSound" preload="auto">
+<source src="audio/correct.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="wrongSound" preload="auto">
+<source src="audio/wrong.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="passSound" preload="auto">
+<source src="audio/pass.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="failSound" preload="auto">
+<source src="audio/fail.mp3" type="audio/mpeg">
+</audio>
+
+
+<body>
+
+<div class="top-bar">
+<div class="top-title">WORD TRANSFORMATION <span style="color:#FFF3A3;">(B2+)</span></div>
+<button id="soundToggle" class="sound-btn">🔊 ON</button>
+</div>
+
+<div class="card" id="card"></div>
+
+<div class="info-row">
+<div id="progress">1 / 5</div>
+
+<div style="text-align:center;">
+
+<details id="instructionsBox">
+<summary style="color:#FFD54A;font-weight:900;cursor:pointer;">
+READ ME
+</summary>
+
+<div style="
+position:absolute;
+top:0;
+margin-top:70px;
+left:50%;
+transform:translateX(-50%);
+width:92vw;
+max-width:380px;
+background:#eef6ff;
+color:#061247;
+padding:16px 18px;
+border-radius:12px;
+font-size:.94rem;
+line-height:1.55;
+z-index:100;
+box-shadow:0 6px 18px rgba(0,0,0,.35);
+max-height:340px;
+overflow-y:hidden;
+">
+
+<span style="color:var(--red);font-weight:900;">
+Transform the base word
+</span>
+into its appropriate part of speech (noun, verb, adjective) so that it can be inserted into the following
+<span style="color:#061247;font-weight:900;">sentences</span><br><br>
+
+There are a total of <span style="color:darkred;font-weight:900;">55 sentences</span>, from which <span style="color:darkred;font-weight:900;">8</span> are selected randomly at each attempt<br><br>
+
+The number in brackets after the
+<span style="color:var(--red);font-weight:900;">base word</span>
+indicates the number of letters in the
+<span style="color:var(--red);font-weight:900;">required answer</span>
+
+<br><br>
+
+You have <span style="color:darkred;font-weight:900;">2 attempts</span> to get the answer right
+
+
+<div onclick="document.getElementById('instructionsBox').removeAttribute('open')"
+style="
+margin-top:12px;
+text-align:right;
+color:darkgreen;
+font-weight:900;
+cursor:pointer;
+">
+CLOSE ▲
+</div>
+
+</div>
+
+</details>
+</div>
+
+<div id="score" class="right">0 / 5</div>
+</div>
+
+<div class="label">Enter your answer here:</div>
+
+<input id="answerInput" type="text" autocomplete="off">
+
+<div id="feedback" class="feedback"></div>
+
+<div class="buttons">
+<button id="checkBtn" class="check-btn">CHECK</button>
+
+<button id="skipBtn"
+style="
+background:#FFD54A;
+color:#061247;
+">
+SKIP
+</button>
+
+<button id="nextBtn" class="next-btn" disabled>NEXT</button>
+</div>
+
+<div class="library-back-container">
+    <button id="libraryBackBtn" class="library-back-btn">
+        BACK
+    </button>
+</div>
+<script>
+
+const questions = [
+
+{
+base:"BELIEVE",
+sentence:"The results were strange. In fact, they were ________",
+answer:"unbelievable",
+popup:[
+"BELIEVE / DISBELIEVE (V)",
+"BELIEF / DISBELIEF (N)",
+"BELIEVABLE / UNBELIEVABLE (ADJ)",
+"BELIEVABLY / UNBELIEVABLY (ADV)"
+]
+},
+
+{
+base:"ABLE",
+sentence:"He has an unfortunate ________ to understand people's feelings",
+answer:"inability",
+popup:[
+"ABLE / UNABLE (ADJ)",
+"ABILITY / INABILITY (N)",
+"ABLY / UNABLY (ADV)",
+"ENABLE / DISABLE (V)",
+"(permettere / disattivare)"
+]
+},
+
+{
+base:"STUBBORN",
+sentence:"Due to the clerk's ________ we missed the train",
+answer:"stubbornness",
+popup:[
+"STUBBORN (ADJ)",
+"STUBBORNNESS (N)",
+"STUBBORNLY (ADV)"
+]
+},
+
+{
+base:"EXPECT",
+sentence:"What we saw was beyond all our ________",
+answer:"expectations",
+popup:[
+"EXPECT (V)",
+"EXPECTATION / EXPECTATIONS (N)",
+"EXPECTED / UNEXPECTED (ADJ)",
+"EXPECTEDLY / UNEXPECTEDLY (ADV)"
+]
+},
+
+{
+base:"TRACE",
+sentence:"The Authorities have discovered that all his transfers are, unforunately, completely ________",
+answer:"untraceable",
+popup:[
+"TRACE (V/N)",
+"TRACING (N) (ricalco / tracciamento)",
+"TRACEABLE / UNTRACEABLE (ADJ)",
+"TRACEABILITY / UNTRACEABILITY (N)"
+]
+},
+
+{
+base:"ILLUSTRATE",
+sentence:"This book contains some great ________",
+answer:"illustrations",
+popup:[
+"ILLUSTRATE (V)",
+"ILLUSTRATION / ILLUSTRATIONS (N)",
+"ILLUSTRATIVE (ADJ)",
+"ILLUSTRATOR (N)"
+]
+},
+
+{
+base:"OCCUPY",
+sentence:"Please give us details of your present ________",
+answer:"occupation",
+popup:[
+"OCCUPY (V)",
+"OCCUPATION (N)",
+"OCCUPIED / UNOCCUPIED (ADJ)",
+"OCCUPANT / OCCUPIER (N)"
+]
+},
+
+{
+base:"LONG",
+sentence:"What is the ________ of the river?",
+answer:"length",
+popup:[
+"LONG (ADJ)",
+"LENGTH (N)",
+"LENGTHEN (V)",
+"LENGTHY (ADJ)"
+]
+},
+
+{
+base:"MECHANIC",
+sentence:"The ________ of agriculture is important",
+answer:"mechanisation",
+popup:[
+"MECHANIC (N)",
+"MECHANICS (N) (meccanismi)",
+"MECHANICAL (ADJ)",
+"MECHANISE (V)",
+"MECHANISATION (N)"
+]
+},
+
+{
+base:"ADDICT",
+sentence:"Drug ________ is a serious issue",
+answer:"addiction",
+popup:[
+"ADDICT (V/N)",
+"ADDICTED (ADJ)",
+"ADDICTION (N)",
+"ADDICTIVE (ADJ)"
+]
+},
+
+{
+base:"PRESENT",
+sentence:"The ________ of the awards is next Friday",
+answer:"presentation",
+popup:[
+"PRESENT (V)",
+"PRESENTATION (N)",
+"PRESENTER (N)",
+"PRESENTABLE (ADJ)"
+]
+},
+
+{
+base:"SECRET",
+sentence:"I have been sworn to ________",
+answer:"secrecy",
+popup:[
+"SECRET (ADJ/N)",
+"SECRECY (N)",
+"SECRETIVE (ADJ)",
+"SECRETLY (ADV)"
+]
+},
+
+{
+base:"EMPLOY",
+sentence:"After losing her job she was ________",
+answer:"unemployed",
+popup:[
+"EMPLOY (V)",
+"EMPLOYMENT / UNEMPLOYMENT (N)",
+"EMPLOYED / UNEMPLOYED (ADJ)",
+"EMPLOYER / EMPLOYEE (N)"
+]
+},
+
+{
+base:"POLITE",
+sentence:"Pushing into a queue is extremely ________",
+answer:"impolite",
+popup:[
+"POLITE / IMPOLITE (ADJ)",
+"POLITELY / IMPOLITELY (ADV)",
+"POLITENESS / IMPOLITENESS (N)"
+]
+},
+
+{
+base:"APPLAUD",
+sentence:"The audience gave a round of ________",
+answer:"applause",
+popup:[
+"APPLAUD (V)",
+"APPLAUSE (N)"
+]
+},
+
+{
+base:"PAY",
+sentence:"He's not happy. He feels he is ________",
+answer:"underpaid",
+popup:[
+"PAY (V/N)",
+"PAID / UNPAID (ADJ)",
+"UNDERPAID / OVERPAID (ADJ)",
+"PAYMENT (N)"
+]
+},
+
+{
+base:"SENSE",
+sentence:"Another example of ________ killing",
+answer:"senseless",
+popup:[
+"SENSE (N/V)",
+"SENSIBLE / SENSELESS (ADJ)",
+"SENSIBLY / SENSELESSLY (ADV)"
+]
+},
+
+{
+base:"SHY",
+sentence:"Her ________ makes social life difficult",
+answer:"shyness",
+popup:[
+"SHY (ADJ)",
+"SHYNESS (N)",
+"SHYLY (ADV)"
+]
+},
+
+{
+base:"CERTAIN",
+sentence:"I can't say with any ________",
+answer:"certainty",
+popup:[
+"CERTAIN / UNCERTAIN (ADJ)",
+"CERTAINTY / UNCERTAINTY (N)",
+"CERTAINLY / UNCERTAINLY (ADV)",
+"ASCERTAIN (V)"
+]
+},
+
+{
+base:"SPECIAL",
+sentence:"My ________ is Elizabethan history",
+answer:"specialisation",
+popup:[
+"SPECIAL (ADJ)",
+"SPECIALISE (V)",
+"SPECIALISATION (N)",
+"SPECIALIST (N)",
+"SPECIALLY / ESPECIALLY (ADV)"
+]
+},
+
+{
+base:"INFORM",
+sentence:"The police were told by their ________ where to find the criminal",
+answer:"informants",
+popup:[
+"INFORM (V)",
+"INFORMATION (N)",
+"INFORMED / UNINFORMED (ADJ)",
+"INFORMATIVE (ADJ)"
+]
+},
+
+{
+base:"HERO",
+sentence:"He received many medals for his acts of ________ during the war",
+answer:"heroism",
+popup:[
+"HERO (N)",
+"HEROINE (N)",
+"HEROIC (ADJ)",
+"HEROICALLY (ADV)",
+"HEROISM (N)"
+]
+},
+
+{
+base:"EXPAND",
+sentence:"The ________ of the company is said to be dangerous to small firms",
+answer:"expansion",
+popup:[
+"EXPAND (V)",
+"EXPANSION (N)",
+"EXPANSIVE (ADJ)",
+"EXPANSIVELY (ADV)",
+"EXPANDING (ADJ/PART.)"
+]
+},
+
+{
+base:"PERSON",
+sentence:"For all of us, Marilyn Monroe was the ________ of beauty",
+answer:"personification",
+popup:[
+"PERSON (N)",
+"PERSONAL (ADJ)",
+"PERSONALLY (ADV)",
+"PERSONALITY (N)",
+"PERSONIFICATION (N)"
+]
+},
+
+{
+base:"RELY",
+sentence:"I can guarantee the ________ of our new product",
+answer:"reliability",
+popup:[
+"RELY (V)",
+"RELIABLE / UNRELIABLE (ADJ)",
+"RELIABLY / UNRELIABLY (ADV)",
+"RELIABILITY / UNRELIABILITY (N)"
+]
+},
+
+{
+base:"INVEST",
+sentence:"The government is encouraging heavy ________",
+answer:"investment",
+popup:[
+"INVEST (V)",
+"INVESTMENT (N)",
+"INVESTOR (N)"
+]
+},
+
+{
+base:"LONELY",
+sentence:"People who suffer from ________ should buy themselves a pet",
+answer:"loneliness",
+popup:[
+"LONELY (ADJ)",
+"LONELINESS (N)",
+"LONE (ADJ)"
+]
+},
+
+{
+base:"CHILD",
+sentence:"George and I have been friends since ________",
+answer:"childhood",
+popup:[
+"CHILD / CHILDREN (N)",
+"CHILDHOOD (N)",
+"CHILDISH (ADJ)",
+"CHILDLIKE (ADJ)"
+]
+},
+
+{
+base:"DESTROY",
+sentence:"Everybody is worried about the ________ of the rainforests",
+answer:"destruction",
+popup:[
+"DESTROY (V)",
+"DESTRUCTION (N)",
+"DESTRUCTIVE (ADJ)",
+"DESTRUCTIVELY (ADV)"
+]
+},
+
+{
+base:"DETAIN",
+sentence:"Some MPs are calling for ________ without trial",
+answer:"detention",
+popup:[
+"DETAIN (V)",
+"DETENTION (N)",
+"DETAINEE (N)"
+]
+},
+
+{
+base:"BRAVE",
+sentence:"My grandfather was given a medal for ________",
+answer:"bravery",
+popup:[
+"BRAVE (ADJ)",
+"BRAVERY (N)",
+"BRAVELY (ADV)"
+]
+},
+
+{
+base:"PROUD",
+sentence:"My father takes great ________ in his work",
+answer:"pride",
+popup:[
+"PROUD (ADJ)",
+"PRIDE (N)",
+"PROUDLY (ADV)",
+"TAKE PRIDE IN (V)"
+]
+},
+
+{
+base:"EQUIP",
+sentence:"This bag contains all my photographic ________",
+answer:"equipment",
+popup:[
+"EQUIP (V)",
+"EQUIPMENT (N)",
+"EQUIPPED / UNEQUIPPED (ADJ)"
+]
+},
+
+{
+base:"ELECTRIC",
+sentence:"________ is probably the most useful form of energy",
+answer:"electricity",
+popup:[
+"ELECTRIC (ADJ)",
+"ELECTRICAL (ADJ)",
+"ELECTRICITY (N)",
+"ELECTRICIAN (N)"
+]
+},
+
+{
+base:"UNDERSTAND",
+sentence:"John turned up on the wrong day because of a ________",
+answer:"misunderstanding",
+popup:[
+"UNDERSTAND (V)",
+"UNDERSTANDING (N)",
+"MISUNDERSTAND (V)",
+"MISUNDERSTANDING (N)",
+"UNDERSTANDABLE (ADJ)"
+]
+},
+
+{
+base:"AGREE",
+sentence:"Jack had another ________ with his boss",
+answer:"disagreement",
+popup:[
+"AGREE (V)",
+"AGREEMENT / DISAGREEMENT (N)",
+"AGREEABLE / DISAGREEABLE (ADJ)"
+]
+},
+
+{
+base:"PRISON",
+sentence:"The bank robbers were sentenced to twelve years of ________",
+answer:"imprisonment",
+popup:[
+"PRISON (N)",
+"PRISONER (N)",
+"IMPRISON (V)",
+"IMPRISONMENT (N)"
+]
+},
+
+{
+base:"REPLACE",
+sentence:"Mary suddenly felt sick, so we needed a ________ for her part in the play",
+answer:"replacement",
+popup:[
+"REPLACE (V) (sostituire)",
+"REPLACEMENT (N)",
+"IRREPLACEABLE (ADJ)"
+]
+},
+
+{
+base:"LOSE",
+sentence:"Failure to apply in time may result in a ________ of benefits",
+answer:"loss",
+popup:[
+"LOSE (V)",
+"LOSS (N)",
+"LOSER (N)"
+]
+},
+
+{
+base:"CONFIDENT",
+sentence:"Patrick was accused of stealing some ________ documents",
+answer:"confidential",
+popup:[
+"CONFIDE (V)",
+"CONFIDENT (ADJ)",
+"CONFIDENCE (N)",
+"CONFIDENTIAL (ADJ)",
+"CONFIDENTIALITY (N)"
+]
+},
+
+{
+base:"PRODUCE",
+sentence:"The company needs to improve its overall _________ this year.",
+answer:"productivity",
+popup:[
+"PRODUCE (V)",
+"PRODUCT (N)",
+"PRODUCTION (N)",
+"PRODUCER (N)",
+"PRODUCTIVE / UNPRODUCTIVE (ADJ)",
+"PRODUCTIVITY (N)"
+]
+},
+
+{
+base:"RESPOND",
+sentence:"The system became completely _________ after the update.",
+answer:"unresponsive",
+popup:[
+"RESPOND (V)",
+"RESPONSE (N)",
+"RESPONSIVE / UNRESPONSIVE (ADJ)",
+"RESPONSIVENESS (N)"
+]
+},
+
+{
+base:"DEPEND",
+sentence:"Many people have a growing _________ on technology in their daily lives.",
+answer:"dependence",
+popup:[
+"DEPEND (V)",
+"DEPENDENT / INDEPENDENT (ADJ)",
+"DEPENDENCE / INDEPENDENCE (N)",
+"DEPENDENCY (N)"
+]
+},
+
+{
+base:"VARY",
+sentence:"The menu offers a wide _________ of dishes to suit all tastes.",
+answer:"variety",
+popup:[
+"VARY (V)",
+"VARIETY (N)",
+"VARIOUS (ADJ)",
+"VARIABLE (ADJ/N)",
+"VARIATION (N)"
+]
+},
+
+{
+base:"COMPARE",
+sentence:"Her talent is truly _________; no one else comes close.",
+answer:"incomparable",
+popup:[
+"COMPARE (V)",
+"COMPARISON (N)",
+"COMPARATIVE (ADJ)",
+"COMPARABLE / INCOMPARABLE (ADJ)"
+]
+},
+
+{
+base:"EXPLAIN",
+sentence:"The report includes several _________ notes to clarify the data.",
+answer:"explanatory",
+popup:[
+"EXPLAIN (V)",
+"EXPLANATION (N)",
+"EXPLANATORY (ADJ)",
+"UNEXPLAINED (ADJ)",
+"UNEXPLAINABLE (ADJ)"
+]
+},
+
+{
+base:"ATTRACT",
+sentence:"The design was considered too dull and _________ to appeal to customers.",
+answer:"unattractive",
+popup:[
+"ATTRACT (V)",
+"ATTRACTION (N)",
+"ATTRACTIVE / UNATTRACTIVE (ADJ)",
+"ATTRACTIVENESS (N)"
+]
+},
+
+{
+base:"STRONG",
+sentence:"The government plans to _________ their rapport with African nations.",
+answer:"strengthen",
+popup:[
+"STRONG (ADJ)",
+"STRENGTH (N)",
+"STRENGTHEN (V)",
+"STRONGLY (ADV)"
+]
+},
+
+{
+base:"SIGNIFY",
+sentence:"The results showed a _________ improvement in performance.",
+answer:"significant",
+popup:[
+"SIGNIFY (V)",
+"SIGNIFICANT / INSIGNIFICANT (ADJ)",
+"SIGNIFICANCE (N)",
+"SIGNIFICANTLY (ADV)"
+]
+},
+
+{
+base:"EFFECT",
+sentence:"Unfortunately, the measures taken to reduce costs proved completely _________.",
+answer:"ineffective",
+popup:[
+"EFFECT (N/V)",
+"EFFECTIVE / INEFFECTIVE (ADJ)",
+"EFFECTIVELY / INEFFECTIVELY (ADV)",
+"EFFECTIVENESS (N)"
+]
+},
+
+{
+base:"JUDGE",
+sentence:"Try not to be too _________ when evaluating other people’s opinions.",
+answer:"judgemental",
+popup:[
+"JUDGE (V/N)",
+"JUDGEMENT (N)",
+"JUDGEMENTAL (ADJ)",
+"JUDICIAL (ADJ)",
+"ADJUDICATE (V)"
+]
+},
+
+{
+base:"ANALYSE",
+sentence:"A detailed _________ of the data revealed several key trends.",
+answer:"analysis",
+popup:[
+"ANALYSE (V)",
+"ANALYSIS (N)",
+"ANALYTICAL (ADJ)",
+"ANALYTICALLY (ADV)"
+]
+},
+
+{
+base:"TROUBLE",
+sentence:"The issue proved far more _________ than we had expected.",
+answer:"troublesome",
+popup:[
+"TROUBLE (N/V)",
+"TROUBLED (ADJ)",
+"TROUBLING (ADJ)",
+"TROUBLESOME (ADJ)",
+"TROUBLEMAKER (N)"
+]
+},
+
+{
+base:"SUGGEST",
+sentence:"The comedian was booed for making _________ remarks about the audience members.",
+answer:"suggestive",
+popup:[
+"SUGGEST (V)",
+"SUGGESTION (N)",
+"SUGGESTIVE (ADJ)"
+]
+},
+
+{
+base:"CORRECT",
+sentence:"The company took immediate _________ measures to address the issue.",
+answer:"corrective",
+popup:[
+"CORRECT (ADJ/V)",
+"CORRECTION (N)",
+"CORRECTIVE (ADJ)",
+"INCORRECT (ADJ)",
+"CORRECTOR (N)"
+]
+}
+
+];
+
+
+let quiz=[];
+let index=0;
+let score=0;
+let attempts=0;
+let retryMode=false;
+
+let soundOn=true;
+
+document.getElementById("soundToggle").onclick=function(){
+soundOn=!soundOn;
+this.innerText = soundOn ? "🔊 ON" : "🔇 OFF";
+};
+
+/* ---------- SHUFFLE ---------- */
+
+function shuffle(array){
+let arr=[...array];
+
+for(let i=arr.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+
+return arr;
+}
+
+/* ---------- AUDIO ---------- */
+
+function playSound(id){
+if(!soundOn) return;
+
+let a=document.getElementById(id);
+if(!a) return;
+
+a.pause();
+a.currentTime=0;
+a.play();
+}
+
+/* ---------- QUESTION SCREEN ---------- */
+
+function showQuestion(){
+
+attempts=0;
+retryMode=false;
+
+const q=quiz[index];
+
+document.getElementById("card").innerHTML=`
+<div class="top-line">Transform the following word appropriately:</div>
+
+<div class="base-word">
+${q.base}
+<span style="color:var(--red);font-size:.9rem;">
+(${q.answer.replace(/\s/g,"").length})
+</span>
+</div>
+
+<div class="sentence" style="text-transform:uppercase;">${q.sentence}</div>
+`;
+
+document.getElementById("progress").innerText=`${index+1} / ${quiz.length}`;
+document.getElementById("score").innerText=`${score} / ${quiz.length}`;
+
+document.getElementById("answerInput").value="";
+document.getElementById("answerInput").disabled=false;
+document.getElementById("answerInput").focus();
+
+document.getElementById("feedback").innerText="";
+
+document.getElementById("checkBtn").innerText="CHECK";
+document.getElementById("checkBtn").disabled=false;
+document.getElementById("skipBtn").disabled=false;
+
+document.getElementById("nextBtn").disabled=true;
+}
+
+/* ---------- POPUP ---------- */
+
+function showCorrectPopup(q){
+document.getElementById("popupLines").innerHTML=q.popup.join("<br>");
+document.getElementById("correctPopup").style.display="flex";
+}
+
+function closePopup(){
+
+document.getElementById("correctPopup").style.display="none";
+
+if(index < quiz.length-1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+
+}
+
+/* ---------- CHECK ANSWER ---------- */
+
+function checkAnswer(){
+
+const q=quiz[index];
+const input=document.getElementById("answerInput");
+
+if(retryMode){
+input.value="";
+input.focus();
+retryMode=false;
+document.getElementById("checkBtn").innerText="CHECK";
+document.getElementById("feedback").innerText="";
+return;
+}
+
+const user=input.value.trim().toLowerCase();
+if(!user) return;
+
+/* CORRECT */
+
+if(user===q.answer.toLowerCase()){
+
+playSound("correctSound");
+
+score++;
+
+document.getElementById("score").innerText=`${score} / ${quiz.length}`;
+document.getElementById("feedback").innerText="";
+
+input.disabled=true;
+
+document.getElementById("checkBtn").disabled=true;
+document.getElementById("nextBtn").disabled=true;
+
+showCorrectPopup(q);
+
+/* WRONG */
+
+}else{
+
+attempts++;
+
+document.getElementById("feedback").style.color="#ef4444";
+
+if(attempts===1){
+
+playSound("wrongSound");
+
+document.getElementById("feedback").innerText="Wrong. Press TRY AGAIN.";
+document.getElementById("checkBtn").innerText="TRY AGAIN";
+document.getElementById("nextBtn").disabled=true;
+
+retryMode=true;
+
+}else{
+
+playSound("wrongSound");
+
+document.getElementById("feedback").innerText="No attempts left";
+
+input.disabled=true;
+
+document.getElementById("checkBtn").disabled=true;
+document.getElementById("skipBtn").disabled=true;
+document.getElementById("nextBtn").disabled=false;
+
+}
+
+}
+
+}
+
+/* ---------- BUTTON EVENTS ---------- */
+
+document.getElementById("checkBtn").onclick=checkAnswer;
+
+document.getElementById("answerInput").addEventListener("keydown",function(e){
+if(e.key==="Enter"){
+checkAnswer();
+}
+});
+
+document.getElementById("nextBtn").onclick=function(){
+
+if(index<quiz.length-1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+
+};
+
+document.getElementById("skipBtn").onclick=function(){
+
+document.getElementById("answerInput").disabled=true;
+
+document.getElementById("checkBtn").disabled=true;
+document.getElementById("nextBtn").disabled=false;
+
+if(index<quiz.length-1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+
+};
+
+document.getElementById("libraryBackBtn").onclick=function(){
+    window.location.href="https://www.acceleratedlanguagesystems.com/quizzes-booster";
+};
+
+
+/* ---------- END QUIZ ---------- */
+
+function endQuiz(){
+
+let resultMessage="";
+let passMark=4;
+
+if(score>=passMark){
+playSound("passSound");
+resultMessage="WELL DONE! YOU'VE PASSED! 🎉";
+}else{
+playSound("failSound");
+resultMessage="BAD LUCK! TRY AGAIN ❌";
+}
+
+document.getElementById("card").innerHTML=`
+<div style="
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:1.15rem;
+font-weight:900;
+color:#561386;
+line-height:1.35;
+padding:10px 20px;
+">
+${resultMessage}
+</div>
+`;
+
+document.getElementById("checkBtn").style.display="none";
+document.getElementById("skipBtn").style.display="none";
+document.getElementById("nextBtn").style.display="none";
+document.getElementById("libraryBackBtn").style.display="none";
+document.getElementById("answerInput").style.display="none";
+document.querySelector(".label").style.display="none";
+document.querySelector(".info-row details").style.display="none";
+document.getElementById("feedback").innerHTML=`
+
+<div style="display:flex;justify-content:center;margin-top:4px;">
+<button onclick="restartQuiz()"
+style="
+background:#561386;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:10px 24px;
+font-weight:900;
+font-size:.92rem;
+text-transform:uppercase;
+width:150px;
+height:38px;
+display:flex;
+align-items:center;
+justify-content:center;
+">
+TRY AGAIN
+</button>
+</div>
+`;
+
+}
+
+/* ---------- RESTART ---------- */
+
+function restartQuiz(){
+
+index=0;
+score=0;
+
+quiz=shuffle(questions).slice(0,8);
+
+document.getElementById("checkBtn").style.display="flex";
+document.getElementById("skipBtn").style.display="flex";
+document.getElementById("nextBtn").style.display="flex";
+document.getElementById("libraryBackBtn").style.display="inline-block";
+document.getElementById("answerInput").style.display="block";
+document.querySelector(".label").style.display="block";
+
+document.getElementById("feedback").innerHTML="";
+
+showQuestion();
+
+}
+
+/* ---------- START ---------- */
+
+quiz=shuffle(questions).slice(0,8);
+
+showQuestion();
+
+</script>
+
+<div id="correctPopup" class="popup">
+<div class="popup-box">
+
+<div style="
+color:#16a34a;
+font-size:1.1rem;
+font-weight:900;
+margin-bottom:12px;
+text-align:left;
+">
+CORRECT!
+</div>
+
+<div id="popupLines" style="
+color:#061247;
+font-weight:800;
+line-height:1.55;
+font-size:.95rem;
+text-align:left;
+"></div>
+
+
+<div onclick="closePopup()" style="
+margin-top:14px;
+text-align:right;
+color:#8C0327;
+font-size:.82rem;
+font-weight:900;
+cursor:pointer;
+text-transform:uppercase;
+">
+CONTINUE ▶
+</div>
+
+</div>
+</div>
+
+</body>
+</html>
