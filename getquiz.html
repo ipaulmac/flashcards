@@ -1,0 +1,2014 @@
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GET QUIZ</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:0 12px 12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin-bottom:10px;
+}
+
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+letter-spacing:.08em;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+}
+
+.top-controls{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.88rem;
+letter-spacing:.03em;
+cursor:pointer;
+user-select:none;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+background:#fff;
+border:4px solid var(--red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkred;
+cursor:pointer;
+user-select:none;
+}
+
+/* FLIP CARD */
+
+.flip-card{
+width:92vw;
+max-width:380px;
+height:250px;
+perspective:1200px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+transform:rotateY(180deg);
+}
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:10px 14px;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+/* FRONT */
+
+.front{
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.question{
+font-size:1.05rem;
+font-weight:900;
+line-height:1.18;
+color:#0E065C;
+text-transform:uppercase;
+}
+
+/* BACK */
+
+.back{
+transform:rotateY(180deg);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+box-sizing:border-box;
+}
+
+#flipContent{
+width:100%;
+font-family:Arial,sans-serif;
+font-size:1rem;
+font-weight:900;
+line-height:1.2;
+color:#0E065C;
+text-align:center;
+word-break:normal;
+overflow-wrap:normal;
+}
+
+#flipContent span{
+color:darkred;
+}
+
+.compare-btn{
+margin-top:14px;
+background:#0E065C;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:8px 14px;
+font-weight:900;
+font-size:.72rem;
+}
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0 12px;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+/* NEXT BUTTON */
+
+.next-btn{
+background:#00cfd5;
+color:#061247;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:.5;
+pointer-events:none;
+}
+
+.compare-control-btn{
+background:darkred;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:1;
+}
+
+/* ANSWERS */
+
+.answers{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+}
+
+.answer-btn{
+height:42px;
+background:#eef2f7;
+color:var(--purple);
+font-weight:900;
+border-radius:10px;
+border:1px solid #cbd5e1;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:.78rem;
+line-height:1.05;
+padding:4px;
+transition:transform .08s ease, background .12s ease;
+}
+
+.answer-btn:active{
+transform:scale(.96);
+}
+
+.correct{
+background:#22c55e;
+color:#fff;
+box-shadow:0 0 10px #22c55e;
+}
+
+.wrong{
+background:#ef4444;
+color:#fff;
+}
+
+/* END SCREEN */
+
+.end-screen{
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:1.15rem;
+font-weight:900;
+color:darkred;
+line-height:1.4;
+padding:6px 14px;
+}
+
+.retry-btn{
+margin-top:30px;
+background:#0E065C;
+color:#fff;
+width:126px;
+height:36px;
+font-weight:700;
+font-size:.9rem;
+border:none;
+border-radius:10px;
+background:#B83AC9;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+.shuffle-wrap{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+margin-top:20px;
+}
+
+.shuffle-btn,
+.library-back-btn{
+height:42px;
+font-weight:900;
+font-size:.78rem;
+border-radius:10px;
+cursor:pointer;
+transition:background .2s,color .2s;
+}
+
+.shuffle-btn{
+background:#008DA3;
+color:#fff;
+border:3px solid #fff;
+grid-column:1;
+}
+
+.shuffle-btn:hover{
+background:#0E065C;
+color:#fff;
+}
+
+.library-back-btn{
+background:#930000;
+color:#fff;
+border:3px solid #fff;
+grid-column:3;
+}
+
+.library-back-btn:hover{
+background:#ffd9e3;
+color:#0E065C;
+}
+
+.shuffle-btn:active,
+.library-back-btn:active{
+transform:scale(.97);
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<!-- TOP -->
+
+<div class="top-bar">
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+<div class="top-title" style="text-align:center;">
+GET QUIZ <span style="color:#FFF3A3;">(B1+)</span>
+</div>
+
+<div style="display:flex;justify-content:flex-end;">
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+</div>
+
+</div>
+
+
+<!-- POPUP -->
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+THIS QUIZ PRACTISES <span style="color:darkred;">12 DIFFERENT MEANINGS</span> OF THE VERB <span style="color:darkred;">GET</span><br><br>
+
+THERE ARE <span style="color:darkred;">100</span> QUESTIONS OF WHICH <span style="color:darkred;">10</span> ARE SELECTED RANDOMLY EACH TIME <br><br>
+
+CHOOSE THE CORRECT MEANING OF <span style="color:darkred;">GET</span> IN THE CONTEXT IN WHICH IT IS USED <br><br>
+
+<span style="color:darkred;">ONLY AFTER</span> A CORRECT ANSWER WILL THE CARD FLIP TO REVEAL THE TRANSLATION <br><br>
+
+USE THE <span style="color:darkred;">COMPARE</span> BUTTON TO SWITCH BETWEEN THE QUESTION AND THE ANSWER
+
+</div>
+
+<div id="closePopup" class="popup-close-text">
+START QUIZ →
+</div>
+
+</div>
+</div>
+
+<!-- CARD -->
+
+<div class="flip-card" id="flipCard">
+
+<div class="flip-inner">
+
+<div class="card-face front">
+<div class="question" id="question"></div>
+</div>
+
+<div class="card-face back">
+<div id="flipContent"></div>
+</div>
+
+</div>
+</div>
+
+<!-- INFO -->
+
+<div class="info-row">
+
+<div id="progress">1 / 10</div>
+
+<div style="display:flex; gap:8px;">
+
+<button id="nextBtn" class="next-btn">
+NEXT
+</button>
+
+<button id="compareBtn" class="compare-control-btn" style="display:none;">
+COMPARE
+</button>
+
+</div>
+
+<div id="score" class="right">0 / 10</div>
+
+</div>
+
+<!-- ANSWERS -->
+
+<div id="answers" class="answers"></div>
+
+<div class="shuffle-wrap">
+
+<button id="shuffleBtn" class="shuffle-btn">
+⟳ SHUFFLE
+</button>
+
+<button id="backButton" class="library-back-btn">
+BACK
+</button>
+
+</div>
+<script>
+
+/* SOUND */
+
+let soundOn = true;
+
+function playSound(id){
+
+if(!soundOn) return;
+
+const a = document.getElementById(id);
+
+if(a){
+a.currentTime = 0;
+a.play();
+}
+}
+
+document.getElementById("soundToggle").onclick = function(){
+soundOn = !soundOn;
+this.innerText = soundOn ? "🔊 ON" : "🔇 OFF";
+};
+
+/* MEANINGS */
+
+const meanings = [
+`BECOME`,
+`ARRIVE`,
+`REACH`,
+`BUY`,
+`OBTAIN`,
+`BRING`,
+`TAKE`,
+`HAVE`,
+`PERSUADE`,
+`UNDERSTAND`,
+`RECEIVE`,
+`EARN`
+];
+
+/* QUESTIONS */
+
+const questions = [
+
+{
+question:`WE NEED TO <span style="color:darkred;">GET</span> TO THE STATION BEFORE EIGHT`,
+meaning:`ARRIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">ARRIVE</span>
+</div>
+DOBBIAMO <span style="color:darkred;">ARRIVARE</span> ALLA STAZIONE PRIMA DELLE OTTO
+`
+},
+
+{
+question:`SHE FINALLY <span style="color:darkred;">GOT</span> HER DIPLOMA AFTER YEARS OF STUDY`,
+meaning:`OBTAIN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">OBTAIN</span>
+</div>
+LEI HA FINALMENTE <span style="color:darkred;">OTTENUTO</span> IL DIPLOMA DOPO ANNI DI STUDIO
+`
+},
+
+{
+question:`IT'S <span style="color:darkred;">GETTING</span> COLDER AND COLDER EVERY EVENING NOW`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+STA <span style="color:darkred;">DIVENTANDO</span> SEMPRE PIÙ FREDDO OGNI SERA ORMAI
+`
+},
+
+{
+question:`I <span style="color:darkred;">GOT</span> A MESSAGE FROM LUCA THIS MORNING`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+HO <span style="color:darkred;">RICEVUTO</span> UN MESSAGGIO DA LUCA STAMATTINA
+`
+},
+
+{
+question:`HE <span style="color:darkred;">GOT</span> THE BUS BECAUSE HIS CAR BROKE DOWN`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+LUI HA <span style="color:darkred;">PRESO</span> L’AUTOBUS PERCHÉ LA SUA MACCHINA SI È ROTTA
+`
+},
+
+{
+question:`CAN YOU <span style="color:darkred;">GET</span> ME SOME WATER PLEASE?`,
+meaning:`BRING`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BRING</span>
+</div>
+MI <span style="color:darkred;">PORTI</span> UN PO’ D’ACQUA, PER FAVORE?
+`
+},
+
+{
+question:`THEY COULDN’T <span style="color:darkred;">GET</span> HIM TO APOLOGISE`,
+meaning:`PERSUADE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">PERSUADE</span>
+</div>
+NON SONO RIUSCITI A <span style="color:darkred;">CONVINCERLO</span> A CHIEDERE SCUSA
+`
+},
+
+{
+question:`HOW MUCH DO YOU <span style="color:darkred;">GET</span> A MONTH?`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+QUANTO <span style="color:darkred;">GUADAGNI</span> OGNI MESE?
+`
+},
+
+{
+question:`I NEED TO <span style="color:darkred;">GET</span> SOME BREAD ON THE WAY HOME`,
+meaning:`BUY`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BUY</span>
+</div>
+DEVO <span style="color:darkred;">COMPRARE</span> UN PO’ DI PANE SULLA STRADA DI CASA
+`
+},
+
+{
+question:`WE <span style="color:darkred;">GOT</span> HOME LATER THAN EXPECTED LAST NIGHT`,
+meaning:`ARRIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">ARRIVE</span>
+</div>
+SIAMO <span style="color:darkred;">ARRIVATI</span> A CASA PIÙ TARDI DEL PREVISTO IERI SERA
+`
+},
+
+{
+question:`WE WILL NEVER <span style="color:darkred;">GET</span> TO MILAN BEFORE MIDNIGHT IN THIS TRAFFIC`,
+meaning:`REACH`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">REACH</span>
+</div>
+NON ARRIVEREMO MAI A MILANO PRIMA DI MEZZANOTTE CON QUESTO TRAFFICO
+`
+},
+
+{
+question:`WE USUALLY <span style="color:darkred;">GET</span> GOOD WEATHER IN JULY`,
+meaning:`HAVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">HAVE</span>
+</div>
+DI SOLITO <span style="color:darkred;">ABBIAMO</span> BEL TEMPO A LUGLIO
+`
+},
+
+{
+question:`I DON’T <span style="color:darkred;">GET</span> WHAT YOU’RE TRYING TO SAY`,
+meaning:`UNDERSTAND`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">UNDERSTAND</span>
+</div>
+NON <span style="color:darkred;">CAPISCO</span> COSA STAI CERCANDO DI DIRE
+`
+},
+
+{
+question:`SHE <span style="color:darkred;">GOT</span> EVERYONE’S RESPECT THROUGH HARD WORK`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+LEI HA <span style="color:darkred;">GUADAGNATO</span> IL RISPETTO DI TUTTI GRAZIE AL DURO LAVORO
+`
+},
+
+{
+question:`I NEED TO <span style="color:darkred;">GET</span> A COPY OF MY PASSPORT`,
+meaning:`OBTAIN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">OBTAIN</span>
+</div>
+HO BISOGNO DI <span style="color:darkred;">OTTENERE</span> UNA COPIA DEL MIO PASSAPORTO
+`
+},
+
+{
+question:`NOBODY COULD <span style="color:darkred;">GET</span> HER TO CHANGE HER MIND`,
+meaning:`PERSUADE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">PERSUADE</span>
+</div>
+NESSUNO È RIUSCITO A <span style="color:darkred;">CONVINCERLA</span> A CAMBIARE IDEA
+`
+},
+
+{
+question:`OUR FLAT <span style="color:darkred;">GETS</span> PLENTY OF SUNLIGHT`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+IL NOSTRO APPARTAMENTO <span style="color:darkred;">RICEVE</span> MOLTA LUCE SOLARE
+`
+},
+
+{
+question:`I RARELY <span style="color:darkred;">GET</span> TIME TO READ`,
+meaning:`HAVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">HAVE</span>
+</div>
+RARAMENTE <span style="color:darkred;">HO</span> TEMPO PER LEGGERE
+`
+},
+
+{
+question:`IF WE LEAVE NOW, WE’LL <span style="color:darkred;">GET</span> TO THE COAST BY NOON`,
+meaning:`REACH`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">REACH</span>
+</div>
+SE PARTIAMO ADESSO, <span style="color:darkred;">ARRIVEREMO</span> ALLA COSTA ENTRO MEZZOGIORNO
+`
+},
+
+{
+question:`SHE <span style="color:darkred;">GOT</span> A FINE FOR PARKING OUTSIDE THE BANK`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+LEI HA <span style="color:darkred;">RICEVUTO</span> UNA MULTA PER AVER PARCHEGGIATO FUORI DALLA BANCA
+`
+},
+
+{
+question:`YOUR COFFEE WILL <span style="color:darkred;">GET</span> COLD IF YOU WAIT`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+IL CAFFÈ <span style="color:darkred;">DIVENTERÀ</span> FREDDO SE ASPETTI
+`
+},
+
+{
+question:`I <span style="color:darkred;">GOT</span> A TAXI BECAUSE IT WAS RAINING`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+HO <span style="color:darkred;">PRESO</span> UN TAXI PERCHÉ PIOVEVA
+`
+},
+
+{
+question:`WOULD YOU LIKE TO <span style="color:darkred;">GET</span> SOME MILK FOR ME WHILE YOU’RE OUT?`,
+meaning:`BUY`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BUY</span>
+</div>
+VUOI <span style="color:darkred;">COMPRARE</span> DEL LATTE MENTRE SEI FUORI?
+`
+},
+
+{
+question:`HE’S ALREADY <span style="color:darkred;">GOT</span> THE MANAGER’S APPROVAL`,
+meaning:`OBTAIN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">OBTAIN</span>
+</div>
+LUI HA GIÀ <span style="color:darkred;">OTTENUTO</span> L’APPROVAZIONE DEL DIRETTORE
+`
+},
+
+{
+question:`IF YOU TRAINED HARDER, YOU’D <span style="color:darkred;">GET</span> BETTER RESULTS`,
+meaning:`OBTAIN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">OBTAIN</span>
+</div>
+SE TI ALLENASSI DI PIÙ, <span style="color:darkred;">OTTERRESTI</span> RISULTATI MIGLIORI
+`
+},
+
+{
+question:`WE <span style="color:darkred;">GOT</span> EXCELLENT SERVICE AT THAT RESTAURANT`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+ABBIAMO <span style="color:darkred;">RICEVUTO</span> UN SERVIZIO ECCELLENTE IN QUEL RISTORANTE
+`
+},
+
+{
+question:`I’LL <span style="color:darkred;">GET</span> EMMA TO SEND THE DETAILS LATER`,
+meaning:`HAVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">HAVE</span>
+</div>
+FARÒ <span style="color:darkred;">MANDARE</span> I DETTAGLI A EMMA PIÙ TARDI
+`
+},
+
+{
+question:`THE KIDS <span style="color:darkred;">GET</span> NOISY AFTER DINNER`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+I BAMBINI <span style="color:darkred;">DIVENTANO</span> RUMOROSI DOPO CENA
+`
+},
+
+{
+question:`SHE <span style="color:darkred;">GOT</span> THREE CALLS FROM THE BOSS WHILE SHE WAS AT LUNCH`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+LEI HA <span style="color:darkred;">RICEVUTO</span> TRE TELEFONATE DAL CAPO MENTRE ERA A PRANZO
+`
+},
+
+{
+question:`IF WE HURRY, WE CAN <span style="color:darkred;">GET</span> TO ROME TONIGHT`,
+meaning:`REACH`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">REACH</span>
+</div>
+SE CI SBRIGHIAMO, POSSIAMO <span style="color:darkred;">ARRIVARE</span> A ROMA STASERA
+`
+},
+
+{
+question:`HE <span style="color:darkred;">GOT</span> A LOAN FROM THE BANK LAST WEEK`,
+meaning:`OBTAIN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">OBTAIN</span>
+</div>
+LUI HA <span style="color:darkred;">OTTENUTO</span> UN PRESTITO DALLA BANCA LA SETTIMANA SCORSA
+`
+},
+
+{
+question:`I’D <span style="color:darkred;">GET</span> THE TRAIN IF I WERE YOU`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+IO <span style="color:darkred;">PRENDEREI</span> IL TRENO SE FOSSI IN TE
+`
+},
+
+{
+question:`WE <span style="color:darkred;">GOT</span> HEAVY RAIN ALL WEEKEND`,
+meaning:`HAVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">HAVE</span>
+</div>
+ABBIAMO <span style="color:darkred;">AVUTO</span> PIOGGIA INTENSA PER TUTTO IL FINE SETTIMANA
+`
+},
+
+{
+question:`COULD YOU <span style="color:darkred;">GET</span> A PEN FROM MY BAG, PLEASE?`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+PUOI <span style="color:darkred;">PRENDERE</span> UNA PENNA DALLA MIA BORSA, PER FAVORE?
+`
+},
+
+{
+question:`SHE <span style="color:darkred;">GOT</span> RICH THROUGH SMART INVESTMENTS`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+LEI È <span style="color:darkred;">DIVENTATA</span> RICCA GRAZIE A INVESTIMENTI INTELLIGENTI
+`
+},
+
+{
+question:`IF THEY OFFERED LESS MONEY, I WOULDN’T LET MYSELF <span style="color:darkred;">GET</span> INVOLVED`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+SE OFFRISSERO MENO SOLDI, NON MI LASCEREI <span style="color:darkred;">COINVOLGERE</span>
+`
+},
+
+{
+question:`HE <span style="color:darkred;">GOT</span> TWO TICKETS FOR SATURDAY’S MATCH`,
+meaning:`BUY`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BUY</span>
+</div>
+LUI HA <span style="color:darkred;">COMPRATO</span> DUE BIGLIETTI PER LA PARTITA DI SABATO
+`
+},
+
+{
+question:`I’LL <span style="color:darkred;">GET</span> THE PLUMBER TO CHECK THE LEAK`,
+meaning:`HAVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">HAVE</span>
+</div>
+FARÒ <span style="color:darkred;">CONTROLLARE</span> LA PERDITA ALL’IDRAULICO
+`
+},
+
+{
+question:`IF YOU ASKED POLITELY, YOU MIGHT <span style="color:darkred;">GET</span> HELP`,
+meaning:`OBTAIN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">OBTAIN</span>
+</div>
+SE LO CHIEDESSI GENTILMENTE, POTRESTI <span style="color:darkred;">OTTENERE</span> AIUTO
+`
+},
+
+{
+question:`WE <span style="color:darkred;">GOT</span> HOME BEFORE THE STORM STARTED`,
+meaning:`ARRIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">ARRIVE</span>
+</div>
+SIAMO <span style="color:darkred;">ARRIVATI</span> A CASA PRIMA CHE INIZIASSE IL TEMPORALE
+`
+},
+
+{
+question:`SHE <span style="color:darkred;">GOT</span> TOP MARKS IN THE FINAL EXAM`,
+meaning:`OBTAIN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">OBTAIN</span>
+</div>
+LEI HA <span style="color:darkred;">OTTENUTO</span> IL MASSIMO DEI VOTI ALL’ESAME FINALE
+`
+},
+
+{
+question:`I’LL <span style="color:darkred;">GET</span> THE BUS IF IT STARTS RAINING`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+PRENDERÒ <span style="color:darkred;">L’AUTOBUS</span> SE INIZIA A PIOVERE
+`
+},
+
+{
+question:`SHE <span style="color:darkred;">GOT</span> THE TRAIN TO NAPLES THIS MORNING`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+LEI HA <span style="color:darkred;">PRESO</span> IL TRENO PER NAPOLI STAMATTINA
+`
+},
+
+{
+question:`IF WE’RE LATE, WE’LL <span style="color:darkred;">GET</span> A TAXI`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+SE SIAMO IN RITARDO, <span style="color:darkred;">PRENDEREMO</span> UN TAXI
+`
+},
+
+{
+question:`I’D <span style="color:darkred;">GET</span> THE METRO DURING RUSH HOUR`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+IO <span style="color:darkred;">PRENDEREI</span> LA METROPOLITANA DURANTE L’ORA DI PUNTA
+`
+},
+
+{
+question:`HE <span style="color:darkred;">GOT</span> A FLIGHT INSTEAD OF DRIVING THERE`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+LUI HA <span style="color:darkred;">PRESO</span> UN VOLO INVECE DI ANDARE IN MACCHINA
+`
+},
+
+{
+question:`SHE <span style="color:darkred;">GOT</span> HERSELF A NEW LAPTOP LAST WEEKEND`,
+meaning:`BUY`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BUY</span>
+</div>
+LEI SI È <span style="color:darkred;">COMPRATA</span> UN NUOVO PORTATILE LO SCORSO FINE SETTIMANA
+`
+},
+
+{
+question:`IF IT’S CHEAPER ONLINE ONLY FOR TODAY, <span style="color:darkred;">GET</span> IT`,
+meaning:`BUY`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BUY</span>
+</div>
+SE OGGI COSTA MENO ONLINE, <span style="color:darkred;">COMPRALO</span>
+`
+},
+
+{
+question:`CAN YOU <span style="color:darkred;">GET</span> ME A BOTTLE OF WATER, PLEASE?`,
+meaning:`BRING`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BRING</span>
+</div>
+PUOI <span style="color:darkred;">PORTARMI</span> UNA BOTTIGLIA D’ACQUA, PER FAVORE?
+`
+},
+
+{
+question:`I’LL <span style="color:darkred;">GET</span> YOU A TOWEL FROM THE BATHROOM`,
+meaning:`BRING`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BRING</span>
+</div>
+TI <span style="color:darkred;">PRENDO</span> UN ASCIUGAMANO DAL BAGNO
+`
+},
+
+{
+question:`COULD YOU <span style="color:darkred;">GET</span> ME A CLEAN GLASS?`,
+meaning:`BRING`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BRING</span>
+</div>
+POTRESTI <span style="color:darkred;">PORTARMI</span> UN BICCHIERE PULITO?
+`
+},
+
+{
+question:`THE DISCUSSION <span style="color:darkred;">GOT</span> AWKWARD WHEN MONEY WAS MENTIONED`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+LA DISCUSSIONE È <span style="color:darkred;">DIVENTATA</span> IMBARAZZANTE QUANDO È STATO MENZIONATO IL DENARO
+`
+},
+
+{
+question:`SHE’S BEEN <span style="color:darkred;">GETTING</span> MORE DEMANDING WITH HER STAFF LATELY`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+ULTIMAMENTE STA <span style="color:darkred;">DIVENTANDO</span> PIÙ ESIGENTE CON IL SUO STAFF
+`
+},
+
+{
+question:`THINGS <span style="color:darkred;">GOT</span> CHAOTIC ONCE THE GUESTS STARTED ARRIVING`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+LE COSE SONO <span style="color:darkred;">DIVENTATE</span> CAOTICHE QUANDO GLI OSPITI HANNO INIZIATO AD ARRIVARE
+`
+},
+
+{
+question:`HOW MUCH DO YOU <span style="color:darkred;">GET</span> A MONTH FOR THAT KIND OF JOB?`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+QUANTO <span style="color:darkred;">PRENDI</span> AL MESE PER UN LAVORO DEL GENERE?
+`
+},
+
+{
+question:`HE DOESN’T <span style="color:darkred;">GET</span> ENOUGH FOR ALL THOSE EXTRA HOURS`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+LUI NON <span style="color:darkred;">PRENDE</span> ABBASTANZA PER TUTTE QUELLE ORE EXTRA
+`
+},
+
+{
+question:`WITH ALL THAT EXPERIENCE, SHE SHOULD <span style="color:darkred;">GET</span> MORE`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+CON TUTTA QUELL’ESPERIENZA, LEI DOVREBBE <span style="color:darkred;">PRENDERE</span> DI PIÙ
+`
+},
+
+{
+question:`HE <span style="color:darkred;">GETS</span> ALMOST DOUBLE SINCE CHANGING JOBS`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+LUI <span style="color:darkred;">GUADAGNA</span> QUASI IL DOPPIO DA QUANDO HA CAMBIATO LAVORO
+`
+},
+
+{
+question:`WE’LL NEVER <span style="color:darkred;">GET</span> HIM TO SELL THE PLACE`,
+meaning:`PERSUADE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">PERSUADE</span>
+</div>
+NON RIUSCIREMO MAI A <span style="color:darkred;">CONVINCERLO</span> A VENDERE IL LOCALE
+`
+},
+
+{
+question:`I COULDN’T <span style="color:darkred;">GET</span> A SEAT FOR SATURDAY’S CONCERT`,
+meaning:`OBTAIN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">OBTAIN</span>
+</div>
+NON SONO RIUSCITO A <span style="color:darkred;">PROCURARMI</span> UN POSTO PER IL CONCERTO DI SABATO
+`
+},
+
+{
+question:`SHALL I <span style="color:darkred;">GET</span> YOU SOMETHING TO DRINK?`,
+meaning:`BRING`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BRING</span>
+</div>
+TI <span style="color:darkred;">PRENDO</span> QUALCOSA DA BERE?
+`
+},
+
+{
+question:`SINCE WORKING ABROAD, HE <span style="color:darkred;">GETS</span> ALMOST TRIPLE`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+DA QUANDO LAVORA ALL’ESTERO, <span style="color:darkred;">PRENDE</span> QUASI IL TRIPLO
+`
+},
+
+{
+question:`IF YOU KEEP SHOUTING, THE SITUATION WILL ONLY <span style="color:darkred;">GET</span> WORSE`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+SE CONTINUI A URLARE, LA SITUAZIONE POTRÀ SOLO <span style="color:darkred;">PEGGIORARE</span>
+`
+},
+
+{
+question:`WE COULDN’T <span style="color:darkred;">GET</span> THEM TO LOWER THE PRICES`,
+meaning:`PERSUADE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">PERSUADE</span>
+</div>
+NON SIAMO RIUSCITI A <span style="color:darkred;">CONVINCERLI</span> AD ABBASSARE I PREZZI
+`
+},
+
+{
+question:`CAN YOU <span style="color:darkred;">GET</span> SOME BATTERIES WHILE YOU’RE AT THE SUPERMARKET?`,
+meaning:`BUY`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BUY</span>
+</div>
+PUOI <span style="color:darkred;">COMPRARE</span> DELLE BATTERIE MENTRE SEI AL SUPERMERCATO?
+`
+},
+
+{
+question:`I NEED TO <span style="color:darkred;">GET</span> MY EYES CHECKED TOMORROW`,
+meaning:`HAVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">HAVE</span>
+</div>
+DOMANI DEVO FARMI <span style="color:darkred;">CONTROLLARE</span> LA VISTA
+`
+},
+
+{
+question:`WE <span style="color:darkred;">GOT</span> SOME REALLY GOOD NEWS JUST BEFORE LEAVING`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+ABBIAMO <span style="color:darkred;">RICEVUTO</span> OTTIME NOTIZIE POCO PRIMA DI PARTIRE
+`
+},
+
+{
+question:`IF WE TAKE THE RING ROAD, WE’LL <span style="color:darkred;">GET</span> THERE MUCH FASTER`,
+meaning:`ARRIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">ARRIVE</span>
+</div>
+SE PRENDIAMO LA TANGENZIALE, <span style="color:darkred;">ARRIVEREMO</span> IN MOLTO MENO TEMPO
+`
+},
+
+{
+question:`I NEVER <span style="color:darkred;">GET</span> THE FIRST TRAIN IN THE MORNING`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+NON RIESCO MAI A <span style="color:darkred;">PRENDERE</span> IL PRIMO TRENO DEL MATTINO
+`
+},
+
+{
+question:`WHO <span style="color:darkred;">GOT</span> YOU TO CHANGE YOUR MIND AT THE LAST MINUTE?`,
+meaning:`PERSUADE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">PERSUADE</span>
+</div>
+CHI TI HA <span style="color:darkred;">CONVINTO</span> A CAMBIARE IDEA ALL’ULTIMO MOMENTO?
+`
+},
+
+{
+question:`SHE <span style="color:darkred;">GOT</span> THE MANAGER TO GIVE HER ANOTHER CHANCE`,
+meaning:`PERSUADE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">PERSUADE</span>
+</div>
+LEI È RIUSCITA A <span style="color:darkred;">CONVINCERE</span> IL DIRETTORE A DARLE UN’ALTRA POSSIBILITÀ
+`
+},
+
+{
+question:`I CAN’T <span style="color:darkred;">GET</span> THEM TO RESPECT DEADLINES`,
+meaning:`PERSUADE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">PERSUADE</span>
+</div>
+NON RIESCO A <span style="color:darkred;">CONVINCERLI</span> A RISPETTARE LE SCADENZE
+`
+},
+
+{
+question:`DID YOU <span style="color:darkred;">GET</span> THE JOKE OR SHOULD I EXPLAIN IT?`,
+meaning:`UNDERSTAND`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">UNDERSTAND</span>
+</div>
+HAI <span style="color:darkred;">CAPITO</span> LA BATTUTA O DEVO SPIEGARTELA?
+`
+},
+
+{
+question:`ONLY AT THE END OF THE MEETING DID HE <span style="color:darkred;">GET</span> WHY IT HAD BEEN HELD`,
+meaning:`UNDERSTAND`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">UNDERSTAND</span>
+</div>
+SOLO ALLA FINE DELLA RIUNIONE HA <span style="color:darkred;">CAPITO</span> IL MOTIVO PER IL QUALE SI ERA TENUTA
+`
+},
+
+{
+question:`IF YOU SPEAK TOO FAST, NOBODY WILL <span style="color:darkred;">GET</span> WHAT YOU MEAN`,
+meaning:`UNDERSTAND`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">UNDERSTAND</span>
+</div>
+SE PARLI TROPPO IN FRETTA, NESSUNO <span style="color:darkred;">CAPIRÀ</span> COSA INTENDI
+`
+},
+
+{
+question:`NOW I <span style="color:darkred;">GET</span> WHY SHE WAS SO FRUSTRATED`,
+meaning:`UNDERSTAND`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">UNDERSTAND</span>
+</div>
+ORA <span style="color:darkred;">CAPISCO</span> PERCHÉ ERA COSÌ FRUSTRATA
+`
+},
+
+{
+question:`I NEED TO <span style="color:darkred;">GET</span> MY HAIR CUT`,
+meaning:`HAVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">HAVE</span>
+</div>
+MI DEVO <span style="color:darkred;">TAGLIARE</span> I CAPELLI
+`
+},
+
+{
+question:`I AM <span style="color:darkred;">GETTING</span> THE CAR WASHED TODAY`,
+meaning:`HAVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">HAVE</span>
+</div>
+OGGI FACCIO <span style="color:darkred;">LAVARE</span> LA MACCHINA
+`
+},
+
+{
+question:`WE NEED TO <span style="color:darkred;">GET</span> TO THE AIRPORT BY 3PM`,
+meaning:`ARRIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">ARRIVE</span>
+</div>
+BISOGNA <span style="color:darkred;">ARRIVARE</span> ALL’AEROPORTO PRIMA DELLE 15
+`
+},
+
+{
+question:`HAVE YOU SEEN RICHARD YET? — NO, I’VE JUST <span style="color:darkred;">GOT</span> HERE`,
+meaning:`ARRIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">ARRIVE</span>
+</div>
+HAI GIÀ VISTO RICHARD? — NO, SONO APPENA <span style="color:darkred;">ARRIVATO</span>
+`
+},
+
+{
+question:`I <span style="color:darkred;">GOT</span> HOME LATER THAN EXPECTED`,
+meaning:`ARRIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">ARRIVE</span>
+</div>
+SONO <span style="color:darkred;">ARRIVATO</span> A CASA PIÙ TARDI DEL PREVISTO
+`
+},
+
+{
+question:`IT USED TO TAKE 3 DAYS FOR ASTRONAUTS TO <span style="color:darkred;">GET</span> TO THE MOON`,
+meaning:`REACH`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">REACH</span>
+</div>
+PRIMA, GLI ASTRONAUTI IMPIEGAVANO 3 GIORNI PER <span style="color:darkred;">RAGGIUNGERE</span> LA LUNA
+`
+},
+
+{
+question:`IT’S EASIER TO <span style="color:darkred;">GET</span> TO MILAN BY TRAIN`,
+meaning:`REACH`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">REACH</span>
+</div>
+È PIÙ FACILE <span style="color:darkred;">RAGGIUNGERE</span> MILANO IN TRENO
+`
+},
+
+{
+question:`IT’S IMPOSSIBLE TO <span style="color:darkred;">GET</span> TO THE OFFICE IN LESS THAN AN HOUR`,
+meaning:`REACH`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">REACH</span>
+</div>
+È IMPOSSIBILE <span style="color:darkred;">RAGGIUNGERE</span> L’UFFICIO IN MENO DI UN’ORA
+`
+},
+
+{
+question:`I <span style="color:darkred;">GET</span> AT LEAST 30 EMAILS A DAY`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+MI <span style="color:darkred;">ARRIVANO</span> ALMENO 30 EMAIL AL GIORNO
+`
+},
+
+{
+question:`I DIDN’T <span style="color:darkred;">GET</span> ANYTHING FOR MY BIRTHDAY`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+NON HO <span style="color:darkred;">RICEVUTO</span> NULLA PER IL MIO COMPLEANNO
+`
+},
+
+{
+question:`I <span style="color:darkred;">GOT</span> A FINE FOR SPEEDING`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+HO <span style="color:darkred;">PRESO</span> UNA MULTA PER ECCESSO DI VELOCITÀ
+`
+},
+
+{
+question:`DID YOU <span style="color:darkred;">GET</span> MY MESSAGE?`,
+meaning:`RECEIVE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">RECEIVE</span>
+</div>
+HAI <span style="color:darkred;">RICEVUTO</span> IL MIO MESSAGGIO?
+`
+},
+
+{
+question:`I HAD TO <span style="color:darkred;">GET</span> THE BUS; MY CAR HAD BROKEN DOWN`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+DOVEVO <span style="color:darkred;">PRENDERE</span> L’AUTOBUS; LA MIA MACCHINA AVEVA UN GUASTO
+`
+},
+
+{
+question:`WE CAN ALWAYS <span style="color:darkred;">GET</span> A TAXI TO GO BACK HOME`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+POSSIAMO SEMPRE <span style="color:darkred;">PRENDERE</span> UN TAXI PER TORNARE A CASA
+`
+},
+
+{
+question:`IF I LEAVE HOME NOW, I CAN <span style="color:darkred;">GET</span> TO YOUR PLACE BEFORE 1PM`,
+meaning:`REACH`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">REACH</span>
+</div>
+SE ESCO DI CASA ORA, POSSO <span style="color:darkred;">ARRIVARE</span> DA TE PRIMA DELLE 13
+`
+},
+
+{
+question:`ONE MOMENT WHILE I GO AND <span style="color:darkred;">GET</span> MY JACKET`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+UN ATTIMO CHE VADO A <span style="color:darkred;">PRENDERE</span> LA GIACCA
+`
+},
+
+{
+question:`WAIT ONE SECOND! I NEED TO <span style="color:darkred;">GET</span> SOMETHING FROM THE DRAWER`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+ASPETTA UN MOMENTO! DEVO <span style="color:darkred;">PRENDERE</span> UNA COSA DAL CASSETTO
+`
+},
+
+{
+question:`SHALL I <span style="color:darkred;">GET</span> MY DOCUMENTS?`,
+meaning:`TAKE`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">TAKE</span>
+</div>
+<span style="color:darkred;">PRENDO</span> I MIEI DOCUMENTI?
+`
+},
+
+{
+question:`THE SITUATION IS <span style="color:darkred;">GETTING</span> UNMANAGEABLE`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+LA SITUAZIONE STA <span style="color:darkred;">DIVENTANDO</span> INGESTIBILE
+`
+},
+
+{
+question:`HE <span style="color:darkred;">GOT</span> RICH BY PLAYING POKER IN LAS VEGAS`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+LUI È <span style="color:darkred;">DIVENTATO</span> RICCO GIOCANDO A POKER A LAS VEGAS
+`
+},
+
+{
+question:`IT USUALLY <span style="color:darkred;">GETS</span> DARK TOWARDS 5PM`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+DI SOLITO <span style="color:darkred;">FA</span> BUIO VERSO LE 17:00
+`
+},
+
+{
+question:`IT WAS <span style="color:darkred;">GETTING</span> IMPOSSIBLE TO REASON WITH THEM`,
+meaning:`BECOME`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">BECOME</span>
+</div>
+STAVA <span style="color:darkred;">DIVENTANDO</span> IMPOSSIBILE RAGIONARE CON LORO
+`
+},
+
+{
+question:`HOW COME SHE <span style="color:darkred;">GETS</span> MORE THAN ME?! WE HAVE THE SAME JOB!`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+COME MAI LEI <span style="color:darkred;">GUADAGNA</span> PIÙ DI ME?! FACCIAMO LO STESSO LAVORO!
+`
+},
+
+{
+question:`AS A TEACHER YOU HAVE TO <span style="color:darkred;">GET</span> THE RESPECT OF YOUR STUDENTS`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+COME INSEGNANTE DEVI <span style="color:darkred;">GUADAGNARTI</span> IL RISPETTO DEI TUOI STUDENTI
+`
+},
+
+{
+question:`WE COULD <span style="color:darkred;">GET</span> MORE MONEY BY INVESTING IN A BIO-TECH COMPANY`,
+meaning:`EARN`,
+flip:`
+<div style="margin-bottom:14px;">
+GET = <span style="color:darkred;">EARN</span>
+</div>
+POTREMMO <span style="color:darkred;">GUADAGNARE</span> PIÙ SOLDI INVESTENDO IN UN’AZIENDA BIOTECNOLOGICA
+`
+}
+
+];
+
+/* STATE */
+
+let quiz = [];
+let index = 0;
+let score = 0;
+
+/* SHUFFLE */
+
+function shuffle(arr){
+
+let copy = [...arr];
+
+for(let i = copy.length - 1; i > 0; i--){
+const j = Math.floor(Math.random() * (i + 1));
+[copy[i], copy[j]] = [copy[j], copy[i]];
+}
+
+return copy;
+}
+
+/* BUILD OPTIONS */
+
+function buildOptions(correct){
+
+let pool = meanings.filter(m => m !== correct);
+
+if(correct === "ARRIVE"){
+pool = pool.filter(m => m !== "REACH");
+}
+
+if(correct === "REACH"){
+pool = pool.filter(m => m !== "ARRIVE");
+}
+
+const selected = shuffle(pool).slice(0,5);
+
+selected.push(correct);
+
+return shuffle(selected);
+}
+
+/* START */
+
+function startQuiz(){
+
+quiz = shuffle(questions).slice(0,10);
+
+index = 0;
+
+score = 0;
+
+showQuestion();
+
+}
+
+/* SHOW QUESTION */
+
+function showQuestion(){
+
+const q = quiz[index];
+
+const flipCard = document.getElementById("flipCard");
+
+flipCard.classList.remove("flipped");
+
+/* RESET COMPARE BUTTON */
+
+const compareBtn = document.getElementById("compareBtn");
+
+compareBtn.style.display = "none";
+
+compareBtn.innerText = "COMPARE";
+
+setTimeout(()=>{
+
+/* QUESTION */
+
+document.getElementById("question").innerHTML = q.question;
+
+/* FLIP */
+
+document.getElementById("flipContent").innerHTML = `
+<div id="backText">
+${q.flip}
+</div>
+`;
+
+/* INFO */
+
+document.getElementById("progress").innerText =
+`${index + 1} / ${quiz.length}`;
+
+updateScore();
+
+/* NEXT */
+
+const nextBtn = document.getElementById("nextBtn");
+
+nextBtn.style.opacity = ".5";
+
+nextBtn.style.pointerEvents = "none";
+
+/* ANSWERS */
+
+const answers = document.getElementById("answers");
+
+answers.innerHTML = "";
+
+const options = buildOptions(q.meaning);
+
+options.forEach(opt=>{
+
+const btn = document.createElement("button");
+
+btn.className = "answer-btn";
+
+btn.innerText = opt;
+
+btn.onclick = ()=>checkAnswer(btn,opt,q.meaning);
+
+answers.appendChild(btn);
+
+});
+
+},300);
+
+}
+
+/* CHECK */
+
+function checkAnswer(button,selected,correct){
+
+if(selected === correct){
+
+button.classList.add("correct");
+
+button.disabled = true;
+
+score++;
+
+updateScore();
+
+playSound("correctSound");
+
+setTimeout(()=>{
+
+document.getElementById("flipCard").classList.add("flipped");
+
+},500);
+
+/* NEXT BUTTON */
+
+const nextBtn = document.getElementById("nextBtn");
+
+nextBtn.style.opacity = "1";
+
+nextBtn.style.pointerEvents = "auto";
+
+/* COMPARE BUTTON */
+
+const compareBtn = document.getElementById("compareBtn");
+
+compareBtn.style.display = "inline-block";
+
+compareBtn.style.opacity = "1";
+
+compareBtn.style.pointerEvents = "auto";
+
+}else{
+
+button.classList.add("wrong");
+
+button.disabled = true;
+
+playSound("wrongSound");
+
+/* NEXT BUTTON */
+
+const nextBtn = document.getElementById("nextBtn");
+
+nextBtn.style.opacity = "1";
+
+nextBtn.style.pointerEvents = "auto";
+
+}
+
+}
+
+/* TOGGLE */
+
+function toggleCard(){
+
+const flipCard = document.getElementById("flipCard");
+
+flipCard.classList.toggle("flipped");
+
+const compareBtn = document.getElementById("compareBtn");
+
+if(flipCard.classList.contains("flipped")){
+
+compareBtn.innerText = "QUESTION";
+
+}else{
+
+compareBtn.innerText = "COMPARE";
+
+}
+
+}
+
+/* SCORE */
+
+function updateScore(){
+
+document.getElementById("score").innerText =
+`${score} / ${quiz.length}`;
+
+}
+
+/* NEXT */
+
+function nextQuestion(){
+
+if(index < quiz.length - 1){
+
+index++;
+
+showQuestion();
+
+}else{
+
+endQuiz();
+
+}
+
+}
+
+/* END */
+
+function endQuiz(){
+
+const passMark = Math.ceil(quiz.length * 0.7);
+
+if(score >= passMark){
+
+playSound("passSound");
+
+}else{
+
+playSound("failSound");
+
+}
+
+const message = score >= passMark
+? `<span style="color:#0E065C;">WELL DONE! YOU'VE PASSED! 🎉</span>`
+: `<span style="color:#0E065C;">BAD LUCK! TRY AGAIN ❌</span>`;
+
+const front = document.querySelector(".front");
+
+front.innerHTML = `
+<div class="end-screen">
+${message}<br><br>
+YOUR SCORE: ${score} / ${quiz.length}
+
+<button class="retry-btn" id="retryBtn">
+TRY AGAIN
+</button>
+</div>`;
+
+/* HIDE ANSWERS */
+
+const answers = document.getElementById("answers");
+
+answers.style.display = "none";
+
+/* RESET CARD */
+
+document.getElementById("flipCard").classList.remove("flipped");
+
+/* HIDE BUTTONS */
+
+document.getElementById("nextBtn").style.display = "none";
+
+document.getElementById("compareBtn").style.display = "none";
+
+/* HIDE SHUFFLE / BACK */
+
+document.querySelector(".shuffle-wrap").style.display = "none";
+setTimeout(()=>{
+
+document.getElementById("retryBtn").onclick = function(){
+
+front.innerHTML =
+`<div class="question" id="question"></div>`;
+
+answers.style.display = "grid";
+
+document.getElementById("nextBtn").style.display =
+"inline-block";
+
+document.querySelector(".shuffle-wrap").style.display =
+"grid";
+
+startQuiz();
+
+};
+
+},100);
+
+}
+
+/* EVENTS */
+
+document.getElementById("nextBtn").onclick = nextQuestion;
+
+document.getElementById("compareBtn").onclick = toggleCard;
+
+document.getElementById("shuffleBtn").onclick = function(){
+
+quiz = shuffle(questions).slice(0,10);
+
+index = 0;
+
+score = 0;
+
+showQuestion();
+
+};
+
+/* BACK BUTTON */
+
+document.getElementById("backButton").onclick = function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+};
+
+
+/* POPUP */
+
+document.getElementById("readMeBtn").onclick = function(){
+document.getElementById("popupOverlay").style.display = "flex";
+};
+
+document.getElementById("closePopup").onclick = function(){
+document.getElementById("popupOverlay").style.display = "none";
+};
+
+document.getElementById("popupOverlay").onclick = function(e){
+if(e.target === this){
+this.style.display = "none";
+}
+};
+
+/* INIT */
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
+```
