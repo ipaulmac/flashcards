@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Odd One Out Quiz</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+--bg-blue:#061247;
+--front-purple:#561386;
+--it-red:#8C0327;
+--gold:#FFD700;
+--cyan:#00cfd5;
+}
+
+body{
+margin:0;
+padding:10px;
+background:var(--bg-blue);
+font-family:system-ui;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+/* TOP BAR */
+
+.topbar{
+width:90vw;
+max-width:380px;
+display:grid;
+grid-template-columns:60px 1fr auto;
+align-items:center;
+margin-bottom:10px;
+}
+
+
+.title{
+color:#fff;
+font-weight:900;
+letter-spacing:.08em;
+font-size:.95rem;
+text-align:center;
+justify-self:center;
+width:100%;
+}
+
+
+.library-back-btn{
+width:58px;
+height:28px;
+background:#930000;
+color:#fff;
+border:3px solid #fff;
+border-radius:999px;
+font-size:.72rem;
+font-weight:900;
+cursor:pointer;
+}
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:#930000;
+}
+
+
+
+
+
+/* INSTRUCTIONS */
+details summary{
+cursor:pointer;
+list-style:none;
+color:var(--gold);
+font-weight:800;
+font-size:.95rem;
+}
+
+.instructions-box{
+position:absolute;
+top:38px;
+left:50%;
+transform:translateX(-50%);
+width:92vw;
+max-width:310px;
+background:#eef6ff;
+color:#061247;
+border-radius:10px;
+padding:12px 14px;
+font-size:.84rem;
+line-height:1.4;
+font-weight:700;
+z-index:10;
+box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+
+.close-box{
+margin-top:10px;
+text-align:right;
+color:#006400;
+font-weight:900;
+cursor:pointer;
+}
+
+/* CARD */
+.card{
+width:90vw;
+max-width:380px;
+background:#fff;
+border:4px solid var(--it-red);
+border-radius:1rem;
+padding:14px 12px;
+min-height:190px;
+}
+
+.word-line{
+font-size:1.05rem;
+font-weight:900;
+margin:10px 0;
+text-transform:uppercase;
+color:#061247;
+}
+
+.letter{
+color:#8C0327;
+margin-right:8px;
+display:inline-block;
+width:28px;
+}
+
+/* HEADER */
+.header{
+width:90vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin-top:8px;
+margin-bottom:8px;
+}
+
+#counter{
+color:#fff;
+font-weight:800;
+}
+
+#score{
+color:var(--gold);
+font-weight:800;
+text-align:right;
+}
+
+.next-btn{
+height:28px;
+padding:0 12px;
+border-radius:8px;
+font-weight:800;
+font-size:.8rem;
+background:var(--cyan);
+color:#061247;
+visibility:hidden;
+}
+
+/* ANSWER BUTTONS */
+
+
+.answer-row{
+width:90vw;
+max-width:320px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+}
+
+.answer-btn{
+height:42px;
+border:none;
+border-radius:10px;
+font-weight:900;
+font-size:1.15rem;
+background:#FFE4EC;
+color:var(--front-purple);
+}
+
+.correct{
+background:#22c55e;
+color:#fff;
+}
+
+.wrong{
+background:#ef4444;
+color:#fff;
+}
+
+/* POPUP BELOW */
+.popup{
+width:90vw;
+max-width:380px;
+background:#fff;
+border-radius:14px;
+padding:14px;
+margin-top:10px;
+display:none;
+}
+
+.popup-title{
+font-weight:900;
+font-size:1rem;
+margin-bottom:10px;
+line-height:1.35;
+}
+
+.good{color:#22c55e;}
+.bad{color:#ef4444;}
+
+.popup-line{
+font-weight:700;
+color:#061247;
+line-height:1.45;
+margin:8px 0;
+}
+
+.listen{
+background:#eef2f7;
+border:none;
+padding:3px 7px;
+border-radius:7px;
+font-weight:800;
+font-size:.8rem;
+margin-left:5px;
+}
+
+.sound-row{
+display:grid;
+grid-template-columns:1fr auto;
+align-items:center;
+gap:8px;
+margin:3px 0;
+}
+
+.popup-word{
+color:#8C0327;
+font-weight:900;
+}
+
+.next-popup{
+margin-top:12px;
+text-align:right;
+font-weight:900;
+cursor:pointer;
+color:#061247;
+}
+
+/* RETRY */
+.retry-btn{
+all:unset;
+background:var(--front-purple);
+color:#fff;
+font-weight:900;
+padding:8px 18px;
+border-radius:8px;
+margin-top:12px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+<button
+id="libraryBackBtn"
+class="library-back-btn"
+type="button">
+BACK
+</button>
+
+<div class="title">ODD ONE OUT <span style="color:#FFF3A3;">(B2)</span></div>
+
+<details id="instructionsBox">
+<summary>READ ME</summary>
+
+<div class="instructions-box">
+
+You will see four words, <span style="color:#d10000;font-weight:900;">THREE</span> of which have the same sound and <span style="color:#d10000;font-weight:900;">ONE</span> which has a different sound<br><br>
+
+Select the <span style="color:#d10000;font-weight:900;">ODD ONE OUT</span>: A, B, C or D<br><br>
+
+There are <span style="color:#d10000;font-weight:900;">90</span> questions, of which only <span style="color:#d10000;font-weight:900;">8</span> are selected randomly<br><br>
+
+You must give at least <span style="color:#d10000;font-weight:900;">6</span> correct answers to pass this test
+
+<div class="close-box"
+onclick="document.getElementById('instructionsBox').removeAttribute('open')">
+CLOSE
+</div>
+</div>
+
+</details>
+</div>
+
+<div class="card" id="card"></div>
+
+<div class="header">
+<div id="counter"></div>
+<button class="next-btn" id="nextBtn">NEXT</button>
+<div id="score"></div>
+</div>
+
+<div class="answer-row" id="answers"></div>
+
+<div class="popup" id="popup"></div>
+
+<div id="retryArea"></div>
+
+<audio id="correctSound" preload="auto">
+<source src="audio/correct.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="wrongSound" preload="auto">
+<source src="audio/wrong.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="passSound" preload="auto">
+<source src="audio/pass.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="failSound" preload="auto">
+<source src="audio/fail.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* ==========================
+PASTE YOUR DATA HERE
+========================== */
+
+
+const questions = [
+{
+options:["wear","steer","fear","hear"],
+correct:0,
+oddSound:"/eə/",
+groupSound:"/ɪə/"
+},
+
+{
+options:["most","lost","cost","frost"],
+correct:0,
+oddSound:"/əʊst/",
+groupSound:"/ɒst/"
+},
+{
+options:["war","car","floor","law"],
+correct:1,
+oddSound:"/ɑː/",
+groupSound:"/ɔː/"
+},
+{
+options:["boot","shoot","foot","root"],
+correct:2,
+oddSound:"/ʊt/",
+groupSound:"/uːt/"
+},
+{
+options:["gave","wave","have","slave"],
+correct:2,
+oddSound:"/æv/",
+groupSound:"/eɪv/"
+},
+{
+options:["raise","trays","says","stays"],
+correct:2,
+oddSound:"/ez/",
+groupSound:"/eɪz/"
+},
+{
+options:["crown","thrown","brown","town"],
+correct:1,
+oddSound:"/əʊn/",
+groupSound:"/aʊn/"
+},
+{
+options:["prove","move","groove","love"],
+correct:3,
+oddSound:"/ʌv/",
+groupSound:"/uːv/"
+},
+{
+options:["were","spare","chair","pair"],
+correct:0,
+oddSound:"/ɜː/",
+groupSound:"/eə/"
+},
+{
+options:["water","porter","daughter","laughter"],
+correct:3,
+oddSound:"/ɑːftə/",
+groupSound:"/ɔːtə/"
+},
+{
+options:["cleared","feared","beard","heard"],
+correct:3,
+oddSound:"/ɜːd/",
+groupSound:"/ɪəd/"
+},
+{
+options:["shoes","goes","blows","knows"],
+correct:0,
+oddSound:"/uːz/",
+groupSound:"/əʊz/"
+},
+{
+options:["wait","state","great","heat"],
+correct:3,
+oddSound:"/iːt/",
+groupSound:"/eɪt/"
+},
+{
+options:["among","wrong","rung","sung"],
+correct:1,
+oddSound:"/ɒŋ/",
+groupSound:"/ʌŋ/"
+},
+{
+options:["broad","load","showed","road"],
+correct:0,
+oddSound:"/ɔːd/",
+groupSound:"/əʊd/"
+},
+{
+options:["knees","peace","freeze","keys"],
+correct:1,
+oddSound:"/iːs/",
+groupSound:"/iːz/"
+},
+{
+options:["home","sum","crumb","come"],
+correct:0,
+oddSound:"/əʊm/",
+groupSound:"/ʌm/"
+},
+{
+options:["straighter","greater","water","later"],
+correct:2,
+oddSound:"/ɔːtə/",
+groupSound:"/eɪtə/"
+},
+{
+options:["ache","shake","steak","weak"],
+correct:3,
+oddSound:"/iːk/",
+groupSound:"/eɪk/"
+},
+{
+options:["another","bother","brother","mother"],
+correct:1,
+oddSound:"/ɒðə/",
+groupSound:"/ʌðə/"
+},
+{
+options:["blood","stood","flood","mud"],
+correct:1,
+oddSound:"/ʊd/",
+groupSound:"/ʌd/"
+},
+{
+options:["word","third","stirred","lord"],
+correct:3,
+oddSound:"/ɔːd/",
+groupSound:"/ɜːd/"
+},
+{
+options:["war","bar","far","star"],
+correct:0,
+oddSound:"/ɔː/",
+groupSound:"/ɑː/"
+},
+{
+options:["eyes","price","lies","buys"],
+correct:1,
+oddSound:"/aɪs/",
+groupSound:"/aɪz/"
+},
+{
+options:["build","mild","wild","child"],
+correct:0,
+oddSound:"/ɪld/",
+groupSound:"/aɪld/"
+},
+{
+options:["dull","bull","wool","pull"],
+correct:0,
+oddSound:"/ʌl/",
+groupSound:"/ʊl/"
+},
+{
+options:["earth","birth","worth","north"],
+correct:3,
+oddSound:"/ɔːθ/",
+groupSound:"/ɜːθ/"
+},
+{
+options:["gone","ton","son","won"],
+correct:0,
+oddSound:"/ɒn/",
+groupSound:"/ʌn/"
+},
+{
+options:["barn","scorn","warn","dawn"],
+correct:0,
+oddSound:"/ɑːn/",
+groupSound:"/ɔːn/"
+},
+{
+options:["wise","rice","cries","sighs"],
+correct:1,
+oddSound:"/aɪs/",
+groupSound:"/aɪz/"
+},
+{
+options:["case","phrase","base","lace"],
+correct:1,
+oddSound:"/eɪz/",
+groupSound:"/eɪs/"
+},
+
+{
+options:["eight","height","weight","freight"],
+correct:1,
+oddSound:"/aɪt/",
+groupSound:"/eɪt/"
+},
+{
+options:["wrong","young","sung","tongue"],
+correct:0,
+oddSound:"/ɒŋ/",
+groupSound:"/ʌŋ/"
+},
+{
+options:["lower","shower","tower","power"],
+correct:0,
+oddSound:"/əʊə/",
+groupSound:"/aʊə/"
+},
+{
+options:["sound","ground","drowned","owned"],
+correct:3,
+oddSound:"/əʊnd/",
+groupSound:"/aʊnd/"
+},
+{
+options:["spear","wear","dare","prayer"],
+correct:0,
+oddSound:"/ɪə/",
+groupSound:"/eə/"
+},
+{
+options:["spread","bead","tread","bread"],
+correct:1,
+oddSound:"/iːd/",
+groupSound:"/ed/"
+},
+{
+options:["blow","allow","owe","sew"],
+correct:1,
+oddSound:"/aʊ/",
+groupSound:"/əʊ/"
+},
+{
+options:["dose","blows","prose","knows"],
+correct:0,
+oddSound:"/əʊs/",
+groupSound:"/əʊz/"
+},
+{
+options:["crime","limb","climb","rhyme"],
+correct:1,
+oddSound:"/aɪm/",
+groupSound:"silent b"
+},
+{
+options:["drum","thumb","home","come"],
+correct:2,
+oddSound:"/əʊm/",
+groupSound:"/ʌm/"
+},
+{
+options:["abroad","load","scored","board"],
+correct:1,
+oddSound:"/əʊd/",
+groupSound:"/ɔːd/"
+},
+{
+options:["bush","brush","crush","rush"],
+correct:0,
+oddSound:"/ʊʃ/",
+groupSound:"/ʌʃ/"
+},
+{
+options:["worm","storm","form","norm"],
+correct:0,
+oddSound:"/ɜːm/",
+groupSound:"/ɔːm/"
+},
+{
+options:["cast","classed","massed","passed"],
+correct:2,
+oddSound:"/st/",
+groupSound:"/səd/"
+},
+{
+options:["freeze","ease","seize","lease"],
+correct:3,
+oddSound:"/iːs/",
+groupSound:"/iːz/"
+},
+{
+options:["weight","great","wheat","freight"],
+correct:2,
+oddSound:"/iːt/",
+groupSound:"/eɪt/"
+},
+{
+options:["palm","calm","warm","harm"],
+correct:2,
+oddSound:"/ɔːm/",
+groupSound:"/ɑːm/"
+},
+{
+options:["hint","mint","print","pint"],
+correct:3,
+oddSound:"/aɪnt/",
+groupSound:"/ɪnt/"
+},
+{
+options:["stuff","cough","rough","enough"],
+correct:1,
+oddSound:"/ɒf/",
+groupSound:"/ʌf/"
+},
+{
+options:["haste","praised","waste","raced"],
+correct:1,
+oddSound:"/eɪzd/",
+groupSound:"/eɪst/"
+},
+{
+options:["part","quart","start","heart"],
+correct:1,
+oddSound:"/wɔːt/",
+groupSound:"/ɑːt/"
+},
+{
+options:["sever","fever","ever","clever"],
+correct:1,
+oddSound:"/iːvə/",
+groupSound:"/evə/"
+},
+{
+options:["speak","break","beak","seek"],
+correct:1,
+oddSound:"/eɪk/",
+groupSound:"/iːk/"
+},
+{
+options:["juice","goose","choose","loose"],
+correct:2,
+oddSound:"/uːs/",
+groupSound:"/uːz/"
+},
+{
+options:["there","their","here","hair"],
+correct:2,
+oddSound:"/ɪə/",
+groupSound:"/eə/"
+},
+{
+options:["pair","pear","dare","dear"],
+correct:3,
+oddSound:"/ɪə/",
+groupSound:"/eə/"
+}
+];
+
+
+/* ========================== */
+
+let quiz=[];
+let index=0;
+let score=0;
+let locked=false;
+
+function shuffle(arr){
+let a=[...arr];
+for(let i=a.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[a[i],a[j]]=[a[j],a[i]];
+}
+return a;
+}
+
+function speak(txt){
+let u=new SpeechSynthesisUtterance(txt);
+u.lang="en-GB";
+u.rate=.9;
+speechSynthesis.cancel();
+speechSynthesis.speak(u);
+}
+
+function playSound(id){
+let a=document.getElementById(id);
+if(!a) return;
+a.pause();
+a.currentTime=0;
+a.play();
+}
+
+function startQuiz(){
+quiz=shuffle(questions).slice(0,8);
+index=0;
+score=0;
+document.getElementById("retryArea").innerHTML="";
+showQuestion();
+}
+
+function showQuestion(){
+locked=false;
+document.getElementById("popup").style.display="none";
+
+let q=quiz[index];
+let card=document.getElementById("card");
+
+card.innerHTML=`
+<div class="word-line"><span class="letter">A)</span>${q.options[0]}</div>
+<div class="word-line"><span class="letter">B)</span>${q.options[1]}</div>
+<div class="word-line"><span class="letter">C)</span>${q.options[2]}</div>
+<div class="word-line"><span class="letter">D)</span>${q.options[3]}</div>
+`;
+
+let wrap=document.getElementById("answers");
+wrap.innerHTML="";
+
+["A","B","C","D"].forEach((letter,i)=>{
+let btn=document.createElement("button");
+btn.className="answer-btn";
+btn.innerText=letter;
+btn.onclick=()=>checkAnswer(i);
+wrap.appendChild(btn);
+});
+
+updateHeader();
+}
+
+function updateHeader(){
+document.getElementById("counter").innerText=`${index+1} / ${quiz.length}`;
+document.getElementById("score").innerText=`${score} / ${quiz.length}`;
+}
+
+function checkAnswer(choice){
+if(locked) return;
+locked=true;
+
+let q=quiz[index];
+let buttons=document.querySelectorAll(".answer-btn");
+
+buttons.forEach((b,i)=>{
+
+if(choice===q.correct){
+if(i===q.correct) b.classList.add("correct");
+}else{
+if(i===choice) b.classList.add("wrong");
+}
+
+b.disabled=true;
+});
+
+if(choice===q.correct){
+score++;
+playSound("correctSound");
+}else{
+playSound("wrongSound");
+}
+
+setTimeout(()=>showPopup(choice===q.correct, choice),500);
+updateHeader();
+}
+
+function showPopup(correctChoice, choice){
+let q=quiz[index];
+let popup=document.getElementById("popup");
+
+if(correctChoice){
+
+let others=q.options.filter((x,i)=>i!==q.correct)
+.map(w=>`
+<div class="sound-row">
+<span class="popup-word">${w.toUpperCase()}</span>
+<button class="listen" onclick="speak('${w}')">🔊</button>
+</div>
+`)
+.join("");
+
+popup.innerHTML=`
+
+<div class="popup-title good" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;">
+<span>CORRECT!</span>
+<span class="popup-word">${q.options[q.correct].toUpperCase()}</span>
+<span>is pronounced</span>
+<button class="listen" onclick="speak('${q.options[q.correct]}')">🔊</button>
+</div>
+
+<div class="popup-line">${others}</div>
+
+<div class="next-popup" style="margin-top:18px;" onclick="nextQuestion()">NEXT ></div>
+
+`;
+
+}else{
+
+popup.innerHTML=`
+
+<div class="popup-title bad">BAD LUCK!</div>
+
+<div class="popup-line">
+The pronunciation of this word is
+<button class="listen" onclick="speak('${q.options[choice]}')">🔊</button>
+</div>
+
+<div class="next-popup" onclick="nextQuestion()">NEXT ></div>
+
+`;
+}
+
+popup.style.display="block";
+}
+
+function nextQuestion(){
+
+if(locked===false) return;
+
+if(index===quiz.length-1){
+
+endQuiz();
+return;
+
+}
+
+index++;
+showQuestion();
+
+}
+function endQuiz(){
+
+document.getElementById("answers").innerHTML="";
+document.getElementById("popup").style.display="none";
+
+let passed=score>=6;
+
+playSound(passed ? "passSound" : "failSound");
+
+document.getElementById("card").innerHTML=`
+<div class="word-line" style="text-align:center;margin-top:55px;">
+${passed ? "WELL DONE! YOU'VE PASSED! 🎉" : "BAD LUCK! TRY AGAIN ❌"}
+</div>
+`;
+
+document.getElementById("retryArea").innerHTML=`
+<button class="retry-btn" onclick="startQuiz()">TRY AGAIN</button>
+`;
+}
+
+document.getElementById("libraryBackBtn").addEventListener("click", function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+});
+
+
+
+startQuiz();
+</script>
+
+</body>
+</html>
