@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>INFINITIVE OR GERUND?</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.9rem;
+letter-spacing:.05em;
+}
+
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+width:58px;
+height:36px;
+padding:0;
+font-weight:900;
+font-size:.8rem;
+}
+
+
+/* READ ME */
+
+.top-controls{
+display:flex;
+flex-direction:row;
+align-items:center;
+gap:14px;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.88rem;
+letter-spacing:.03em;
+cursor:pointer;
+user-select:none;
+position:relative;
+top:10px;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+background:#fff;
+border:4px solid var(--red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-title{
+font-size:1rem;
+font-weight:900;
+color:var(--red);
+text-align:center;
+margin-bottom:14px;
+}
+
+.popup-text{
+font-size:.92rem;
+font-weight:900;
+line-height:1.4;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkred;
+cursor:pointer;
+user-select:none;
+}
+
+/* FLIP CARD */
+
+.flip-card{
+width:92vw;
+max-width:380px;
+height:255px;
+perspective:1200px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+transform:rotateY(180deg);
+}
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:12px 18px 18px 18px;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+.front{
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.back{
+transform:rotateY(180deg);
+display:grid;
+padding:12px 14px;
+overflow:hidden;
+box-sizing:border-box;
+}
+
+.back-content{
+align-self:center;
+text-align:left;
+font-weight:900;
+font-size:.9rem;
+line-height:1.2;
+color:#0E065C;
+width:100%;
+}
+
+.back br + br{
+display:block;
+content:"";
+margin-top:10px;
+}
+
+.question{
+font-size:1rem;
+font-weight:900;
+color:#0E065C;
+line-height:1.28;
+white-space:pre-line;
+padding:0 6px;
+text-transform:uppercase;
+}
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+
+/* ANSWERS */
+
+.answers{
+width:92vw;
+max-width:380px;
+display:flex;
+flex-direction:column;
+gap:8px;
+margin-top:10px;
+}
+
+.answer-btn{
+width:100%;
+min-height:50px;
+background:#eef2f7;
+color:var(--purple);
+font-weight:800;
+border-radius:10px;
+border:1px solid #cbd5e1;
+display:flex;
+align-items:center;
+justify-content:flex-start;
+text-align:left;
+padding:10px 12px;
+font-size:.95rem;
+line-height:1.3;
+white-space:normal;
+word-break:break-word;
+text-transform:uppercase;
+transition:transform .08s ease, background .12s ease;
+}
+
+.answer-btn:active{
+transform:scale(.96);
+}
+
+.correct{
+background:#22c55e;
+color:#fff;
+box-shadow:0 0 10px #22c55e;
+}
+
+.wrong{
+background:#ef4444;
+color:#fff;
+}
+
+/* FEEDBACK */
+
+.feedback{
+    width:92vw;
+    max-width:380px;
+    min-height:0;
+    margin:0;
+    font-weight:900;
+    text-align:center;
+    color:#ef4444;
+}
+
+
+/* BUTTONS */
+
+.buttons{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin-top:4px;
+}
+
+button{
+border:none;
+border-radius:10px;
+padding:13px 10px;
+font-size:.88rem;
+font-weight:900;
+text-transform:uppercase;
+}
+
+
+button:disabled{
+opacity:.5;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+.end-screen{
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:1.15rem;
+font-weight:900;
+color:#561386;
+line-height:1.35;
+padding:10px 20px;
+}
+
+.retry-btn{
+margin-top:16px;
+background:#0E065C;
+color:#fff;
+width:150px;
+height:40px;
+font-weight:900;
+border-radius:10px;
+}
+
+/* BACK BUTTON */
+
+.library-back-container{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin:12px auto 0;
+}
+
+.library-back-btn{
+background:#930000;
+color:#ffffff;
+border:3px solid #ffffff;
+border-radius:10px;
+width:90px;
+height:42px;
+font-size:.88rem;
+font-weight:900;
+cursor:pointer;
+transition:background .2s,color .2s;
+}
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:#061247;
+}
+
+.library-back-btn:active{
+transform:scale(.97);
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+
+<audio id="correctSound"><source src="audio/correct.mp3"></audio>
+<audio id="wrongSound"><source src="audio/wrong.mp3"></audio>
+<audio id="passSound"><source src="audio/pass.mp3"></audio>
+<audio id="failSound"><source src="audio/fail.mp3"></audio>
+
+<!-- TOP -->
+
+<div class="top-bar">
+
+<div class="top-title">
+INFINITIVE OR GERUND?<br>
+<span style="color:#FFF3A3;">(B1)</span>
+</div>
+<div class="top-controls">
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
+</div>
+
+</div>
+
+<!-- POPUP -->
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+THIS QUIZ CONTAINS <span style="color:darkred;">50</span> QUESTIONS OF WHICH <span style="color:darkred;">5</span> ARE SELECTED RANDOMLY AT A TIME<br><br>
+
+ONLY IF YOU ANSWER CORRECTLY WILL THE CARD FLIP TO REVEAL THE GRAMMATICAL EXPLANATION
+
+</div>
+
+<div id="closePopup" class="popup-close-text">
+START QUIZ →
+</div>
+
+</div>
+</div>
+
+<!-- CARD -->
+
+<div class="flip-card" id="flipCard">
+<div class="flip-inner">
+
+<div class="card-face front">
+<div class="question" id="question"></div>
+</div>
+
+<div class="card-face back">
+<div class="back-content" id="flipContent"></div>
+</div>
+
+</div>
+</div>
+
+<!-- INFO -->
+
+<div class="info-row">
+
+<div id="progress">1 / 10</div>
+
+<div style="
+display:flex;
+justify-content:center;
+align-items:center;
+">
+
+<button id="middleNextBtn"
+style="
+background:#00cfd5;
+color:#061247;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:.5;
+pointer-events:none;
+">
+Next
+</button>
+
+</div>
+
+<div id="score" class="right">0 / 10</div>
+
+</div>
+
+<!-- MCQ MODE -->
+
+<div id="answers" class="answers"></div>
+
+<div id="feedback" class="feedback"></div>
+
+<div class="library-back-container">
+    <button id="libraryBackBtn" class="library-back-btn">
+        BACK
+    </button>
+</div>
+
+<script>
+
+const questions = [
+{
+question:`Non ho il tempo per farlo.`,
+options:[
+`I don’t have time doing it.`,
+`I don’t have time to do it.`,
+`I don’t have time for doing it.`,
+`I don’t have time for to do it.`
+],
+correct:`I don’t have time to do it.`,
+flip:`AFTER A NOUN (<span style="color:darkred;">TIME</span>) WE USE THE INFINITIVE<br><br>
+I DON'T HAVE <span style="color:darkred;">TIME TO DO</span> IT.`
+},
+
+{
+question:`Hai qualcosa da dire?`,
+options:[
+`Do you have anything to say?`,
+`Do you have anything saying?`,
+`Do you have anything say?`
+],
+correct:`Do you have anything to say?`,
+flip:`AFTER A PRONOUN (<span style="color:darkred;">ANYTHING</span>) WE USE THE INFINITIVE<br><br>
+DO YOU HAVE <span style="color:darkred;">ANYTHING TO SAY</span>?`
+},
+
+{
+question:`E' troppo grande per portarlo a mano.`,
+options:[
+`It's too big carrying by hand.`,
+`It's too big for carrying by hand.`,
+`It's too big to carry by hand.`
+],
+correct:`It's too big to carry by hand.`,
+flip:`AFTER AN ADJECTIVE (<span style="color:darkred;">BIG</span>) WE USE THE INFINITIVE<br><br>
+IT'S TOO <span style="color:darkred;">BIG TO CARRY</span> BY HAND.`
+},
+
+{
+question:`Hard work and creativity are the keys ____ successful.`,
+options:[
+`to be`,
+`to being`,
+`for being`
+],
+correct:`to being`,
+flip:`IN THIS CASE, <span style="color:darkred;">TO</span> IS A PREPOSITION. IT CAN BE FOLLOWED EITHER BY A NOUN OR A VERB. SO THE VERB BECOMES A NOUN<br><br>
+IL LAVORO DURO E LA CREATIVITÀ SONO LE CHIAVI PER <span style="color:darkred;">AVERE</span> SUCCESSO.<br><br>
+HARD WORK AND CREATIVITY ARE THE KEYS <span style="color:darkred;">TO BEING</span> SUCCESSFUL.`
+},
+
+{
+question:`Which sentence is correct?`,
+options:[
+`He avoided to talk to her.`,
+`He avoided talking to her.`,
+`He avoided talk to her.`
+],
+correct:`He avoided talking to her.`,
+flip:`<span style="color:darkred;">AVOID</span> IS A 'JOINING VERB' WITHOUT 'TO'. AUTOMATICALLY, THE SECOND VERB BECOMES '-ING'<br><br>
+LUI <span style="color:darkred;">EVITAVA DI PARLARE</span> CON LEI.<br><br>
+HE <span style="color:darkred;">AVOIDED TALKING</span> TO HER.`
+},
+
+{
+question:`Which of the following verbs is always followed by the "-ING" form?`,
+options:[
+`Want`,
+`Decide`,
+`Enjoy`
+],
+correct:`Enjoy`,
+flip:`<span style="color:darkred;">ENJOY</span> IS A 'JOINING VERB' WITHOUT 'TO'. AUTOMATICALLY, THE SECOND VERB BECOMES '-ING'<br><br>
+DIVERTIRSI A FARE = ENJOY <span style="color:darkred;">DOING</span>`
+},
+
+{
+question:`When will you stop ____?`,
+options:[
+`smoking`,
+`to smoke`,
+`of smoking`
+],
+correct:`smoking`,
+flip:`<span style="color:darkred;">STOP</span> IS A 'JOINING VERB' WITHOUT '<span style="color:darkred;">TO</span>'. AUTOMATICALLY, THE SECOND VERB BECOMES '-ING'<br><br>
+QUANDO SMETTERAI DI <span style="color:darkred;">FUMARE</span>?<br><br>
+WHEN WILL YOU <span style="color:darkred;">STOP SMOKING</span>?`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Non abbiamo soldi da buttare (throw away).`,
+options:[`throw away`,`to throw away`,`throwing away`],
+correct:`to throw away`,
+flip:`AFTER A NOUN (<span style="color:darkred;">MONEY</span>) WE USE THE INFINITIVE<br><br>
+NON ABBIAMO <span style="color:darkred;">SOLDI</span> DA BUTTARE.<br><br>
+WE DON'T HAVE <span style="color:darkred;">MONEY TO THROW AWAY</span>.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Mi serve un'altra busta per portare a casa la spesa (carry).`,
+options:[`carry`,`to carry`,`carrying`],
+correct:`to carry`,
+flip:`AFTER A NOUN (<span style="color:darkred;">BAG</span>) WE USE THE INFINITIVE<br><br>
+MI SERVE UN'ALTRA <span style="color:darkred;">BUSTA</span> PER PORTARE A CASA LA SPESA.<br><br>
+I NEED ANOTHER <span style="color:darkred;">BAG TO CARRY</span> THE SHOPPING HOME.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Sono interessato a saperne di più (know).`,
+options:[`know`,`to know`,`knowing`],
+correct:`to know`,
+flip:`AFTER AN ADJECTIVE (<span style="color:darkred;">INTERESTED</span>) WE USE THE INFINITIVE<br><br>
+SONO <span style="color:darkred;">INTERESSATO</span> A SAPERNE DI PIÙ.<br><br>
+I'M <span style="color:darkred;">INTERESTED TO KNOW</span> MORE ABOUT IT.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): È impossibile capire cosa vogliono (understand).`,
+options:[`understand`,`to understand`,`understanding`],
+correct:`to understand`,
+flip:`AFTER AN ADJECTIVE (<span style="color:darkred;">IMPOSSIBLE</span>) WE USE THE INFINITIVE<br><br>
+È <span style="color:darkred;">IMPOSSIBILE</span> CAPIRE COSA VOGLIONO.<br><br>
+IT'S <span style="color:darkred;">IMPOSSIBLE TO UNDERSTAND</span> WHAT THEY WANT.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Non c'è alcun motivo per aspettare (wait).`,
+options:[`wait`,`to wait`,`waiting`],
+correct:`to wait`,
+flip:`AFTER A NOUN (<span style="color:darkred;">REASON</span>) WE USE THE INFINITIVE<br><br>
+NON C'È ALCUN <span style="color:darkred;">MOTIVO</span> PER ASPETTARE.<br><br>
+THERE'S NO <span style="color:darkred;">REASON TO WAIT</span>.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Ha qualcosa da dire? (say)`,
+options:[`say`,`to say`,`saying`],
+correct:`to say`,
+flip:`AFTER A PRONOUN (<span style="color:darkred;">ANYTHING</span>) WE USE THE INFINITIVE<br><br>
+LEI HA <span style="color:darkred;">QUALCOSA</span> DA DIRE?<br><br>
+DOES SHE HAVE <span style="color:darkred;">ANYTHING TO SAY</span>?`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): È davvero bello vedere il tramonto da qui (see).`,
+options:[`see`,`to see`,`seeing`],
+correct:`to see`,
+flip:`AFTER AN ADJECTIVE (<span style="color:darkred;">NICE</span>) WE USE THE INFINITIVE<br><br>
+È DAVVERO <span style="color:darkred;">BELLO</span> VEDERE IL TRAMONTO DA QUI.<br><br>
+IT'S REALLY <span style="color:darkred;">NICE TO SEE</span> THE SUNSET FROM HERE.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Non ho problemi a dimenticare il passato (forget).`,
+options:[`forget`,`to forget`,`forgetting`],
+correct:`forgetting`,
+flip:`THIS EXPRESSION CONTAINS THE UNEXPRESSED PREPOSITION '<span style="color:darkred;">IN</span>': NO USE (IN). AFTER A PREPOSITION (EXPRESSED OR NOT) WE USE A GERUND<br><br>
+NON HO PROBLEMI A <span style="color:darkred;">DIMENTICARE</span> IL PASSATO.<br><br>
+I HAVE NO PROBLEMS <span style="color:darkred;">(IN) FORGETTING</span> THE PAST.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Non toccare il pulsante (touch).`,
+options:[`touch`,`to touch`,`touching`],
+correct:`touch`,
+flip:`AFTER ANY AUXILIARY VERB (IN THIS CASE <span style="color:darkred;">DO</span>) WE USE THE BASE FORM<br><br>
+NON <span style="color:darkred;">TOCCARE</span> IL PULSANTE.<br><br>
+<span style="color:darkred;">DON'T TOUCH</span> THE BUTTON.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Non dovrebbe essere un problema (be).`,
+options:[`be`,`to be`,`being`],
+correct:`be`,
+flip:`AFTER ANY AUXILIARY VERB (IN THIS CASE <span style="color:darkred;">SHOULD</span>) WE USE THE BASE FORM<br><br>
+NON DOVREBBE <span style="color:darkred;">ESSERE</span> UN PROBLEMA.<br><br>
+IT <span style="color:darkred;">SHOULDN'T BE</span> A PROBLEM.`
+},
+
+{
+question:`Which sentence is correct?`,
+options:[`She suggested to go earlier.`,`She suggested going earlier.`,`She suggested go earlier.`],
+correct:`She suggested going earlier.`,
+flip:`<span style="color:darkred;">SUGGEST</span> IS A 'JOINING VERB' WITHOUT 'TO'. AUTOMATICALLY, THE SECOND VERB BECOMES '-ING'<br><br>
+LEI HA <span style="color:darkred;">SUGGERITO DI ANDARE</span> VIA PRIMA.<br><br>
+SHE <span style="color:darkred;">SUGGESTED GOING</span> EARLIER.`
+},
+
+{
+question:`I'm not used ____ up so early.`,
+options:[`get`,`to get`,`to getting`],
+correct:`to getting`,
+flip:`IN THIS CASE, <span style="color:darkred;">TO</span> IS A PREPOSITION. IT CAN BE FOLLOWED EITHER BY A NOUN OR A VERB<br><br>
+NON SONO ABITUATO <span style="color:darkred;">A SVEGLIARMI</span> COSÌ PRESTO.<br><br>
+I'M NOT USED <span style="color:darkred;">TO GETTING</span> UP SO EARLY.`
+},
+
+{
+question:`They refused ____ us the reason for the delay.`,
+options:[`telling`,`tell`,`to tell`],
+correct:`to tell`,
+flip:`<span style="color:darkred;">REFUSE</span> IS A 'JOINING VERB' WITH 'TO'<br><br>
+HANNO <span style="color:darkred;">RIFIUTATO DI DIRCI</span> IL MOTIVO DEL RITARDO.<br><br>
+THEY <span style="color:darkred;">REFUSED TO TELL</span> US THE REASON FOR THE DELAY.`
+},
+
+{
+question:`Which sentence is grammatically incorrect?`,
+options:[`I look forward to seeing you.`,`She admitted breaking the vase.`,`He promised helping me.`,`They avoided talking about it.`],
+correct:`He promised helping me.`,
+flip:`<span style="color:darkred;">PROMISE</span> IS A 'JOINING VERB' WITH 'TO'<br><br>
+LUI HA <span style="color:darkred;">PROMESSO DI AIUTARMI</span>.<br><br>
+HE <span style="color:darkred;">PROMISED TO HELP</span> ME.`
+},
+
+{
+question:`Which sentence is correct?`,
+options:[`She was sad hear the news.`,`She was happy to heard the news.`,`She was sad to hear the news.`,`She was happy hearing the news.`],
+correct:`She was sad to hear the news.`,
+flip:`AFTER AN ADJECTIVE (<span style="color:darkred;">SAD</span>) WE USE THE INFINITIVE<br><br>
+LEI ERA <span style="color:darkred;">TRISTE</span> DI SENTIRE LA NOTIZIA.<br><br>
+SHE WAS <span style="color:darkred;">SAD TO HEAR</span> THE NEWS.`
+},
+
+{
+question:`Which sentence is grammatically incorrect?`,
+options:[`It's important to arrive on time.`,`She apologized for being late.`,`I have nothing complain about.`,`Swimming is good exercise.`],
+correct:`I have nothing complain about.`,
+flip:`AFTER A PRONOUN (<span style="color:darkred;">NOTHING</span>) WE USE THE INFINITIVE<br><br>
+NON HO <span style="color:darkred;">NIENTE</span> DI CUI LAMENTARMI.<br><br>
+I HAVE <span style="color:darkred;">NOTHING TO COMPLAIN</span> ABOUT.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): È difficile trovare un parcheggio qui (find).`,
+options:[`find`,`to find`,`finding`],
+correct:`to find`,
+flip:`AFTER AN ADJECTIVE (<span style="color:darkred;">DIFFICULT</span>) WE USE THE INFINITIVE<br><br>
+È <span style="color:darkred;">DIFFICILE TROVARE</span> UN PARCHEGGIO QUI.<br><br>
+IT'S <span style="color:darkred;">DIFFICULT TO FIND</span> A PARKING SPACE HERE.`
+},
+
+{
+question:`This exercise is easy ____ .`,
+options:[`doing`,`do`,`to do`],
+correct:`to do`,
+flip:`AFTER AN ADJECTIVE (<span style="color:darkred;">EASY</span>) WE USE THE INFINITIVE<br><br>
+QUESTO ESERCIZIO È <span style="color:darkred;">FACILE DA FARE</span>.<br><br>
+THIS EXERCISE IS <span style="color:darkred;">EASY TO DO</span>.`
+},
+
+{
+question:`Which sentence is correct?`,
+options:[`Before leave, turn off the lights.`,`Before to leave, turn off the lights.`,`Before leaving, turn off the lights.`],
+correct:`Before leaving, turn off the lights.`,
+flip:`<span style="color:darkred;">BEFORE</span> IS A PREPOSITION. AFTER A PREPOSITION, WE USE A GERUND<br><br>
+<span style="color:darkred;">PRIMA DI ANDARE</span> VIA, SPEGNI LE LUCI.<br><br>
+<span style="color:darkred;">BEFORE LEAVING</span>, TURN OFF THE LIGHTS.`
+},
+
+{
+question:`I bought a notebook ____ notes during the meeting.`,
+options:[`taking`,`take`,`to take`],
+correct:`to take`,
+flip:`AFTER A NOUN (<span style="color:darkred;">NOTEBOOK</span>) WE USE THE INFINITIVE<br><br>
+HO COMPRATO UN <span style="color:darkred;">QUADERNO</span> PER PRENDERE APPUNTI DURANTE LA RIUNIONE.<br><br>
+I BOUGHT A <span style="color:darkred;">NOTEBOOK TO TAKE</span> NOTES DURING THE MEETING.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Non era sicura cosa dire (say).`,
+options:[`say`,`to say`,`saying`],
+correct:`to say`,
+flip:`AFTER A PRONOUN (<span style="color:darkred;">WHAT</span>) WE USE AN INFINITIVE<br><br>
+NON ERA SICURA <span style="color:darkred;">COSA DIRE</span>.<br><br>
+SHE WASN'T SURE <span style="color:darkred;">WHAT TO SAY</span>.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Non ho la possibilità di unirmi a loro (join).`,
+options:[`join`,`to join`,`of joining`],
+correct:`of joining`,
+flip:`AFTER A PREPOSITION (<span style="color:darkred;">OF</span>) WE USE A GERUND<br><br>
+NON HO LA POSSIBILITÀ <span style="color:darkred;">DI UNIRMI</span> A LORO.<br><br>
+I DON'T HAVE ANY POSSIBILITY <span style="color:darkred;">OF JOINING</span> THEM.`
+},
+
+{
+question:`Which sentence is grammatically incorrect?`,
+options:[`She left without saying a word.`,`Travelling alone can be exciting.`,`He had no reason to complain.`,`They succeeded to finish on time.`],
+correct:`They succeeded to finish on time.`,
+flip:`<span style="color:darkred;">SUCCEED</span> IS ALWAYS FOLLOWED BY THE PREPOSITION <span style="color:darkred;">IN</span>, THEREFORE WE USE A GERUND<br><br>
+LORO SONO RIUSCITI A <span style="color:darkred;">FINIRE</span> IN TEMPO.<br><br>
+THEY <span style="color:darkred;">SUCCEEDED IN FINISHING</span> ON TIME.`
+},
+
+{
+question:`I need something ____ the bottle with.`,
+options:[`opening`,`to open`,`open`],
+correct:`to open`,
+flip:`AFTER A PRONOUN (<span style="color:darkred;">SOMETHING</span>) WE USE THE INFINITIVE<br><br>
+HO BISOGNO DI <span style="color:darkred;">QUALCOSA</span> PER APRIRE LA BOTTIGLIA.<br><br>
+I NEED <span style="color:darkred;">SOMETHING TO OPEN</span> THE BOTTLE WITH.`
+},
+
+{
+question:`Which sentence is grammatically incorrect?`,
+options:[`Reading before bed helps me relax.`,`He left without saying goodbye.`,`I bought a chair to sit on.`,`She insisted to pay for dinner.`],
+correct:`She insisted to pay for dinner.`,
+flip:`WE USE THE FORM <span style="color:darkred;">INSIST ON DOING</span><br><br>
+LEI HA INSISTITO A <span style="color:darkred;">PAGARE</span> LA CENA.<br><br>
+SHE INSISTED <span style="color:darkred;">ON PAYING</span> FOR DINNER.`
+},
+
+{
+question:`He went to the supermarket ____ some milk.`,
+options:[`buying`,`buy`,`to buy`],
+correct:`to buy`,
+flip:`AFTER A NOUN (<span style="color:darkred;">SUPERMARKET</span>) WE USE THE INFINITIVE<br><br>
+È ANDATO AL <span style="color:darkred;">SUPERMERCATO</span> PER COMPRARE DEL LATTE.<br><br>
+HE WENT TO THE <span style="color:darkred;">SUPERMARKET TO BUY</span> SOME MILK.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Non serve gridare (shout).`,
+options:[`shout`,`to shout`,`shouting`],
+correct:`shouting`,
+flip:`THIS EXPRESSION CONTAINS AN UNEXPRESSED PREPOSITION: NO SENSE (<span style="color:darkred;">IN</span>)<br>
+AFTER A PREPOSITION, EXPRESSED OR NOT, WE USE A GERUND<br><br>
+NON SERVE <span style="color:darkred;">GRIDARE</span>.<br><br>
+THERE'S NO SENSE <span style="color:darkred;">(IN) SHOUTING</span>.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): E' importante lavarsi i denti (brush).`,
+options:[`brush`,`to brush`,`brushing`],
+correct:`to brush`,
+flip:`AFTER AN ADJECTIVE (<span style="color:darkred;">IMPORTANT</span>) WE USE THE INFINITIVE<br><br>
+È <span style="color:darkred;">IMPORTANTE LAVARSI</span> I DENTI.<br><br>
+IT'S <span style="color:darkred;">IMPORTANT TO BRUSH</span> ONE'S TEETH.`
+},
+
+{
+question:`Which sentence is grammatically incorrect?`,
+options:[
+`They had no possibility to join us.`,
+`He insisted on paying for dinner.`,
+`I’m looking forward to seeing you.`,
+`She admitted stealing the money.`
+],
+correct:`They had no possibility to join us.`,
+flip:`THE PREPOSITION <span style="color:darkred;">OF</span> IS PART OF THE WORD <span style="color:darkred;">POSSIBILITY</span>. AFTER A PREPOSITION, WE USE A GERUND<br><br>
+NON AVEVANO LA <span style="color:darkred;">POSSIBILITÀ DI UNIRSI</span> A NOI.<br><br>
+THEY HAD NO <span style="color:darkred;">POSSIBILITY OF JOINING</span> US.`
+},
+
+{
+question:`Which sentence is grammatically incorrect?`,
+options:[
+`Do you have anything to drink?`,
+`I have nobody help me.`,
+`He doesn't know how to do it.`,
+`She had nowhere to go.`
+],
+correct:`I have nobody help me.`,
+flip:`AFTER A PRONOUN (<span style="color:darkred;">NOBODY</span>) WE MUST USE THE INFINITIVE<br><br>
+NON HO <span style="color:darkred;">NESSUNO</span> CHE MI AIUTI.<br><br>
+I HAVE <span style="color:darkred;">NOBODY TO HELP</span> ME.`
+},
+
+{
+question:`Transform the Italian infinitive accordingly (do, to do or doing): Ho delle difficoltà a dormire quando fa caldo (sleep).`,
+options:[
+`sleep`,
+`to sleep`,
+`sleeping`
+],
+correct:`sleeping`,
+flip:`THIS EXPRESSION CONTAINS AN UNEXPRESSED PREPOSITION: DIFFICULTY (<span style="color:darkred;">IN</span>).AFTER A PREPOSITION, EXPRESSED OR NOT, WE USE A <span style="color:darkred;">GERUND</span><br><br>
+HO DELLE <span style="color:darkred;">DIFFICOLTÀ A DORMIRE</span> QUANDO FA CALDO.<br><br>
+I HAVE <span style="color:darkred;">DIFFICULTIES (IN) SLEEPING</span> WHEN IT'S HOT.`
+},
+
+{
+question:`Which sentence is grammatically incorrect?`,
+options:[
+`She was eager to help.`,
+`She is committed to improve her English.`,
+`They were ready to leave.`,
+`He was determined to succeed.`
+],
+correct:`She is committed to improve her English.`,
+flip:`THE PREPOSITION <span style="color:darkred;">TO</span> IS PART OF THE VERB <span style="color:darkred;">COMMIT</span>. AFTER A PREPOSITION, WE USE A GERUND<br><br>
+LEI È <span style="color:darkred;">IMPEGNATA A MIGLIORARE</span> IL SUO INGLESE.<br><br>
+SHE IS <span style="color:darkred;">COMMITTED TO IMPROVING</span> HER ENGLISH.`
+}
+];
+
+
+/* STATE */
+
+let quiz = [];
+let index = 0;
+let score = 0;
+let soundOn = true;
+
+/* SOUND */
+
+function playSound(id){
+if(!soundOn) return;
+
+const a = document.getElementById(id);
+
+if(a){
+a.currentTime = 0;
+a.play();
+}
+}
+
+document.getElementById("soundToggle").onclick = function(){
+soundOn = !soundOn;
+this.innerText = soundOn ? "🔊 ON" : "🔇 OFF";
+};
+
+/* SHUFFLE */
+
+function shuffle(arr){
+let copy = [...arr];
+
+for(let i = copy.length - 1; i > 0; i--){
+const j = Math.floor(Math.random() * (i + 1));
+[copy[i], copy[j]] = [copy[j], copy[i]];
+}
+
+return copy;
+}
+
+/* CLEAN */
+
+function clean(t){
+return t.trim().replace(/\s+/g," ").toLowerCase();
+}
+
+function removeFinalFullStop(text){
+return text.replace(/\.(?=\s*($|<))/g,"");
+}
+
+/* SHOW QUESTION */
+
+function showQuestion(){
+
+const q = quiz[index];
+
+const flipCard = document.getElementById("flipCard");
+flipCard.classList.remove("flipped");
+
+setTimeout(()=>{
+
+let formattedQuestion = q.question;
+
+if(formattedQuestion.includes("Transform the Italian infinitive accordingly")){
+
+formattedQuestion =
+formattedQuestion.replace("):", "):<br>");
+
+formattedQuestion =
+formattedQuestion.replace(
+"Transform the Italian infinitive accordingly (do, to do or doing):",
+`<span style="color:darkred;">
+Transform the Italian infinitive accordingly (do, to do or doing):
+</span>`
+);
+
+}
+
+formattedQuestion = removeFinalFullStop(formattedQuestion);
+
+document.getElementById("question").innerHTML = formattedQuestion;
+
+document.getElementById("flipContent").innerHTML =
+removeFinalFullStop(q.flip);
+
+document.getElementById("progress").innerText =
+`${index + 1} / ${quiz.length}`;
+
+document.getElementById("score").innerText =
+`${score} / ${quiz.length}`;
+
+document.getElementById("feedback").innerText = "";
+
+document.getElementById("middleNextBtn").style.opacity = ".5";
+document.getElementById("middleNextBtn").style.pointerEvents = "none";
+
+renderMCQ(q);
+
+},300);
+}
+
+/* MCQ MODE */
+
+function renderMCQ(q){
+
+const answers = document.getElementById("answers");
+
+answers.innerHTML = "";
+answers.style.display = "flex";
+
+q.options.forEach((opt,i)=>{
+
+const btn = document.createElement("button");
+
+btn.className = "answer-btn";
+
+const letters = ["a)","b)","c)","d)"];
+
+btn.innerHTML = `
+<span style="color:#8C0327;font-weight:900;display:inline-block;width:28px;">
+${letters[i]}
+</span>
+${removeFinalFullStop(opt)}`;
+
+btn.onclick = ()=>checkMCQ(btn,opt,q.correct);
+
+answers.appendChild(btn);
+
+});
+
+}
+
+/* MCQ CHECK */
+
+function checkMCQ(button,selected,correct){
+
+const buttons = document.querySelectorAll(".answer-btn");
+
+buttons.forEach(b=>b.disabled=true);
+
+if(selected===correct){
+
+button.classList.add("correct");
+
+score++;
+
+playSound("correctSound");
+
+updateScore();
+
+setTimeout(()=>{
+document.getElementById("flipCard").classList.add("flipped");
+},500);
+
+}else{
+
+button.classList.add("wrong");
+
+buttons.forEach(b=>{
+
+if(clean(b.innerText.replace(/^[a-d]\)/,""))===clean(correct)){
+b.classList.add("correct");
+}
+
+});
+
+playSound("wrongSound");
+
+}
+
+document.getElementById("middleNextBtn").style.opacity="1";
+document.getElementById("middleNextBtn").style.pointerEvents="auto";
+
+}
+
+/* UPDATE SCORE */
+
+function updateScore(){
+
+document.getElementById("score").innerText =
+`${score} / ${quiz.length}`;
+
+}
+
+/* NEXT */
+
+function nextQuestion(){
+
+if(index<quiz.length-1){
+
+index++;
+showQuestion();
+
+}else{
+
+endQuiz();
+
+}
+
+}
+
+/* END QUIZ */
+
+function endQuiz(){
+
+const passMark=Math.ceil(quiz.length*0.7);
+
+if(score>=passMark){
+
+playSound("passSound");
+
+}else{
+
+playSound("failSound");
+
+}
+
+const message=score>=passMark
+? "WELL DONE! YOU'VE PASSED! 🎉"
+: "BAD LUCK! TRY AGAIN ❌";
+
+const front = document.querySelector(".front");
+
+document.getElementById("flipCard").classList.remove("flipped");
+
+setTimeout(() => {
+
+front.innerHTML = `
+<div class="end-screen">
+${message}
+<button class="retry-btn" id="retryBtn">
+TRY AGAIN
+</button>
+</div>`;
+
+document.getElementById("retryBtn").onclick = restartQuiz;
+
+document.getElementById("answers").style.display = "none";
+
+document.getElementById("middleNextBtn").style.display = "none";
+
+document.querySelector(".library-back-container").style.display = "none";
+
+}, 600);
+
+return;
+
+
+}
+
+/* RESTART */
+
+function restartQuiz(){
+
+const front=document.querySelector(".front");
+
+front.innerHTML=`
+<div class="question" id="question"></div>
+`;
+
+quiz=shuffle(questions).slice(0,5);
+
+index=0;
+score=0;
+
+document.getElementById("answers").style.display="flex";
+
+document.getElementById("middleNextBtn").style.display="block";
+
+document.querySelector(".library-back-container").style.display="flex";
+
+showQuestion();
+
+}
+
+/* EVENTS */
+
+document.getElementById("middleNextBtn").onclick=nextQuestion;
+
+
+/* READ ME POPUP */
+
+document.getElementById("readMeBtn").onclick = function(){
+document.getElementById("popupOverlay").style.display = "flex";
+};
+
+document.getElementById("closePopup").onclick = function(){
+document.getElementById("popupOverlay").style.display = "none";
+};
+
+document.getElementById("popupOverlay").onclick = function(e){
+if(e.target === this){
+this.style.display = "none";
+}
+};
+
+document.getElementById("libraryBackBtn").onclick = function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+};
+
+/* START */
+
+quiz = shuffle(questions).slice(0,5);
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
+```
