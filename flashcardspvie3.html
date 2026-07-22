@@ -126,6 +126,15 @@ body{
   color:white;
 }
 
+.lesson-label{
+  color:#8C0327;
+  font-size:.65rem;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+
 </style>
 </head>
 
@@ -140,14 +149,24 @@ STAGE THREE <span style="color:#FFF3A3;">(B2/C1)</span>
     <div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
       <div id="front-text" class="it-text"></div>
     </div>
+
     <div class="face back bg-white border-4 border-[#8C0327] flex flex-col justify-between p-4">
-      <div class="flex-grow flex items-center justify-center">
-        <div id="back-text" class="en-text"></div>
-      </div>
-      <div class="flex justify-center pb-2">
-        <button id="speakBtn" class="listen-btn">🔊 LISTEN</button>
-      </div>
-    </div>
+
+  <div class="flex justify-end">
+    <div id="lesson-label" class="lesson-label"></div>
+  </div>
+
+  <div class="flex-grow flex items-center justify-center">
+    <div id="back-text" class="en-text"></div>
+  </div>
+
+  <div class="flex justify-center pb-2">
+    <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+  </div>
+
+</div>
+
+
   </div>
 </div>
 
@@ -420,6 +439,7 @@ let activeFolder=null;
 const flashcard=document.getElementById("flashcard");
 const frontText=document.getElementById("front-text");
 const backText=document.getElementById("back-text");
+const lessonLabel=document.getElementById("lesson-label");
 const counter=document.getElementById("counter-display");
 const speakBtn=document.getElementById("speakBtn");
 
@@ -485,8 +505,12 @@ function updateCard(){
   const c=cards[index];
 
   frontText.innerText=c.front.toUpperCase();
-  backText.innerText=c.back.toUpperCase();
-  counter.innerText=`${index+1} / ${cards.length}`;
+backText.innerText=c.back.toUpperCase();
+
+const lessonNumber = Number(c.folder.split(".")[1]) + 24;
+lessonLabel.innerText = `LESSON ${lessonNumber}`;
+
+counter.innerText=`${index+1} / ${cards.length}`;
 }
 
 window.nextCard=function(e){
