@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prepositions</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+  --bg:#061247;
+  --purple:#561386;
+  --red:#8C0327;
+  --blue:#00cfd5;
+  --green:#22c55e;
+  --gold:#FFD700;
+}
+
+body{
+  margin:0;
+  padding:12px;
+  background:var(--bg);
+  font-family:system-ui,Arial,sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* TOP BAR */
+.top-bar{
+  width:92vw;
+  max-width:380px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.top-title{
+  color:#fff;
+  font-weight:900;
+  letter-spacing:.08em;
+  font-size:.90rem;
+}
+
+.top-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.instructions-btn{
+  background:none;
+  border:none;
+  color:var(--gold);
+  font-weight:900;
+  font-size:.9rem;
+}
+
+.sound-btn{
+  background:#fff;
+  color:#061247;
+  border:none;
+  border-radius:10px;
+  padding:6px 10px;
+  font-weight:900;
+  font-size:.8rem;
+}
+
+/* CARD */
+.perspective{perspective:1000px;}
+
+.card{
+  width:92vw;
+  max-width:380px;
+  height:48vw;
+  max-height:220px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:.45s;
+}
+
+.card.flipped{transform:rotateY(180deg);}
+
+.face{
+  position:absolute;
+  inset:0;
+  background:#fff;
+  border:4px solid var(--red);
+  border-radius:1rem;
+  backface-visibility:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+  text-align:center;
+}
+
+.back{transform:rotateY(180deg);}
+
+.back .card-text{
+  color:var(--purple);
+}
+
+.card-text{
+  color:#0E065C;
+  font-weight:900;
+  text-transform:uppercase;
+  line-height:1.25;
+  font-size:clamp(1rem,3.5vw,1.2rem);
+}
+
+
+/* INFO ROW */
+.info-row{
+  width:92vw;
+  max-width:380px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  margin-top:10px;
+  margin-bottom:10px;
+  color:#fff;
+  font-weight:800;
+  font-size:.95rem;
+}
+
+.info-left{text-align:left;}
+.info-right{text-align:right;color:var(--gold);}
+
+.next-btn{
+  background:var(--blue);
+  color:#061247;
+  border:none;
+  border-radius:10px;
+  font-weight:900;
+  padding:7px 18px;
+  font-size:.85rem;
+}
+
+/* ANSWERS */
+.answers{
+  width:92vw;
+  max-width:380px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(2,48px);
+  gap:10px;
+}
+
+.answer-btn,.refresh-btn{
+  min-height:40px;
+  border:none;
+  border-radius:8px;
+  background:#FCECEF;
+  color:#0E065C;
+  font-weight:900;
+  font-size:.83rem;
+  padding:4px;
+  text-transform:uppercase;
+}
+
+.answer-btn.correct{
+  background:var(--green);
+  color:#fff;
+}
+
+.answer-btn.wrong{
+  background:#ef4444;
+  color:#fff;
+}
+
+.refresh-btn{
+  background:#FFF3A3;
+  color:#8C0327;
+  border:none;
+  border-radius:8px;
+  font-weight:900;
+  font-size:.83rem;
+  min-height:40px;
+  padding:4px;
+}
+
+/* RETRY */
+.retry-wrap{
+  width:92vw;
+  max-width:380px;
+  display:flex;
+  justify-content:center;
+  margin-top:16px;
+}
+
+.retry-btn{
+  background:var(--purple);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:10px 24px;
+  font-weight:900;
+  font-size:.95rem;
+}
+
+button:active{transform:scale(.96);}
+
+.library-back-container{
+  width:92vw;
+  max-width:380px;
+  display:flex;
+  justify-content:center;
+  margin-top:14px;
+  margin-bottom:6px;
+}
+
+.library-back-btn{
+  background:#8C0327;
+  color:white;
+  border:2px solid white;
+  border-radius:10px;
+  padding:8px 30px;
+  font-weight:900;
+  font-size:.82rem;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:background .2s,color .2s;
+}
+
+.library-back-btn:hover{
+  background:#FFF3A3;
+  color:#8C0327;
+}
+
+.library-back-btn:active{
+  transform:scale(.97);
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+  <div class="top-title">PREPOSITIONS <span style="color:#FFF3A3;">(B2-)</span></div>
+
+  <div class="top-right">
+    <details id="instructionsBox">
+
+<summary style="
+cursor:pointer;
+font-weight:800;
+color:#FFD700;
+list-style:none;
+white-space:nowrap;
+display:flex;
+align-items:center;
+gap:4px;
+font-size:0.90rem;
+">
+
+READ ME 
+
+</summary>
+
+<div style="
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+top:42px;
+width:90vw;
+max-width:270px;
+background:#eef6ff;
+border-radius:8px;
+padding:10px 12px 20px 12px;
+font-size:0.85rem;
+line-height:1.4;
+min-height:185px;color:#061247;
+font-weight:700;
+z-index:50;
+box-shadow:0 4px 12px rgba(0,0,0,0.25);
+">
+
+This quiz contains <span style="color:var(--red);font-weight:900;">70</span> questions, of which only <span style="color:var(--red);font-weight:900;">10</span> are selected randomly<br><br>
+
+The questions will change each time you press <span style="color:var(--red);font-weight:900;">REFRESH</span><br><br>
+
+The <span style="color:var(--red);font-weight:900;">PASS MARK</span> is <span style="color:var(--red);font-weight:900;">7</span> out of <span style="color:var(--red);font-weight:900;">10</span><br><br>
+
+<span style="color:var(--red);font-weight:900;">ONLY IF</span> you give the correct answer will the card flip to reveal the Italian translation
+
+<div style="text-align:right;margin-top:14px;">
+
+<button id="closeInstructions" type="button" style="
+background:none;
+border:none;
+padding:0;
+margin:0;
+cursor:pointer;
+font-weight:900;
+color:#006400;
+font-size:0.95rem;
+">
+CLOSE <span style="color:#006400;">▲</span>
+</button>
+
+</div>
+
+</div>
+
+</details>
+
+    <button id="soundToggle" class="sound-btn">🔊 ON</button>
+  </div>
+</div>
+
+<div class="perspective">
+  <div id="card" class="card">
+    <div class="face">
+      <div id="frontText" class="card-text"></div>
+    </div>
+
+    <div class="face back">
+      <div id="backText" class="card-text"></div>
+    </div>
+  </div>
+</div>
+
+<div class="info-row">
+  <div id="progress" class="info-left">1 / 10</div>
+  <button id="nextBtn" class="next-btn">NEXT</button>
+  <div id="score" class="info-right">0 / 10</div>
+</div>
+
+<div id="answers" class="answers"></div>
+
+<div class="library-back-container">
+    <button id="libraryBackBtn" class="library-back-btn">
+        BACK
+    </button>
+</div>
+
+<div id="retryWrap" class="retry-wrap"></div>
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<script>
+let soundEnabled = true;
+
+document.getElementById("soundToggle").onclick = ()=>{
+  soundEnabled = !soundEnabled;
+  document.getElementById("soundToggle").innerText =
+    soundEnabled ? "🔊 ON" : "🔇 OFF";
+};
+
+
+
+
+function playSound(id){
+  if(!soundEnabled) return;
+  const audio = document.getElementById(id);
+  audio.pause();
+  audio.currentTime = 0;
+  audio.play();
+}
+
+const questions = [
+{
+  question: "______ luck, we should be in London by 3 o'clock",
+  options: ["with","on","under","in","to"],
+  answer: 0,
+  translation: "Se tutto va bene, dovremmo essere a Londra per le tre"
+},
+{
+  question: "It's not like John to lose his temper. It's completely ______ character",
+  options: ["in","out of","with","under","to"],
+  answer: 1,
+  translation: "Non è da John perdere le staffe. È un comportamento del tutto insolito per lui"
+},
+{
+  question: "Would you like to contribute ______ our campaign fund",
+  options: ["to","under","in","out of","with"],
+  answer: 0,
+  translation: "Ti piacerebbe contribuire al nostro fondo elettorale"
+},
+{
+  question: "You are ______ arrest, Sir - On what charge? - I'll think of something, Sir",
+  options: ["on","in","under","with","to"],
+  answer: 2,
+  translation: "Lei è in arresto, signore - Con quale accusa? - Mi verrà in mente qualcosa, signore"
+},
+{
+  question: "The match resulted ______ a goalless draw after full-time",
+  options: ["with","under","to","in","out of"],
+  answer: 3,
+  translation: "La partita si è conclusa con un pareggio a reti inviolate dopo i tempi regolamentari"
+},
+{
+  question: "With increasing competition from overseas, several factories are threatened ______ closure",
+  options: ["with","to","under","out of","in"],
+  answer: 0,
+  translation: "Con la crescente concorrenza dall'estero, diverse fabbriche rischiano la chiusura"
+},
+{
+  question: "The talks broke down when the Cubans decided to pull ______ negotiations and go home",
+  options: ["under","with","out of","in","to"],
+  answer: 2,
+  translation: "I colloqui sono falliti quando i cubani hanno deciso di ritirarsi dalle trattative e tornare a casa"
+},
+{
+  question: "All the preparations made? - Don't worry, everything is ______ hand",
+  options: ["in","out of","under","to","with"],
+  answer: 0,
+  translation: "Tutti i preparativi sono pronti? - Non preoccuparti, tutto è sotto controllo"
+},
+{
+  question: "You really look ______ the weather. Are you ill?",
+  options: ["with","to","under","in","out of"],
+  answer: 2,
+  translation: "Sembri proprio giù di corda. Stai male?"
+},
+{
+  question: "I told her ______ her face exactly what I thought of her",
+  options: ["in","under","with","to","out of"],
+  answer: 3,
+  translation: "Le ho detto in faccia esattamente ciò che pensavo di lei"
+},
+{
+  question: "Christopher has started to take an interest ______ girls, much to his father's relief",
+  options: ["with","under","out of","in","to"],
+  answer: 3,
+  translation: "Christopher ha cominciato a interessarsi alle ragazze, con grande sollievo di suo padre"
+},
+{
+  question: "We have a good working relationship ______ the local authorities",
+  options: ["with","under","out of","in","to"],
+  answer: 0,
+  translation: "Abbiamo un buon rapporto di lavoro con le autorità locali"
+},
+{
+  question: "The proposal to introduce a local income tax is still ______ discussion",
+  options: ["with","under","out of","in","to"],
+  answer: 1,
+  translation: "La proposta di introdurre un'imposta locale sul reddito è ancora in fase di discussione"
+},
+{
+  question: "The car went over the brow of the hill and was soon ______ sight",
+  options: ["with","under","out of","in","to"],
+  answer: 2,
+  translation: "L'auto ha superato il ciglio della collina ed è presto sparita alla vista"
+},
+{
+  question: "I was ______ the impression that you had to be 21 before you could vote in the general elections",
+  options: ["with","under","out of","in","to"],
+  answer: 1,
+  translation: "Ero dell'impressione che bisognasse avere 21 anni per poter votare alle elezioni generali"
+},
+
+{
+  question: "My neighbour's garage, which is adjacent ______ my house, is full of rubbish",
+  options: ["with","under","out of","in","to"],
+  answer: 4,
+  translation: "Il garage del mio vicino, adiacente a casa mia, è pieno di spazzatura"
+},
+{
+  question: "This is supposed to be a socialist country, but it is social ______ name only",
+  options: ["with","under","out of","in","to"],
+  answer: 3,
+  translation: "Questo dovrebbe essere un paese socialista, ma lo è solo di nome"
+},
+{
+  question: "What it amounts ______ is this: the word Socialist means what the government wants it to mean",
+  options: ["with","under","out of","in","to"],
+  answer: 4,
+  translation: "In sostanza è questo: la parola socialista significa ciò che il governo vuole che significhi"
+},
+{
+  question: "Why have you got a pet African buffalo in the house? - I wanted something a little ______ the ordinary",
+  options: ["with","under","out of","in","to"],
+  answer: 2,
+  translation: "Perché hai un bufalo africano in casa? - Volevo qualcosa di un po' fuori dal comune"
+},
+{
+  question: "Are you familiar ______ Professor Smith's bilingualism in parrots",
+  options: ["with","under","out of","in","to"],
+  answer: 0,
+  translation: "Conosci gli studi del professor Smith sul bilinguismo nei pappagalli?"
+},
+{
+  question: "I advertised several times for someone to mow the lawn for me, but ______ the end I had to do it myself",
+  options: ["in","by","at","to","with"],
+  answer: 0,
+  translation: "Ho messo diversi annunci per trovare qualcuno che mi tagliasse il prato, ma alla fine ho dovuto farlo io"
+},
+{
+  question: "I'm sorry I can't see you immediately, but if you would like to take a seat, I'll be with you ______ moment",
+  options: ["for the","at the","in a","for a","by a"],
+  answer: 2,
+  translation: "Mi dispiace, non posso riceverla subito, ma se vuole accomodarsi sarò da lei tra un attimo"
+},
+{
+  question: "I didn't trust the post, so I delivered the parcel ______ hand",
+  options: ["by","to","on","out of","with"],
+  answer: 0,
+  translation: "Non mi fidavo della posta, quindi ho consegnato il pacco a mano"
+},
+{
+  question: "We've had such a busy day! At least 10 people phoned. Oh, ______ the way, there's a message here for you from your brother",
+  options: ["on","in","by","over","to"],
+  answer: 2,
+  translation: "Che giornata intensa! Hanno telefonato almeno dieci persone. Ah, a proposito, c'è un messaggio per te da tuo fratello"
+},
+{
+  question: "If you want to be a professional spy, you must learn to be very secretive. ______ all, you must learn to listen more and speak less",
+  options: ["in","at","after","above","over"],
+  answer: 3,
+  translation: "Se vuoi diventare una spia professionista, devi imparare a essere molto riservato. Soprattutto, devi imparare ad ascoltare di più e parlare di meno"
+},
+{
+  question: "His name is Sebastian, but we call him Seb ______ short",
+  options: ["in","for","as","by","to"],
+  answer: 1,
+  translation: "Si chiama Sebastian, ma lo chiamiamo Seb in breve"
+},
+{
+  question: "I have some important information for you, but I don't want to give it ______ the phone. Do you think we could meet somewhere?",
+  options: ["by","through","on","over","to"],
+  answer: 3,
+  translation: "Ho alcune informazioni importanti per te, ma non voglio darle al telefono. Pensi che potremmo incontrarci da qualche parte?"
+},
+{
+  question: "Is everything okay, sir? Don't worry. Everything is ______ control",
+  options: ["under","in","on","by","with"],
+  answer: 0,
+  translation: "Va tutto bene, signore? Non si preoccupi. È tutto sotto controllo"
+},
+{
+  question: "Do you agree? ______ point, but I don't think you are completely right",
+  options: ["to the","for a","up to a","on the","by the"],
+  answer: 2,
+  translation: "Sei d'accordo? - Fino a un certo punto, ma non credo che tu abbia del tutto ragione"
+},
+{
+  question: "I never saw Ali fight, but he was a great boxer ______",
+  options: ["by all accounts","on account","in the account","according to the accounts","for all accounts"],
+  answer: 0,
+  translation: "Non ho mai visto combattere Ali, ma a quanto si dice era un grande pugile"
+},
+{
+  question: "I forgot to pack some food, so we'll get something to eat ______ the way back",
+  options: ["in","all","on","by","to"],
+  answer: 2,
+  translation: "Ho dimenticato di preparare il cibo al sacco, quindi prenderemo qualcosa da mangiare sulla via del ritorno"
+},
+{
+  question: "The red light goes on outside the studio door to let people know that the show is ______ air",
+  options: ["on the","by","in","through the","over the"],
+  answer: 0,
+  translation: "La luce rossa si accende fuori dalla porta dello studio per far sapere che il programma è in onda"
+},
+{
+  question: "The auditors have been through the accounts, and they report that everything is ______ order",
+  options: ["to","on","by","in","under"],
+  answer: 3,
+  translation: "I revisori hanno esaminato i conti e riferiscono che tutto è in regola"
+},
+{
+  question: "Have you seen this morning's paper? There's a picture of you ______ the front!",
+  options: ["at","on","in","by","to"],
+  answer: 1,
+  translation: "Hai visto il giornale di stamattina? C'è una tua foto in prima pagina!"
+},
+{
+  question: "The general manager is away ______ business this week",
+  options: ["for","on","in","about","with"],
+  answer: 1,
+  translation: "Il direttore generale è via per affari questa settimana"
+},
+{
+  question: "______ during the performance of this trick, ladies and gentlemen, do my hands actually leave my arms",
+  options: ["on time","in no time","at no time","at times","for no time"],
+  answer: 2,
+  translation: "In nessun momento durante l'esecuzione di questo trucco, signore e signori, le mie mani si staccano effettivamente dalle braccia"
+},
+{
+  question: "There is nothing illegal about my business dealings. Everything is strictly ______ board",
+  options: ["on","above","by the","over","under"],
+  answer: 1,
+  translation: "Non c'è nulla di illegale nei miei affari. È tutto rigorosamente alla luce del sole"
+},
+{
+  question: "Ah, love of my life ______ I've found you!",
+  options: ["at the last","at least","at last","at the least","for last"],
+  answer: 2,
+  translation: "Ah, amore della mia vita, finalmente ti ho trovato!"
+},
+
+{
+  question: "The old castle has now been converted ______ a luxury hotel",
+  options: ["to","into","with","for","by"],
+  answer: 1,
+  translation: "Il vecchio castello è stato ormai convertito in un hotel di lusso"
+},
+{
+  question: "I object strongly ______ being treated like a child",
+  options: ["with","for","to","by","from"],
+  answer: 2,
+  translation: "Mi oppongo fermamente all’essere trattato come un bambino"
+},
+{
+  question: "She has always been very generous ______ those less fortunate than herself",
+  options: ["to","for","from","into","under"],
+  answer: 0,
+  translation: "È sempre stata molto generosa con chi è meno fortunato di lei"
+},
+{
+  question: "We need to distinguish clearly ______ fact and opinion",
+  options: ["from","among","between","to","with"],
+  answer: 2,
+  translation: "Dobbiamo distinguere chiaramente tra fatti e opinioni"
+},
+{
+  question: "His sudden success took everyone ______ surprise",
+  options: ["in","by","with","from","under"],
+  answer: 1,
+  translation: "Il suo improvviso successo colse tutti di sorpresa"
+},
+{
+  question: "The committee finally agreed ______ a compromise after hours of debate",
+  options: ["with","to","on","for","into"],
+  answer: 2,
+  translation: "La commissione ha finalmente accettato un compromesso dopo ore di dibattito"
+},
+{
+  question: "I would never have suspected him ______ lying to us",
+  options: ["from","of","with","to","by"],
+  answer: 1,
+  translation: "Non avrei mai sospettato che ci stesse mentendo"
+},
+{
+  question: "The village was cut off ______ the outside world by heavy snow",
+  options: ["with","to","from","under","over"],
+  answer: 2,
+  translation: "Il villaggio fu isolato dal mondo esterno dalla forte neve"
+},
+{
+  question: "She burst ______ tears when she heard the news",
+  options: ["to","in","into","with","by"],
+  answer: 2,
+  translation: "Scoppiò in lacrime quando sentì la notizia"
+},
+{
+  question: "The manager congratulated the staff ______ their excellent results",
+  options: ["for","with","on","to","from"],
+  answer: 2,
+  translation: "Il direttore si è congratulato con il personale per gli eccellenti risultati"
+},
+{
+  question: "I’m not accustomed ______ such rude behaviour",
+  options: ["with","to","for","from","by"],
+  answer: 1,
+  translation: "Non sono abituato a un comportamento così maleducato"
+},
+{
+  question: "He was prevented ______ entering the building by security guards",
+  options: ["to","with","from","into","over"],
+  answer: 2,
+  translation: "Gli fu impedito di entrare nell’edificio dalle guardie di sicurezza"
+},
+{
+  question: "The success of the project depends largely ______ public support",
+  options: ["of","on","from","with","into"],
+  answer: 1,
+  translation: "Il successo del progetto dipende in gran parte dal sostegno pubblico"
+},
+{
+  question: "She prides herself ______ never being late",
+  options: ["in","with","at","on","for"],
+  answer: 3,
+  translation: "Va orgogliosa della sua puntualità"
+},
+{
+  question: "The child was shaking ______ fear",
+  options: ["by","with","from","at","into"],
+  answer: 2,
+  translation: "Il bambino tremava dalla paura"
+},
+{
+  question: "We were provided ______ all the equipment we needed",
+  options: ["of","from","with","into","to"],
+  answer: 2,
+  translation: "Ci è stata fornita tutta l'attrezzatura di cui avevamo bisogno"
+},
+{
+  question: "His remarks were completely irrelevant ______ the discussion",
+  options: ["to","for","with","into","by"],
+  answer: 0,
+  translation: "Le sue osservazioni erano del tutto irrilevanti per la discussione"
+},
+{
+  question: "They accused the newspaper ______ having published lies",
+  options: ["from","with","to","of","under"],
+  answer: 3,
+  translation: "Hanno accusato il giornale di aver pubblicato menzogne"
+},
+{
+  question: "I’d like to exchange this jacket ______ a larger size",
+  options: ["from","into","for","with","by"],
+  answer: 2,
+  translation: "Vorrei cambiare questa giacca con una taglia più grande"
+},
+{
+  question: "We’re ______ no obligation to accept their offer",
+  options: ["under","in","with","to","by"],
+  answer: 0,
+  translation: "Non abbiamo alcun obbligo di accettare la loro offerta"
+},
+{
+  question: "His behaviour is completely ______ keeping with company policy",
+  options: ["out of","under","to","with","by"],
+  answer: 0,
+  translation: "Il suo comportamento è completamente in contrasto con la politica aziendale"
+},
+{
+  question: "The new shopping centre is still ______ construction",
+  options: ["under","in","with","to","by"],
+  answer: 0,
+  translation: "Il nuovo centro commerciale è ancora in costruzione"
+},
+{
+  question: "We’re working ______ the assumption that prices will rise",
+  options: ["on","under","with","to","by"],
+  answer: 0,
+  translation: "Stiamo lavorando partendo dal presupposto che i prezzi aumenteranno"
+},
+{
+  question: "The children were ______ their best behaviour during dinner",
+  options: ["on","in","under","with","to"],
+  answer: 0,
+  translation: "I bambini si sono comportati benissimo durante la cena"
+},
+{
+  question: "I’m not speaking ______ behalf of the whole team",
+  options: ["on","in","with","for","to"],
+  answer: 0,
+  translation: "Non sto parlando a nome dell’intera squadra"
+},
+{
+  question: "We seem to be ______ agreement on most of the main issues",
+  options: ["under","in","with","to","by"],
+  answer: 1,
+  translation: "Sembriamo essere d’accordo sulla maggior parte delle questioni principali"
+},
+{
+  question: "I’m afraid your application is still ______ consideration",
+  options: ["under","in","with","by","to"],
+  answer: 0,
+  translation: "Mi dispiace, la sua domanda è ancora in fase di valutazione"
+},
+{
+  question: "I met an old friend quite ______ chance in Rome last week",
+  options: ["in","on","at","by","with"],
+  answer: 3,
+  translation: "Mi sono imbattuto per caso in un vecchio amico a Roma la settimana scorsa"
+}
+
+];
+
+let quizSize = 10;
+let quiz = [];
+let index = 0;
+let score = 0;
+let answered = false;
+let solved = false;
+
+const card = document.getElementById("card");
+const frontText = document.getElementById("frontText");
+const backText = document.getElementById("backText");
+const progress = document.getElementById("progress");
+const scoreBox = document.getElementById("score");
+const answersDiv = document.getElementById("answers");
+const nextBtn = document.getElementById("nextBtn");
+const libraryBackBtn = document.getElementById("libraryBackBtn");
+
+
+libraryBackBtn.onclick = ()=>{
+
+  window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+
+};
+
+
+function shuffle(arr){
+ let a=[...arr];
+ for(let i=a.length-1;i>0;i--){
+   let j=Math.floor(Math.random()*(i+1));
+   [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+
+function startQuiz(){
+ quiz = shuffle(questions).slice(0,quizSize);
+ index = 0;
+ score = 0;
+ answered = false;
+ solved = false;
+
+ answersDiv.style.display = "grid";
+nextBtn.style.display = "inline-flex";
+libraryBackBtn.style.display = "flex";
+document.getElementById("retryWrap").innerHTML = "";
+
+ showQuestion();
+}
+
+function showQuestion(){
+ answered = false;
+ solved = false;
+ card.classList.remove("flipped");
+
+ const q = quiz[index];
+
+ frontText.innerText = q.question.toUpperCase();
+ backText.innerText = q.translation.toUpperCase();
+
+ progress.innerText = `${index+1} / ${quiz.length}`;
+ scoreBox.innerText = `${score} / ${quiz.length}`;
+
+ answersDiv.innerHTML = "";
+
+nextBtn.disabled = true;
+nextBtn.classList.add("disabled-next");
+
+ q.options.forEach((opt,i)=>{
+   const btn = document.createElement("button");
+   btn.className = "answer-btn";
+   btn.innerText = opt.toUpperCase();
+   btn.onclick = ()=>checkAnswer(i,btn);
+   answersDiv.appendChild(btn);
+ });
+
+ const refresh = document.createElement("button");
+ refresh.className = "refresh-btn";
+ refresh.innerText = "REFRESH";
+ refresh.onclick = startQuiz;
+ answersDiv.appendChild(refresh);
+}
+
+function checkAnswer(selected,btn){
+
+ if(answered) return;
+
+ answered = true;
+
+ const q = quiz[index];
+ const buttons = document.querySelectorAll(".answer-btn");
+
+ buttons.forEach(b=>b.disabled=true);
+
+ if(selected === q.answer){
+
+   btn.classList.add("correct");
+   score++;
+   solved = true;
+
+   playSound("correctSound");
+
+   card.classList.add("flipped");
+
+ }else{
+
+   btn.classList.add("wrong");
+   playSound("wrongSound");
+ }
+
+ scoreBox.innerText = `${score} / ${quiz.length}`;
+
+nextBtn.disabled = false;
+nextBtn.classList.remove("disabled-next");
+}
+
+function endQuiz(){
+
+ const percent = (score / quiz.length) * 100;
+
+ answersDiv.style.display = "none";
+nextBtn.style.display = "none";
+libraryBackBtn.style.display = "none";
+
+ card.classList.remove("flipped");
+
+ if(percent >= 80){
+   frontText.innerText = "WELL DONE! YOU'VE PASSED! 🎉";
+   playSound("passSound");
+ }else{
+   frontText.innerText = "BAD LUCK! TRY AGAIN ❌";
+   playSound("failSound");
+ }
+
+ document.getElementById("retryWrap").innerHTML =
+ `<button class="retry-btn">TRY AGAIN</button>`;
+
+ document.querySelector(".retry-btn").onclick = startQuiz;
+
+ solved = false;
+}
+
+nextBtn.onclick = ()=>{
+
+ if(index === quiz.length - 1){
+   endQuiz();
+   return;
+ }
+
+ index++;
+ showQuestion();
+};
+
+
+card.onclick = ()=>{
+
+ if(solved){
+   card.classList.toggle("flipped");
+ }
+};
+
+document.addEventListener("DOMContentLoaded", function(){
+
+ const closeBtn =
+ document.getElementById("closeInstructions");
+
+ const box =
+ document.getElementById("instructionsBox");
+
+ if(closeBtn){
+
+   closeBtn.addEventListener("click", function(e){
+
+     e.preventDefault();
+     e.stopPropagation();
+
+     box.removeAttribute("open");
+
+   });
+
+ }
+
+});
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
