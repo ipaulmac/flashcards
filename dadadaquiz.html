@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DA DA DA QUIZ</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin-bottom:10px;
+}
+
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+letter-spacing:.08em;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+}
+
+.top-controls{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.88rem;
+letter-spacing:.03em;
+cursor:pointer;
+user-select:none;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+background:#fff;
+border:4px solid var(--red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkred;
+cursor:pointer;
+user-select:none;
+}
+
+/* FLIP CARD */
+
+.flip-card{
+width:92vw;
+max-width:380px;
+height:250px;
+perspective:1200px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+transform:rotateY(180deg);
+}
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:10px 14px;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+/* FRONT */
+
+.front{
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.question{
+font-size:1.05rem;
+font-weight:900;
+line-height:1.18;
+color:#0E065C;
+text-transform:uppercase;
+}
+
+
+/* BACK */
+
+/* BACK */
+
+.back{
+transform:rotateY(180deg);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+padding:20px;
+box-sizing:border-box;
+}
+
+#flipContent{
+width:100%;
+
+font-family:Arial,sans-serif;
+font-size:1rem;
+font-weight:900;
+line-height:1.2;
+
+color:#0E065C;
+
+text-align:center;
+
+word-break:normal;
+overflow-wrap:normal;
+}
+
+#flipContent span{
+color:darkred;
+}
+
+
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0 12px;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+/* NEXT BUTTON */
+
+.next-btn{
+background:#00cfd5;
+color:#061247;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:.5;
+pointer-events:none;
+}
+
+/* ANSWERS */
+
+.answers{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+}
+
+.library-back-container{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin-top:14px;
+}
+
+.library-back-btn{
+background:#930000;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:10px 28px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+cursor:pointer;
+transition:background .2s,color .2s;
+}
+
+.library-back-btn:hover{
+background:#ffd9e3;
+color:#0E065C;
+}
+
+.answer-btn{
+height:42px;
+background:#eef2f7;
+color:var(--purple);
+font-weight:900;
+border-radius:10px;
+border:1px solid #cbd5e1;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:.92rem;
+transition:transform .08s ease, background .12s ease;
+}
+
+.answer-btn:active{
+transform:scale(.96);
+}
+
+.correct{
+background:#22c55e;
+color:#fff;
+box-shadow:0 0 10px #22c55e;
+}
+
+.wrong{
+background:#ef4444;
+color:#fff;
+}
+
+/* END SCREEN */
+
+.end-screen{
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:1.15rem;
+font-weight:900;
+color:darkred;
+line-height:1.4;
+padding:6px 14px;
+}
+
+.retry-btn{
+margin-top:16px;
+background:#0E065C;
+color:#fff;
+width:150px;
+height:42px;
+font-weight:900;
+border:none;
+border-radius:10px;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<!-- TOP -->
+
+<div class="top-bar">
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+<div class="top-title" style="text-align:center;">
+DA DA DA QUIZ <span style="color:#FFF3A3;">(B1+)</span>
+</div>
+
+<div style="display:flex;justify-content:flex-end;">
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
+</div>
+
+</div>
+
+
+<!-- POPUP -->
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+THIS QUIZ PRACTISES <span style="color:darkred;">SIX</span> DIFFERENT TRANSLATIONS OF THE  ITALIAN PREPOSITION <span style="color:darkred;">DA</span><br><br>
+
+THERE ARE A TOTAL OF <span style="color:darkred;">60</span> QUESTIONS OF WHICH <span style="color:darkred;">10</span> ARE SELECTED RANDOMLY EACH TIME <br><br>
+
+CHOOSE THE CORRECT TRANSLATION IN THE CONTEXT IN WHICH IT IS USED <br><br>
+
+ONLY AFTER A CORRECT ANSWER WILL THE CARD FLIP TO REVEAL THE TRANSLATION
+
+</div>
+
+<div id="closePopup" class="popup-close-text">
+START QUIZ →
+</div>
+
+</div>
+</div>
+
+<!-- CARD -->
+
+<div class="flip-card" id="flipCard">
+
+<div class="flip-inner">
+
+<div class="card-face front">
+<div class="question" id="question"></div>
+</div>
+
+<div class="card-face back">
+<div id="flipContent"></div>
+</div>
+
+</div>
+</div>
+
+<!-- INFO -->
+
+<div class="info-row">
+
+<div id="progress">1 / 15</div>
+
+<div>
+<button id="nextBtn" class="next-btn">
+NEXT
+</button>
+</div>
+
+<div id="score" class="right">0 / 15</div>
+
+</div>
+
+<!-- ANSWERS -->
+
+<div id="answers" class="answers"></div>
+
+<div class="library-back-container">
+    <button id="backButton" class="library-back-btn">
+        BACK
+    </button>
+</div>
+
+<script>
+
+/* SOUND */
+
+let soundOn = true;
+
+function playSound(id){
+
+if(!soundOn) return;
+
+const a = document.getElementById(id);
+
+if(a){
+a.currentTime = 0;
+a.play();
+}
+}
+
+document.getElementById("soundToggle").onclick = function(){
+soundOn = !soundOn;
+this.innerText = soundOn ? "🔊 ON" : "🔇 OFF";
+};
+
+/* QUESTIONS */
+
+const questions = [
+
+{
+question:`STASERA PASSO <span style="color:darkred;">DA</span> TE VERSO LE OTTO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`I'LL COME <span style="color:darkred;">TO</span> YOUR PLACE AT AROUND EIGHT THIS EVENING`
+},
+
+{
+question:`PORTO QUESTA TORTA <span style="color:darkred;">DA</span> GIULIA PER IL SUO COMPLEANNO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`I'M TAKING THIS CAKE <span style="color:darkred;">TO</span> GIULIA'S FOR HER BIRTHDAY`
+},
+
+{
+question:`DOMANI DEVO ANDARE <span style="color:darkred;">DAL</span> DENTISTA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`I HAVE TO GO <span style="color:darkred;">TO</span> THE DENTIST'S TOMORROW`
+},
+
+{
+question:`DEVI RECAPITARE QUESTO PACCO <span style="color:darkred;">DAL</span> SIGNOR BIANCHI ENTRO STASERA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`YOU MUST DELIVER THIS PARCEL <span style="color:darkred;">TO</span> MR BIANCHI'S BY EVENING`
+},
+
+{
+question:`DOPO IL LAVORO POSSO VENIRE <span style="color:darkred;">DA</span> VOI PER CENA?`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`AFTER WORK, CAN I COME <span style="color:darkred;">TO</span> YOUR PLACE FOR DINNER?`
+},
+
+{
+question:`STAMATTINA ACCOMPAGNO MIO FIGLIO <span style="color:darkred;">DAL</span> PEDIATRA PER UN CONTROLLO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`I'M TAKING MY SON <span style="color:darkred;">TO</span> THE PAEDIATRICIAN FOR A CHECK-UP THIS MORNING`
+},
+
+{
+question:`DEVO ANDARE <span style="color:darkred;">DAL</span> MECCANICO A RITIRARE L’AUTO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`I NEED TO GO <span style="color:darkred;">TO</span> THE MECHANIC'S TO PICK UP MY CAR`
+},
+
+{
+question:`QUANDO FINISCI, VIENI <span style="color:darkred;">DA</span> NOI PER UN CAFFÈ`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`WHEN YOU FINISH, COME <span style="color:darkred;">TO</span> OUR PLACE FOR A COFFEE`
+},
+
+{
+question:`SI È DIRETTA DI CORSA <span style="color:darkred;">DALL'</span>UFFICIO DEL CAPO PER LAMENTARSI DEL COLLEGA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`SHE RUSHED <span style="color:darkred;">TO</span> THE BOSS'S OFFICE TO COMPLAIN ABOUT HER COLLEAGUE`
+},
+
+{
+question:`SABATO VADO <span style="color:darkred;">DAI</span> MIEI PER PRANZO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:0,
+flip:`ON SATURDAY, I'M GOING <span style="color:darkred;">TO</span> MY PARENTS' FOR LUNCH`
+},
+
+{
+question:`SONO APPENA TORNATO <span style="color:darkred;">DA</span> ROMA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`I'VE JUST RETURNED <span style="color:darkred;">FROM</span> ROME`
+},
+
+{
+question:`VENGO <span style="color:darkred;">DAL</span> LAVORO E SONO STANCHISSIMO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`I'M COMING <span style="color:darkred;">FROM</span> WORK AND I'M TIRED OUT`
+},
+
+{
+question:`LUI HA PRESO QUESTO VIZIO <span style="color:darkred;">DA</span> ME`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`HE GOT THIS HABIT <span style="color:darkred;">FROM</span> ME`
+},
+
+{
+question:`ARRIVANO QUI DIRETTAMENTE <span style="color:darkred;">DALLA</span> STAZIONE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`THEY ARE COMING HERE STRAIGHT <span style="color:darkred;">FROM</span> THE STATION`
+},
+
+{
+question:`HO RICEVUTO UNA CHIAMATA <span style="color:darkred;">DALL'</span>UFFICIO POCO FA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`I RECEIVED A CALL <span style="color:darkred;">FROM</span> THE OFFICE A SHORT WHILE AGO`
+},
+
+{
+question:`SIAMO RIENTRATI <span style="color:darkred;">DAL</span> MARE IERI SERA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`WE GOT BACK <span style="color:darkred;">FROM</span> THE SEASIDE YESTERDAY EVENING`
+},
+
+{
+question:`LEI PROVIENE <span style="color:darkred;">DA</span> UNA FAMIGLIA MOLTO NUMEROSA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`SHE COMES <span style="color:darkred;">FROM</span> A VERY LARGE FAMILY`
+},
+
+{
+question:`SONO SCAPPATI <span style="color:darkred;">DAL</span> RISTORANTE SENZA PAGARE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`THEY RAN AWAY <span style="color:darkred;">FROM</span> THE RESTAURANT WITHOUT PAYING`
+},
+
+{
+question:`STO TORNANDO ORA <span style="color:darkred;">DAL</span> SUPERMERCATO CON DUE BUSTE PIENE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`I'M COMING BACK <span style="color:darkred;">FROM</span> THE SUPERMARKET NOW WITH TWO FULL BAGS`
+},
+
+{
+question:`<span style="color:darkred;">DA</span> DOVE SONO IO, RIESCO A VEDERE TUTTO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`<span style="color:darkred;">FROM</span> WHERE I AM, I CAN SEE EVERYTHING`
+},
+
+{
+question:`HANNO PRESO IL TRENO <span style="color:darkred;">DA</span> MILANO STAMATTINA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:1,
+flip:`THEY TOOK THE TRAIN <span style="color:darkred;">FROM</span> MILAN THIS MORNING`
+},
+
+{
+question:`QUESTO ROMANZO È STATO SCRITTO <span style="color:darkred;">DA</span> UMBERTO ECO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THIS NOVEL WAS WRITTEN <span style="color:darkred;">BY</span> UMBERTO ECO`
+},
+
+{
+question:`LA FINESTRA È STATA ROTTA <span style="color:darkred;">DA</span> UN PALLONE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THE WINDOW WAS BROKEN <span style="color:darkred;">BY</span> A BALL`
+},
+
+{
+question:`IL PROGETTO È STATO APPROVATO <span style="color:darkred;">DAL</span> DIRETTORE IERI`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THE PROJECT WAS APPROVED <span style="color:darkred;">BY</span> THE MANAGER YESTERDAY`
+},
+
+{
+question:`QUEL QUADRO È STATO DIPINTO <span style="color:darkred;">DA</span> MIA ZIA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THAT PICTURE WAS PAINTED <span style="color:darkred;">BY</span> MY AUNT`
+},
+
+{
+question:`SIAMO STATI ACCOLTI <span style="color:darkred;">DA</span> UN ASSISTENTE MOLTO GENTILE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`WE WERE WELCOMED <span style="color:darkred;">BY</span> A KIND ASSISTANT`
+},
+
+{
+question:`LA PORTA È STATA RIPARATA <span style="color:darkred;">DA</span> QUALCUNO CHE TU CONOSCI MOLTO BENE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THE DOOR WAS REPAIRED <span style="color:darkred;">BY</span> SOMEONE YOU KNOW VERY WELL`
+},
+
+{
+question:`IL CONCERTO È STATO ORGANIZZATO <span style="color:darkred;">DA</span> ALCUNI VOLONTARI`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THE CONCERT WAS ORGANISED <span style="color:darkred;">BY</span> SOME VOLUNTEERS`
+},
+
+{
+question:`LA DECISIONE È STATA PRESA <span style="color:darkred;">DAL</span> CDA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THE DECISION WAS TAKEN <span style="color:darkred;">BY</span> THE BOARD OF DIRECTORS`
+},
+
+{
+question:`QUESTO DOLCE È STATO PREPARATO <span style="color:darkred;">DA</span> MIA NONNA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THIS DESSERT WAS PREPARED <span style="color:darkred;">BY</span> MY GRANDMOTHER`
+},
+
+{
+question:`IL PACCO È STATO CONSEGNATO <span style="color:darkred;">DA</span> LUCA STAMATTINA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:2,
+flip:`THE PARCEL WAS DELIVERED <span style="color:darkred;">BY</span> LUCA THIS MORNING`
+},
+
+{
+question:`TUTTO DIPENDE <span style="color:darkred;">DA</span> TE ADESSO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`EVERYTHING DEPENDS <span style="color:darkred;">ON</span> YOU NOW`
+},
+
+{
+question:`IL RISULTATO DIPENDE <span style="color:darkred;">DAL</span> TEMPO DISPONIBILE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`THE RESULT DEPENDS <span style="color:darkred;">ON</span> THE TIME AVAILABLE`
+},
+
+{
+question:`IL BAR È <span style="color:darkred;">DALL'</span>ALTRA PARTE DELLA STRADA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`THE BAR IS <span style="color:darkred;">ON</span> THE OTHER SIDE OF THE ROAD`
+},
+
+{
+question:`<span style="color:darkred;">D'</span>ALTRA PARTE, NON AVEVAMO ALTERNATIVE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`<span style="color:darkred;">ON</span> THE OTHER HAND, WE HAD NO ALTERNATIVES`
+},
+
+{
+question:`LA FARMACIA SI TROVA <span style="color:darkred;">DALL'</span>ALTRO LATO DELLA PIAZZA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`THE CHEMIST'S IS <span style="color:darkred;">ON</span> THE OTHER SIDE OF THE SQUARE`
+},
+
+{
+question:`LA SCELTA FINALE DIPENDEREBBE <span style="color:darkred;">DAL</span> BUDGET`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`THE FINAL CHOICE WOULD DEPEND <span style="color:darkred;">ON</span> THE BUDGET`
+},
+
+{
+question:`VIVE <span style="color:darkred;">DALL'</span>ALTRA PARTE DEL FIUME`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`HE LIVES <span style="color:darkred;">ON</span> THE OTHER SIDE OF THE RIVER`
+},
+
+{
+question:`<span style="color:darkred;">D'</span>ALTRA PARTE, CAPISCO LA SUA DECISIONE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`<span style="color:darkred;">ON</span> THE OTHER HAND, I CAN UNDERSTAND HIS DECISION`
+},
+
+{
+question:`IL SUCCESSO DIPENDE <span style="color:darkred;">DALL'</span>IMPEGNO DI TUTTI`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`SUCCESS DEPENDS <span style="color:darkred;">ON</span> EVERYONE'S COMMITMENT`
+},
+
+{
+question:`IL SUPERMERCATO È <span style="color:darkred;">DALL'</span>ALTRA PARTE DEL PAESE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:3,
+flip:`THE SUPERMARKET IS <span style="color:darkred;">ON</span> THE OTHER SIDE OF TOWN`
+},
+
+{
+question:`STUDIAVO INGLESE <span style="color:darkred;">DA</span> DUE ORE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:4,
+flip:`I HAD BEEN STUDYING ENGLISH <span style="color:darkred;">FOR</span> TWO HOURS`
+},
+
+{
+question:`NON LO VEDEVO <span style="color:darkred;">DA</span> TRE GIORNI`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:4,
+flip:`I HADN'T SEEN HIM <span style="color:darkred;">FOR</span> THREE DAYS`
+},
+
+{
+question:`ASPETTAVANO QUI <span style="color:darkred;">DA</span> MEZZ’ORA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:4,
+flip:`THEY HAD BEEN WAITING HERE <span style="color:darkred;">FOR</span> HALF AN HOUR`
+},
+
+{
+question:`NON MANGIO PIZZA <span style="color:darkred;">DA</span> ANNI`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:4,
+flip:`I HAVEN'T EATEN PIZZA <span style="color:darkred;">FOR</span> YEARS`
+},
+
+{
+question:`LAVORANO INSIEME <span style="color:darkred;">DA</span> SEI MESI`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:4,
+flip:`THEY HAVE BEEN WORKING TOGETHER <span style="color:darkred;">FOR</span> SIX MONTHS`
+},
+
+{
+question:`LUI NON DORME BENE <span style="color:darkred;">DA</span> TANTE SETTIMANE ORMAI`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:4,
+flip:`HE HASN'T SLEPT WELL <span style="color:darkred;">FOR</span> MANY WEEKS NOW`
+},
+
+{
+question:`SIAMO IN VIAGGIO <span style="color:darkred;">DA</span> QUATTRO ORE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:4,
+flip:`WE HAVE BEEN TRAVELLING <span style="color:darkred;">FOR</span> FOUR HOURS`
+},
+
+{
+question:`NON USO LA MACCHINA <span style="color:darkred;">DA</span> OLTRE UNA SETTIMANA`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:4,
+flip:`I HAVEN'T USED THE CAR <span style="color:darkred;">FOR</span> OVER A WEEK`
+},
+
+{
+question:`È <span style="color:darkred;">DALLE</span> 10 CHE PIOVE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`IT HAS BEEN RAINING <span style="color:darkred;">SINCE</span> TEN O'CLOCK`
+},
+
+{
+question:`LEI NON PARLA CON SUO FRATELLO <span style="color:darkred;">DALL'</span>ANNO SCORSO`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`SHE HASN'T SPOKEN TO HER BROTHER <span style="color:darkred;">SINCE</span> LAST YEAR`
+},
+
+{
+question:`VIVO QUI <span style="color:darkred;">DA</span> GENNAIO 2010`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`I HAVE BEEN LIVING HERE <span style="color:darkred;">SINCE</span> JANUARY 2010`
+},
+
+{
+question:`NON VEDO MARCO <span style="color:darkred;">DA</span> LUNEDÌ`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`I HAVEN'T SEEN MARCO <span style="color:darkred;">SINCE</span> MONDAY`
+},
+
+{
+question:`<span style="color:darkred;">DA</span> QUANDO LAVORI IN BANCA?`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`<span style="color:darkred;">SINCE</span> WHEN HAVE YOU BEEN WORKING AT THE BANK?`
+},
+
+{
+question:`NON SUCCEDEVA <span style="color:darkred;">DAL</span> 2020`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`IT HADN'T HAPPENED <span style="color:darkred;">SINCE</span> 2020`
+},
+
+{
+question:`NON PIOVEVA <span style="color:darkred;">DALLO</span> SCORSO MESE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`IT HADN'T RAINED <span style="color:darkred;">SINCE</span> LAST MONTH`
+},
+
+{
+question:`<span style="color:darkred;">DA</span> QUANDO STUDI INGLESE SUL SERIO?`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`<span style="color:darkred;">SINCE</span> WHEN HAVE YOU BEEN STUDYING ENGLISH SERIOUSLY?`
+},
+
+{
+question:`SONO SPOSATI <span style="color:darkred;">DAL</span> 2015`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`THEY HAVE BEEN MARRIED <span style="color:darkred;">SINCE</span> 2015`
+},
+
+{
+question:`LUI NON USAVA LA MACCHINA <span style="color:darkred;">DA</span> APRILE`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`HE HADN'T USED THE CAR <span style="color:darkred;">SINCE</span> APRIL`
+},
+
+{
+question:`<span style="color:darkred;">DA</span> QUANDO ASPETTAVI NOTIZIE?`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`<span style="color:darkred;">SINCE</span> WHEN HAD YOU BEEN WAITING FOR NEWS?`
+},
+
+{
+question:`CONOSCO GIULIA <span style="color:darkred;">DA</span> QUANDO ERAVAMO BAMBINI`,
+options:[`TO`,`FROM`,`BY`,`ON`,`FOR`,`SINCE`],
+answer:5,
+flip:`I'VE KNOWN GIULIA <span style="color:darkred;">SINCE</span> WE WERE CHILDREN`
+}
+
+];
+
+
+/* STATE */
+
+let quiz = [];
+let index = 0;
+let score = 0;
+
+/* SHUFFLE */
+
+function shuffle(arr){
+
+let copy = [...arr];
+
+for(let i = copy.length - 1; i > 0; i--){
+const j = Math.floor(Math.random() * (i + 1));
+[copy[i], copy[j]] = [copy[j], copy[i]];
+}
+
+return copy;
+}
+
+/* START */
+
+function startQuiz(){
+
+quiz = shuffle(questions).slice(0,10);
+index = 0;
+score = 0;
+
+showQuestion();
+}
+
+/* SHOW QUESTION */
+
+function showQuestion(){
+
+const q = quiz[index];
+
+const flipCard = document.getElementById("flipCard");
+flipCard.classList.remove("flipped");
+
+setTimeout(()=>{
+
+/* QUESTION */
+
+document.getElementById("question").innerHTML = q.question;
+
+/* FLIP */
+
+document.getElementById("flipContent").innerHTML = q.flip;
+
+/* INFO */
+
+document.getElementById("progress").innerText =
+`${index + 1} / ${quiz.length}`;
+
+updateScore();
+
+/* NEXT */
+
+const nextBtn = document.getElementById("nextBtn");
+nextBtn.style.opacity = ".5";
+nextBtn.style.pointerEvents = "none";
+
+/* ANSWERS */
+
+const answers = document.getElementById("answers");
+answers.innerHTML = "";
+
+q.options.forEach((opt,i)=>{
+
+const btn = document.createElement("button");
+btn.className = "answer-btn";
+btn.innerText = opt;
+
+btn.onclick = ()=>checkAnswer(btn,i,q.answer);
+
+answers.appendChild(btn);
+});
+
+},300);
+}
+
+/* CHECK */
+
+function checkAnswer(button,selected,correct){
+
+const buttons = document.querySelectorAll(".answer-btn");
+
+buttons.forEach(b=>b.disabled = true);
+
+if(selected === correct){
+
+button.classList.add("correct");
+
+score++;
+
+updateScore();
+
+playSound("correctSound");
+
+setTimeout(()=>{
+document.getElementById("flipCard").classList.add("flipped");
+},500);
+
+}else{
+
+button.classList.add("wrong");
+
+playSound("wrongSound");
+}
+
+const nextBtn = document.getElementById("nextBtn");
+nextBtn.style.opacity = "1";
+nextBtn.style.pointerEvents = "auto";
+}
+
+/* SCORE */
+
+function updateScore(){
+document.getElementById("score").innerText = `${score} / ${quiz.length}`;
+}
+
+/* NEXT */
+
+function nextQuestion(){
+
+if(index < quiz.length - 1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+}
+
+/* END */
+
+function endQuiz(){
+
+const passMark = Math.ceil(quiz.length * 0.7);
+
+if(score >= passMark){
+playSound("passSound");
+}else{
+playSound("failSound");
+}
+
+const message = score >= passMark
+? `<span style="color:#0E065C;">WELL DONE! YOU'VE PASSED! 🎉</span>`
+: `<span style="color:#0E065C;">BAD LUCK! TRY AGAIN ❌</span>`;
+
+const front = document.querySelector(".front");
+
+front.innerHTML = `
+<div class="end-screen">
+${message}<br><br>
+FINAL SCORE: ${score} / ${quiz.length}
+
+<button class="retry-btn" id="retryBtn">
+TRY AGAIN
+</button>
+</div>`;
+
+const answers = document.getElementById("answers");
+answers.style.display = "none";
+
+document.getElementById("flipCard").classList.remove("flipped");
+
+const nextBtn = document.getElementById("nextBtn");
+nextBtn.style.display = "none";
+
+document.querySelector(".library-back-container").style.display = "none";
+
+setTimeout(()=>{
+
+document.getElementById("retryBtn").onclick = function(){
+
+front.innerHTML = `<div class="question" id="question"></div>`;
+
+answers.style.display = "grid";
+nextBtn.style.display = "block";
+
+document.querySelector(".library-back-container").style.display = "flex";
+
+startQuiz();
+};
+
+},100);
+}
+
+/* EVENTS */
+
+document.getElementById("nextBtn").onclick = nextQuestion;
+
+/* POPUP */
+
+document.getElementById("readMeBtn").onclick = function(){
+document.getElementById("popupOverlay").style.display = "flex";
+};
+
+document.getElementById("closePopup").onclick = function(){
+document.getElementById("popupOverlay").style.display = "none";
+};
+
+document.getElementById("popupOverlay").onclick = function(e){
+if(e.target === this){
+this.style.display = "none";
+}
+};
+
+/* BACK BUTTON */
+
+document.getElementById("backButton").onclick = function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+};
+
+
+/* INIT */
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
+```
