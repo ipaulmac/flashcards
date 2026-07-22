@@ -1,0 +1,2652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>LO SAI FARE?</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+letter-spacing:.08em;
+}
+
+.top-controls{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.88rem;
+cursor:pointer;
+user-select:none;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+background:#fff;
+border:4px solid var(--red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkred;
+cursor:pointer;
+}
+
+/* CARD */
+
+.flip-card{
+width:92vw;
+max-width:380px;
+height:270px;
+perspective:1200px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+transform:rotateY(180deg);
+}
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:16px;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+.front{
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.question{
+font-size:1.42rem;
+font-weight:900;
+line-height:1.3;
+color:#0E065C;
+text-transform:uppercase;
+}
+
+.back{
+transform:rotateY(180deg);
+display:flex;
+justify-content:flex-start;
+align-items:flex-start;
+text-align:left;
+padding-top:34px;
+}
+
+#flipContent{
+width:100%;
+color:#0E065C;
+font-weight:900;
+text-transform:uppercase;
+padding-left:18px;
+padding-right:18px;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+.translation-line{
+font-size:1.05rem;
+font-weight:900;
+line-height:1.22;
+margin-bottom:20px;
+text-transform:uppercase;
+}
+
+.example{
+font-size:.96rem;
+font-weight:900;
+line-height:1.48;
+text-transform:uppercase;
+}
+
+
+.red{
+color:darkred;
+font-weight:900;
+}
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0 14px;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+/* NEXT */
+
+.next-btn{
+background:#00cfd5;
+color:#061247;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:.5;
+pointer-events:none;
+}
+
+/* BUTTONS */
+
+.answers{
+width:92vw;
+max-width:380px;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.answer-row{
+display:grid;
+gap:8px;
+}
+
+.row-1{
+grid-template-columns:1fr 1fr 1fr;
+}
+
+.row-2{
+grid-template-columns:1fr 1fr 1fr;
+}
+
+.answer-btn{
+height:40px;
+background:#eef2f7;
+color:var(--purple);
+font-weight:900;
+border-radius:10px;
+border:1px solid #cbd5e1;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:.95rem;
+letter-spacing:.02em;
+transition:all .12s ease;
+}
+
+.answer-btn:active{
+transform:scale(.96);
+}
+
+/* BACK BUTTON */
+
+.library-back-btn{
+background:#930000;
+color:#ffffff;
+border:3px solid #ffffff;
+}
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:#061247;
+}
+
+
+.correct{
+background:#22c55e !important;
+color:#fff !important;
+box-shadow:0 0 10px #22c55e;
+}
+
+.wrong{
+background:#ef4444 !important;
+color:#fff !important;
+}
+
+/* END SCREEN */
+
+.end-screen{
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:1.15rem;
+font-weight:900;
+color:#0E065C;
+line-height:1.4;
+padding:6px 14px;
+}
+
+.retry-btn{
+margin-top:30px;
+background:#B83AC9;
+color:#fff;
+width:126px;
+height:36px;
+font-weight:700;
+font-size:.9rem;
+border:none;
+border-radius:10px;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- AUDIO -->
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<!-- TOP -->
+
+<div class="top-bar">
+
+<div class="top-title">
+LO SAI FARE? <span style="color:#FFF3A3;">(B1+)</span>
+</div>
+
+<div class="top-controls">
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
+</div>
+
+</div>
+
+<!-- POPUP -->
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+THIS QUIZ PRACTISES DIFFERENT ENGLISH TRANSLATIONS OF THE ITALIAN VERB
+<span style="color:darkred;">FARE</span><br><br>
+
+THERE ARE <span style="color:darkred;">106</span> SENTENCES OF WHICH ONLY
+<span style="color:darkred;">12</span> ARE SELECTED RANDOMLY. PASS MARK <span style="color:darkred;">9/12</span><br><br>
+
+YOU MUST CHOOSE THE CORRECT ENGLISH MEANING OF THE VERB
+<span style="color:darkred;">FARE</span>:<br><br>
+
+<div style="
+font-size:1.08rem;
+font-weight:900;
+letter-spacing:.03em;
+line-height:1.5;
+text-align:center;
+">
+
+<span style="color:#B83AC9;">DO</span>
+
+<span style="color:#0E065C;">-</span>
+
+<span style="color:#B83AC9;">MAKE</span>
+
+<span style="color:#0E065C;">-</span>
+
+<span style="color:#B83AC9;">HAVE</span>
+
+<span style="color:#0E065C;">-</span>
+
+<span style="color:#B83AC9;">BE</span>
+
+<span style="color:#0E065C;">-</span>
+
+<span style="color:#B83AC9;">OTHER</span>
+
+</div><br>
+
+
+ONLY AFTER A CORRECT ANSWER WILL THE CARD FLIP TO REVEAL THE TRANSLATION
+
+</div>
+
+<div id="closePopup" class="popup-close-text">
+START QUIZ →
+</div>
+
+</div>
+
+</div>
+
+<!-- CARD -->
+
+<div class="flip-card" id="flipCard">
+
+<div class="flip-inner">
+
+<div class="card-face front">
+<div class="question" id="question"></div>
+</div>
+
+<div class="card-face back">
+<div id="flipContent"></div>
+</div>
+
+</div>
+
+</div>
+
+<!-- INFO -->
+
+<div class="info-row">
+
+<div id="progress">1 / 1</div>
+
+<div>
+
+<button id="nextBtn" class="next-btn">
+NEXT
+</button>
+
+</div>
+
+<div id="score" class="right">0 / 0</div>
+
+</div>
+
+<!-- BUTTONS -->
+
+<div class="answers" id="answers">
+
+<div class="answer-row row-1">
+
+<button class="answer-btn" data-answer="DO">
+DO
+</button>
+
+<button class="answer-btn" data-answer="MAKE">
+MAKE
+</button>
+
+<button class="answer-btn" data-answer="HAVE">
+HAVE
+</button>
+
+</div>
+
+<div class="answer-row row-2">
+
+<button class="answer-btn" data-answer="BE">
+BE
+</button>
+
+<button class="answer-btn" data-answer="OTHER">
+OTHER
+</button>
+
+<button
+id="libraryBackBtn"
+class="answer-btn library-back-btn"
+type="button">
+BACK
+</button>
+
+</div>
+</div>
+
+<script>
+
+/* SOUND */
+
+let soundOn = true;
+
+function playSound(id){
+
+if(!soundOn) return;
+
+const a = document.getElementById(id);
+
+if(a){
+
+a.currentTime = 0;
+a.play();
+
+}
+
+}
+
+document.getElementById("soundToggle").onclick = function(){
+
+soundOn = !soundOn;
+
+this.innerText =
+soundOn ? "🔊 ON" : "🔇 OFF";
+
+};
+
+/* QUESTIONS */
+
+const questions = [
+
+{
+question:`FARE I COMPITI`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> I COMPITI =
+<span class="red">DO</span> HOMEWORK
+</div>
+
+<div class="example">
+I HAVE ALREADY <span class="red">DONE</span> MY HOMEWORK<br><br>
+
+HO GIÀ <span class="red">FATTO</span> I COMPITI
+</div>
+`
+},
+
+{
+question:`FARE IL BUCATO`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> IL BUCATO =
+<span class="red">DO</span> THE LAUNDRY
+</div>
+
+<div class="example">
+SHE <span class="red">DOES</span> THE LAUNDRY ON SATURDAYS<br><br>
+
+LEI <span class="red">FA</span> IL BUCATO IL SABATO
+</div>
+`
+},
+
+{
+question:`FARE LA SPESA`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> LA SPESA =
+<span class="red">DO</span> THE SHOPPING
+</div>
+
+<div class="example">
+I DON’T HAVE TIME TO <span class="red">DO</span> THE SHOPPING DURING THE WEEK<br><br>
+
+NON HO IL TEMPO PER <span class="red">FARE</span> LA SPESA DURANTE LA SETTIMANA
+</div>
+`
+},
+
+{
+question:`FARE ATTIVITÀ FISICA`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> ATTIVITÀ FISICA =
+<span class="red">DO</span> EXERCISE
+</div>
+
+<div class="example">
+<span class="red">DOING</span> EXERCISE IS IMPORTANT AT ANY AGE<br><br>
+
+<span class="red">FARE</span> ATTIVITÀ FISICA È IMPORTANTE A QUALSIASI ETÀ
+</div>
+`
+},
+
+{
+question:`FARE SPORT`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> SPORT =
+<span class="red">DO</span> SPORTS
+</div>
+
+<div class="example">
+THE BOYS DON’T <span class="red">DO</span> SPORTS AT SCHOOL<br><br>
+
+I RAGAZZI NON <span class="red">FANNO</span> SPORT A SCUOLA
+</div>
+`
+},
+
+{
+question:`FARE YOGA/PILATES, ECC`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> YOGA/PILATES =
+<span class="red">DO</span> YOGA/PILATES
+</div>
+
+<div class="example">
+SHE PREFERS TO <span class="red">DO</span> YOGA INSTEAD OF PILATES<br><br>
+
+LEI PREFERISCE <span class="red">FARE</span> YOGA INVECE DI PILATES
+</div>
+`
+},
+
+{
+question:`FARE UN FAVORE`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN FAVORE =
+<span class="red">DO</span> A FAVOUR
+</div>
+
+<div class="example">
+THANK YOU! YOU HAVE <span class="red">DONE</span> ME A HUGE FAVOUR<br><br>
+
+GRAZIE! MI HAI <span class="red">FATTO</span> UN FAVORE ENORME
+</div>
+`
+},
+
+{
+question:`FARE VOLONTARIATO`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> VOLONTARIATO =
+<span class="red">DO</span> VOLUNTARY WORK
+</div>
+
+<div class="example">
+HE <span class="red">DOES</span> VOLUNTARY WORK AT WEEKENDS<br><br>
+
+LUI <span class="red">FA</span> VOLONTARIATO NEI FINE SETTIMANA
+</div>
+`
+},
+
+{
+question:`FARE BUSINESS`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> BUSINESS =
+<span class="red">DO</span> BUSINESS
+</div>
+
+<div class="example">
+THEY <span class="red">DO</span> BUSINESS MAINLY WITH FOREIGN COMPANIES<br><br>
+
+<span class="red">FANNO</span> BUSINESS PRINCIPALMENTE CON AZIENDE STRANIERE
+</div>
+`
+},
+
+{
+question:`FARE DEL BENE/MALE`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> DEL BENE/MALE =
+<span class="red">DO</span> GOOD/HARM
+</div>
+
+<div class="example">
+THAT MEDICINE <span class="red">DOES</span> MORE HARM THAN GOOD<br><br>
+
+QUEL FARMACO <span class="red">FA</span> PIÙ MALE CHE BENE
+</div>
+`
+},
+
+{
+question:`FARE A MENO DI`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> A MENO DI =
+<span class="red">DO</span> WITHOUT
+</div>
+
+<div class="example">
+I JUST CAN’T <span class="red">DO</span> WITHOUT COFFEE<br><br>
+
+NON POSSO PROPRIO <span class="red">FARE</span> A MENO DEL CAFFÈ
+</div>
+`
+},
+
+{
+question:`FARE I PIATTI`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> I PIATTI =
+<span class="red">DO</span> THE DISHES
+</div>
+
+<div class="example">
+WE TAKE TURNS <span class="red">DOING</span> THE DISHES<br><br>
+
+FACCIAMO A TURNO PER LAVARE I PIATTI
+</div>
+`
+},
+
+{
+question:`FARE GIARDINAGGIO`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> GIARDINAGGIO =
+<span class="red">DO</span> THE GARDENING
+</div>
+
+<div class="example">
+MY FATHER USED TO <span class="red">DO</span> THE GARDENING EVERY SUNDAY<br><br>
+
+MIO PADRE <span class="red">FACEVA</span> GIARDINAGGIO OGNI DOMENICA
+</div>
+`
+},
+
+{
+question:`FARE TURNI`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> TURNI =
+<span class="red">DO</span> SHIFTS
+</div>
+
+<div class="example">
+SHE <span class="red">DOES</span> NIGHT SHIFTS<br><br>
+
+LEI <span class="red">FA</span> TURNI DI NOTTE
+</div>
+`
+},
+
+{
+question:`FARE BENE/MALE`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> BENE/MALE =
+<span class="red">DO</span> WELL/BADLY
+</div>
+
+<div class="example">
+YOU <span class="red">DID</span> WELL TO CALL HIM BACK<br><br>
+
+HAI <span class="red">FATTO</span> BENE A RICHIAMARLO
+</div>
+`
+},
+
+{
+question:`FARE RICERCHE`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> RICERCHE =
+<span class="red">DO</span> RESEARCH
+</div>
+
+<div class="example">
+THEY ARE <span class="red">DOING</span> RESEARCH ON SUBATOMIC PARTICLES<br><br>
+
+STANNO <span class="red">FACENDO</span> RICERCHE SULLE PARTICELLE SUBATOMICHE
+</div>
+`
+},
+
+{
+question:`FARE DEL PROPRIO MEGLIO`,
+meaning:`DO`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> DEL PROPRIO MEGLIO =
+<span class="red">DO</span> ONE’S BEST
+</div>
+
+<div class="example">
+AT LEAST SHE <span class="red">DID</span> HER BEST<br><br>
+
+ALMENO LEI HA <span class="red">FATTO</span> DEL SUO MEGLIO
+</div>
+`
+},
+
+{
+question:`FARE COLPO`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> COLPO =
+<span class="red">MAKE</span> AN IMPRESSION
+</div>
+
+<div class="example">
+SHE <span class="red">MADE</span> AN IMPRESSION ON EVERYONE<br><br>
+
+HA <span class="red">FATTO</span> COLPO SU TUTTI
+</div>
+`
+},
+
+{
+question:`FARE SOLDI`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> SOLDI =
+<span class="red">MAKE</span> MONEY
+</div>
+
+<div class="example">
+HE <span class="red">MAKES</span> A LOT OF MONEY ONLINE<br><br>
+
+LUI <span class="red">FA</span> MOLTI SOLDI ONLINE
+</div>
+`
+},
+
+{
+question:`FARE PROGRESSI`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> PROGRESSI =
+<span class="red">MAKE</span> PROGRESS
+</div>
+
+<div class="example">
+WELL DONE! YOU ARE <span class="red">MAKING</span> A LOT OF PROGRESS<br><br>
+
+BRAVO! STAI <span class="red">FACENDO</span> MOLTI PROGRESSI
+</div>
+`
+},
+
+{
+question:`FARE RUMORE`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> RUMORE =
+<span class="red">MAKE</span> NOISE
+</div>
+
+<div class="example">
+I TRY NOT TO <span class="red">MAKE</span> TOO MUCH NOISE WHEN THE OTHERS ARE SLEEPING<br><br>
+
+PROVO A NON <span class="red">FARE</span> TROPPO RUMORE QUANDO GLI ALTRI DORMONO
+</div>
+`
+},
+
+{
+question:`FARE UNO SFORZO`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNO SFORZO =
+<span class="red">MAKE</span> AN EFFORT
+</div>
+
+<div class="example">
+SHE <span class="red">MADE</span> A BIG EFFORT NOT TO ARRIVE LATE<br><br>
+
+HA <span class="red">FATTO</span> UN GRANDE SFORZO PER NON ARRIVARE IN RITARDO
+</div>
+`
+},
+
+{
+question:`FARE UN ERRORE`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN ERRORE =
+<span class="red">MAKE</span> A MISTAKE
+</div>
+
+<div class="example">
+SORRY. I <span class="red">MADE</span> A STUPID MISTAKE<br><br>
+
+SCUSAMI. HO <span class="red">FATTO</span> UN ERRORE STUPIDO
+</div>
+`
+},
+
+{
+question:`FARE ATTENZIONE`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> ATTENZIONE =
+<span class="red">PAY</span> ATTENTION
+</div>
+
+<div class="example">
+<span class="red">PAY</span> ATTENTION TO WHAT YOU SAY<br><br>
+
+<span class="red">FAI</span> ATTENZIONE A QUELLO CHE DICI
+</div>
+`
+},
+
+{
+question:`FARE COMODO`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> COMODO =
+<span class="red">BE</span> CONVENIENT
+</div>
+
+<div class="example">
+TOMORROW WOULD <span class="red">BE</span> MORE CONVENIENT FOR ME<br><br>
+
+DOMANI MI <span class="red">FAREBBE</span> PIÙ COMODO
+</div>
+`
+},
+
+{
+question:`FARE IL BRAVO`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> IL BRAVO =
+<span class="red">BE</span> GOOD
+</div>
+
+<div class="example">
+THE CHILDREN HAVE <span class="red">BEEN</span> REALLY GOOD TODAY<br><br>
+
+I BAMBINI HANNO <span class="red">FATTO</span> I BRAVI OGGI
+</div>
+`
+},
+
+{
+question:`FARE PIANI`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> PIANI =
+<span class="red">MAKE</span> PLANS
+</div>
+
+<div class="example">
+ARE THEY ALREADY <span class="red">MAKING</span> PLANS FOR THE SUMMER?<br><br>
+
+STANNO GIÀ <span class="red">FACENDO</span> PIANI PER L’ESTATE?
+</div>
+`
+},
+
+{
+question:`FARE UNA PROMESSA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA PROMESSA =
+<span class="red">MAKE</span> A PROMISE
+</div>
+
+<div class="example">
+YOU SHOULD KEEP PROMISES THAT YOU <span class="red">MAKE</span><br><br>
+
+DOVRESTI MANTENERE LE PROMESSE CHE <span class="red">FAI</span>
+</div>
+`
+},
+
+{
+question:`FARE UNA SCELTA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA SCELTA =
+<span class="red">MAKE</span> A CHOICE
+</div>
+
+<div class="example">
+WE NEED TO <span class="red">MAKE</span> A CHOICE AT ONCE<br><br>
+
+DOBBIAMO <span class="red">FARE</span> UNA SCELTA SUBITO
+</div>
+`
+},
+
+{
+question:`FARE UN COMMENTO`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN COMMENTO =
+<span class="red">MAKE</span> A COMMENT
+</div>
+
+<div class="example">
+HE <span class="red">MADE</span> A COMMENT THAT DIDN'T MAKE ANY SENSE<br><br>
+
+LUI HA <span class="red">FATTO</span> UN COMMENTO INCOMPRENSIBILE
+</div>
+`
+},
+
+{
+question:`FARE UN’ECCEZIONE`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN’ECCEZIONE =
+<span class="red">MAKE</span> AN EXCEPTION
+</div>
+
+<div class="example">
+I’LL <span class="red">MAKE</span> AN EXCEPTION THIS TIME<br><br>
+
+PER QUESTA VOLTA <span class="red">FARÒ</span> UN’ECCEZIONE
+</div>
+`
+},
+
+{
+question:`FARE UNA TELEFONATA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA TELEFONATA =
+<span class="red">MAKE</span> A PHONE CALL
+</div>
+
+<div class="example">
+I NEED TO <span class="red">MAKE</span> AN URGENT PHONE CALL<br><br>
+
+DEVO <span class="red">FARE</span> UNA TELEFONATA URGENTE
+</div>
+`
+},
+
+{
+question:`FARE UN DISCORSO`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN DISCORSO =
+<span class="red">MAKE</span> A SPEECH
+</div>
+
+<div class="example">
+SHE <span class="red">MADE</span> A GREAT SPEECH<br><br>
+
+LEI HA <span class="red">FATTO</span> UN BEL DISCORSO
+</div>
+`
+},
+
+{
+question:`FARE UNA PRENOTAZIONE`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA PRENOTAZIONE =
+<span class="red">MAKE</span> A BOOKING
+</div>
+
+<div class="example">
+WE SHOULD HAVE <span class="red">MADE</span> THE BOOKING ONLINE<br><br>
+
+AVREMMO DOVUTO <span class="red">FARE</span> LA PRENOTAZIONE ONLINE
+</div>
+`
+},
+
+{
+question:`FARE UNA CITAZIONE`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA CITAZIONE =
+<span class="red">MAKE</span> A REFERENCE TO
+</div>
+
+<div class="example">
+HE <span class="red">MADE</span> A REFERENCE TO MY BOOK<br><br>
+
+LUI HA <span class="red">FATTO</span> UNA CITAZIONE AL MIO LIBRO
+</div>
+`
+},
+
+{
+question:`FARE UN RECLAMO`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN RECLAMO =
+<span class="red">MAKE</span> A COMPLAINT
+</div>
+
+<div class="example">
+THEY HAD TO <span class="red">MAKE</span> AN OFFICIAL COMPLAINT<br><br>
+
+HANNO DOVUTO <span class="red">FARE</span> UN RECLAMO UFFICIALE
+</div>
+`
+},
+
+{
+question:`FARE UNA PROPOSTA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA PROPOSTA =
+<span class="red">MAKE</span> A PROPOSAL
+</div>
+
+<div class="example">
+SHE <span class="red">MADE</span> ME AN INTERESTING PROPOSAL<br><br>
+
+LEI MI HA <span class="red">FATTO</span> UNA PROPOSTA INTERESSANTE
+</div>
+`
+},
+
+{
+question:`FARE PACE`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> PACE =
+<span class="red">MAKE</span> UP
+</div>
+
+<div class="example">
+AFTER MANY YEARS THE TWO FRIENDS <span class="red">MADE</span> UP<br><br>
+
+DOPO TANTI ANNI I DUE AMICI HANNO <span class="red">FATTO</span> PACE
+</div>
+`
+},
+
+{
+question:`FARE AMICIZIA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> AMICIZIA =
+<span class="red">MAKE</span> FRIENDS
+</div>
+
+<div class="example">
+SHE <span class="red">MADE</span> A LOT OF FRIENDS WHILE SHE WAS IN MADRID<br><br>
+
+LEI HA <span class="red">FATTO</span> AMICIZIA CON MOLTE PERSONE MENTRE ERA A MADRID
+</div>
+`
+},
+
+{
+question:`FARE CARRIERA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> CARRIERA =
+<span class="red">MAKE</span> A CAREER
+</div>
+
+<div class="example">
+HE WANTS TO <span class="red">MAKE</span> A CAREER ABROAD<br><br>
+
+LUI VUOLE <span class="red">FARE</span> CARRIERA ALL’ESTERO
+</div>
+`
+},
+
+{
+question:`FARE SPAZIO`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> SPAZIO =
+<span class="red">MAKE</span> ROOM
+</div>
+
+<div class="example">
+<span class="red">MAKE</span> ROOM FOR OUR GUESTS, PLEASE<br><br>
+
+<span class="red">FATE</span> SPAZIO PER I NOSTRI OSPITI, PER FAVORE
+</div>
+`
+},
+
+{
+question:`FARE FORTUNA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> FORTUNA =
+<span class="red">MAKE</span> ONE’S FORTUNE
+</div>
+
+<div class="example">
+HE <span class="red">MADE</span> HIS FORTUNE IN AMERICA<br><br>
+
+LUI HA <span class="red">FATTO</span> FORTUNA IN AMERICA
+</div>
+`
+},
+
+{
+question:`FARE UNA SCENATA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA SCENATA =
+<span class="red">MAKE</span> A SCENE
+</div>
+
+<div class="example">
+SHE <span class="red">MADE</span> A SCENE AT THE RESTAURANT<br><br>
+
+LEI HA <span class="red">FATTO</span> UNA SCENATA AL RISTORANTE
+</div>
+`
+},
+
+{
+question:`FARE LA DIFFERENZA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> LA DIFFERENZA =
+<span class="red">MAKE</span> A DIFFERENCE
+</div>
+
+<div class="example">
+A GOOD TEACHER CAN <span class="red">MAKE</span> A DIFFERENCE<br><br>
+
+UN BUON INSEGNANTE PUÒ <span class="red">FARE</span> LA DIFFERENZA
+</div>
+`
+},
+
+{
+question:`FARE IL LETTO`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> IL LETTO =
+<span class="red">MAKE</span> THE BED
+</div>
+
+<div class="example">
+I HOPE YOU <span class="red">MADE</span> YOUR BED THIS MORNING!<br><br>
+
+SPERO CHE TU ABBIA <span class="red">FATTO</span> IL LETTO STAMATTINA!
+</div>
+`
+},
+
+{
+question:`FARE APPUNTI`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> APPUNTI =
+<span class="red">MAKE</span> NOTES
+</div>
+
+<div class="example">
+I MESSED UP. I DIDN’T <span class="red">MAKE</span> ANY NOTES<br><br>
+
+HO SBAGLIATO. NON HO <span class="red">FATTO</span> APPUNTI
+</div>
+`
+},
+
+{
+question:`FAR ACCADERE QUALCOSA`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FAR</span> ACCADERE QUALCOSA =
+<span class="red">MAKE</span> SOMETHING HAPPEN
+</div>
+
+<div class="example">
+IF YOU WANT CHANGE, YOU HAVE TO <span class="red">MAKE</span> IT HAPPEN<br><br>
+
+SE VUOI UN CAMBIAMENTO, DEVI <span class="red">FARLO</span> ACCADERE
+</div>
+`
+},
+
+{
+question:`FAR RIDERE`,
+meaning:`MAKE`,
+flip:`
+<div class="translation-line">
+<span class="red">FAR</span> RIDERE =
+<span class="red">MAKE</span> SOMEONE LAUGH
+</div>
+
+<div class="example">
+HE ALWAYS <span class="red">MAKES</span> ME LAUGH<br><br>
+
+LUI MI <span class="red">FA</span> SEMPRE RIDERE
+</div>
+`
+},
+
+{
+question:`FARE COLAZIONE`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> COLAZIONE =
+<span class="red">HAVE</span> BREAKFAST
+</div>
+
+<div class="example">
+WE <span class="red">HAVE</span> BREAKFAST TOGETHER EVERY SUNDAY<br><br>
+
+<span class="red">FACCIAMO</span> COLAZIONE INSIEME OGNI DOMENICA
+</div>
+`
+},
+
+{
+question:`FARE MERENDA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> MERENDA =
+<span class="red">HAVE</span> A SNACK
+</div>
+
+<div class="example">
+THE CHILDREN <span class="red">HAVE</span> A SNACK AT FOUR O’CLOCK<br><br>
+
+I BAMBINI <span class="red">FANNO</span> MERENDA ALLE QUATTRO
+</div>
+`
+},
+
+{
+question:`FARE UNA PAUSA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA PAUSA =
+<span class="red">HAVE</span> A BREAK
+</div>
+
+<div class="example">
+LET’S <span class="red">HAVE</span> A TEN-MINUTE BREAK<br><br>
+
+<span class="red">FACCIAMO</span> UNA PAUSA DI DIECI MINUTI
+</div>
+`
+},
+
+{
+question:`FARE UN PISOLINO`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN PISOLINO =
+<span class="red">HAVE</span> A NAP
+</div>
+
+<div class="example">
+MY NAN ALWAYS <span class="red">HAS</span> A NAP AFTER LUNCH<br><br>
+
+MIA NONNA <span class="red">FA</span> SEMPRE UN PISOLINO DOPO PRANZO
+</div>
+`
+},
+
+{
+question:`FARE LA DOCCIA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> LA DOCCIA =
+<span class="red">HAVE</span> A SHOWER
+</div>
+
+<div class="example">
+I’M GOING TO <span class="red">HAVE</span> A SHOWER<br><br>
+
+VADO A <span class="red">FARE</span> LA DOCCIA
+</div>
+`
+},
+
+{
+question:`FARE UN SOGNO`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN SOGNO =
+<span class="red">HAVE</span> A DREAM
+</div>
+
+<div class="example">
+I <span class="red">HAD</span> A VERY STRANGE DREAM LAST NIGHT<br><br>
+
+STANOTTE HO <span class="red">FATTO</span> UN SOGNO STRANISSIMO
+</div>
+`
+},
+
+{
+question:`FARE GLI ESAMI DEL SANGUE`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> GLI ESAMI DEL SANGUE =
+<span class="red">HAVE</span> A BLOOD TEST
+</div>
+
+<div class="example">
+TOMORROW I HAVE TO <span class="red">HAVE</span> A BLOOD TEST<br><br>
+
+DOMANI DEVO <span class="red">FARE</span> GLI ESAMI DEL SANGUE
+</div>
+`
+},
+
+{
+question:`FARE UN COLLOQUIO`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN COLLOQUIO =
+<span class="red">HAVE</span> A JOB INTERVIEW
+</div>
+
+<div class="example">
+SHE IS <span class="red">HAVING</span> A JOB INTERVIEW TOMORROW MORNING<br><br>
+
+LEI <span class="red">FARÀ</span> UN COLLOQUIO DOMANI MATTINA
+</div>
+`
+},
+
+{
+question:`FARE UNA DISCUSSIONE`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA DISCUSSIONE =
+<span class="red">HAVE</span> A DISCUSSION
+</div>
+
+<div class="example">
+WE <span class="red">HAD</span> A VERY LONG DISCUSSION<br><br>
+
+ABBIAMO <span class="red">FATTO</span> UNA LUNGHISSIMA DISCUSSIONE
+</div>
+`
+},
+
+{
+question:`FARE UN’ESPERIENZA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN’ESPERIENZA =
+<span class="red">HAVE</span> AN EXPERIENCE
+</div>
+
+<div class="example">
+WE <span class="red">HAD</span> A TERRIBLE EXPERIENCE<br><br>
+
+ABBIAMO <span class="red">FATTO</span> UN’ESPERIENZA TERRIBILE
+</div>
+`
+},
+
+{
+question:`FARE UNA NUOTATA / PASSEGGIATA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA NUOTATA / PASSEGGIATA =
+<span class="red">HAVE</span> A SWIM / WALK
+</div>
+
+<div class="example">
+DO YOU FANCY <span class="red">HAVING</span> A SWIM?<br><br>
+
+TI VA DI <span class="red">FARE</span> UNA NUOTATA?
+</div>
+`
+},
+
+{
+question:`FARE UN INCIDENTE`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN INCIDENTE =
+<span class="red">HAVE</span> AN ACCIDENT
+</div>
+
+<div class="example">
+HE <span class="red">HAD</span> A REALLY BAD CAR ACCIDENT LAST YEAR<br><br>
+
+LUI HA <span class="red">FATTO</span> UN BRUTTISSIMO INCIDENTE D’AUTO L’ANNO SCORSO
+</div>
+`
+},
+
+{
+question:`FARE UNA FESTA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA FESTA =
+<span class="red">HAVE</span> A PARTY
+</div>
+
+<div class="example">
+WE HAVE DECIDED TO <span class="red">HAVE</span> A PARTY FOR HER BIRTHDAY<br><br>
+
+ABBIAMO DECISO DI <span class="red">FARE</span> UNA FESTA PER IL SUO COMPLEANNO
+</div>
+`
+},
+
+{
+question:`FARSI LA BARBA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARSI</span> LA BARBA =
+<span class="red">HAVE</span> A SHAVE
+</div>
+
+<div class="example">
+HE <span class="red">HAS</span> A SHAVE EVERY OTHER DAY<br><br>
+
+LUI SI <span class="red">FA</span> LA BARBA A GIORNI ALTERNI
+</div>
+`
+},
+
+{
+question:`FARE UNA CHIACCHIERATA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA CHIACCHIERATA =
+<span class="red">HAVE</span> A CHAT
+</div>
+
+<div class="example">
+WE <span class="red">HAD</span> A REALLY NICE CHAT<br><br>
+
+ABBIAMO <span class="red">FATTO</span> UNA BELLISSIMA CHIACCHIERATA
+</div>
+`
+},
+
+{
+question:`FARE UNA RISATA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA RISATA =
+<span class="red">HAVE</span> A LAUGH
+</div>
+
+<div class="example">
+IT SEEMS LIKE THEY <span class="red">HAD</span> A GOOD LAUGH<br><br>
+
+SEMBRA CHE LORO ABBIANO <span class="red">FATTO</span> UNA BELLA RISATA
+</div>
+`
+},
+
+{
+question:`FARE UNA LITIGATA`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA LITIGATA =
+<span class="red">HAVE</span> AN ARGUMENT
+</div>
+
+<div class="example">
+THEY <span class="red">HAD</span> A BIG ARGUMENT<br><br>
+
+HANNO <span class="red">FATTO</span> UNA BRUTTA LITIGATA
+</div>
+`
+},
+
+{
+question:`FARE UN TENTATIVO`,
+meaning:`HAVE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN TENTATIVO =
+<span class="red">HAVE</span> A GO
+</div>
+
+<div class="example">
+DO YOU WANT TO <span class="red">HAVE</span> A GO?<br><br>
+
+VUOI <span class="red">FARE</span> UN TENTATIVO?
+</div>
+`
+},
+
+{
+question:`FARE CALDO / FREDDO`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> CALDO / FREDDO =
+<span class="red">BE</span> HOT / COLD
+</div>
+
+<div class="example">
+IT’S TOO <span class="red">HOT</span> TODAY<br><br>
+
+OGGI <span class="red">FA</span> TROPPO CALDO
+</div>
+`
+},
+
+{
+question:`FARE TARDI`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> TARDI =
+<span class="red">BE</span> LATE
+</div>
+
+<div class="example">
+I <span class="red">WAS</span> LATE BECAUSE THERE WAS A LOT OF TRAFFIC<br><br>
+
+HO <span class="red">FATTO</span> TARDI PERCHÉ C’ERA TANTO TRAFFICO
+</div>
+`
+},
+
+{
+question:`FARE SILENZIO`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> SILENZIO =
+<span class="red">BE</span> QUIET
+</div>
+
+<div class="example">
+<span class="red">BE</span> QUIET, PLEASE, I NEED TO CONCENTRATE<br><br>
+
+<span class="red">FATE</span> SILENZIO, PER FAVORE, MI DEVO CONCENTRARE
+</div>
+`
+},
+
+{
+question:`FARE PAURA`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> PAURA =
+<span class="red">BE</span> FRIGHTENING / SCARY
+</div>
+
+<div class="example">
+THIS FILM IS REALLY <span class="red">SCARY</span><br><br>
+
+QUESTO FILM <span class="red">FA</span> DAVVERO PAURA
+</div>
+`
+},
+
+{
+question:`FARE PENA`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> PENA =
+<span class="red">BE</span> PATHETIC
+</div>
+
+<div class="example">
+THAT BOY IS REALLY <span class="red">PATHETIC</span><br><br>
+
+QUEL RAGAZZO <span class="red">FA</span> PENA DAVVERO
+</div>
+`
+},
+
+{
+question:`FARE IMPRESSIONE`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> IMPRESSIONE =
+<span class="red">BE</span> SHOCKING
+</div>
+
+<div class="example">
+THAT NEWS WAS <span class="red">SHOCKING</span> TO EVERYONE<br><br>
+
+QUELLA NOTIZIA <span class="red">FACEVA</span> IMPRESSIONE A TUTTI
+</div>
+`
+},
+
+{
+question:`FARE SCALPORE`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> SCALPORE =
+<span class="red">BE</span> A SENSATION
+</div>
+
+<div class="example">
+THE NEWS WAS A <span class="red">SENSATION</span><br><br>
+
+LA NOTIZIA HA <span class="red">FATTO</span> SCALPORE
+</div>
+`
+},
+
+{
+question:`FARE TERAPIA`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> TERAPIA =
+<span class="red">BE</span> IN THERAPY
+</div>
+
+<div class="example">
+SHE HAS <span class="red">BEEN</span> IN THERAPY FOR A FEW MONTHS<br><br>
+
+LEI <span class="red">FA</span> TERAPIA DA ALCUNI MESI
+</div>
+`
+},
+
+{
+question:`FARE LO SCEMO`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> LO SCEMO =
+<span class="red">BE</span> SILLY / STUPID
+</div>
+
+<div class="example">
+HE WAS <span class="red">BEING</span> SILLY IN FRONT OF EVERYONE<br><br>
+
+LUI STAVA <span class="red">FACENDO</span> LO SCEMO DAVANTI A TUTTI
+</div>
+`
+},
+
+{
+question:`FARE BENE / MALE A`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> BENE / MALE A =
+<span class="red">BE</span> GOOD / BAD FOR
+</div>
+
+<div class="example">
+TOO MUCH SUGAR IS <span class="red">BAD</span> FOR YOUR TEETH<br><br>
+
+TROPPO ZUCCHERO <span class="red">FA</span> MALE AI DENTI
+</div>
+`
+},
+
+{
+question:`FARE SCHIFO`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> SCHIFO =
+<span class="red">BE</span> DISGUSTING
+</div>
+
+<div class="example">
+THAT FISH WAS REALLY <span class="red">DISGUSTING</span><br><br>
+
+QUEL PESCE <span class="red">FACEVA</span> DAVVERO SCHIFO
+</div>
+`
+},
+
+{
+question:`FARE BUIO`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> BUIO =
+<span class="red">BE</span> DARK
+</div>
+
+<div class="example">
+WHEN WE WENT OUT, IT WAS ALREADY GETTING <span class="red">DARK</span><br><br>
+
+QUANDO SIAMO USCITI, STAVA GIÀ <span class="red">FACENDO</span> BUIO
+</div>
+`
+},
+
+{
+question:`FARE IL FURBO`,
+meaning:`BE`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> IL FURBO =
+<span class="red">BE</span> SNEAKY
+</div>
+
+<div class="example">
+HE WAS <span class="red">BEING</span> SNEAKY WITH EVERYONE<br><br>
+
+LUI STAVA <span class="red">FACENDO</span> IL FURBO CON TUTTI
+</div>
+`
+},
+
+{
+question:`FARE A PUGNI`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> A PUGNI =
+<span class="red">GET</span> INTO A FISTFIGHT / CLASH
+</div>
+
+<div class="example">
+THE TWO BROTHERS <span class="red">GOT</span> INTO A FISTFIGHT<br><br>
+
+I DUE FRATELLI HANNO <span class="red">FATTO</span> A PUGNI
+</div>
+`
+},
+
+{
+question:`FARE BELLA/BRUTTA FIGURA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> BELLA/BRUTTA FIGURA =
+<span class="red">MAKE</span> A GOOD/BAD IMPRESSION
+</div>
+
+<div class="example">
+YOU WILL <span class="red">MAKE</span> A BAD IMPRESSION IN THAT SHIRT<br><br>
+
+CON QUELLA CAMICIA <span class="red">FARAI</span> UNA BRUTTA FIGURA
+</div>
+`
+},
+
+{
+question:`FARE CASO A`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> CASO A =
+<span class="red">NOTICE</span>
+</div>
+
+<div class="example">
+WHAT DO YOU MEAN YOU DIDN’T <span class="red">NOTICE</span>?!<br><br>
+
+MA COME, NON CI HAI <span class="red">FATTO</span> CASO?!
+</div>
+`
+},
+
+{
+question:`FARE COLLAUDO`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> COLLAUDO =
+<span class="red">RUN</span> / CARRY OUT TESTS
+</div>
+
+<div class="example">
+THEY ARE <span class="red">RUNNING</span> TESTS ON THE ENGINE<br><br>
+
+STANNO <span class="red">FACENDO</span> COLLAUDI SUL MOTORE
+</div>
+`
+},
+
+{
+question:`FARE DOMANDA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> DOMANDA =
+<span class="red">APPLY</span>
+</div>
+
+<div class="example">
+SHE HASN’T <span class="red">APPLIED</span> FOR THAT JOB YET<br><br>
+
+LEI NON HA ANCORA <span class="red">FATTO</span> DOMANDA PER QUEL LAVORO
+</div>
+`
+},
+
+{
+question:`FARE FINTA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> FINTA =
+<span class="red">PRETEND</span>
+</div>
+
+<div class="example">
+I RECKON HE IS ONLY <span class="red">PRETENDING</span> TO SLEEP<br><br>
+
+DIREI CHE STA SOLO <span class="red">FACENDO</span> FINTA DI DORMIRE
+</div>
+`
+},
+
+{
+question:`FARE I BAGAGLI`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> I BAGAGLI =
+<span class="red">PACK</span>
+</div>
+
+<div class="example">
+WE STILL HAVE TO <span class="red">PACK</span><br><br>
+
+DOBBIAMO ANCORA <span class="red">FARE</span> I BAGAGLI
+</div>
+`
+},
+
+{
+question:`FARE I CONTI`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> I CONTI =
+<span class="red">ACCOUNT</span> FOR / RECKON WITH
+</div>
+
+<div class="example">
+UNFORTUNATELY, WE HADN’T <span class="red">ACCOUNTED</span> FOR THE TRAFFIC<br><br>
+
+PURTROPPO, NON AVEVAMO <span class="red">FATTO</span> I CONTI CON IL TRAFFICO
+</div>
+`
+},
+
+{
+question:`FARE IL TIFO`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> IL TIFO =
+<span class="red">CHEER</span> / ROOT FOR
+</div>
+
+<div class="example">
+WHO ARE YOU <span class="red">CHEERING</span> FOR TONIGHT?<br><br>
+
+PER CHI <span class="red">FAI</span> IL TIFO STASERA?
+</div>
+`
+},
+
+{
+question:`FARE LA FILA / CODA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> LA FILA / CODA =
+<span class="red">QUEUE</span>
+</div>
+
+<div class="example">
+WE HAD TO <span class="red">QUEUE</span> FOR MORE THAN AN HOUR<br><br>
+
+ABBIAMO DOVUTO <span class="red">FARE</span> LA FILA PER PIÙ DI UN’ORA
+</div>
+`
+},
+
+{
+question:`FARE LA SPIA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> LA SPIA =
+<span class="red">ACT</span> AS AN INFORMANT
+</div>
+
+<div class="example">
+HE WAS <span class="red">ACTING</span> AS AN INFORMANT FOR THE POLICE<br><br>
+
+LUI <span class="red">FACEVA</span> LA SPIA PER LA POLIZIA
+</div>
+`
+},
+
+{
+question:`FARE BENZINA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> BENZINA =
+<span class="red">GET</span> PETROL
+</div>
+
+<div class="example">
+WE HAVE TO <span class="red">GET</span> SOME PETROL BEFORE LEAVING<br><br>
+
+DOBBIAMO <span class="red">FARE</span> BENZINA PRIMA DI PARTIRE
+</div>
+`
+},
+
+{
+question:`FARE RIFORNIMENTO`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> RIFORNIMENTO =
+<span class="red">REFUEL</span>
+</div>
+
+<div class="example">
+WE NEED TO <span class="red">REFUEL</span> BEFORE LEAVING<br><br>
+
+DOBBIAMO <span class="red">FARE</span> RIFORNIMENTO PRIMA DI PARTIRE
+</div>
+`
+},
+
+{
+question:`FARE SCALO`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> SCALO =
+<span class="red">STOP</span> OVER
+</div>
+
+<div class="example">
+WE <span class="red">STOPPED</span> OVER IN DUBAI<br><br>
+
+ABBIAMO <span class="red">FATTO</span> SCALO A DUBAI
+</div>
+`
+},
+
+{
+question:`FARE SCATTARE`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> SCATTARE =
+<span class="red">TRIGGER</span> / SET OFF
+</div>
+
+<div class="example">
+THAT NOISE <span class="red">TRIGGERED</span> THE ALARM<br><br>
+
+QUEL RUMORE HA <span class="red">FATTO</span> SCATTARE L’ALLARME
+</div>
+`
+},
+
+{
+question:`FARE UN GIRO / PASSEGGIATA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN GIRO / PASSEGGIATA =
+<span class="red">GO</span> FOR A WALK
+</div>
+
+<div class="example">
+SHALL WE <span class="red">GO</span> FOR A WALK?<br><br>
+
+ANDIAMO A <span class="red">FARE</span> UNA PASSEGGIATA?
+</div>
+`
+},
+
+{
+question:`FARE UN SALTO`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UN SALTO =
+<span class="red">DROP</span> BY / GO ROUND
+</div>
+
+<div class="example">
+I NEED TO <span class="red">DROP</span> BY MY MOTHER’S PLACE<br><br>
+
+DEVO <span class="red">FARE</span> UN SALTO DA MIA MADRE
+</div>
+`
+},
+
+{
+question:`FARE UNA DOMANDA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> UNA DOMANDA =
+<span class="red">ASK</span> A QUESTION
+</div>
+
+<div class="example">
+CAN I <span class="red">ASK</span> YOU A QUESTION?<br><br>
+
+POSSO <span class="red">FARTI</span> UNA DOMANDA?
+</div>
+`
+},
+
+{
+question:`FARE CENTRO`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> CENTRO =
+<span class="red">GET</span> IT RIGHT / HIT THE TARGET
+</div>
+
+<div class="example">
+YOU <span class="red">GOT</span> IT RIGHT AT THE FIRST ATTEMPT<br><br>
+
+HAI <span class="red">FATTO</span> CENTRO AL PRIMO COLPO
+</div>
+`
+},
+
+{
+question:`FARE FUORI`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> FUORI =
+<span class="red">GET</span> RID OF / KILL
+</div>
+
+<div class="example">
+IT SEEMS LIKE THEY WANT TO <span class="red">GET</span> RID OF THE MANAGER<br><br>
+
+SEMBRA CHE VOGLIANO <span class="red">FARE</span> FUORI IL MANAGER
+</div>
+`
+},
+
+{
+question:`FARE VISITA A`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> VISITA A =
+<span class="red">VISIT</span>
+</div>
+
+<div class="example">
+THE PRESIDENT WILL <span class="red">VISIT</span> THE INJURED IN HOSPITAL TODAY<br><br>
+
+IL PRESIDENTE <span class="red">FARÀ</span> VISITA AI FERITI IN OSPEDALE OGGI
+</div>
+`
+},
+
+{
+question:`FARE AVANTI E INDIETRO`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> AVANTI E INDIETRO =
+<span class="red">TRAVEL</span> BACK AND FORTH
+</div>
+
+<div class="example">
+HE <span class="red">TRAVELS</span> BACK AND FORTH BETWEEN ROME AND NAPLES EVERY DAY<br><br>
+
+LUI <span class="red">FA</span> AVANTI E INDIETRO TRA ROMA E NAPOLI OGNI GIORNO
+</div>
+`
+},
+
+{
+question:`FARE RICORSO`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> RICORSO =
+<span class="red">APPEAL</span>
+</div>
+
+<div class="example">
+THEY DECIDED IT WAS WORTH <span class="red">APPEALING</span><br><br>
+
+HANNO DECISO CHE VALEVA LA PENA <span class="red">FARE</span> RICORSO
+</div>
+`
+},
+
+{
+question:`FARE STRADA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> STRADA =
+<span class="red">LEAD</span> THE WAY
+</div>
+
+<div class="example">
+HE <span class="red">LED</span> THE WAY FOR US THROUGH THE WOODS<br><br>
+
+LUI CI HA <span class="red">FATTO</span> STRADA NEL BOSCO
+</div>
+`
+},
+
+{
+question:`FARE MENTE LOCALE`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> MENTE LOCALE =
+<span class="red">GET</span> ONE’S BEARINGS
+</div>
+
+<div class="example">
+WAIT A SECOND. I NEED TO <span class="red">GET</span> MY BEARINGS<br><br>
+
+ASPETTA UN ATTIMO. DEVO <span class="red">FARE</span> MENTE LOCALE
+</div>
+`
+},
+
+{
+question:`FARE PRESENTE`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> PRESENTE =
+<span class="red">POINT</span> OUT
+</div>
+
+<div class="example">
+I’D LIKE TO <span class="red">POINT</span> OUT THAT THERE ARE TWO PROBLEMS<br><br>
+
+VORREI <span class="red">FARE</span> PRESENTE CHE CI SONO DUE PROBLEMI
+</div>
+`
+},
+
+{
+question:`FARE LA VITTIMA`,
+meaning:`OTHER`,
+flip:`
+<div class="translation-line">
+<span class="red">FARE</span> LA VITTIMA =
+<span class="red">PLAY</span> THE VICTIM
+</div>
+
+<div class="example">
+SHE IS <span class="red">PLAYING</span> THE VICTIM YET AGAIN<br><br>
+
+LEI STA <span class="red">FACENDO</span> LA VITTIMA ANCORA UNA VOLTA
+</div>
+`
+}
+
+];
+
+//* STATE */
+
+let quiz = [];
+let index = 0;
+let score = 0;
+let answeredCorrectly = false;
+let flipTimer = null;
+
+/* SHUFFLE */
+
+function shuffle(arr){
+
+let copy = [...arr];
+
+for(let i = copy.length - 1; i > 0; i--){
+
+const j = Math.floor(Math.random() * (i + 1));
+
+[copy[i], copy[j]] = [copy[j], copy[i]];
+
+}
+
+return copy;
+
+}
+
+/* START QUIZ */
+
+function startQuiz(){
+
+quiz = shuffle(questions).slice(0,12);
+
+/* LATER */
+/* quiz = shuffle(questions).slice(0,10); */
+
+index = 0;
+score = 0;
+
+showQuestion();
+
+}
+
+/* SHOW QUESTION */
+
+function showQuestion(){
+
+answeredCorrectly = false;
+
+if(flipTimer){
+
+clearTimeout(flipTimer);
+flipTimer = null;
+
+}
+
+const q = quiz[index];
+
+document.getElementById("flipCard")
+.classList.remove("flipped");
+
+setTimeout(()=>{
+
+document.getElementById("question")
+.innerHTML = q.question;
+
+document.getElementById("flipContent")
+.innerHTML = q.flip;
+
+document.getElementById("progress")
+.innerText = `${index + 1} / ${quiz.length}`;
+
+updateScore();
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+nextBtn.style.opacity = ".5";
+nextBtn.style.pointerEvents = "none";
+
+resetButtons();
+
+},300);
+
+}
+
+/* RESET BUTTONS */
+
+function resetButtons(){
+
+document.querySelectorAll(".answer-btn")
+.forEach(btn=>{
+
+btn.classList.remove("correct");
+btn.classList.remove("wrong");
+
+});
+
+}
+
+/* ANSWERS */
+
+document.querySelectorAll(".answer-btn")
+.forEach(btn=>{
+
+btn.onclick = function(){
+
+if(answeredCorrectly) return;
+
+const selected =
+this.dataset.answer;
+
+const correct =
+quiz[index].meaning;
+
+if(selected === correct){
+
+answeredCorrectly = true;
+
+this.classList.add("correct");
+
+score++;
+
+updateScore();
+
+playSound("correctSound");
+
+flipTimer = setTimeout(()=>{
+
+document.getElementById("flipCard")
+.classList.add("flipped");
+
+},500);
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+nextBtn.style.opacity = "1";
+nextBtn.style.pointerEvents = "auto";
+
+}else{
+
+this.classList.add("wrong");
+
+playSound("wrongSound");
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+nextBtn.style.opacity = "1";
+nextBtn.style.pointerEvents = "auto";
+
+}
+
+};
+
+});
+
+/* SCORE */
+
+function updateScore(){
+
+document.getElementById("score")
+.innerText =
+`${score} / ${quiz.length}`;
+
+}
+
+/* NEXT */
+
+document.getElementById("nextBtn")
+.onclick = function(){
+
+if(index < quiz.length - 1){
+
+index++;
+
+showQuestion();
+
+}else{
+
+endQuiz();
+
+}
+
+};
+
+/* END QUIZ */
+
+function endQuiz(){
+
+const passMark =
+Math.ceil(quiz.length * 0.7);
+
+if(score >= passMark){
+
+playSound("passSound");
+
+}else{
+
+playSound("failSound");
+
+}
+
+const message =
+score >= passMark
+
+? `<span style="color:#0E065C;">WELL DONE! YOU'VE PASSED! 🎉</span>`
+
+: `<span style="color:#0E065C;">BAD LUCK! TRY AGAIN ❌</span>`;
+
+const front =
+document.querySelector(".front");
+
+front.innerHTML = `
+
+<div class="end-screen">
+
+${message}<br><br>
+
+YOUR SCORE:
+${score} / ${quiz.length}
+
+<button class="retry-btn" id="retryBtn">
+TRY AGAIN
+</button>
+
+</div>
+`;
+
+const answers =
+document.getElementById("answers");
+
+answers.style.display = "none";
+
+document.getElementById("nextBtn").style.display = "none";
+
+document.getElementById("flipCard")
+.classList.remove("flipped");
+
+setTimeout(()=>{
+
+document.getElementById("retryBtn").onclick =
+function(){
+
+front.innerHTML =
+`<div class="question" id="question"></div>`;
+
+answers.style.display = "flex";
+
+document.getElementById("nextBtn")
+.style.display = "inline-block";
+
+startQuiz();
+
+};
+
+},100);
+
+}
+
+/* POPUP */
+
+document.getElementById("readMeBtn")
+.onclick = function(){
+
+document.getElementById("popupOverlay")
+.style.display = "flex";
+
+};
+
+document.getElementById("closePopup")
+.onclick = function(){
+
+document.getElementById("popupOverlay")
+.style.display = "none";
+
+};
+
+document.getElementById("popupOverlay")
+.onclick = function(e){
+
+if(e.target === this){
+
+this.style.display = "none";
+
+}
+
+};
+
+document.getElementById("libraryBackBtn").onclick = function(){
+
+window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+
+};
+
+/* INIT */
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
