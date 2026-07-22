@@ -1,0 +1,2543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>FALSE FRIEND?</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+letter-spacing:.08em;
+}
+
+.top-controls{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.readme-text{
+color:var(--gold);
+font-weight:900;
+font-size:.88rem;
+cursor:pointer;
+user-select:none;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:90px;
+z-index:99999;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+}
+
+.popup{
+width:80vw;
+max-width:360px;
+background:#fff;
+border:4px solid var(--red);
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+
+.popup-text{
+font-size:.82rem;
+font-weight:900;
+line-height:1.45;
+color:#0E065C;
+text-align:left;
+}
+
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.9rem;
+font-weight:900;
+color:darkred;
+cursor:pointer;
+}
+
+/* CARD */
+
+.flip-card{
+width:92vw;
+max-width:380px;
+height:270px;
+perspective:1200px;
+}
+
+.flip-inner{
+position:relative;
+width:100%;
+height:100%;
+transition:transform .6s;
+transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+transform:rotateY(180deg);
+}
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
+backface-visibility:hidden;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:16px;
+box-sizing:border-box;
+overflow:hidden;
+}
+
+.front{
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.question{
+font-size:1.55rem;
+font-weight:900;
+line-height:1.3;
+color:#0E065C;
+text-transform:uppercase;
+}
+
+.back{
+transform:rotateY(180deg);
+display:flex;
+justify-content:flex-start;
+align-items:flex-start;
+text-align:left;
+padding-top:26px;
+}
+
+#flipContent{
+width:100%;
+color:#0E065C;
+font-weight:900;
+text-transform:uppercase;
+padding-left:18px;
+padding-right:18px;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+.translation-line{
+font-size:1.22rem;
+font-weight:900;
+line-height:1.35;
+margin-bottom:16px;
+text-transform:uppercase;
+}
+
+.section-label{
+font-size:.82rem;
+font-weight:900;
+color:#00A8B5;
+margin-top:6px;
+margin-bottom:12px;
+letter-spacing:.04em;
+}
+
+.example{
+font-size:1.08rem;
+font-weight:900;
+line-height:1.5;
+text-transform:uppercase;
+}
+
+.red{
+color:darkred;
+font-weight:900;
+}
+
+.false-line{
+font-size:.92rem;
+font-weight:900;
+line-height:1.4;
+text-transform:uppercase;
+margin-left:-10px;
+margin-bottom:10px;
+}
+
+.friend-line{
+font-size:1rem;
+font-weight:900;
+line-height:1.25;
+text-transform:uppercase;
+margin-top:-10px;
+margin-bottom:16px;
+white-space:nowrap;
+}
+
+.result-banner{
+font-size:.82rem;
+font-weight:900;
+line-height:1.2;
+margin-bottom:42px;
+text-transform:uppercase;
+letter-spacing:0;
+color:#0E065C;
+}
+
+.green{
+color:#22c55e;
+font-weight:900;
+}
+
+/* INFO */
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0 14px;
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+}
+
+.right{
+text-align:right;
+color:var(--gold);
+}
+
+/* NEXT */
+
+.next-btn{
+background:#00cfd5;
+color:#061247;
+border:none;
+border-radius:10px;
+padding:8px 18px;
+font-weight:900;
+font-size:.82rem;
+text-transform:uppercase;
+opacity:.5;
+pointer-events:none;
+}
+
+/* BUTTONS */
+
+.answers{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.answer-btn{
+height:56px;
+background:#eef2f7;
+color:var(--purple);
+font-weight:900;
+border-radius:10px;
+border:1px solid #cbd5e1;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:1.2rem;
+letter-spacing:.02em;
+transition:all .12s ease;
+}
+
+.answer-btn:active{
+transform:scale(.96);
+}
+
+.correct{
+background:#22c55e !important;
+color:#fff !important;
+box-shadow:0 0 10px #22c55e;
+}
+
+.wrong{
+background:#ef4444 !important;
+color:#fff !important;
+}
+
+/* END SCREEN */
+
+.end-screen{
+height:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+font-size:1.15rem;
+font-weight:900;
+color:#0E065C;
+line-height:1.4;
+padding:6px 14px;
+}
+
+.retry-btn{
+margin-top:30px;
+background:#B83AC9;
+color:#fff;
+width:126px;
+height:36px;
+font-weight:700;
+font-size:.9rem;
+border:none;
+border-radius:10px;
+}
+
+button:active{
+transform:scale(.97);
+}
+
+.shuffle-wrap{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+gap:10px;
+margin-top:20px;
+}
+
+.shuffle-btn,
+.library-back-btn{
+flex:1;
+height:42px;
+border-radius:999px;
+font-weight:900;
+font-size:1rem;
+cursor:pointer;
+transition:background .2s,color .2s;
+}
+
+.shuffle-btn{
+background:#008DA3;
+color:#fff;
+border:3px solid #fff;
+}
+
+.shuffle-btn:hover{
+background:#0E065C;
+color:#fff;
+}
+
+.library-back-btn{
+background:#930000;
+color:#fff;
+border:3px solid #fff;
+}
+
+.library-back-btn:hover{
+background:#ffd9e3;
+color:#0E065C;
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+<!-- AUDIO -->
+
+<!-- AUDIO -->
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<!-- TOP -->
+
+<div class="top-bar">
+
+<div id="readMeBtn" class="readme-text">
+READ ME
+</div>
+
+<div class="top-title" style="text-align:center;">
+FALSE FRIEND? <span style="color:#FFF3A3;">(B1+)</span>
+</div>
+
+<div style="display:flex;justify-content:flex-end;">
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
+</div>
+
+</div>
+
+<!-- POPUP -->
+
+<div class="popup-overlay" id="popupOverlay">
+
+<div class="popup">
+
+<div class="popup-text">
+
+THIS QUIZ TESTS YOUR KNOWLEDGE OF ENGLISH / ITALIAN
+<span style="color:#E91E63;">FALSE FRIENDS</span><br><br>
+
+<span style="color:#00A8B5;">PRESS YES</span> IF YOU THINK THE ENGLISH WORD IS A FALSE FRIEND OR
+<span style="color:#00A8B5;">PRESS NO</span> IF THE WORD TRANSLATES ALMOST IDENTICALLY INTO ITALIAN.<br><br>
+
+THERE ARE <span style="color:darkred;">8</span> QUESTIONS SELECTED RANDOMLY FROM A TOTAL OF
+<span style="color:darkred;">100</span>.<br><br>
+
+YOU CAN SHUFFLE AND RESTART THE QUIZ WHENEVER YOU WISH.<br><br>
+
+ONLY A CORRECT ANSWER WILL FLIP THE CARD TO REVEAL THE EXPLANATION.
+
+</div>
+
+<div id="closePopup" class="popup-close-text">
+
+START QUIZ →
+</div>
+
+</div>
+
+</div>
+
+<!-- CARD -->
+
+<div class="flip-card" id="flipCard">
+
+<div class="flip-inner">
+
+<div class="card-face front">
+<div class="question" id="question"></div>
+</div>
+
+<div class="card-face back">
+<div id="flipContent"></div>
+</div>
+
+</div>
+
+</div>
+
+<!-- INFO -->
+
+<div class="info-row">
+
+<div id="progress">1 / 6</div>
+
+<div>
+<button id="nextBtn" class="next-btn">
+NEXT
+</button>
+</div>
+
+<div id="score" class="right">0 / 6</div>
+
+</div>
+
+<!-- BUTTONS -->
+
+<div class="answers" id="answers">
+
+<button class="answer-btn" data-answer="YES">
+YES
+</button>
+
+<button class="answer-btn" data-answer="NO">
+NO
+</button>
+
+</div>
+
+<div class="shuffle-wrap">
+
+<button id="shuffleBtn" class="shuffle-btn">
+↻ SHUFFLE
+</button>
+
+<button id="backButton" class="library-back-btn">
+BACK
+</button>
+
+</div>
+
+<script>
+
+/* SOUND */
+
+let soundOn = true;
+
+function playSound(id){
+
+if(!soundOn) return;
+
+const a = document.getElementById(id);
+
+if(a){
+a.currentTime = 0;
+a.play();
+}
+
+}
+
+document.getElementById("soundToggle").onclick = function(){
+
+soundOn = !soundOn;
+this.innerText = soundOn ? "🔊 ON" : "🔇 OFF";
+
+};
+
+/* QUESTIONS */
+
+const questions = [
+{
+word:"ACTUALLY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• ACTUALLY = <span class="red">IN REALTÀ</span>
+</div><br>
+
+<div class="false-line">
+• ATTUALMENTE = <span class="red">CURRENTLY</span>
+</div>
+`
+},
+
+{
+word:"EVENTUALLY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• EVENTUALLY =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;ALLA FINE / PRIMA O POI</span>
+</div><br>
+
+<div class="false-line">
+• EVENTUALMENTE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;IF NEED BE / IF NECESSARY</span>
+</div>
+`
+},
+
+
+{
+word:"LIBRARY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• LIBRARY = <span class="red">BIBLIOTECA</span>
+</div><br>
+
+<div class="false-line">
+• LIBRERIA = <span class="red">BOOKSHOP</span>
+</div>
+`
+},
+
+{
+word:"PARENTS",
+answer:"YES",
+flip:`
+<div class="false-line">
+• PARENTS = <span class="red">GENITORI</span>
+</div><br>
+
+<div class="false-line">
+• PARENTI = <span class="red">RELATIVES</span>
+</div>
+`
+},
+
+{
+word:"PRETEND",
+answer:"YES",
+flip:`
+<div class="false-line">
+• PRETEND = <span class="red">FINGERE</span>
+</div><br>
+
+<div class="false-line">
+• PRETENDERE = <span class="red">TO DEMAND / EXPECT</span>
+</div>
+`
+},
+
+{
+word:"ATTEND",
+answer:"YES",
+flip:`
+<div class="false-line">
+• ATTEND =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;FREQUENTARE / PARTECIPARE</span>
+</div><br>
+
+<div class="false-line">
+• ATTENDERE = <span class="red">TO WAIT</span>
+</div>
+`
+},
+
+
+{
+word:"ARGUMENT",
+answer:"YES",
+flip:`
+<div class="false-line">
+• ARGUMENT =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;LITIGIO / DISCUSSIONE</span>
+</div><br>
+
+<div class="false-line">
+• ARGOMENTO = <span class="red">TOPIC / SUBJECT</span>
+</div>
+`
+},
+
+{
+word:"FABRIC",
+answer:"YES",
+flip:`
+<div class="false-line">
+• FABRIC = <span class="red">TESSUTO</span>
+</div><br>
+
+<div class="false-line">
+• FABBRICA = <span class="red">FACTORY</span>
+</div>
+`
+},
+
+{
+word:"SENSIBLE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• SENSIBLE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;SENSATO / RAGIONEVOLE</span>
+</div><br>
+
+<div class="false-line">
+• SENSIBILE = <span class="red">SENSITIVE</span>
+</div>
+`
+},
+
+{
+word:"COLLEGE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• COLLEGE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;UNIVERSITÀ / ISTITUTO</span>
+</div><br>
+
+<div class="false-line">
+• COLLEGIO =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;BOARDING SCHOOL</span>
+</div>
+`
+},
+
+
+{
+word:"SYMPATHETIC",
+answer:"YES",
+flip:`
+<div class="false-line">
+• SYMPATHETIC =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;COMPRENSIVO / SOLIDALE</span>
+</div><br>
+
+<div class="false-line">
+• SIMPATICO = <span class="red">LIKEABLE / NICE</span>
+</div>
+`
+},
+
+{
+word:"ANNOYED",
+answer:"YES",
+flip:`
+<div class="false-line">
+• ANNOYED =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;INFASTIDITO / SECCATO</span>
+</div><br>
+
+<div class="false-line">
+• ANNOIATO = <span class="red">BORED</span>
+</div>
+`
+},
+
+{
+word:"NOVEL",
+answer:"YES",
+flip:`
+<div class="false-line">
+• NOVEL = <span class="red">ROMANZO</span>
+</div><br>
+
+<div class="false-line">
+• NOVELLA = <span class="red">SHORT STORY</span>
+</div>
+`
+},
+
+{
+word:"MAGAZINE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• MAGAZINE = <span class="red">RIVISTA</span>
+</div><br>
+
+<div class="false-line">
+• MAGAZZINO = <span class="red">STORE ROOM</span>
+</div>
+`
+},
+
+{
+word:"EDUCATED",
+answer:"YES",
+flip:`
+<div class="false-line">
+• EDUCATED =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;ISTRUITO / COLTO</span>
+</div><br>
+
+<div class="false-line">
+• EDUCATO =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;POLITE / WELL-MANNERED</span>
+</div>
+`
+},
+
+{
+word:"RELATIVES",
+answer:"YES",
+flip:`
+<div class="false-line">
+• RELATIVES = <span class="red">PARENTI</span>
+</div><br>
+
+<div class="false-line">
+• RELATIVO =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;RELATIVE / CONNECTED</span><br>
+<span class="red">&nbsp;&nbsp;&nbsp;CONCERNING</span>
+</div>
+`
+},
+
+{
+word:"CONVENIENT",
+answer:"YES",
+flip:`
+<div class="false-line">
+• CONVENIENT =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;COMODO / PRATICO</span>
+</div><br>
+
+<div class="false-line">
+• CONVENIENTE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;GOOD VALUE / ADVANTAGEOUS</span>
+</div>
+`
+},
+
+{
+word:"MISERABLE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• MISERABLE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;INFELICE / MISERO</span>
+</div><br>
+
+<div class="false-line">
+• MISERABILE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;WRETCHED / PITIFUL</span>
+</div>
+`
+},
+
+{
+word:"CONTEST",
+answer:"YES",
+flip:`
+<div class="false-line">
+• CONTEST =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;GARA / COMPETIZIONE</span>
+</div><br>
+
+<div class="false-line">
+• CONTESTARE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;DISPUTE / OBJECT TO</span>
+</div>
+`
+},
+
+{
+word:"DELUSION",
+answer:"YES",
+flip:`
+<div class="false-line">
+• DELUSION =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;DELIRIO / FALSA CONVINZIONE</span>
+</div><br>
+
+<div class="false-line">
+• DELUSIONE = <span class="red">DISAPPOINTMENT</span>
+</div>
+`
+},
+
+{
+word:"CASUALTY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• CASUALTY =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;VITTIMA / FERITO</span>
+</div><br>
+
+<div class="false-line">
+• CASUALITÀ = <span class="red">COINCIDENCE</span>
+</div>
+`
+},
+
+{
+word:"NOTICE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• NOTICE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;AVVISO / COMUNICAZIONE</span>
+</div><br>
+
+<div class="false-line">
+• NOTIZIA =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;NEWS</span><br>
+<span class="red">&nbsp;&nbsp;&nbsp;PIECE OF NEWS</span>
+</div>
+`
+},
+
+{
+word:"ASSIST",
+answer:"YES",
+flip:`
+<div class="false-line">
+• ASSIST = <span class="red">AIUTARE</span>
+</div><br>
+
+<div class="false-line">
+• ASSISTERE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;WATCH / WITNESS</span>
+</div>
+`
+},
+
+{
+word:"INJURY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• INJURY =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;FERITA / INFORTUNIO</span>
+</div><br>
+
+<div class="false-line">
+• INGIURIA = <span class="red">INSULT</span>
+</div>
+`
+},
+
+{
+word:"APOLOGY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• APOLOGY = <span class="red">SCUSA</span>
+</div><br>
+
+<div class="false-line">
+• APOLOGIA =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;PRAISE / DEFENCE</span>
+</div>
+`
+},
+
+{
+word:"AGONY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• AGONY =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;SOFFERENZA INTENSA</span><br>
+<span class="red">&nbsp;&nbsp;&nbsp;TORMENTO</span>
+</div><br>
+
+<div class="false-line">
+• AGONIA = <span class="red">DEATH THROES</span>
+</div>
+`
+},
+
+{
+word:"LARGE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• LARGE = <span class="red">GRANDE</span>
+</div><br>
+
+<div class="false-line">
+• LARGO = <span class="red">WIDE</span>
+</div>
+`
+},
+
+{
+word:"FACTORY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• FACTORY = <span class="red">FABBRICA</span>
+</div><br>
+
+<div class="false-line">
+• FATTORIA = <span class="red">FARM</span>
+</div>
+`
+},
+
+{
+word:"AGENDA",
+answer:"YES",
+flip:`
+<div class="false-line">
+• AGENDA =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;ORDINE DEL GIORNO</span>
+</div><br>
+
+<div class="false-line">
+• AGENDA =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;DIARY / PLANNER</span>
+</div>
+`
+},
+
+{
+word:"BRAVE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• BRAVE = <span class="red">CORAGGIOSO</span>
+</div><br>
+
+<div class="false-line">
+• BRAVO =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;GOOD / SKILFUL</span>
+</div>
+`
+},
+
+{
+word:"CAMERA",
+answer:"YES",
+flip:`
+<div class="false-line">
+• CAMERA =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;MACCHINA</span><br>
+<span class="red">&nbsp;&nbsp;&nbsp;FOTOGRAFICA</span>
+</div><br>
+
+<div class="false-line">
+• CAMERA = <span class="red">ROOM</span>
+</div>
+`
+},
+
+
+{
+word:"COMMODITY",
+answer:"YES",
+flip:`
+<div class="false-line">
+• COMMODITY =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;MERCE / PRODOTTO</span>
+</div><br>
+
+<div class="false-line">
+• COMODITÀ =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;COMFORT / CONVENIENCE</span>
+</div>
+`
+},
+
+{
+word:"CONFIDENT",
+answer:"YES",
+flip:`
+<div class="false-line">
+• CONFIDENT = <span class="red">SICURO DI SÉ</span>
+</div><br>
+
+<div class="false-line">
+• CONFIDENTE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;TRUSTING / CONFIDING</span>
+</div>
+`
+},
+
+{
+word:"EDUCATION",
+answer:"YES",
+flip:`
+<div class="false-line">
+• EDUCATION = <span class="red">ISTRUZIONE</span>
+</div><br>
+
+<div class="false-line">
+• EDUCAZIONE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;MANNERS / POLITENESS</span>
+</div>
+`
+},
+
+{
+word:"FIRM",
+answer:"YES",
+flip:`
+<div class="false-line">
+• FIRM =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;AZIENDA / DITTA</span>
+</div><br>
+
+<div class="false-line">
+• FIRMA = <span class="red">SIGNATURE</span>
+</div><br>
+
+<div class="false-line">
+• FERMO = <span class="red">STABLE / FIXED</span>
+</div>
+`
+},
+
+{
+word:"GENIAL",
+answer:"YES",
+flip:`
+<div class="false-line">
+• GENIAL =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;CORDIALE / AFFABILE</span>
+</div><br>
+
+<div class="false-line">
+• GENIALE = <span class="red">BRILLIANT</span>
+</div>
+`
+},
+
+{
+word:"MORBID",
+answer:"YES",
+flip:`
+<div class="false-line">
+• MORBID = <span class="red">MORBOSO</span>
+</div><br>
+
+<div class="false-line">
+• MORBIDO = <span class="red">SOFT</span>
+</div>
+`
+},
+
+{
+word:"PRESERVATIVE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• PRESERVATIVE = <span class="red">CONSERVANTE</span>
+</div><br>
+
+<div class="false-line">
+• PRESERVATIVO = <span class="red">CONDOM</span>
+</div>
+`
+},
+
+{
+word:"RECEIPT",
+answer:"YES",
+flip:`
+<div class="false-line">
+• RECEIPT = <span class="red">RICEVUTA</span>
+</div><br>
+
+<div class="false-line">
+• RICETTA =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;RECIPE / PRESCRIPTION</span>
+</div>
+`
+},
+
+{
+word:"STANZA",
+answer:"YES",
+flip:`
+<div class="false-line">
+• STANZA = <span class="red">STROFA</span>
+</div><br>
+
+<div class="false-line">
+• STANZA = <span class="red">ROOM</span>
+</div>
+`
+},
+
+{
+word:"TERRAIN",
+answer:"YES",
+flip:`
+<div class="false-line">
+• TERRAIN = <span class="red">LANDSCAPE</span>
+</div><br>
+
+<div class="false-line">
+• TERRENO = <span class="red">LAND / PLOT</span>
+</div>
+`
+},
+
+{
+word:"COMPREHENSIVE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• COMPREHENSIVE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;ESAURIENTE / COMPLETO</span>
+</div><br>
+
+<div class="false-line">
+• COMPRENSIVO =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;UNDERSTANDING</span><br>
+<span class="red">&nbsp;&nbsp;&nbsp;SYMPATHETIC</span>
+</div>
+`
+},
+
+
+{
+word:"CONDUCTOR",
+answer:"YES",
+flip:`
+<div class="false-line">
+• CONDUCTOR =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;DIRETTORE D'ORCHESTRA</span><br>
+<span class="red">&nbsp;&nbsp;&nbsp;CONTROLLORE</span>
+</div><br>
+
+<div class="false-line">
+• CONDUTTORE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;HOST / PRESENTER</span>
+</div>
+`
+},
+
+{
+word:"CONSISTENT",
+answer:"YES",
+flip:`
+<div class="false-line">
+• CONSISTENT =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;COERENTE / COSTANTE</span>
+</div><br>
+
+<div class="false-line">
+• CONSISTENTE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;SUBSTANTIAL / SOLID</span>
+</div>
+`
+},
+
+{
+word:"DISGRACE",
+answer:"YES",
+flip:`
+<div class="false-line">
+• DISGRACE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;VERGOGNA / DISONORE</span>
+</div><br>
+
+<div class="false-line">
+• DISGRAZIA =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;MISFORTUNE / TRAGEDY</span>
+</div>
+`
+},
+
+{
+word:"VIGILANT",
+answer:"YES",
+flip:`
+<div class="false-line">
+• VIGILANT =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;VIGILE / ATTENTO</span>
+</div><br>
+
+<div class="false-line">
+• VIGILANTE =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;SECURITY GUARD</span>
+</div>
+`
+},
+
+{
+word:"LAMP",
+answer:"YES",
+flip:`
+<div class="false-line">
+• LAMP = <span class="red">LAMPADA</span>
+</div><br>
+
+<div class="false-line">
+• LAMPO =<br>
+<span class="red">&nbsp;&nbsp;&nbsp;STREAK OF LIGHTNING</span>
+</div>
+`
+},
+
+{
+word:"COINCIDE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+COINCIDE = <span class="red">COINCIDERE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+COINCIDENCE (n)<br>
+COINCIDENTAL (adj)<br>
+COINCIDENTALLY (adv)
+</div>
+`
+},
+
+{
+word:"CORROBORATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+CORROBORATE = <span class="red">CORROBORARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+CORROBORATION (n)<br>
+CORROBORATIVE (adj)<br>
+(UN)CORROBORATED (adj)
+</div>
+`
+},
+
+{
+word:"DETERIORATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+DETERIORATE = <span class="red">DETERIORARSI</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+DETERIORATION (n)
+</div>
+`
+},
+
+{
+word:"DEVIATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+DEVIATE = <span class="red">DEVIARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+DEVIATION (n)
+</div>
+`
+},
+
+{
+word:"EMPHASISE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+EMPHASISE = <span class="red">ENFATIZZARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+EMPHASIS (n)<br>
+EMPHATIC (adj)<br>
+EMPHATICALLY (adv)
+</div>
+`
+},
+
+{
+word:"ELONGATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+ELONGATE = <span class="red">ALLUNGARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+ELONGATION (n)
+</div>
+`
+},
+
+{
+word:"EXASPERATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+EXASPERATE = <span class="red">ESASPERARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+EXASPERATION (n)<br>
+EXASPERATING (adj / adv)
+</div>
+`
+},
+
+{
+word:"IMPLY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+IMPLY = <span class="red">IMPLICARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+IMPLICATION (n)
+</div>
+`
+},
+
+{
+word:"INSINUATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+INSINUATE = <span class="red">INSINUARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+INSINUATION (n)<br>
+INSINUATING (adj)<br>
+INSINUATINGLY (adv)
+</div>
+`
+},
+
+{
+word:"INTIMIDATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+INTIMIDATE = <span class="red">INTIMIDIRE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+INTIMIDATION (n)<br>
+INTIMIDATING (adj / adv)<br>
+(UN)INTIMIDATED (adj)
+</div>
+`
+},
+
+{
+word:"ALIENATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+ALIENATE = <span class="red">ALIENARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+ALIENATION (n)<br>
+(UN)ALIENATED (adj)
+</div>
+`
+},
+
+{
+word:"CONSOLIDATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+CONSOLIDATE = <span class="red">CONSOLIDARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+CONSOLIDATION (n)<br>
+(UN)CONSOLIDATED (adj)
+</div>
+`
+},
+
+{
+word:"ERADICATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+ERADICATE = <span class="red">ERADICARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+ERADICATION (n)<br>
+INERADICABLE (adj / adv)
+</div>
+`
+},
+
+{
+word:"SPONTANEOUS",
+answer:"NO",
+flip:`
+<div class="friend-line">
+SPONTANEOUS = <span class="red">SPONTANEO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+SPONTANEITY (n)<br>
+(UN)SPONTANEOUS (adj)<br>
+(UN)SPONTANEOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"FLUCTUATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+FLUCTUATE = <span class="red">FLUTTUARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+FLUCTUATION (n)<br>
+FLUCTUATING (adj)
+</div>
+`
+},
+
+{
+word:"MITIGATE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+MITIGATE = <span class="red">MITIGARE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+MITIGATION (n)<br>
+MITIGATING (adj)<br>
+(UN)MITIGATED (adj)
+</div>
+`
+},
+
+{
+word:"ANIMOSITY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+ANIMOSITY = <span class="red">ANIMOSITÀ</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+ANIMUS (n)
+</div>
+`
+},
+
+{
+word:"AUSTERITY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+AUSTERITY = <span class="red">AUSTERITÀ</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+AUSTERE (adj)<br>
+AUSTERELY (adv)
+</div>
+`
+},
+
+{
+word:"CALAMITY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+CALAMITY = <span class="red">CALAMITÀ</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+CALAMITOUS (adj)<br>
+CALAMITOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"DISCREPANCY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+DISCREPANCY = <span class="red">DISCREPANZA</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+DISCREPANT (adj)
+</div>
+`
+},
+
+{
+word:"EFFICACY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+EFFICACY = <span class="red">EFFICACIA</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+(IN)EFFICACY (n)<br>
+(IN)EFFICACIOUS (adj)<br>
+(IN)EFFICACIOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"FATALITY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+FATALITY = <span class="red">FATALITÀ</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+FATAL (adj)<br>
+FATALLY (adv)
+</div>
+`
+},
+
+{
+word:"HOSTILE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+HOSTILE = <span class="red">OSTILE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+HOSTILITY (n)<br>
+HOSTILELY (adv)
+</div>
+`
+},
+
+{
+word:"HYPOCRISY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+HYPOCRISY = <span class="red">IPOCRISIA</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+HYPOCRITE (n)<br>
+HYPOCRITICAL (adj)<br>
+HYPOCRITICALLY (adv)
+</div>
+`
+},
+
+{
+word:"PERIPHERY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+PERIPHERY = <span class="red">PERIFERIA</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+PERIPHERAL (adj)<br>
+PERIPHERALLY (adv)
+</div>
+`
+},
+
+{
+word:"ANALOGY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+ANALOGY = <span class="red">ANALOGIA</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+ANALOGOUS (adj)<br>
+ANALOGOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"INFAMY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+INFAMY = <span class="red">INFAMIA</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+INFAMOUS (adj)<br>
+INFAMOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"PROXIMITY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+PROXIMITY = <span class="red">PROSSIMITÀ</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+PROXIMATE (adj)<br>
+PROXIMATELY (adv)
+</div>
+`
+},
+
+{
+word:"SOVEREIGNTY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+SOVEREIGNTY = <span class="red">SOVRANITÀ</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+SOVEREIGN (adj / n)<br>
+SOVEREIGNLY (adv)
+</div>
+`
+},
+
+{
+word:"ARDUOUS",
+answer:"NO",
+flip:`
+<div class="friend-line">
+ARDUOUS = <span class="red">ARDUO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+ARDUOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"CAPRICIOUS",
+answer:"NO",
+flip:`
+<div class="friend-line">
+CAPRICIOUS = <span class="red">CAPRICCIOSO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+CAPRICE (n)<br>
+CAPRICIOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"COLLOQUIAL",
+answer:"NO",
+flip:`
+<div class="friend-line">
+COLLOQUIAL = <span class="red">COLLOQUIALE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+COLLOQUIALISM (n)<br>
+COLLOQUIALLY (adv)
+</div>
+`
+},
+
+{
+word:"EPHEMERAL",
+answer:"NO",
+flip:`
+<div class="friend-line">
+EPHEMERAL = <span class="red">EFEMERO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+EPHEMERALLY (adv)
+</div>
+`
+},
+
+{
+word:"GLORIOUS",
+answer:"NO",
+flip:`
+<div class="friend-line">
+GLORIOUS = <span class="red">GLORIOSO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+GLORY (n) / GLORIFY (v)<br>
+GLORIFICATION (n)<br>
+(IN)GLORIOUS(LY) (adj / adv)
+</div>
+`
+},
+
+{
+word:"INFALLIBLE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+INFALLIBLE = <span class="red">INFALLIBILE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+(IN)FALLIBILITY (n) / (IN)FALLIBLY (adv)<br>
+FALLIBLE (adj)
+</div>
+`
+},
+
+{
+word:"METICULOUS",
+answer:"NO",
+flip:`
+<div class="friend-line">
+METICULOUS = <span class="red">METICOLOSO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+METICULOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"MONOTONOUS",
+answer:"NO",
+flip:`
+<div class="friend-line">
+MONOTONOUS = <span class="red">MONOTONO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+MONOTONY (n)<br>
+MONOTONE (n)<br>
+MONOTONOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"REDUNDANT",
+answer:"NO",
+flip:`
+<div class="friend-line">
+REDUNDANT = <span class="red">RIDONDANTE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+REDUNDANCY (n)<br>
+REDUNDANTLY (adv)
+</div>
+`
+},
+
+{
+word:"SUPERFLUOUS",
+answer:"NO",
+flip:`
+<div class="friend-line">
+SUPERFLUOUS = <span class="red">SUPERFLUO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+SUPERFLUITY (n)<br>
+SUPERFLUOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"AUDACIOUS",
+answer:"NO",
+flip:`
+<div class="friend-line">
+AUDACIOUS = <span class="red">AUDACE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+AUDACITY (n)<br>
+AUDACIOUSLY (adv)
+</div>
+`
+},
+
+{
+word:"INHERENT",
+answer:"NO",
+flip:`
+<div class="friend-line">
+INHERENT = <span class="red">INERENTE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+INHERENCE (n)<br>
+INHERENTLY (adv)
+</div>
+`
+},
+
+{
+word:"LUCID",
+answer:"NO",
+flip:`
+<div class="friend-line">
+LUCID = <span class="red">LUCIDO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+LUCIDITY (n)<br>
+ELUCIDATE (v)<br>
+LUCIDLY (adv)
+</div>
+`
+},
+
+{
+word:"OBSESSIVE",
+answer:"NO",
+flip:`
+<div class="friend-line">
+OBSESSIVE = <span class="red">OSSESSIVO</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+OBSESSION (n)<br>
+OBSESS (v)<br>
+OBSESSIVELY (adv)
+</div>
+`
+},
+
+{
+word:"INVARIABLY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+INVARIABLY = <span class="red">INVARIABILMENTE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+VARIATION (n)<br>
+(IN)VARIABLE (adj)<br>
+(IN)VARIABLY (adv)
+</div>
+`
+},
+
+{
+word:"LITERALLY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+LITERALLY = <span class="red">LETTERALMENTE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+LITERAL (adj)
+</div>
+`
+},
+
+{
+word:"MUTUALLY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+MUTUALLY = <span class="red">MUTUAMENTE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+MUTUAL (adj)<br>
+MUTUALITY (n)
+</div>
+`
+},
+
+{
+word:"SIMULTANEOUSLY",
+answer:"NO",
+flip:`
+<div class="friend-line">
+SIMULTANEOUSLY =<br>
+<span class="red">SIMULTANEAMENTE</span>
+</div>
+
+<div class="section-label">
+ASSOCIATED WORDS
+</div>
+
+<div class="example">
+SIMULTANEOUS (adj)<br>
+SIMULTANEITY (n)
+</div>
+`
+}
+
+];
+
+/* STATE */
+
+let deck = [];
+let quizQuestions = [];
+let index = 0;
+let score = 0;
+let answeredCorrectly = false;
+let flipTimer = null;
+
+/* SHOW QUESTION */
+
+function showQuestion(){
+
+answeredCorrectly = false;
+
+if(flipTimer){
+
+clearTimeout(flipTimer);
+flipTimer = null;
+
+}
+
+const q = quizQuestions[index];
+
+document.getElementById("flipCard")
+.classList.remove("flipped");
+
+
+setTimeout(()=>{
+
+document.getElementById("question")
+.innerHTML = q.word;
+
+let banner = "";
+
+if(q.answer === "YES"){
+
+banner = `
+<div class="result-banner">
+<span class="green">CORRECT:</span> THIS IS A FALSE FRIEND
+</div>
+`;
+
+
+}else{
+
+banner = `
+<div class="result-banner">
+<span style="color:#00A8B5;">CORRECT:</span> THIS IS A FRIEND
+</div>
+`;
+}
+
+document.getElementById("flipContent")
+.innerHTML = banner + q.flip;
+
+document.getElementById("progress")
+.innerText = `${index + 1} / 8`;
+
+
+updateScore();
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+nextBtn.style.opacity = ".5";
+nextBtn.style.pointerEvents = "none";
+
+resetButtons();
+
+},300);
+
+}
+
+/* RESET BUTTONS */
+
+function resetButtons(){
+
+document.querySelectorAll(".answer-btn")
+.forEach(btn=>{
+
+btn.classList.remove("correct");
+btn.classList.remove("wrong");
+
+});
+
+}
+
+/* ANSWERS */
+
+document.querySelectorAll(".answer-btn")
+.forEach(btn=>{
+
+btn.onclick = function(){
+
+if(answeredCorrectly) return;
+
+const selected =
+this.dataset.answer;
+
+const correct =
+quizQuestions[index].answer;
+
+if(selected === correct){
+
+answeredCorrectly = true;
+
+this.classList.add("correct");
+
+score++;
+
+updateScore();
+
+playSound("correctSound");
+
+flipTimer = setTimeout(()=>{
+
+document.getElementById("flipCard")
+.classList.add("flipped");
+
+},500);
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+nextBtn.style.opacity = "1";
+nextBtn.style.pointerEvents = "auto";
+
+}else{
+
+this.classList.add("wrong");
+
+playSound("wrongSound");
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+nextBtn.style.opacity = "1";
+nextBtn.style.pointerEvents = "auto";
+
+}
+
+};
+
+});
+
+/* SCORE */
+
+function updateScore(){
+
+document.getElementById("score")
+.innerText =
+`${score} / 8`;
+
+}
+
+/* NEXT */
+
+document.getElementById("nextBtn")
+.onclick = function(){
+
+if(index < 7){
+
+index++;
+showQuestion();
+
+}else{
+
+endQuiz();
+
+}
+
+};
+
+/* END QUIZ */
+
+/* END QUIZ */
+
+function endQuiz(){
+
+const passMark = 6;
+
+if(score >= passMark){
+
+playSound("passSound");
+
+}else{
+
+playSound("failSound");
+
+}
+
+const front = document.querySelector(".front");
+
+let message = "";
+let colour = "";
+
+if(score >= passMark){
+
+message = "WELL DONE! YOU'VE PASSED!";
+colour = "darkblue";
+
+}else{
+
+message = "BAD LUCK! TRY AGAIN";
+colour = "darkred";
+
+}
+
+front.innerHTML = `
+
+<div class="end-screen">
+
+<div style="
+font-size:1.5rem;
+font-weight:900;
+color:${colour};
+margin-bottom:20px;
+">
+${message}
+</div>
+
+YOUR SCORE:<br>
+${score} / 8
+
+<button class="retry-btn" id="retryBtn">
+TRY AGAIN
+</button>
+
+</div>
+`;
+
+const answers =
+document.getElementById("answers");
+
+answers.style.display = "none";
+
+document.getElementById("nextBtn").style.display = "none";
+
+document.querySelector(".shuffle-wrap").style.display = "none";
+
+document.getElementById("flipCard")
+.classList.remove("flipped");
+
+setTimeout(()=>{
+
+document.getElementById("retryBtn").onclick =
+function(){
+
+startQuiz();
+
+};
+
+},100);
+
+}
+
+/* POPUP */
+
+document.getElementById("readMeBtn")
+.onclick = function(){
+
+document.getElementById("popupOverlay")
+.style.display = "flex";
+
+};
+
+document.getElementById("closePopup")
+.onclick = function(){
+
+document.getElementById("popupOverlay")
+.style.display = "none";
+
+};
+
+document.getElementById("popupOverlay")
+.onclick = function(e){
+
+if(e.target === this){
+
+this.style.display = "none";
+
+}
+
+};
+
+/* SHUFFLE */
+
+function shuffle(arr){
+
+let copy = [...arr];
+
+for(let i = copy.length - 1; i > 0; i--){
+
+const j = Math.floor(Math.random() * (i + 1));
+
+[copy[i], copy[j]] = [copy[j], copy[i]];
+
+}
+
+return copy;
+
+}
+
+function startQuiz(){
+
+if(deck.length === 0){
+
+deck = shuffle([...questions]);
+
+}
+
+quizQuestions = deck.splice(0,8);
+
+index = 0;
+score = 0;
+updateScore();
+
+const front = document.querySelector(".front");
+
+front.innerHTML =
+`<div class="question" id="question"></div>`;
+
+document.getElementById("answers").style.display = "grid";
+
+document.getElementById("nextBtn")
+.style.display = "inline-block";
+
+document.querySelector(".shuffle-wrap").style.display = "flex";
+
+document.getElementById("shuffleBtn")
+.style.display = "inline-block";
+
+document.getElementById("flipCard")
+.classList.remove("flipped");
+
+showQuestion();
+
+}
+
+document.getElementById("shuffleBtn")
+.onclick = function(){
+
+deck = shuffle([...questions]);
+
+startQuiz();
+
+};
+
+/* BACK BUTTON */
+
+document.getElementById("backButton").onclick = function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+};
+
+
+/* INIT */
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
