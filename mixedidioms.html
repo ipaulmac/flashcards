@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mixed Idioms Quiz</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:70px 1fr auto;
+align-items:start;
+margin-bottom:10px;
+}
+
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.95rem;
+letter-spacing:.06em;
+text-align:center;
+line-height:1.15;
+padding-top:7px;
+}
+
+.top-right{
+display:flex;
+gap:8px;
+align-items:center;
+}
+
+.library-back-btn{
+width:68px;
+height:32px;
+padding:0;
+background:#930000;
+color:#ffffff;
+border:3px solid #ffffff;
+border-radius:0;
+font-size:.8rem;
+font-weight:900;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+appearance:none;
+box-sizing:border-box;
+}
+
+
+.library-back-btn:hover{
+background:#FFF3A3;
+color:#930000;
+}
+
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:4px 8px;
+font-weight:900;
+font-size:.8rem;
+}
+
+details summary{
+cursor:pointer;
+font-weight:900;
+color:var(--gold);
+list-style:none;
+font-size:.95rem;
+padding-top:3px;
+}
+
+
+.popup{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+top:42px;
+width:90vw;
+max-width:280px;
+background:#eef6ff;
+border-radius:10px;
+padding:12px;
+font-size:.84rem;
+line-height:1.45;
+color:#061247;
+font-weight:700;
+z-index:20;
+}
+
+.perspective{perspective:1000px;}
+
+.card{
+width:92vw;
+max-width:380px;
+height:230px;
+position:relative;
+transform-style:preserve-3d;
+transition:.45s;
+}
+
+.card.flipped{transform:rotateY(180deg);}
+
+.face{
+position:absolute;
+inset:0;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+backface-visibility:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:16px;
+text-align:center;
+}
+
+.back{transform:rotateY(180deg);}
+
+.card-header{
+font-size:clamp(.72rem,2.2vw,.82rem);
+font-weight:700;
+color:#6b7280;
+line-height:1.2;
+margin-bottom:10px;
+text-transform:none;
+letter-spacing:.01em;
+}
+
+.card-main{
+font-size:clamp(.95rem,3vw,1.08rem);
+font-weight:900;
+color:#0E065C;
+line-height:1.28;
+text-transform:uppercase;
+}
+
+.info-row{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+margin:10px 0;
+color:#fff;
+font-weight:800;
+}
+
+.info-right{text-align:right;color:var(--gold);}
+.next-btn{
+background:var(--blue);
+color:#061247;
+border:none;
+border-radius:10px;
+padding:7px 18px;
+font-weight:900;
+}
+
+.answers{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:1fr;
+gap:8px;
+}
+
+.answer-btn{
+border:none;
+border-radius:10px;
+padding:10px;
+background:#eef2f7;
+font-weight:800;
+color:#0E065C;
+font-size:.95rem;
+line-height:1.2;
+text-transform:none;
+min-height:50px;
+word-break:break-word;
+}
+
+.answer-btn.correct{background:var(--green);color:#fff;}
+.answer-btn.wrong{background:#ef4444;color:#fff;}
+
+.retry-wrap{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:center;
+margin-top:16px;
+}
+
+.retry-btn{
+background:var(--purple);
+color:#fff;
+border:none;
+border-radius:10px;
+padding:10px 24px;
+font-weight:900;
+}
+
+button:disabled{opacity:.55}
+button:active{transform:scale(.97);}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+
+<button
+id="libraryBackBtn"
+class="library-back-btn"
+type="button">
+BACK
+</button>
+
+<div class="top-title">
+MIXED IDIOMS <span style="color:#FFF3A3;">(B2)</span>
+</div>
+
+<div class="top-right">
+
+<details id="instructionsBox">
+<summary>READ ME</summary>
+
+<div class="popup">
+
+This quiz contains <span style="color:var(--red);font-weight:900;">70</span> questions, of which only <span style="color:var(--red);font-weight:900;">10</span> are selected randomly<br><br>
+
+The questions will change each time you attempt the quiz<br><br>
+
+The <span style="color:var(--red);font-weight:900;">PASS MARK</span> is <span style="color:var(--red);font-weight:900;">7</span> out of <span style="color:var(--red);font-weight:900;">10</span><br><br>
+
+<span style="color:var(--red);font-weight:900;">ONLY IF</span> you give the correct answer will the card flip to reveal the Italian translation of the idiom or definition
+
+<br><br>
+
+<button onclick="document.getElementById('instructionsBox').removeAttribute('open')" style="border:none;background:none;font-weight:900;color:#006400;">
+CLOSE <span style="color:#006400;">▲</span>
+</button>
+
+</div>
+
+</details>
+
+<button id="soundToggle" class="sound-btn">🔊 ON</button>
+
+</div>
+</div>
+
+<div class="perspective">
+<div id="card" class="card">
+<div class="face"><div id="frontText" class="card-text"></div></div>
+<div class="face back"><div id="backText" class="card-text"></div></div>
+</div>
+</div>
+
+<div class="info-row">
+<div id="progress">1 / 10</div>
+<button id="nextBtn" class="next-btn">NEXT</button>
+<div id="score" class="info-right">0 / 10</div>
+</div>
+
+<div id="answers" class="answers"></div>
+<div id="retryWrap" class="retry-wrap"></div>
+
+<audio id="correctSound" src="audio/correct.mp3"></audio>
+<audio id="wrongSound" src="audio/wrong.mp3"></audio>
+<audio id="passSound" src="audio/pass.mp3"></audio>
+<audio id="failSound" src="audio/fail.mp3"></audio>
+
+<script>
+let soundEnabled=true;
+
+document.getElementById("soundToggle").onclick=()=>{
+soundEnabled=!soundEnabled;
+document.getElementById("soundToggle").innerText=soundEnabled?"🔊 ON":"🔇 OFF";
+};
+
+function playSound(id){
+if(!soundEnabled)return;
+let a=document.getElementById(id);
+a.pause();
+a.currentTime=0;
+a.play();
+}
+
+
+const questions = [
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT WOULD BE FAR BETTER",
+options:[
+"It would be a great improvement",
+"It's not right here",
+"It would work better at a long distance",
+"The further away it is, the better"
+],
+answer:0,
+back:"THAT WOULD BE FAR BETTER\n\nSAREBBE MOLTO MEGLIO / UN GRANDE MIGLIORAMENTO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nHE __________ WHEN HIS MOTHER DIED",
+options:[
+"fell in bits",
+"split up",
+"broke himself up",
+"went to pieces"
+],
+answer:3,
+back:"GO TO PIECES\n\nCROLLARE EMOTIVAMENTE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nYOU OUGHT TO STAND UP TO HIM",
+options:[
+"You should get up when he comes in",
+"You should support him",
+"You shouldn't be afraid to argue with him",
+"You are probably the same height as he is"
+],
+answer:2,
+back:"STAND UP TO SOMEONE\n\nTENER TESTA A QUALCUNO / AFFRONTARLO SENZA PAURA"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE'VE SPENT SO MUCH RECENTLY THAT OUR BANK BALANCE MUST BE __________",
+options:[
+"in the green",
+"in the pink",
+"in the red",
+"in the black"
+],
+answer:2,
+back:"IN THE RED\n\nESSERE IN ROSSO / AVERE DEBITI"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nHE ASKED ME OUT",
+options:[
+"He wanted me to go outside",
+"He told me he would meet me outside",
+"He had some questions for me when I got outside",
+"He invited me to go out with him"
+],
+answer:3,
+back:"ASK SOMEONE OUT\n\nCHIEDERE DI USCIRE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE'VE HAD A LOT OF PROBLEMS TO SOLVE BUT AT LAST WE'RE _________",
+options:[
+"out of the woods",
+"beyond the pale",
+"over the traces",
+"up the wall"
+],
+answer:0,
+back:"OUT OF THE WOODS\n\nESSERE FUORI DAI GUAI / AVER SUPERATO IL PEGGIO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nNEVER MIND",
+options:[
+"It doesn't bear thinking about",
+"Don't be upset about it",
+"It's none of your business",
+"You needn't remember it"
+],
+answer:1,
+back:"NEVER MIND\n\nNON IMPORTA / LASCIA PERDERE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nHE'S SOMETIMES BAD-TEMPERED BUT HE'S A GOOD FELLOW __________",
+options:[
+"in heart",
+"with heart",
+"at heart",
+"by heart"
+],
+answer:2,
+back:"AT HEART\n\nIN FONDO / NELL'ANIMO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHEY'LL BE SENT TO YOU IN DUE COURSE",
+options:[
+"You'll get them in the correct order",
+"They'll arrive at the right time",
+"You'll receive them after the normal space of time has passed",
+"They'll be given to you when you've paid for your studies"
+],
+answer:2,
+back:"IN DUE COURSE\n\nA TEMPO DEBITO / QUANDO SARÀ IL MOMENTO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nDON'T __________ BECAUSE YOU'RE LOSING THE ARGUMENT",
+options:[
+"change the subject",
+"pull the wool",
+"alter the theme",
+"vary the tune"
+],
+answer:0,
+back:"CHANGE THE SUBJECT\n\nCAMBIARE DISCORSO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nHE CALLS IN FROM TIME TO TIME",
+options:[
+"He often comes to see us",
+"He visits us occasionally",
+"He visits us every hour",
+"He sometimes comes to stay for a while"
+],
+answer:1,
+back:"CALL IN FROM TIME TO TIME\n\nFARE VISITA OGNI TANTO / FARE UN SALTO OCCASIONALMENTE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nI CAN'T REMEMBER THE TITLE EXACTLY. I'VE GOT IT __________",
+options:[
+"down in the mouth",
+"on the point of my tongue",
+"at the edge of my mouth",
+"on the tip of my tongue"
+],
+answer:3,
+back:"ON THE TIP OF ONE'S TONGUE\n\nSULLA PUNTA DELLA LINGUA"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nWHAT'S UP?",
+options:[
+"What's the matter?",
+"What's the news?",
+"What's needed?",
+"What's improved?"
+],
+answer:0,
+back:"WHAT'S UP?\n\nCHE SUCCEDE? / COME VA? / QUAL È IL PROBLEMA?"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nTHE CHILDREN ARE WELL, EXCEPT FOR SUE. SHE'S BEEN __________ THESE LAST FEW DAYS",
+options:[
+"off health",
+"out of condition",
+"off colour",
+"out of the weather"
+],
+answer:2,
+back:"BE / FEEL OFF COLOUR\n\nNON ESSERE IN FORMA / SENTIRSI POCO BENE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nIT'S AS BROAD AS IT IS LONG AS FAR AS I'M CONCERNED",
+options:[
+"I want a clear answer one way or another",
+"It makes no difference to me, either way",
+"It doesn't make sense to me",
+"I think it's a square"
+],
+answer:1,
+back:"AS BROAD AS IT'S LONG\n\nÈ LO STESSO / NON FA DIFFERENZA / SIAMO LÌ"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE HAD GIVEN OURSELVES SO LITTLE TIME TO GET THERE THAT IT WAS __________ WHETHER WE WOULD CATCH THE PLANE",
+options:[
+"give and take",
+"touch and go",
+"stop and go",
+"to and fro"
+],
+answer:1,
+back:"TOUCH AND GO\n\nMOLTO INCERTO / IN BILICO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT CHILD IS ALWAYS UP TO SOMETHING",
+options:[
+"He is naughty",
+"He likes climbing",
+"He likes making things",
+"He's never left behind"
+],
+answer:0,
+back:"BE UP TO SOMETHING\n\nCOMBINARE QUALCOSA / STAR TRAMANDO QUALCOSA"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE'VE BEEN SITTING HERE DOING NOTHING ABOUT IT FOR DAYS. IT'S TIME WE __________ THE PROBLEM",
+options:[
+"shook hands with",
+"got to grips with",
+"got to brass tacks with",
+"reached the bottom of"
+],
+answer:1,
+back:"GET TO GRIPS WITH\n\nAFFRONTARE SERIAMENTE / VENIRE A CAPO DI"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nYOU'LL BE ALL RIGHT IN THE LONG RUN",
+options:[
+"You'll all be on the same side when it comes to a head",
+"All of you will prove to be correct eventually",
+"In the end, you'll have no need to worry",
+"You'll do well in the marathon"
+],
+answer:2,
+back:"IN THE LONG RUN\n\nALLA LUNGA / COL TEMPO / NEL LUNGO PERIODO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nHE COULDN'T HAVE BEEN SERIOUS. HE MUST HAVE BEEN __________",
+options:[
+"twisting your arm",
+"pulling your leg",
+"taking your nose",
+"screwing your wrist"
+],
+answer:1,
+back:"PULL ONE'S LEG\n\nPRENDERE IN GIRO / SCHERZARE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI'LL LET YOU OFF",
+options:[
+"I'll help you to escape",
+"I won't punish you",
+"I'll take you off the field",
+"I'll leave you outside"
+],
+answer:1,
+back:"LET SOMEONE OFF\n\nLASCIAR CORRERE / NON PUNIRE QUALCUNO / GRAZIARE QUALCUNO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nHE'LL NEVER COMMIT HIMSELF. HE'LL JUST __________ UNTIL EVERYONE ELSE HAS GIVEN THEIR OPINION",
+options:[
+"sit on the fence",
+"hide under the table",
+"wait in the rain",
+"sleep in the shadows"
+],
+answer:0,
+back:"SIT ON THE FENCE\n\nNON SCHIERARSI / RESTARE NEUTRALE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI CAN'T HELP THINKING ABOUT IT",
+options:[
+"Nothing I do will make any difference",
+"I wish I could forget it but I can't",
+"It would be more useful if I did something",
+"I wish I could keep my mind on the subject"
+],
+answer:1,
+back:"CAN'T HELP DOING SOMETHING\n\nNON POTER FARE A MENO DI (FARE QUALCOSA)"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE HADN'T BEEN ON GOOD TERMS FOR QUITE A WHILE BUT THE MATTER __________ WHEN HE ACCUSED ME OF STEALING HIS WORK",
+options:[
+"went to my head",
+"came to a head",
+"came under the head",
+"went out of my head"
+],
+answer:1,
+back:"COME TO A HEAD\n\nARRIVARE AL PUNTO CRITICO / GIUNGERE AL CULMINE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nHE'S OUT FOR A PROFIT",
+options:[
+"He's interested in getting money",
+"He's not going to make any money",
+"He's abroad on business",
+"He's doing it for nothing"
+],
+answer:0,
+back:"BE OUT FOR PROFIT\n\nCERCARE IL PROFITTO / MIRARE AL GUADAGNO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWHAT A STRANGE ANIMAL! IT LOOKS LIKE A __________ A DEER AND A MOOSE",
+options:[
+"mix of",
+"result of",
+"half of",
+"cross between"
+],
+answer:3,
+back:"CROSS BETWEEN\n\nINCROCIO TRA / VIA DI MEZZO TRA"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nHE CAN HARDLY ARGUE WITH THAT SUGGESTION",
+options:[
+"There may be a terrible quarrel about it",
+"He'll have plenty of objections to make",
+"There's no reason for him to disagree",
+"He may have a better plan of his own"
+],
+answer:2,
+back:"CAN HARDLY ARGUE WITH THAT\n\nÈ DIFFICILE NON ESSERE D'ACCORDO / NULLA DA RIDIRE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nI HAVE __________ WITH YOU. WHY DIDN'T YOU KEEP YOUR APPOINTMENT WITH ME YESTERDAY?",
+options:[
+"an argument to make",
+"a bone to pick",
+"a leg to pull",
+"a row to share"
+],
+answer:1,
+back:"A BONE TO PICK\n\nAVERE QUALCOSA DA CHIARIRE / AVERE UN CONTO IN SOSPESO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nON THE OTHER HAND, HE MAY BE RIGHT",
+options:[
+"On the contrary, what he says is correct",
+"He's correct from another point of view",
+"But it's also possible that what he says is correct",
+"Not at all. He's the most suitable man for the job"
+],
+answer:2,
+back:"ON THE OTHER HAND\n\nD'ALTRA PARTE / PERÒ / D'ALTRO CANTO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nYOU'D BETTER __________ WHEN YOU SPEAK TO THE BOSS. HE'S IN A BAD MOOD THIS MORNING",
+options:[
+"put your foot in it",
+"watch your step",
+"mind your pace",
+"steal a march"
+],
+answer:1,
+back:"WATCH ONE'S STEP\n\nFARE ATTENZIONE / BADARE A QUELLO CHE SI DICE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nWE HAVE SOMETHING IN COMMON",
+options:[
+"We're partners",
+"We're both normal",
+"We like each other",
+"In one way, we're similar"
+],
+answer:3,
+back:"HAVE SOMETHING IN COMMON\n\nAVERE QUALCOSA IN COMUNE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nCHILDREN ARE LIKELY TO GET __________ IF NO ONE CARES ABOUT THEIR UPBRINGING",
+options:[
+"away from the hand",
+"away from hand",
+"out of hand",
+"out of the hand"
+],
+answer:2,
+back:"OUT OF HAND\n\nFUORI CONTROLLO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHE WEDDING'S OFF",
+options:[
+"The marriage has been cancelled",
+"The marriage ceremony has started",
+"The bride and groom are going on their honeymoon",
+"They are going to get a divorce"
+],
+answer:0,
+back:"BE OFF (EVENT CANCELLED)\n\nESSERE ANNULLATO / SALTARE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI'M FED UP WITH IT",
+options:[
+"I've had enough to eat",
+"I'm getting fat",
+"I'm tired of it",
+"I'm worn out"
+],
+answer:2,
+back:"BE FED UP WITH\n\nESSERE STUFO DI / AVERNE ABBASTANZA"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT'S ALL FOR THE BEST",
+options:[
+"Everything about it is perfect",
+"It's finished happily, in spite of everything",
+"The others will have to wait their turn",
+"It's an advantage under the circumstances"
+],
+answer:3,
+back:"FOR THE BEST\n\nPER IL MEGLIO / LA COSA MIGLIORE NELLE CIRCOSTANZE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI WOULDN'T TAKE IT FOR GRANTED",
+options:[
+"I'd prefer to pay for it",
+"I wouldn't assume that it will be all right",
+"I wouldn't accept it at any price",
+"I don't trust it"
+],
+answer:1,
+back:"TAKE SOMETHING FOR GRANTED\n\nDARE QUALCOSA PER SCONTATO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI'M NOT CUT OUT FOR IT",
+options:[
+"I'm not dressed properly for it",
+"I'm not suited to doing it",
+"I'm too tired to begin it",
+"I'm not allowed to take part"
+],
+answer:1,
+back:"BE CUT OUT FOR SOMETHING\n\nESSERE PORTATO PER QUALCOSA / ESSERE ADATTO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE WERE ABOUT TO LEAVE WHEN JOHN ARRIVED __________",
+options:[
+"in the blue",
+"out of the black",
+"from the dark",
+"out of the blue"
+],
+answer:3,
+back:"OUT OF THE BLUE\n\nALL'IMPROVVISO / INASPETTATAMENTE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nHE'S MAKING A BIG THING OF IT",
+options:[
+"He's exaggerating its importance",
+"He's building something large",
+"He's explaining it clearly",
+"He's charging too much for it"
+],
+answer:0,
+back:"MAKE A BIG THING OF SOMETHING\n\nFARNE UN CASO / ESAGERARNE L'IMPORTANZA"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nI DON'T KNOW WHY YOU'RE WORRIED. EVERYTHING WILL __________ IN THE END",
+options:[
+"come out in the wash",
+"wash out the door",
+"turn through the water",
+"clean up at last"
+],
+answer:0,
+back:"COME OUT IN THE WASH\n\nCHIARIRSI COL TEMPO / RISOLVERSI ALLA FINE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI'M AT A LOSS",
+options:[
+"I'm short of money",
+"I don't know what to do or say",
+"I'm angry about the situation",
+"I'm feeling physically weak"
+],
+answer:1,
+back:"BE AT A LOSS\n\nESSERE PERPLESSO / NON SAPERE CHE FARE O DIRE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nIF YOU KEEP SPENDING LIKE THIS, YOU'LL __________ MONEY VERY SOON",
+options:[
+"run out of",
+"drop away from",
+"come short with",
+"finish off"
+],
+answer:0,
+back:"RUN OUT OF\n\nRIMANERE SENZA / ESAURIRE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT'S BESIDE THE POINT",
+options:[
+"That's exactly what we are discussing",
+"That is close to the main issue",
+"That isn't relevant to the matter",
+"That explains everything clearly"
+],
+answer:2,
+back:"BESIDE THE POINT\n\nFUORI QUESTIONE / NON RILEVANTE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nDON'T WORRY ABOUT THE EXAM. I'M SURE YOU'LL __________ IT",
+options:[
+"get through",
+"bring over",
+"take across",
+"come by"
+],
+answer:0,
+back:"GET THROUGH\n\nSUPERARE / PASSARE (ESAME, PROVA, DIFFICOLTÀ)"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI'M IN TWO MINDS ABOUT IT",
+options:[
+"I'm very confused and angry",
+"I've decided against it",
+"I can't decide what to do",
+"I'm thinking about it twice a day"
+],
+answer:2,
+back:"BE IN TWO MINDS ABOUT SOMETHING\n\nESSERE INDECISO / AVERE DUE IDEE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nI WAS CAUGHT __________ WHEN MY BOSS ASKED FOR MY RESIGNATION DURING THE MEETING",
+options:[
+"under surprise",
+"off guard",
+"without defence",
+"out of watch"
+],
+answer:1,
+back:"CATCH SOMEONE OFF GUARD\n\nCOGLIERE DI SORPRESA / IMPREPARATO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT RINGS A BELL",
+options:[
+"That sounds completely wrong",
+"It reminds me of something familiar",
+"That is making too much noise",
+"It has just been announced"
+],
+answer:1,
+back:"RING A BELL\n\nSUONARE FAMILIARE / DIRE QUALCOSA"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE WERE WORRIED ABOUT TOM, BUT HE TURNED UP SAFE AND __________",
+options:[
+"clean",
+"well",
+"sound",
+"strong"
+],
+answer:2,
+back:"SAFE AND SOUND\n\nSANO E SALVO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI'M UP TO MY EYES IN WORK",
+options:[
+"I'm looking for a new job",
+"I'm surrounded by workers",
+"I have far too much work to do",
+"I'm doing work very carefully"
+],
+answer:2,
+back:"BE UP TO ONE'S EYES IN WORK\n\nESSERE SOMMERSO DI LAVORO / PIENO FIN SOPRA I CAPELLI"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE HAD AN ARGUMENT LAST NIGHT, BUT WE'VE __________ NOW",
+options:[
+"put it through",
+"brought it round",
+"turned it over",
+"made up"
+],
+answer:3,
+back:"MAKE UP\n\nFARE PACE / RICONCILIARSI"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nI'M NOT MYSELF TODAY",
+options:[
+"I'm being completely honest today",
+"I'm alone all day today",
+"I'm proud of who I am today",
+"I'm behaving unusually because I don't feel well"
+],
+answer:3,
+back:"NOT BE ONESELF\n\nNON ESSERE IN FORMA / NON ESSERE IL SOLITO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nTHE MATCH WAS CANCELLED __________ THE HEAVY RAIN",
+options:[
+"by means of",
+"on account of",
+"with reference to",
+"in spite of"
+],
+answer:1,
+back:"ON ACCOUNT OF\n\nA CAUSA DI / PER VIA DI"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\n__________, THE NEW RESTAURANT IS EXCELLENT",
+options:[
+"In any case",
+"At all costs",
+"By all accounts",
+"For the time being"
+],
+answer:2,
+back:"BY ALL ACCOUNTS\n\nA QUANTO PARE / A DETTA DI TUTTI / SECONDO TUTTI"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT WAS A CLOSE CALL",
+options:[
+"It was an easy decision to make",
+"It nearly ended badly",
+"It was the wrong telephone number",
+"It happened exactly as planned"
+],
+answer:1,
+back:"CLOSE CALL\n\nPER UN PELO / BRUTTO RISCHIO EVITATO / SCAMPATO PERICOLO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nIT'S A CLEAR-CUT CASE",
+options:[
+"It's impossible to understand",
+"It's very complicated",
+"It's obvious and straightforward",
+"It's only partly true"
+],
+answer:2,
+back:"CLEAR-CUT\n\nCHIARO / EVIDENTE / PALESE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT OPTION IS OFF THE TABLE",
+options:[
+"It is ready to be discussed immediately",
+"It is written clearly in the report",
+"It has been moved to another department",
+"It has been rejected and is no longer being considered"
+],
+answer:3,
+back:"OFF THE TABLE\n\nESCLUSO / NON PIÙ IN CONSIDERAZIONE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTRY AS I MIGHT, I COULDN'T OPEN THE DOOR",
+options:[
+"I refused to try opening the door",
+"Although I tried hard, I couldn't open the door",
+"I opened the door after one attempt",
+"I might try to open the door later"
+],
+answer:1,
+back:"TRY AS I MIGHT\n\nPER QUANTO MI SFORZI"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT SHOULD RAISE RED FLAGS",
+options:[
+"That should create unnecessary delays",
+"That should improve the situation quickly",
+"That should cause everyone to celebrate",
+"That should make people suspicious or concerned"
+],
+answer:3,
+back:"RAISE RED FLAGS\n\nFAR SCATTARE UN CAMPANELLO D'ALLARME / DESTARE SOSPETTI"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nLET ME __________ YOU BEFORE I SEND THIS EMAIL",
+options:[
+"run this past",
+"bring this over",
+"take this through",
+"put this among"
+],
+answer:0,
+back:"RUN SOMETHING PAST SOMEONE\n\nSOTTOPORRE QUALCOSA A QUALCUNO / CHIEDERE UN PARERE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHE STORY HAD MANY TWISTS AND TURNS",
+options:[
+"It was short and easy to follow",
+"It was based on true events",
+"It was full of unexpected changes",
+"It was told in the wrong order"
+],
+answer:2,
+back:"TWISTS AND TURNS\n\nCOLPI DI SCENA / SVOLTE IMPREVISTE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nIT'S AS GOOD A TIME AS ANY",
+options:[
+"We should wait for a better opportunity",
+"This is the worst possible moment",
+"This moment is as suitable as any other",
+"It's exactly the right time by schedule"
+],
+answer:2,
+back:"AS GOOD A TIME AS ANY\n\nTANTO VALE FARLO ADESSO"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nTHAT FIGURES",
+options:[
+"That can be measured exactly",
+"That needs further explanation",
+"That makes sense and is not surprising",
+"That seems completely impossible"
+],
+answer:2,
+back:"THAT FIGURES\n\nCI STA / TORNA / NON MI SORPRENDE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nAFTER SELLING HIS FLAT, HE WENT __________ FOR SIX MONTHS",
+options:[
+"under the road",
+"beyond the map",
+"off the grid",
+"out of the station"
+],
+answer:2,
+back:"OFF THE GRID\n\nIRRINTRACCIABILE / FUORI DAI RADAR"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nTHE MANAGER ASKED ME TO __________ ON THE NEW EMPLOYEE'S PROGRESS",
+options:[
+"hold tabs",
+"watch notes",
+"keep tabs",
+"carry marks"
+],
+answer:2,
+back:"KEEP TABS\n\nTENERE D'OCCHIO / TENERE SOTTO CONTROLLO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nYOU SHOULD TAKE WHAT HE SAYS WITH __________",
+options:[
+"a grain of pepper",
+"a touch of sugar",
+"a pinch of salt",
+"a drop of spice"
+],
+answer:2,
+back:"A PINCH OF SALT\n\nPRENDERE QUALCOSA CON LE PINZE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nTHE PRESS SOMEHOW __________ THE SECRET MERGER PLANS",
+options:[
+"got wind of",
+"made air of",
+"caught breeze on",
+"took scent from"
+],
+answer:0,
+back:"GET WIND OF\n\nVENIRE A SAPERE DI / FIUTARE / SCOPRIRE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nLOSING THE CONTRACT WAS A REAL KICK IN THE TEETH",
+options:[
+"It was a lucky escape",
+"It was a very disappointing setback",
+"It was exactly what we expected",
+"It was a minor inconvenience"
+],
+answer:1,
+back:"KICK IN THE TEETH\n\nDURO COLPO / BATOSTA / BRUTTA BOTTA"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nI DIDN'T RECOGNISE HER __________ BECAUSE SHE'D CHANGED HER HAIRSTYLE",
+options:[
+"under the hand",
+"through the gate",
+"off the bat",
+"by the swing"
+],
+answer:2,
+back:"OFF THE BAT\n\nSUBITO / IMMEDIATAMENTE"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nWE'RE REALLY SCRAPING THE BARREL NOW",
+options:[
+"We're saving money very carefully",
+"We're cleaning everything thoroughly",
+"We're using the worst or last remaining options",
+"We're working faster than before"
+],
+answer:2,
+back:"SCRAPE THE BARREL\n\nRACIMOLARE IL PEGGIO / USARE LE ULTIME RISORSE SCARSE"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nWE CAUGHT THE LAST TRAIN __________",
+options:[
+"under our noses",
+"at the double",
+"through the gap",
+"by the skin of our teeth"
+],
+answer:3,
+back:"BY THE SKIN OF ONE'S TEETH\n\nPER UN PELO / A MALAPENA"
+},
+
+{
+type:"definition",
+front:"Choose the sentence that matches the expression\n\nIT'S NO GOOD TALKING TO HIM NOW",
+options:[
+"There is no point talking to him now",
+"He is not speaking properly now",
+"It's better to talk to someone else now",
+"He refuses to talk at any time"
+],
+answer:0,
+back:"NO GOOD\n\nNON SERVE A NULLA / NON HA SENSO"
+},
+
+{
+type:"phrase",
+front:"Choose the missing idiom phrase\n\nTHE FIRE ALARM WENT OFF, SO WE LEFT THE BUILDING __________",
+options:[
+"at the double",
+"under the clock",
+"by the stretch",
+"through the motion"
+],
+answer:0,
+back:"AT THE DOUBLE\n\nDI CORSA / MOLTO RAPIDAMENTE"
+}
+
+];
+
+
+let quiz=[],index=0,score=0,answered=false,solved=false;
+let lastFirstQuestion=null;
+const quizSize=10;
+
+const card=document.getElementById("card");
+const frontText=document.getElementById("frontText");
+const backText=document.getElementById("backText");
+const progress=document.getElementById("progress");
+const scoreBox=document.getElementById("score");
+const answersDiv=document.getElementById("answers");
+const nextBtn=document.getElementById("nextBtn");
+
+function shuffle(a){
+let arr=[...a];
+for(let i=arr.length-1;i>0;i--){
+let j=Math.floor(Math.random()*(i+1));
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+return arr;
+}
+
+function startQuiz(){
+let shuffled;
+
+do{
+shuffled = shuffle(questions);
+}while(
+lastFirstQuestion &&
+shuffled[0].front === lastFirstQuestion
+);
+
+quiz = shuffled.slice(0,quizSize);
+lastFirstQuestion = quiz[0].front;
+
+index=0;score=0;
+document.getElementById("retryWrap").innerHTML="";
+answersDiv.style.display="grid";
+nextBtn.style.display="inline-block";
+showQuestion();
+}
+
+function showQuestion(){
+answered=false;solved=false;
+card.classList.remove("flipped");
+
+let q=quiz[index];
+const parts = q.front.split("\n\n");
+
+frontText.innerHTML = `
+<div style="
+font-size:.94rem;
+color:#8C0327;
+font-weight:800;
+margin-bottom:18px;
+text-transform:none;
+line-height:1.2;
+position:absolute;
+top:22px;
+left:14px;
+right:14px;
+text-align:center;">
+${parts[0].charAt(0) + parts[0].slice(1).toLowerCase()}
+</div>
+
+<div style="
+font-size:1rem;
+font-weight:900;
+color:#0E065C;
+line-height:1.3;
+text-transform:uppercase;
+">
+${parts[1]}
+</div>
+`;
+
+const backParts = q.back.split("\n\n");
+
+backText.innerHTML = `
+<div style="
+font-size:1rem;
+font-weight:900;
+color:#0E065C;
+line-height:1.3;
+text-transform:uppercase;
+margin-bottom:16px;
+">
+${backParts[0]}
+</div>
+
+<div style="
+font-size:1rem;
+font-weight:900;
+color:#8C0327;
+line-height:1.3;
+text-transform:uppercase;
+">
+${backParts[1]}
+</div>
+`;
+
+
+progress.innerText=`${index+1} / ${quiz.length}`;
+scoreBox.innerText=`${score} / ${quiz.length}`;
+
+nextBtn.disabled=true;
+answersDiv.innerHTML="";
+
+q.options.forEach((opt,i)=>{
+let b=document.createElement("button");
+b.className="answer-btn";
+b.innerText=opt;
+b.onclick=()=>checkAnswer(i,b);
+answersDiv.appendChild(b);
+});
+}
+
+function checkAnswer(selected,btn){
+if(answered)return;
+answered=true;
+
+let q=quiz[index];
+let buttons=document.querySelectorAll(".answer-btn");
+buttons.forEach(x=>x.disabled=true);
+
+if(selected===q.answer){
+btn.classList.add("correct");
+score++;
+solved=true;
+playSound("correctSound");
+card.classList.add("flipped");
+}else{
+btn.classList.add("wrong");
+playSound("wrongSound");
+}
+
+scoreBox.innerText=`${score} / ${quiz.length}`;
+nextBtn.disabled=false;
+}
+
+nextBtn.onclick=()=>{
+if(index===quiz.length-1){endQuiz();return;}
+index++;
+showQuestion();
+};
+
+card.onclick=()=>{
+if(solved)card.classList.toggle("flipped");
+};
+
+function endQuiz(){
+answersDiv.style.display="none";
+nextBtn.style.display="none";
+card.classList.remove("flipped");
+
+if(score>=7){
+frontText.innerText="WELL DONE!\nYOU'VE PASSED!";
+playSound("passSound");
+}else{
+frontText.innerText="BAD LUCK!\nTRY AGAIN!";
+playSound("failSound");
+}
+
+if(score>=7){
+
+frontText.innerHTML = `
+<div style="
+font-size:1.05rem;
+font-weight:900;
+color:#0E065C;
+line-height:1.35;
+text-transform:uppercase;
+text-align:center;
+">
+<div style="width:100%; text-align:center;">WELL DONE!</div>
+<div style="width:100%; text-align:center;">YOU'VE PASSED! 🎉</div>
+`;
+
+playSound("passSound");
+
+}else{
+
+frontText.innerHTML = `
+<div style="
+font-size:1.05rem;
+font-weight:900;
+color:#0E065C;
+line-height:1.35;
+text-transform:uppercase;
+text-align:center;
+width:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:100%;
+">
+
+
+<div style="width:100%; text-align:center;">BAD LUCK!</div>
+<div style="width:100%; text-align:center;">TRY AGAIN! ❌</div>
+`;
+
+playSound("failSound");
+}
+
+backText.innerHTML = "";
+
+document.getElementById("retryWrap").innerHTML=
+'<button class="retry-btn" onclick="startQuiz()">TRY AGAIN</button>';
+}
+
+document.getElementById("libraryBackBtn").addEventListener("click", function () {
+    window.location.href = "https://www.acceleratedlanguagesystems.com/quizzes-booster";
+});
+
+
+startQuiz();
+</script>
+</body>
+</html>
