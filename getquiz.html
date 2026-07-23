@@ -1799,7 +1799,7 @@ setTimeout(()=>{
 
 document.getElementById("flipCard").classList.add("flipped");
 
-},500);
+setTimeout(()=>{
 
 /* NEXT BUTTON */
 
@@ -1818,6 +1818,10 @@ compareBtn.style.display = "inline-block";
 compareBtn.style.opacity = "1";
 
 compareBtn.style.pointerEvents = "auto";
+
+},600);   // Wait for flip animation to finish
+
+},500);
 
 }else{
 
