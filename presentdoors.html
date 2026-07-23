@@ -564,7 +564,7 @@ const sets = {
 
 let cards = []
 let index = 0
-let currentFloor = 1
+let currentDoor = 1
 let mode = "floor"
 let currentAudio = null
 
@@ -587,7 +587,7 @@ const frontText = document.getElementById("front-text")
 const backText = document.getElementById("back-text")
 const counter = document.getElementById("counter-display")
 const speakBtn = document.getElementById("speakBtn")
-const floorLabel = document.getElementById("door-label")
+const doorLabel = document.getElementById("door-label")
 
 /* ================= SHUFFLE ================= */
 
@@ -670,7 +670,7 @@ window.loadTest = function(){
     sets[i].forEach((card, idx)=>{
       combined.push({
         ...card,
-        floor: Number(i), // FIX
+        door: Number(i), // FIX
         audio: `audio/floor${i}/F${i}-${String(idx+1).padStart(3,'0')}.mp3`
       })
     })
@@ -715,9 +715,9 @@ function updateCard(){
   backText.innerText = c.back.toUpperCase()
 
   if(mode === "floor"){
-    floorLabel.innerText = doorLabels[currentFloor] || ("DOOR " + currentFloor)
+    doorLabel.innerText = doorLabels[currentDoor] || ("DOOR " + currentDoor)
   } else {
-    floorLabel.innerText = doorLabels[c.floor] || ("DOOR " + c.floor)
+    doorLabel.innerText = doorLabels[c.door] || ("DOOR " + c.door)
   }
 
   counter.innerText = (index + 1) + " / " + cards.length
@@ -778,7 +778,7 @@ window.loadInstructions = function(){
 
   frontText.style.color = "#061247";
   frontText.style.textAlign = "left";
-  frontText.style.fontSize = ".82rem";
+  frontText.style.fontSize = ".74rem";
   frontText.style.lineHeight = "1.22";
   frontText.style.padding = "6px 10px";
 
