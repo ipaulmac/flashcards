@@ -245,6 +245,44 @@ body{
   transform:scale(0.95);
 }
 
+/* RETURN TO LEVELS */
+
+.return-btn{
+
+  width:90vw;
+  max-width:380px;
+
+  min-height:52px;
+
+  margin-top:40px;
+
+  background:#561386;
+
+  color:white;
+
+  font-weight:900;
+
+  border:none;
+
+  border-radius:10px;
+
+  font-size:.95rem;
+
+  letter-spacing:.5px;
+
+  text-transform:uppercase;
+
+  cursor:pointer;
+
+  transition:.1s;
+}
+
+.return-btn:active{
+
+  transform:scale(.95);
+}
+
+
 /* CORRECT / WRONG */
 
 .correct{
@@ -520,6 +558,14 @@ class="answers hidden">
 
 </div>
 
+<button
+id="returnLevelsBtn"
+class="return-btn hidden">
+
+RETURN TO LEVELS
+
+</button>
+
 <!-- LEVEL BUTTONS -->
 
 <div id="levelsContainer"
@@ -754,7 +800,11 @@ document.getElementById("backButton").onclick = function () {
 
 };
 
+document.getElementById("returnLevelsBtn").onclick = function () {
 
+  showLevelMenu();
+
+};
 
 
 /* QUIZZES */
@@ -2370,7 +2420,7 @@ answer: 2
 {
 question: "What is your cousin?",
 options: ["That's him","I haven't got any","She's a doctor","He's twenty-five"],
-answer: 2
+answer: 3
 },
 {
 question: "Can you see ________________ the bottles?",
@@ -7833,6 +7883,7 @@ margin-top:-10px;
 </div>`;
 
 }
+
 /* START QUIZ */
 
 function startQuiz(){
@@ -7871,6 +7922,9 @@ function startQuiz(){
 
   document.getElementById("answers")
     .classList.remove("hidden");
+
+   document.getElementById("returnLevelsBtn")
+  .classList.remove("hidden");
 
   document.getElementById("endButtons")
     .classList.add("hidden");
@@ -8070,6 +8124,9 @@ function endQuiz(){
   document.getElementById("answers")
     .classList.add("hidden");
 
+document.getElementById("returnLevelsBtn")
+  .classList.add("hidden");
+
   document.getElementById("header")
     .classList.add("hidden");
 
@@ -8153,23 +8210,27 @@ function showLevelMenu(){
   document.getElementById("levelsContainer")
     .classList.remove("hidden");
 
-document.getElementById("backButton")
-  .classList.remove("hidden");
+  document.getElementById("backButton")
+    .classList.remove("hidden");
 
   document.getElementById("answers")
+    .classList.add("hidden");
+
+  document.getElementById("returnLevelsBtn")
     .classList.add("hidden");
 
   document.getElementById("header")
     .classList.add("hidden");
 
-  document.getElementById("endButtons")
-    .classList.add("hidden");
+   clearInterval(timer);
+
+   document.getElementById("timerDisplay")
+  .style.visibility = "hidden";
 
   document.getElementById("question").innerHTML =
     `CHOOSE YOUR LEVEL`;
 
 }
-
 </script>
 
 </body>
