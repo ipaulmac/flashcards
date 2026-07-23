@@ -1001,7 +1001,17 @@ updateScore();
 playSound("correctSound");
 
 setTimeout(()=>{
+
 document.getElementById("flipCard").classList.add("flipped");
+
+setTimeout(()=>{
+
+const nextBtn = document.getElementById("nextBtn");
+nextBtn.style.opacity = "1";
+nextBtn.style.pointerEvents = "auto";
+
+},600);   // Wait for flip animation to finish
+
 },500);
 
 }else{
@@ -1009,11 +1019,11 @@ document.getElementById("flipCard").classList.add("flipped");
 button.classList.add("wrong");
 
 playSound("wrongSound");
-}
 
 const nextBtn = document.getElementById("nextBtn");
 nextBtn.style.opacity = "1";
 nextBtn.style.pointerEvents = "auto";
+}
 }
 
 /* SCORE */
