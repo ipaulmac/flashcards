@@ -2478,13 +2478,17 @@ flipTimer = setTimeout(()=>{
 document.getElementById("flipCard")
 .classList.add("flipped");
 
-},500);
+setTimeout(()=>{
 
 const nextBtn =
 document.getElementById("nextBtn");
 
 nextBtn.style.opacity = "1";
 nextBtn.style.pointerEvents = "auto";
+
+},600);   // Wait for flip animation to finish
+
+},500);
 
 }else{
 
