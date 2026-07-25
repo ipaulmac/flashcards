@@ -194,7 +194,7 @@ cursor:pointer;
 BACK
 </button>
 
-<h2 class="text-white font-extrabold tracking-wide m-0 text-[1rem]">
+<h2 class="text-white font-extrabold m-0 text-[1rem]" style="letter-spacing:.03em;">
 AUX VERBS PT 2 <span style="color:#FFF3A3;">(B2)</span>
 </h2>
 
@@ -924,7 +924,7 @@ speakBtn.addEventListener("click",(e)=>{
   if(!cards.length) return;
 
   const id = cards[index].id;
-  const audio = new Audio(`audio/aux2/${id}.mp3`);
+  const audio = new Audio(`audio/auxiliaryverbs2/${id}.mp3`);
   audio.play();
 });
 
