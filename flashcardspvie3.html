@@ -43,7 +43,7 @@ body{
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:clamp(1.2rem,4.5vw,1.5rem);
+  font-size:clamp(1.05rem,4vw,1.35rem);
   line-height:1.25;
   word-break:break-word;
   overflow-wrap:break-word;
@@ -134,6 +134,60 @@ body{
   letter-spacing:.5px;
 }
 
+.popup{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:70px;
+  background:rgba(0,0,0,.45);
+  z-index:9999;
+}
+
+
+.popup-box{
+  width:90%;
+  max-width:360px;
+  background:#EEF6FF;
+  border:4px solid #8C0327;
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+}
+
+
+#popupText{
+  color:#0E065C;
+  font-size:1rem;
+  font-weight:900;
+  line-height:1.6;
+}
+
+.popup-buttons{
+  margin-top:20px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.popup-close,
+.popup-start{
+  background:none;
+  border:none;
+  font-size:1rem;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.popup-close{
+  color:darkgreen;
+}
+
+.popup-start{
+  color:#8C0327;
+}
+
+
 
 </style>
 </head>
@@ -177,26 +231,29 @@ STAGE THREE <span style="color:#FFF3A3;">(B2/C1)</span>
 </div>
 
 <div class="w-full max-w-[380px] flex justify-center mt-2">
-  <button onclick="refreshCurrentSet()"
+  <button id="refreshBtn"
+        onclick="refreshCurrentSet()"
           class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounded-full">
     <span class="font-bold text-sm">REFRESH</span>
   </button>
 </div>
 
 <div class="set-grid mt-2">
-<button class="set-btn" onclick="loadSet('pvie3.1')">LESSON 25</button>
-<button class="set-btn" onclick="loadSet('pvie3.2')">LESSON 26</button>
-<button class="set-btn" onclick="loadSet('pvie3.3')">LESSON 27</button>
-<button class="set-btn" onclick="loadSet('pvie3.4')">LESSON 28</button>
-<button class="set-btn inactive-btn">LESSON 29</button>
-<button class="set-btn inactive-btn">LESSON 30</button>
+<button class="set-btn" onclick="openStartPopup('pvie3.1','single')">LESSON 25</button>
+<button class="set-btn" onclick="openStartPopup('pvie3.2','single')">LESSON 26</button>
+<button class="set-btn" onclick="openStartPopup('pvie3.3','single')">LESSON 27</button>
+<button class="set-btn" onclick="openStartPopup('pvie3.4','single')">LESSON 28</button>
+<button class="set-btn" onclick="openStartPopup('pvie3.5','single')">LESSON 29</button>
+<button class="set-btn" onclick="openStartPopup('pvie3.6','single')">LESSON 30</button>
 <button class="set-btn inactive-btn">LESSON 31</button>
 <button class="set-btn inactive-btn">LESSON 32</button>
 <button class="set-btn inactive-btn">LESSON 33</button>
 <button class="set-btn inactive-btn">LESSON 34</button>
 <button class="set-btn inactive-btn">LESSON 35</button>
 <button class="set-btn inactive-btn">LESSON 36</button>
-<button class="set-btn global-btn" onclick="loadGlobal()">
+
+<button class="set-btn global-btn"
+        onclick="openStartPopup(null,'global')">
   TEST 25-36
 </button>
 
@@ -424,6 +481,127 @@ const sets = {
   {"front":"è molto intraprendente nelle situazioni difficili", "back":"she's very resourceful in difficult situations"},
   {"front":"bisogna dargli atto di averci provato", "back":"you have to give him credit for trying"},
   {"front":"aveva un terribile mal di testa e gli antidolorifici non sono serviti a nulla", "back":"she had a dreadful headache and the pain-killers didn't help"}
+],
+
+"pvie3.5": [
+
+  {"front":"fare la somma / avere senso / quadrare","back":"add up"},
+  {"front":"venire fuori / emergere","back":"come up"},
+  {"front":"saltare fuori / presentarsi all'improvviso","back":"crop up"},
+  {"front":"arrivare al punto di dire","back":"go so far as to say"},
+  {"front":"invitare a casa","back":"have over"},
+  {"front":"essere d'accordo con / essere in combutta con","back":"in cahoots with"},
+  {"front":"desiderare intensamente","back":"long for"},
+  {"front":"puntare a fare","back":"look to do"},
+  {"front":"così, su due piedi","back":"off the top of one's head"},
+  {"front":"allo stesso livello di / al pari di","back":"on a par with"},
+  {"front":"d'impulso","back":"on the spur of the moment"},
+  {"front":"fuori di testa","back":"out of one's mind"},
+  {"front":"spiluccare","back":"pick at"},
+  {"front":"assimilare / ospitare / accogliere","back":"take in"},
+  {"front":"sgridare / rimproverare","back":"tell off"},
+  {"front":"una vita / un'eternità","back":"donkey's years"},
+  {"front":"escluso / fuori discussione","back":"off the table"},
+  {"front":"ma dai! / ma non dire sciocchezze!","back":"come off it!"},
+  {"front":"ora che mi ci fai pensare / ora che lo dici","back":"now that you mention it"},
+  {"front":"arabo / incomprensibile","back":"double dutch"},
+  {"front":"devastato dalla guerra","back":"war-torn"},
+  {"front":"cane randagio","back":"stray dog"},
+  {"front":"cedere a","back":"succumb"},
+  {"front":"ci sto!","back":"count me in!"},
+  {"front":"cotta adolescenziale / amore adolescenziale","back":"puppy love"},
+  {"front":"puoi fare la somma di questi numeri? a me viene sempre 92, ma dovrebbe essere 94.","back":"can you add up these numbers for me? i keep getting 92, but it should be 94."},
+  {"front":"qualcosa non quadra. sono sicuro che c'è qualcosa che non ci sta dicendo.","back":"something just doesn't add up. i'm sure there's something he's not telling us."},
+  {"front":"che coincidenza che tu lo dica, perché l'argomento è venuto fuori proprio ieri sera a cena.","back":"funny you should say that because the subject came up during dinner last night."},
+  {"front":"mi dispiace, ma è appena saltato fuori un imprevisto e dovrò lavorare fino a tardi.","back":"i'm sorry, but something has just cropped up and i'm going to have to work until late."},
+  {"front":"è già allo stesso livello delle migliori giocatrici. molti giornalisti sportivi arrivano persino a dire che sarà la migliore di sempre.","back":"she's already on a par with the best players. many sports writers go so far as to say she'll be the best ever."},
+  {"front":"ieri sera abbiamo invitato alcuni amici a casa. è stato un disastro.","back":"we had some friends over last night. it turned out to be a disaster."},
+  {"front":"sono convinto che siano in combutta tra loro.","back":"i'm convinced they're in cahoots with each other."},
+  {"front":"ho sempre desiderato intensamente una casa al mare.","back":"i've always longed for a house by the sea."},
+  {"front":"stiamo cercando di espandere l'attività il prossimo anno.","back":"we're looking to expand the business next year."},
+  {"front":"così, su due piedi, direi che c'erano una cinquantina di persone.","back":"off the top of my head, i'd say there were about fifty people."},
+  {"front":"direi che il mio ultimo lavoro è al pari di qualsiasi cosa che io abbia fatto finora.","back":"i'd say my latest work is on a par with anything i've done to date."},
+  {"front":"d'impulso ho deciso di lasciare il lavoro e trasferirmi all'estero.","back":"i made up my mind on the spur of the moment to quit my job and move abroad."},
+  {"front":"devi essere fuori di testa se pensi che accetterò!","back":"you must be out of your mind if you think i'll agree to that!"},
+  {"front":"ha solo spiluccato la cena perché non si sentiva bene.","back":"he only picked at his dinner because he wasn't feeling well."},
+  {"front":"parlava così in fretta che non sono riuscito ad assimilare tutto. non ci ho capito niente.","back":"he was speaking so fast that i couldn't take it all in. it went right over my head."},
+  {"front":"prenderesti in casa dei senzatetto per natale?","back":"would you consider taking in homeless people over christmas?"},
+  {"front":"lo ha rimproverato per essere stato maleducato, ma lui le ha detto di stare zitto e farsi gli affari suoi.","back":"she told him off for being rude, but he just told her to shut up and mind her own business."},
+  {"front":"non la vedo da una vita. chissà che fine ha fatto.","back":"i haven't seen her for donkey's years. i wonder what's become of her."},
+  {"front":"all'epoca eravamo tutti favorevoli. purtroppo quell'idea ormai è fuori discussione.","back":"back then, we were all in favour. unfortunately, that idea is off the table now."},
+  {"front":"ma dai! nessuno crederà a quella storia.","back":"come off it! nobody's going to believe that story."},
+  {"front":"ora che mi ci fai pensare, sembrava davvero piuttosto silenzioso e preoccupato.","back":"now that you mention it, he did seem rather quiet and preoccupied."},
+  {"front":"devo ammettere che la sua spiegazione per me era arabo.","back":"i have to confess that his explanation was all double dutch to me."},
+  {"front":"questa parte del paese è ancora devastata dalla guerra.","back":"this part of the country is still badly war-torn."},
+  {"front":"l'anno scorso abbiamo adottato un cane randagio. è stata la cosa migliore che abbiamo mai fatto.","back":"we adopted a stray dog last year. best thing we ever did."},
+  {"front":"alla fine ha ceduto alla tentazione e si è comprato un rolex.","back":"he finally succumbed to temptation and bought himself a rolex."},
+  {"front":"\"domani andiamo al mare. vuoi venire?\" \"eccome! ci sto!\"","back":"\"we're going to the beach tomorrow. wanna come?\" \"you bet! count me in!\""},
+  {"front":"forse era solo una cotta adolescenziale, ma adoravo quella ragazza.","back":"it may well only have been puppy love, but i adored that girl."}
+],
+
+
+"pvie3.6": [
+
+  {"front":"sostenere / corroborare","back":"back up"},
+  {"front":"salvare una copia","back":"back up"},
+  {"front":"certamente / assolutamente","back":"by all means"},
+  {"front":"assolutamente no / per niente","back":"by no means"},
+  {"front":"lasciare / far scendere","back":"drop off"},
+  {"front":"consegnare","back":"drop off"},
+  {"front":"addormentarsi","back":"drop off"},
+  {"front":"muoversi / darsi una mossa","back":"get a move on"},
+  {"front":"correre troppo / fare il passo più lungo della gamba","back":"get ahead of oneself"},
+  {"front":"senza mezzi termini","back":"in no uncertain terms"},
+  {"front":"abbandonare / rinunciare a","back":"knock something on the head"},
+  {"front":"fare storie","back":"make a fuss"},
+  {"front":"fare i capricci / dare fastidio","back":"play up"},
+  {"front":"distrarre / deconcentrare","back":"put off"},
+  {"front":"roba da non credere! / che (ignoranza)!","back":"talk about (ignorance)!"},
+  {"front":"portare avanti / mantenere viva la conversazione","back":"keep the ball rolling"},
+  {"front":"appunto! / proprio così!","back":"quite!"},
+  {"front":"un pizzico di / un accenno di","back":"a hint of"},
+  {"front":"risorsa / punto di forza","back":"asset"},
+  {"front":"virus / insetto","back":"bug"},
+  {"front":"accomodatevi","back":"make yourselves comfortable"},
+  {"front":"zoppicare","back":"limp"},
+  {"front":"locali","back":"premises"},
+  {"front":"mettere in mostra / valorizzare","back":"showcase"},
+  {"front":"tempi di recupero","back":"injury time"},
+  {"front":"agitarsi / stare sempre in movimento","back":"fidget"},
+  {"front":"perdere la calma / le staffe","back":"lose one's cool"},
+  {"front":"stare sempre addosso a qualcuno","back":"be on someone's back"},
+  {"front":"musi lunghi","back":"long faces"},
+  {"front":"piovere a dirotto / diluviare","back":"pour with rain"},
+
+  {"front":"le riprese delle telecamere corroborano tutto quello che ha detto il testimone","back":"the cctv footage backs up everything the witness said"},
+  {"front":"non dimenticare di salvare una copia di tutti i tuoi file prima di installare l'aggiornamento","back":"don't forget to back up all your files before installing the update"},
+  {"front":"posso aprire la finestra? — ma certo","back":"can i open the window? — by all means"},
+  {"front":"il mio lavoro non è affatto facile","back":"my job is by no means easy"},
+  {"front":"mi lasci all'angolo, per favore?","back":"can you please drop me off at the corner?"},
+  {"front":"passo a lasciarti i documenti in ufficio prima di andare via","back":"i'll drop the documents off at your office before i leave"},
+  {"front":"è stato più per la noia che per la stanchezza che mi sono addormentato durante il film","back":"it was more out of boredom than tiredness that i dropped off during the film"},
+  {"front":"sbrigati, per favore, altrimenti non faremo mai in tempo per l'inizio della partita!","back":"get a move on, will you, or we won't possibly make the start of the match!"},
+  {"front":"non corriamo troppo. non abbiamo ancora firmato il contratto","back":"let's not get ahead of ourselves. we haven't signed the contract yet"},
+  {"front":"gli ha detto senza mezzi termini di lasciarla in pace","back":"she told him in no uncertain terms to leave her alone"},
+  {"front":"abbiamo deciso di piantarla lì con l'intero progetto. non è più fattibile","back":"we've decided to knock the whole project on the head. it's no longer feasible"},
+  {"front":"fa sempre storie per le cose più banali. — eh, lo so! sembra quasi che stia crollando il mondo!","back":"he always makes a fuss about the smallest things. — i know! you'd think it was the end of the world!"},
+  {"front":"i bambini hanno iniziato a fare i capricci non appena ci siamo girati dall'altra parte","back":"the kids started playing up as soon as we turned our backs"},
+  {"front":"quel rumore incessante mi deconcentrava e non riuscivo a seguire quello che diceva il professore","back":"the constant noise was putting me off and i couldn't follow what the lecturer was saying"},
+  {"front":"che sfiga! il motore si è spento improvvisamente sulla strada per l'aeroporto","back":"talk about bad luck! the engine cut out on the way to the airport"},
+  {"front":"come fai a mantenere viva la conversazione quando cala all'improvviso il silenzio?","back":"how do you keep the ball rolling when the conversation suddenly goes quiet?"},
+  {"front":"appunto! è proprio quello che stavo cercando di dire","back":"quite! that's exactly what i was trying to say"},
+  {"front":"per caso percepisco un pizzico di frustrazione?","back":"do i detect a hint of frustration by any chance?"},
+  {"front":"a differenza di molti dei nostri concorrenti, il nostro personale è la nostra risorsa più preziosa","back":"unlike many of our competitors, our staff are our greatest asset"},
+  {"front":"accomodatevi. vi porto subito qualcosa da bere","back":"make yourselves comfortable. i'll bring you something to drink right away"},
+  {"front":"vedo che zoppichi. ti va di dirmi cos'è successo?","back":"i notice you're limping. want to tell me about it?"},
+  {"front":"quando è previsto il trasferimento nei nostri nuovi locali?","back":"when are we due to move into our new premises?"},
+  {"front":"dovremmo quantomeno cercare di mettere in mostra il meglio che abbiamo da offrire","back":"we should at least try to showcase the very best we have to offer"},
+  {"front":"mancano ancora cinque minuti di recupero. possiamo ancora vincerla","back":"there's still five minutes of injury time left. we can still win this"},
+  {"front":"la smetti di agitarti, per favore? mi stai facendo venire il mal di testa!","back":"will you please stop fidgeting? you're giving me a headache"},
+  {"front":"mi raccomando, non perdere la calma. non ne vale proprio la pena","back":"whatever you do, don't lose your cool. it's really not worth it"},
+  {"front":"stai sempre addosso a tuo figlio. lasciagli un po' di spazio, per l'amor di dio!","back":"you're always on your son's back. give him a bit of space, for god's sake!"},
+  {"front":"come mai tutti questi musi lunghi, ragazzi? è venerdì!","back":"why the long faces, guys? it's friday!"},
+  {"front":"non avevamo altra scelta; pioveva a dirotto","back":"we had no choice; it was pouring with rain"}
 ]
 
 };
@@ -435,6 +613,8 @@ let cards=[];
 let index=0;
 let activeMode=null;
 let activeFolder=null;
+let selectedFolder = null;
+let selectedMode = null;
 
 const flashcard=document.getElementById("flashcard");
 const frontText=document.getElementById("front-text");
@@ -442,6 +622,62 @@ const backText=document.getElementById("back-text");
 const lessonLabel=document.getElementById("lesson-label");
 const counter=document.getElementById("counter-display");
 const speakBtn=document.getElementById("speakBtn");
+
+window.closeStartPopup = function(){
+
+  document.getElementById("startPopup").style.display = "none";
+
+}
+
+window.openStartPopup = function(folder, mode){
+
+  selectedFolder = folder;
+  selectedMode = mode;
+
+  let totalCards = 0;
+  let selectedCards = 12;
+
+  if(mode === "single"){
+
+    totalCards = sets[folder].length;
+
+
+  }else{
+
+    Object.values(sets).forEach(set=>{
+      totalCards += set.length;
+    });
+
+    selectedCards = 20;
+
+  }
+
+  document.getElementById("popupText").innerHTML =
+      `THIS LESSON CONTAINS A TOTAL OF
+      <br><strong style="color:#8C0327;">${totalCards}</strong> CARDS
+      <br><br>
+      OF WHICH
+      <br><strong style="color:#8C0327;">${selectedCards}</strong> ARE SELECTED RANDOMLY`;
+
+  document.getElementById("startPopup").style.display = "flex";
+
+}
+
+window.startSelectedSet = function(){
+
+  closeStartPopup();
+
+  if(selectedMode === "single"){
+
+      loadSet(selectedFolder);
+
+  }else{
+
+      loadGlobal();
+
+  }
+
+}
 
 function shuffle(arr){
   const a=[...arr];
@@ -514,20 +750,37 @@ counter.innerText=`${index+1} / ${cards.length}`;
 }
 
 window.nextCard=function(e){
+
   if(e) e.stopPropagation();
+
+  if(cards.length===0) return;
+
   index=(index+1)%cards.length;
+
   updateCard();
+
 };
 
 window.prevCard=function(e){
+
   if(e) e.stopPropagation();
+
+  if(cards.length===0) return;
+
   index=(index-1+cards.length)%cards.length;
+
   updateCard();
+
 };
 
 flashcard.addEventListener("click",()=>{
+
+  if(cards.length===0) return;
+
   flashcard.classList.toggle("flipped");
+
 });
+
 
 speakBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
@@ -568,10 +821,55 @@ document.getElementById("libraryBackBtn").addEventListener("click", function () 
   window.location.href = "https://www.acceleratedlanguagesystems.com/idiomatic-expressions-booster";
 });
 
-/* INITIAL LOAD */
-loadSet("pvie3.1");
+/* INITIAL SCREEN */
+
+cards = [];
+
+index = 0;
+
+flashcard.classList.remove("flipped");
+
+frontText.innerText = "CHOOSE YOUR LESSON";
+
+backText.innerText = "";
+
+lessonLabel.innerText = "";
+
+counter.innerText = "0 / 0";
 
 });
 </script>
+
+</script>
+
+<!-- START POPUP -->
+
+<div id="startPopup" class="popup">
+
+  <div class="popup-box">
+
+    <div id="popupText"></div>
+
+    <div class="popup-buttons">
+
+      <button type="button"
+              class="popup-close"
+              onclick="closeStartPopup()">
+        CLOSE
+      </button>
+
+      <button type="button"
+              class="popup-start"
+              onclick="startSelectedSet()">
+        START
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
 </body>
 </html>
+
