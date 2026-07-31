@@ -8046,17 +8046,17 @@ function checkAnswer(selected,correct){
 
   buttons.forEach((btn,i)=>{
 
-    if(i === correct){
-      btn.classList.add("correct");
-    }
+  if(selected === correct && i === correct){
+    btn.classList.add("correct");
+  }
 
-    if(i === selected && selected !== correct){
-      btn.classList.add("wrong");
-    }
+  if(i === selected && selected !== correct){
+    btn.classList.add("wrong");
+  }
 
-    btn.disabled = true;
+  btn.disabled = true;
 
-  });
+});
 
   if(selected === correct){
 
