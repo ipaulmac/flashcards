@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PVIE2 – Lessons 13–24</title>
+<title>STAGE TWO – Lessons 13–24</title>
 <!-- update -->
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -37,16 +37,22 @@ body{
 .flipped{transform:rotateY(180deg);}
 .face{position:absolute; inset:0; backface-visibility:hidden; border-radius:1rem;}
 .back{transform:rotateY(180deg);}
+
+
 .it-text,.en-text{
   font-weight:800;
   text-transform:uppercase;
   text-align:center;
-  font-size:1.25rem;
+  font-size:clamp(1.05rem,4vw,1.35rem);
+  line-height:1.25;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  padding:0 .35rem;
 }
 
-
-.it-text{ color:var(--front-purple); }
+.it-text{ color:var(--en-blue); }
 .en-text{ color:var(--en-blue); }
+
 .listen-btn{
   background:none;
   border:none;
@@ -54,20 +60,16 @@ body{
   font-weight:700;
   font-size:.9rem;
 }
-
-
 .nav-btn{
   font-size:1.4rem;
   font-weight:700;
   color:white;
 }
 
-
 .set-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  row-gap:.5rem;
-  column-gap:.25rem;
+  gap:.45rem;
   max-width:380px;
   width:100%;
 }
@@ -77,14 +79,13 @@ body{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  height:42px;
-  padding:0;
+  padding:7px 0;
   font-size:.75rem;
   font-weight:800;
   border-radius:999px;
   background:white;
   color:#0E065C;
-  line-height:1.15;
+  line-height:1.3;
   text-align:center;
 }
 
@@ -93,26 +94,29 @@ body{
   color:#061247;
 }
 
-.extras-btn{
-  background:#0FF268;
+.global-green{
+  background:#1E8E3E;
+  color:white;
+}
+
+.global-yellow{
+  background:#FFD700;
   color:#061247;
 }
+
 
 .back-btn{
   background:#C46A1A;
   color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:42px;
-  padding:0;
-  font-size:.75rem;
-  font-weight:800;
   border:none;
-  border-radius:999px;
   cursor:pointer;
-  white-space:nowrap;
   transition:.2s;
+
+  border-radius:10px;
+  padding:6px 14px;
+  min-width:82px;
+  font-size:.80rem;
+  font-weight:800;
 }
 
 .back-btn:hover{
@@ -120,6 +124,15 @@ body{
   color:darkred;
 }
 
+.extras-btn{
+  background:#0FF268;
+  color:#061247;
+}
+
+.inactive-btn{
+  background:#A8E6A3;
+  color:#061247;
+}
 
 @media (max-width: 480px) {
   .set-btn{
@@ -132,28 +145,110 @@ body{
   color:white;
 }
 
+.lesson-label{
+  color:#8C0327;
+  font-size:.65rem;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+.popup{
+  position:fixed;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:70px;
+  background:rgba(0,0,0,.45);
+  z-index:9999;
+}
+
+
+.popup-box{
+  width:90%;
+  max-width:360px;
+  background:#EEF6FF;
+  border:4px solid #8C0327;
+  border-radius:18px;
+  padding:22px;
+  text-align:center;
+}
+
+
+#popupText{
+  color:#0E065C;
+  font-size:1rem;
+  font-weight:900;
+  line-height:1.6;
+}
+
+.popup-buttons{
+  margin-top:20px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.popup-close,
+.popup-start{
+  background:none;
+  border:none;
+  font-size:1rem;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.popup-close{
+  color:darkgreen;
+}
+
+.popup-start{
+  color:#8C0327;
+}
+
+
+
 </style>
 </head>
 
 <body>
 
-<h2 class="text-white text-lg font-extrabold tracking-widest text-center">
-STAGE TWO <span style="color:#FFF3A3;">(B2)</span>
+<div class="w-full max-w-[380px] flex justify-between items-center mb-2">
+
+ <h2 class="text-white text-lg font-extrabold tracking-widest">
+    STAGE TWO <span style="color:#FFF3A3;">(B2)</span>
 </h2>
 
-<div class="perspective mt-4">
+  <button id="libraryBackBtn"
+          class="set-btn back-btn">
+    ◀ BACK
+  </button>
+
+</div>
+
+<div class="perspective mt-1">
   <div id="flashcard" class="card-inner">
     <div class="face bg-white border-4 border-[#8C0327] flex items-center justify-center p-4">
       <div id="front-text" class="it-text"></div>
     </div>
+
     <div class="face back bg-white border-4 border-[#8C0327] flex flex-col justify-between p-4">
-      <div class="flex-grow flex items-center justify-center">
-        <div id="back-text" class="en-text"></div>
-      </div>
-      <div class="flex justify-center pb-2">
-        <button id="speakBtn" class="listen-btn">🔊 LISTEN</button>
-      </div>
-    </div>
+
+  <div class="flex justify-end">
+    <div id="lesson-label" class="lesson-label"></div>
+  </div>
+
+  <div class="flex-grow flex items-center justify-center">
+    <div id="back-text" class="en-text"></div>
+  </div>
+
+  <div class="flex justify-center pb-2">
+    <button id="speakBtn" class="listen-btn">🔊 Listen</button>
+  </div>
+
+</div>
+
+
   </div>
 </div>
 
@@ -164,54 +259,44 @@ STAGE TWO <span style="color:#FFF3A3;">(B2)</span>
 </div>
 
 <div class="w-full max-w-[380px] flex justify-center mt-2">
-  <button onclick="refreshCurrentSet()"
+  <button id="refreshBtn"
+        onclick="refreshCurrentSet()"
           class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounded-full">
     <span class="font-bold text-sm">REFRESH</span>
   </button>
 </div>
 
-<div class="set-grid">
+<div class="set-grid mt-2">
+<button class="set-btn" onclick="openStartPopup('pvie2.1','single')">LESSON 13</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.2','single')">LESSON 14</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.3','single')">LESSON 15</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.4','single')">LESSON 16</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.5','single')">LESSON 17</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.6','single')">LESSON 18</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.7','single')">LESSON 19</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.8','single')">LESSON 20</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.9','single')">LESSON 21</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.10','single')">LESSON 22</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.11','single')">LESSON 23</button>
+<button class="set-btn" onclick="openStartPopup('pvie2.12','single')">LESSON 24</button>
 
-  <button class="set-btn" onclick="loadSet('pvie2.1')">
-    LESSONS<br>13&14
-  </button>
+<button class="set-btn global-btn"
+        onclick="openStartPopup('global13to18','global13to18')">
+  GLOBAL 13–18
+</button>
 
-  <button class="set-btn" onclick="loadSet('pvie2.2')">
-    LESSONS<br>15&16
-  </button>
+<button class="set-btn global-green"
+        onclick="openStartPopup('global19to24','global19to24')">
+  GLOBAL 19–24
+</button>
 
-  <button class="set-btn" onclick="loadSet('pvie2.3')">
-    LESSONS<br>17&18
-  </button>
-
-  <button class="set-btn" onclick="loadSet('pvie2.4')">
-    LESSONS<br>19&20
-  </button>
-
-  <button class="set-btn" onclick="loadSet('pvie2.5')">
-    LESSONS<br>21&22
-  </button>
-
-  <button class="set-btn" onclick="loadSet('pvie2.6')">
-    LESSONS<br>23&24
-  </button>
-
-  <button class="set-btn extras-btn"
-          onclick="loadSet('pvie2.7')">
-    EXTRAS
-  </button>
-
-  <button class="set-btn global-btn"
-          onclick="loadGlobal()">
-    GLOBAL<br>13–24
-  </button>
-
-  <button id="libraryBackBtn"
-          class="set-btn back-btn">
-    ◀ BACK
-  </button>
+<button class="set-btn global-yellow"
+        onclick="openStartPopup('global13to24','global13to24')">
+  GLOBAL 13–24
+</button>
 
 </div>
+
 <script>
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -221,371 +306,1106 @@ document.addEventListener("DOMContentLoaded", function(){
 const sets = {
 
 "pvie2.1": [
-  {front:"Guastarsi / Crollare", back:"Break down"},
-  {front:"Richiedere / Esigere", back:"Call for"},
-  {front:"Passare da / Dare la parola", back:"Call on"},
-  {front:"Ovvio / Inequivocabile", back:"Clear cut"},
-  {front:"Riprendere i sensi / Rinvenire", back:"Come to"},
-  {front:"Cancellare / Barrare", back:"Cross out"},
-  {front:"Smettere", back:"Give up"},
-  {front:"Arrendersi", back:"Give up"},
-  {front:"Rinunciare", back:"Give up"},
-  {front:"Indossare", back:"Have on"},
-  {front:"Chiarire", back:"Make clear"},
-  {front:"Dare per scontato", back:"Take for granted"},
-  {front:"Tenere in considerazione", back:"Take into account"},
-  {front:"Rivelarsi / Andare a finire / Diventare", back:"Turn out"},
-  {front:"A dire il vero / In realtà", back:"As a matter of fact"},
-  {front:"Non vedere l’ora di fare", back:"Can’t wait to do / Look forward to doing"},
-  {front:"Avverarsi", back:"Come true"},
-  {front:"Mangiare a casa", back:"Eat in"},
-  {front:"Mangiare fuori", back:"Eat out"},
-  {front:"Avere voglia di (fare)", back:"Fancy doing / Feel like doing"},
-  {front:"Sentire (qualcuno)", back:"Hear from"},
-  {front:"Sentire parlare di", back:"Hear of"},
-  {front:"Offro io", back:"It’s on me"},
-  {front:"Tenere d’occhio", back:"Keep an eye on"},
-  {front:"Prendersi cura di", back:"Look after"},
-  {front:"Prendere in giro", back:"Make fun of"},
-  {front:"Una volta per tutte", back:"Once and for all"},
-  {front:"Non tutto il male vien per nuocere", back:"A blessing in disguise"},
-  {front:"Stordito", back:"Dazed"},
-  {front:"Premere un interruttore", back:"Flick a switch"},
-  {front:"Avvicinarsi (all’età/ora)", back:"Get on for"},
-  {front:"Accensione", back:"Ignition"},
-  {front:"Attaccare bottone / Avviare", back:"Strike up"},
-  {front:"A dir poco", back:"To say the least"},
-  {front:"I perché e i percome", back:"The whys and wherefores"}
+  { "front": "Guastarsi / Crollare", "back": "Break down", "speak": ["Break down"] },
+  { "front": "Richiedere / Esigere", "back": "Call for", "speak": ["Call for"] },
+  { "front": "Passare da / Dare la parola", "back": "Call on", "speak": ["Call on"] },
+  { "front": "Ovvio / Inequivocabile", "back": "Clear cut", "speak": ["Clear cut"] },
+  { "front": "Riprendere i sensi / Rinvenire", "back": "Come to", "speak": ["Come to"] },
+  { "front": "Dare per scontato", "back": "Take for granted", "speak": ["Take for granted"] },
+  { "front": "Cancellare / Barrare", "back": "Cross out", "speak": ["Cross out"] },
+  { "front": "Smettere", "back": "Give up", "speak": ["Give up"] },
+  { "front": "Arrendersi", "back": "Give up", "speak": ["Give up"] },
+  { "front": "Rinunciare", "back": "Give up", "speak": ["Give up"] },
+  { "front": "Indossare", "back": "Have on", "speak": ["Have on"] },
+  { "front": "Chiarire", "back": "Make clear", "speak": ["Make clear"] },
+  { "front": "Tenere in considerazione", "back": "Take into account", "speak": ["Take into account"] },
+  { "front": "Rivelarsi / Andare a finire / Diventare", "back": "Turn out", "speak": ["Turn out"] },
+  { "front": "Bravo!", "back": "Good for you!", "speak": ["good for you!"] },
+  { "front": "Intendiamoci / Sia chiaro", "back": "Mind you", "speak": ["mind you"] },
+  { "front": "Preferisco non pensare", "back": "I hate to think", "speak": ["i hate to think"] },
+
+  { "front":"La macchina si è <span style=\"color:#8C0327;\">rotta</span> proprio mentre stavamo per tornare a casa", "back":"The car <span style=\"color:#8C0327;\">broke down</span> just as we were about to go back home", "speak":["The car broke down just as we were about to go back home"] },
+
+{ "front":"Appena ha saputo di aver perso il lavoro, <span style=\"color:#8C0327;\">è crollato</span> in modo incontrollabile", "back":"As soon as he learnt he had lost his job, he <span style=\"color:#8C0327;\">broke down</span> uncontrollably", "speak":["As soon as he learnt he had lost his job, he broke down uncontrollably"] },
+
+{ "front":"Ti <span style=\"color:#8C0327;\">passo a prendere</span> alle otto, quindi, mi raccomando, trovati pronto", "back":"I'll <span style=\"color:#8C0327;\">call for you</span> at eight, so whatever you do, be ready!", "speak":["I'll call for you at eight, so whatever you do, be ready!"] },
+
+{ "front":"La situazione è critica e <span style=\"color:#8C0327;\">richiede</span> un intervento immediato", "back":"The situation is critical and <span style=\"color:#8C0327;\">calls for</span> immediate action", "speak":["The situation is critical and calls for immediate action"] },
+
+{ "front":"Durante la riunione, il direttore <span style=\"color:#8C0327;\">ha invitato</span> alcuni dipendenti a esprimere le loro opinioni", "back":"During the meeting, the manager <span style=\"color:#8C0327;\">called on</span> several employees to express their opinions", "speak":["During the meeting, the manager called on several employees to express their opinions"] },
+
+{ "front":"Ero in zona, quindi ho deciso di <span style=\"color:#8C0327;\">passare a trovarlo</span> senza preavviso", "back":"I was in the area, so, without notice, I decided to <span style=\"color:#8C0327;\">call on him</span>", "speak":["I was in the area, so, without notice, I decided to call on him"] },
+
+{ "front":"Eravamo tutti d'accordo che si trattava di un caso <span style=\"color:#8C0327;\">palese</span> di discriminazione", "back":"We all agreed that it was a <span style=\"color:#8C0327;\">clear-cut</span> case of discrimination", "speak":["We all agreed that it was a clear-cut case of discrimination"] },
+
+{ "front":"Sono rimasto scioccato quando mi ha detto che il conto <span style=\"color:#8C0327;\">era di</span> oltre 200 euro", "back":"I was shocked when she told me the bill <span style=\"color:#8C0327;\">came to</span> over €200", "speak":["I was shocked when she told me the bill came to over €200"] },
+
+{ "front":"Dopo aver perso i sensi, <span style=\"color:#8C0327;\">è rinvenuto</span> solo per scoprire che qualcuno gli aveva rubato il portafoglio", "back":"After losing consciousness, he <span style=\"color:#8C0327;\">came to</span> only to find someone had stolen his wallet", "speak":["After losing consciousness, he came to only to find someone had stolen his wallet"] },
+
+{ "front":"Per qualche motivo inspiegabile, ho scoperto che il mio nome era stato <span style=\"color:#8C0327;\">cancellato</span>", "back":"For some inexplicable reason, I discovered my name had been <span style=\"color:#8C0327;\">crossed out</span>", "speak":["For some inexplicable reason, I discovered my name had been crossed out"] },
+
+{ "front":"Ho <span style=\"color:#8C0327;\">smesso</span> di fumare non appena ho scoperto che mia moglie era incinta", "back":"I <span style=\"color:#8C0327;\">gave up</span> smoking as soon as I found out my wife was pregnant", "speak":["I gave up smoking as soon as I found out my wife was pregnant"] },
+
+{ "front":"Ho <span style=\"color:#8C0327;\">chiarito</span> fin dall'inizio che non ero disposto a cambiare idea", "back":"I <span style=\"color:#8C0327;\">made it clear</span> from the outset that I wasn't prepared to change my mind", "speak":["I made it clear from the outset that I wasn't prepared to change my mind"] },
+
+{ "front":"Dobbiamo <span style=\"color:#8C0327;\">tenere conto</span> delle possibili conseguenze se seguiamo questa linea d'azione", "back":"We need to <span style=\"color:#8C0327;\">take into account</span> the possible consequences if we follow this course of action", "speak":["We need to take into account the possible consequences if we follow this course of action"] },
+
+{ "front":"Mai avrei potuto immaginare che sarebbe <span style=\"color:#8C0327;\">diventato</span> così famoso", "back":"Never could I have imagined that he would <span style=\"color:#8C0327;\">turn out</span> to be so famous", "speak":["Never could I have imagined that he would turn out to be so famous"] },
+
+{ "front":"Nonostante tutte le difficoltà, non ha alcuna intenzione di <span style=\"color:#8C0327;\">arrendersi</span>", "back":"Despite all the difficulties, he has no intention of <span style=\"color:#8C0327;\">giving up</span>", "speak":["Despite all the difficulties, he has no intention of giving up"] },
+
+{ "front":"L'ultima cosa che voglio fare è <span style=\"color:#8C0327;\">rinunciare</span> a questo progetto", "back":"The last thing I want to do is <span style=\"color:#8C0327;\">give up</span> on this project", "speak":["The last thing I want to do is give up on this project"] },
+
+{ "front":"Malgrado fosse nuvoloso quando mi sono alzato, si è <span style=\"color:#8C0327;\">rivelata</span> una giornata molto soleggiata", "back":"Although it was cloudy when I got up, it's <span style=\"color:#8C0327;\">turned out</span> to be a very sunny day", "speak":["Although it was cloudy when I got up, it's turned out to be a very sunny day"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Preferisco non pensare</span> a come sarebbe andata altrimenti", "back":"I <span style=\"color:#8C0327;\">hate to think</span> how it would have turned out otherwise", "speak":["I hate to think how it would have turned out otherwise"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Intendiamoci</span>, non è che non la ammiri", "back":"It's not that I don't look up to her, <span style=\"color:#8C0327;\">mind you</span>", "speak":["It's not that I don't look up to her mind you"] },
+
+{ "front":"È stato <span style=\"color:#8C0327;\">condannato</span> a 100 ore di servizi sociali", "back":"He was <span style=\"color:#8C0327;\">sentenced</span> to 100 hours of community service", "speak":["He was sentenced to 100 hours of community service"] },
+
+{ "front":"Sinceramente, <span style=\"color:#8C0327;\">per me è lo stesso</span>", "back":"Honestly, <span style=\"color:#8C0327;\">I don't mind either way</span>", "speak":["Honestly, I don't mind either way"] },
+
+{ "front":"Non sono potuto uscire fuori perché non <span style=\"color:#8C0327;\">avevo le scarpe ai piedi</span>", "back":"I couldn't go outside because I didn't <span style=\"color:#8C0327;\">have my shoes on</span>", "speak":["I couldn't go outside because I didn't have my shoes on"] },
+
+{ "front":"Ti va un <span style=\"color:#8C0327;\">antipasto</span> o ti basta <span style=\"color:#8C0327;\">un secondo</span>?", "back":"Do you fancy a <span style=\"color:#8C0327;\">starter</span> or do you want just a <span style=\"color:#8C0327;\">main course</span>?", "speak":["Do you fancy a starter or do you want just a main course?"] },
+
+{ "front":"Carol <span style=\"color:#8C0327;\">ha fatto una brutta caduta</span> e si è rotta l'anca", "back":"Carol <span style=\"color:#8C0327;\">fell over badly</span> and broke her hip", "speak":["Carol fell over badly and broke her hip"] },
+
+
+{ "front":"Non credi che <span style=\"color:#8C0327;\">vada festeggiato</span>?", "back":"Don't you think this <span style=\"color:#8C0327;\">calls for a celebration</span>?", "speak":["Don't you think this calls for a celebration?"] },
+
+{ "front":"Il poliziotto ha arrestato il borseggiatore <span style=\"color:#8C0327;\">sul posto</span>", "back":"The police officer arrested the pickpocket <span style=\"color:#8C0327;\">on the spot</span>", "speak":["The police officer arrested the pickpocket on the spot"] }
+
 ],
 
- "pvie2.2": [
-  {front:"Al contrario", back:"Back to front"},
-  {front:"Aggiornare qualcuno", back:"Fill someone in"},
-  {front:"Sostituire qualcuno", back:"Fill in for someone"},
-  {front:"Compilare / Riempire moduli", back:"Fill out / Fill in"},
-  {front:"A lungo termine", back:"In the long run"},
-  {front:"In contatto", back:"In touch"},
-  {front:"Alla rovescia", back:"Inside out"},
-  {front:"Conoscere come le proprie tasche", back:"Know inside out / Know back to front"},
-  {front:"Non importa come", back:"No matter how"},
-  {front:"Fuori contatto / Fuori dal giro", back:"Out of touch"},
-  {front:"Nel verso giusto", back:"Right way round"},
-  {front:"Nel verso corretto / Dritto", back:"Right way up"},
-  {front:"Approfittare di", back:"Take advantage of"},
-  {front:"Assomigliare a / Seguire le orme", back:"Take after"},
-  {front:"Iniziare (un passatempo)", back:"Take up"},
-  {front:"Sottosopra / Capovolto", back:"Upside down"},
-  {front:"A portata di mano", back:"At hand"},
-  {front:"Tenere a mente / Ricordarsi", back:"Bear in mind"},
-  {front:"A mano", back:"By hand"},
-  {front:"Interrompere", back:"Cut off"},
-  {front:"Isolato", back:"Cut off"},
-  {front:"Eliminare", back:"Cut out"},
-  {front:"Ritagliare", back:"Cut out"},
-  {front:"Spegnersi (motore)", back:"Cut out"},
-  {front:"Per una volta", back:"For once"},
-  {front:"Tenere in mente / Considerare", back:"Have in mind / Keep in mind"},
-  {front:"Sfruttare al meglio", back:"Make the best of / Make the most of"},
-  {front:"Da una parte", back:"On one hand"},
-  {front:"Dall’altra parte", back:"On the other hand"},
-  {front:"Andare fuori controllo / Sfuggire di mano", back:"Get out of hand"},
-  {front:"Vedere le cose allo stesso modo", back:"See eye to eye"},
-  {front:"Vigilia / Giorno prima", back:"Eve"},
-  {front:"Sapere benissimo", back:"Know full well"},
-  {front:"Accendere (una sigaretta)", back:"Light up"},
-  {front:"Mettere i bastoni tra le ruote / Scherzare con", back:"Mess with"},
-  {front:"Non si può tornare indietro", back:"There's no going back"},
-  {front:"Ultimamente / Di recente", back:"Of late"},
-  {front:"Stranezze / Peculiarità", back:"Quirks"},
-  {front:"Ripensamenti / Dubbi", back:"Second thoughts"},
-  {front:"Partire / Mettersi in viaggio", back:"Set off"},
-  {front:"Restare fermo / Non muoversi", back:"Stay put"},
-  {front:"Essere solito fare", back:"Be wont to do"},
-  {front:"Avere il cuore puntato su / Essere decisi", back:"Have one’s heart set on"},
-  {front:"Tutto inutile", back:"All to no avail"},
-  {front:"Una passeggiata! / Facilissimo!", back:"Piece of cake!"},
-  {front:"Clausole / Testo piccolo", back:"Small print"},
-  {front:"Meno male", back:"Just as well"},
-  {front:"Essere indecisi / Essere combattuti", back:"Be in two minds"},
-  {front:"Il punto è / Il fatto è", back:"The thing is"},
-  {front:"Il più delle volte", back:"More often than not"},
-  {front:"Febbre da fieno", back:"Hay fever"},
-  {front:"Salire alle stelle", back:"Go through the roof!"},
-  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch"},
-  {front:"Occuparsi dei fatti propri / Non immischiarsi", back:"Mind one’s own business"}
+
+"pvie2.2": [
+
+  
+{ "front": "A dire il vero / In realtà", "back": "As a matter of fact", "speak": ["As a matter of fact"] },
+{ "front": "Non vedere l’ora di fare", "back": "Can’t wait to do / Look forward to doing", "speak": ["Can't wait to do", "Look forward to doing"] },
+{ "front": "Avverarsi", "back": "Come true", "speak": ["Come true"] },
+{ "front": "Mangiare a casa", "back": "Eat in", "speak": ["Eat in"] },
+{ "front": "Mangiare fuori", "back": "Eat out", "speak": ["Eat out"] },
+{ "front": "Avere voglia di (fare)", "back": "Fancy doing / Feel like doing", "speak": ["Fancy doing", "Feel like doing"] },
+{ "front": "Sentire (qualcuno)", "back": "Hear from", "speak": ["Hear from"] },
+{ "front": "Sentire parlare di", "back": "Hear of", "speak": ["Hear of"] },
+{ "front": "Offro io", "back": "It’s on me", "speak": ["It's on me"] },
+{ "front": "Tenere d’occhio", "back": "Keep an eye on", "speak": ["Keep an eye on"] },
+{ "front": "Prendersi cura di", "back": "Look after", "speak": ["Look after"] },
+{ "front": "Prendere in giro", "back": "Make fun of", "speak": ["Make fun of"] },
+{ "front": "Una volta per tutte", "back": "Once and for all", "speak": ["Once and for all"] },
+{ "front": "Non tutto il male vien per nuocere", "back": "A blessing in disguise", "speak": ["A blessing in disguise"] },
+{ "front": "Stordito", "back": "Dazed", "speak": ["Dazed"] },
+{ "front": "Premere un interruttore", "back": "Flick a switch", "speak": ["Flick a switch"] },
+{ "front": "Avvicinarsi (all’età/ora)", "back": "Get on for", "speak": ["Get on for"] },
+{ "front": "Accensione", "back": "Ignition", "speak": ["Ignition"] },
+{ "front": "Avviare (un rapport, una conversazione)", "back": "Strike up", "speak": ["Strike up"] },
+{ "front": "A dir poco", "back": "To say the least", "speak": ["To say the least"] },
+{ "front": "I perché e i percome", "back": "The whys and wherefores", "speak": ["The whys and wherefores"] },
+
+{ "front":"<span style=\"color:#8C0327;\">A dire il vero</span>, non mi aspettavo che accettasse la mia offerta così facilmente", "back":"<span style=\"color:#8C0327;\">As a matter of fact</span>, I wasn't expecting him to agree to my offer so easily", "speak":["As a matter of fact, I wasn't expecting him to agree to my offer so easily"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Non vedo l'ora di</span> sapere cosa ne pensano delle modifiche che ho apportato", "back":"<span style=\"color:#8C0327;\">I can't wait to</span> hear what they think of the changes I've made", "speak":["I can't wait to hear what they think of the changes I've made"] },
+
+{ "front":"Dopo tutti questi anni, il suo sogno di aprire un ristorante <span style=\"color:#8C0327;\">si è finalmente avverato</span>", "back":"After all these years, his dream of opening a restaurant <span style=\"color:#8C0327;\">finally came true</span>", "speak":["After all these years, his dream of opening a restaurant finally came true"] },
+
+{ "front":"Se vuoi <span style=\"color:#8C0327;\">mangiare fuori</span> stasera, faremmo meglio a prenotare", "back":"If you want to <span style=\"color:#8C0327;\">eat out</span> this evening, we'd better make a booking", "speak":["If you want to eat out this evening, we'd better make a booking"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Ti va di</span> andare fuori da qualche parte questo fine settimana?", "back":"<span style=\"color:#8C0327;\">Do you fancy</span> going away somewhere this weekend?", "speak":["Do you fancy going away somewhere this weekend?"] },
+
+{ "front":"Dopo quello che è successo ieri sera, <span style=\"color:#8C0327;\">non mi va</span> proprio di parlarne con nessuno", "back":"After what happened last night, I really <span style=\"color:#8C0327;\">don't feel like</span> talking about it with anyone", "speak":["After what happened last night, I really don't feel like talking about it with anyone"] },
+
+{ "front":"Non <span style=\"color:#8C0327;\">sentiamo</span> Colin da quando si è trasferito in Spagna", "back":"We haven't <span style=\"color:#8C0327;\">heard from</span> Colin since he moved to Spain", "speak":["We haven't heard from Colin since he moved to Spain"] },
+
+{ "front":"Non avevo mai <span style=\"color:#8C0327;\">sentito parlare di</span> lui prima che il suo nome apparisse su tutti i giornali", "back":"I had never <span style=\"color:#8C0327;\">heard of</span> him before his name appeared in all the newspapers", "speak":["I had never heard of him before his name appeared in all the newspapers"] },
+
+{ "front":"Ho insistito per <span style=\"color:#8C0327;\">offrire io</span> il pranzo, ma non ne hanno voluto sapere", "back":"I insisted that lunch <span style=\"color:#8C0327;\">was on me</span> but they would have none of it", "speak":["I insisted that lunch was on me but they would have none of it"] },
+
+{ "front":"Dobbiamo <span style=\"color:#8C0327;\">tenere d'occhio</span> l'ora, altrimenti rimarremo incastrati nel traffico dell'ora di punta", "back":"We need to <span style=\"color:#8C0327;\">keep an eye on</span> the time, otherwise we'll get caught in the rush-hour traffic", "speak":["We need to keep an eye on the time, otherwise we'll get caught in the rush-hour traffic"] },
+
+{ "front":"Chi <span style=\"color:#8C0327;\">si prenderà cura</span> del vostro cane mentre siete in vacanza?", "back":"Who's going to <span style=\"color:#8C0327;\">look after</span> your dog while you're on holiday?", "speak":["Who's going to look after your dog while you're on holiday?"] },
+
+{ "front":"Davvero <span style=\"color:#8C0327;\">non vedo l'ora di</span> tornarci. L'anno scorso ci siamo divertiti un sacco", "back":"I'm <span style=\"color:#8C0327;\">looking forward to</span> going back. We had such a great time last year", "speak":["I'm looking forward to going back. We had such a great time last year"] },
+
+{ "front":"Ci proverò, ma solo se prometti di non <span style=\"color:#8C0327;\">prendermi in giro</span>", "back":"I'll give it a go, but only if you promise not to <span style=\"color:#8C0327;\">make fun of me</span>", "speak":["I'll give it a go, but only if you promise not to make fun of me"] },
+
+{ "front":"Ho davvero bisogno di risolvere questa questione <span style=\"color:#8C0327;\">una volta per tutte</span>", "back":"I really need to settle this matter <span style=\"color:#8C0327;\">once and for all</span>", "speak":["I really need to settle this matter once and for all"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Mi farebbe molto piacere</span> venire, solo che ho già un impegno", "back":"<span style=\"color:#8C0327;\">I would love to</span> come, except that I have a prior engagement", "speak":["I would love to come, except that I have a prior engagement"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Basta che mi dici il giorno</span> e ci sarò", "back":"<span style=\"color:#8C0327;\">Just name the day</span> and I’ll be there", "speak":["Just name the day and I’ll be there"] },
+
+{ "front":"È appena partito per <span style=\"color:#8C0327;\">un viaggio in solitaria</span> nell'entroterra australiano", "back":"He's just left <span style=\"color:#8C0327;\">on a solo trip</span> into the Australian outback", "speak":["He's just left on a solo trip into the Australian outback"] },
+
+{ "front":"Non mi piace <span style=\"color:#8C0327;\">il suo modo di parlare</span> alle persone", "back":"I don't like <span style=\"color:#8C0327;\">the way he talks</span> to people", "speak":["I don't like the way he talks to people"] },
+
+{ "front":"Molto spiritoso!", "back":"Very funny!", "speak":["Very funny!"] },
+
+{ "front":"il migliore del settore", "back":"the best in the business", "speak":["the best in the business"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Mi raccomando</span>, spegni tutto quando te ne vai, <span style=\"color:#8C0327;\">va bene?</span>", "back":"<span style=\"color:#8C0327;\">Do</span> shut everything off when you leave, <span style=\"color:#8C0327;\">won't you?</span>", "speak":["Do shut everything off when you leave, won't you?"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Non potevo mica</span> andare a trovarlo con questo tempo, <span style=\"color:#8C0327;\">no?</span>", "back":"<span style=\"color:#8C0327;\">I was hardly going to</span> look him up in this weather, <span style=\"color:#8C0327;\">was I?</span>", "speak":["I was hardly going to look him up in this weather, was I?"] },
+
+{ "front":"Perdere il lavoro si è rivelata <span style=\"color:#8C0327;\">una fortuna nella sfortuna</span> perché con il nuovo lavoro guadagno di più", "back":"Losing my job turned out to be <span style=\"color:#8C0327;\">a blessing in disguise</span> because I earn more in my new job", "speak":["Losing my job turned out to be a blessing in disguise because I earn more in my new job"] },
+
+{ "front":"Dopo l'incidente, era <span style=\"color:#8C0327;\">stordito</span> e non riusciva a capire cosa fosse successo", "back":"After the accident, he was <span style=\"color:#8C0327;\">dazed</span> and couldn't understand what had happened", "speak":["After the accident, he was dazed and couldn't understand what had happened"] },
+
+{ "front":"Direi che <span style=\"color:#8C0327;\">doveva avere quasi</span> 50 anni quando l'ho conosciuto per la prima volta", "back":"I'd say he <span style=\"color:#8C0327;\">must have been getting on for</span> 50 when I first met him", "speak":["I'd say he must have been getting on for 50 when I first met him"] },
+
+{ "front":"La chiave si è incastrata nell'<span style=\"color:#8C0327;\">accensione</span>. Non sapevo cosa fare", "back":"The key got stuck in the <span style=\"color:#8C0327;\">ignition</span>. I didn't know what to do", "speak":["The key got stuck in the ignition. I didn't know what to do"] },
+
+{ "front":"Ho <span style=\"color:#8C0327;\">iniziato a fare conversazione</span> con una persona molto simpatica che era seduta accanto a me", "back":"I <span style=\"color:#8C0327;\">struck up a conversation</span> with a very nice person who was sitting next to me", "speak":["I struck up a conversation with a very nice person who was sitting next to me"] },
+
+{ "front":"La sua reazione è stata <span style=\"color:#8C0327;\">a dir poco</span> inaspettata", "back":"Her reaction was unexpected, <span style=\"color:#8C0327;\">to say the least</span>", "speak":["Her reaction was unexpected, to say the least"] },
+
+{ "front":"Non mi interessano <span style=\"color:#8C0327;\">i perché e i percome</span>, ma solo riavere i miei soldi!", "back":"I’m not interested in <span style=\"color:#8C0327;\">the whys and wherefores</span> but only in getting my money back!", "speak":["I’m not interested in the whys and wherefores but only in getting my money back!"] }
+
 ],
 
- "pvie2.3": [
-  {front:"Soprattutto", back:"Above all"},
-  {front:"Che fine ha fatto …?", back:"What’s become of …?"},
-  {front:"A detta di tutti", back:"By all accounts"},
-  {front:"Per un pelo", back:"In the nick of time"},
-  {front:"Va da sé / È inutile dire", back:"It goes without saying"},
-  {front:"Tenersi al passo con / Stare al passo", back:"Keep up with"},
-  {front:"Con certezza", back:"For certain / For sure"},
-  {front:"Fare a meno di", back:"Do without / Go without"},
-  {front:"In linea con / In armonia con", back:"In keeping with"},
-  {front:"Finire / Esaurire", back:"Run out of"},
-  {front:"Scarseggiare / Avere poco di", back:"Run short of"},
-  {front:"Svignarsela / Sgusciare via", back:"Slip away"},
-  {front:"Entrare un attimo", back:"Slip in"},
-  {front:"Sfilarsi", back:"Slip off"},
-  {front:"Infilarsi", back:"Slip on"},
-  {front:"Uscire un attimo", back:"Slip out"},
-  {front:"Prendere per", back:"Take for"},
-  {front:"Sarà anche vero ma …", back:"That’s all very well but …"},
-  {front:"Vicolo / Stradina", back:"Alley"},
-  {front:"Venire alla luce / Emergere", back:"Come to light"},
-  {front:"Spacciato", back:"Doomed"},
-  {front:"Sospirare / Ansimi di sorpresa", back:"Gasp"},
-  {front:"Bottino / Saccheggio", back:"Loot"},
-  {front:"Forzare una serratura", back:"Pick a lock"},
-  {front:"Sospirare di sollievo", back:"Sigh of relief"},
-  {front:"Andarsene velocemente", back:"Speed away"},
-  {front:"Pila / Mucchio", back:"Stack"},
-  {front:"Severo", back:"Stern"},
-  {front:"Ondata / Picco", back:"Surge"},
-  {front:"Sterzare / Fare zig-zag", back:"Swerve"},
-  {front:"Emozione forte / Brivido", back:"Thrill"},
-  {front:"Fermo nelle mie convinzioni", back:"Firm in my belief"},
-  {front:"Per quanto mi sforzi", back:"For the life of me"},
-  {front:"Ero convinto", back:"I could have sworn"},
-  {front:"Per citarne solo alcuni", back:"To name but a few"},
-  {front:"Per i miei gusti", back:"For my liking"},
-  {front:"Ricominciare da zero", back:"Start from scratch"},
-  {front:"Giorno e notte", back:"Around the clock"},
-  {front:"Fuggire con / Scappare con", back:"Run off with"},
-  {front:"Siccome siamo fortunati", back:"Knowing our luck"},
-  {front:"Costa nulla (fare)", back:"There’s no harm (doing)"},
-  {front:"Diamoci da fare!", back:"Let’s get cracking!"},
-  {front:"Col cavolo / ma quando mai!", back:"Like hell!"},
-  {front:"Licenziarsi / Lasciare il lavoro", back:"Quit one’s job"},
-  {front:"Una boccata d’aria fresca", back:"A breath of fresh air"},
-  {front:"Inosservato", back:"Unnoticed"}
+
+"pvie2.3": [
+  { "front": "Al contrario", "back": "Back to front", "speak": ["Back to front"] },
+  { "front": "Aggiornare qualcuno", "back": "Fill someone in", "speak": ["Fill someone in"] },
+  { "front": "Sostituire qualcuno", "back": "Fill in for someone", "speak": ["Fill in for someone"] },
+  { "front": "Compilare / Riempire moduli", "back": "Fill out / Fill in", "speak": ["Fill out", "Fill in"] },
+  { "front": "A lungo termine", "back": "In the long run", "speak": ["In the long run"] },
+  { "front": "In contatto", "back": "In touch", "speak": ["In touch"] },
+  { "front": "Alla rovescia", "back": "Inside out", "speak": ["Inside out"] },
+  { "front": "Non importa come", "back": "No matter how", "speak": ["No matter how"] },
+  { "front": "Fuori contatto / Fuori dal giro", "back": "Out of touch", "speak": ["Out of touch"] },
+  { "front": "Nel verso giusto", "back": "Right way round", "speak": ["Right way round"] },
+  { "front": "Una passeggiata! / Facilissimo!", "back": "Piece of cake!", "speak": ["Piece of cake!"] },
+  { "front": "Nel verso corretto / Dritto", "back": "Right way up", "speak": ["Right way up"] },
+  { "front": "Approfittare di", "back": "Take advantage of", "speak": ["Take advantage of"] },
+  { "front": "Assomigliare a / Seguire le orme", "back": "Take after", "speak": ["Take after"] },
+  { "front": "Conoscere come le proprie tasche", "back": "Know inside out / Know back to front", "speak": ["Know inside out", "Know back to front"] },
+  { "front": "Avere il cuore puntato su / Essere decisi", "back": "Have one’s heart set on", "speak": ["Have one's heart set on"] },
+  { "front": "Tutto inutile", "back": "All to no avail", "speak": ["All to no avail"] },
+  { "front": "Clausole / Testo piccolo", "back": "Small print", "speak": ["Small print"] },
+  { "front": "Meno male", "back": "Just as well", "speak": ["Just as well"] },
+  { "front": "Essere indecisi / Essere combattuti", "back": "Be in two minds", "speak": ["Be in two minds"] },
+  { "front": "Il punto è / Il fatto è", "back": "The thing is", "speak": ["The thing is"] },
+  { "front": "Molto probabilmente / Molto probabile che...", "back": "May well", "speak": ["may well"] },
+  { "front": "Iniziare (un passatempo)", "back": "Take up", "speak": ["Take up"] },
+  { "front": "Sottosopra / Capovolto", "back": "Upside down", "speak": ["Upside down"] },
+
+{ "front":"Solo quando sono arrivato al lavoro mi sono reso conto di aver messo la maglietta <span style=\"color:#8C0327;\">al contrario</span>", "back":"Only when I got to work did I realise I had put my t-shirt on <span style=\"color:#8C0327;\">back to front</span>", "speak":["Only when I got to work did I realise I had put my t-shirt on back to front"] },
+
+{ "front":"Quando il mio collega si è ammalato, mi è stato chiesto di <span style=\"color:#8C0327;\">sostituirlo</span> per il resto della settimana", "back":"When my colleague fell ill, I was asked to <span style=\"color:#8C0327;\">fill in for him</span> for the rest of the week", "speak":["When my colleague fell ill, I was asked to fill in for him for the rest of the week"] },
+
+{ "front":"Prima della riunione, il mio collega <span style=\"color:#8C0327;\">mi ha messo al corrente</span> di quello che era successo", "back":"Before the meeting, my colleague <span style=\"color:#8C0327;\">filled me in</span> on what had happened", "speak":["Before the meeting, my colleague filled me in on what had happened"] },
+
+{ "front":"Devi <span style=\"color:#8C0327;\">compilare</span> tutte le sezioni, anche quelle che non ti riguardano", "back":"You need to <span style=\"color:#8C0327;\">fill in / fill out</span> all the sections, even those which don't apply to you", "speak":["You need to fill in","You need to fill out all the sections, even those which don't apply to you"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Al lungo andare</span>, questa scelta potrebbe rivelarsi molto vantaggiosa", "back":"<span style=\"color:#8C0327;\">In the long run</span>, this choice could turn out to be very advantageous", "speak":["In the long run, this choice could turn out to be very advantageous"] },
+
+{ "front":"Faccio tutto il possibile per tenermi <span style=\"color:#8C0327;\">in contatto con</span> i miei vecchi compagni di scuola, anche se viviamo lontani", "back":"I do everything possible to keep <span style=\"color:#8C0327;\">in touch with</span> my old school friends, even though we live far apart", "speak":["I do everything possible to keep in touch with my old school friends, even though we live far apart"] },
+
+{ "front":"Mark vive qui da così tanto tempo ormai che conosce questa città <span style=\"color:#8C0327;\">come le sue tasche</span>", "back":"Mark has lived here so long now that he knows this city <span style=\"color:#8C0327;\">inside out</span>", "speak":["Mark has lived here so long now that he knows this city inside out"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Non importa</span> quanto tu sia stanco, non puoi saltare l’allenamento", "back":"<span style=\"color:#8C0327;\">No matter</span> how tired you are, you can't skip your training session", "speak":["No matter how tired you are, you can't skip your training session"] },
+
+{ "front":"Da quando ha cambiato lavoro, è del tutto <span style=\"color:#8C0327;\">fuori dal giro</span>", "back":"Since he changed jobs, he's been completely <span style=\"color:#8C0327;\">out of touch</span>", "speak":["Since he changed jobs, he's been completely out of touch"] },
+
+{ "front":"So che è <span style=\"color:#8C0327;\">nel verso giusto</span>, ma sembra ancora <span style=\"color:#8C0327;\">capovolta</span>!", "back":"I know it's the <span style=\"color:#8C0327;\">right way up</span> but it still looks <span style=\"color:#8C0327;\">upside down</span>!", "speak":["I know it's the right way up but it still looks upside down!"] },
+
+{ "front":"Non lasciare che si <span style=\"color:#8C0327;\">approfittino</span> della tua gentilezza", "back":"Don't let them <span style=\"color:#8C0327;\">take advantage of</span> your kindness", "speak":["Don't let them take advantage of your kindness"] },
+
+{ "front":"Tutti dicono che mia sorella <span style=\"color:#8C0327;\">assomiglia</span> a mia madre, ma solo nell'aspetto e non nel carattere", "back":"Everyone says my sister <span style=\"color:#8C0327;\">takes after</span> my mother, but only in looks and not in personality", "speak":["Everyone says my sister takes after my mother, but only in looks and not in personality"] },
+
+{ "front":"Sono rimasto scioccato quando ho saputo che Carol aveva <span style=\"color:#8C0327;\">iniziato</span> a fare fotografia nel tempo libero", "back":"I was shocked to learn that Carol had <span style=\"color:#8C0327;\">taken up photography</span> in her spare time", "speak":["I was shocked to learn that Carol had taken up photography in her spare time"] },
+
+{ "front":"Adoro avere un giardino, ma curarlo mi <span style=\"color:#8C0327;\">occupa</span> un sacco di tempo", "back":"I love having a garden but taking care of it <span style=\"color:#8C0327;\">takes up</span> so much of my time", "speak":["I love having a garden but taking care of it takes up so much of my time"] },
+
+{ "front":"Dopo averci pensato per qualche giorno, ho deciso di <span style=\"color:#8C0327;\">accettare</span> l'offerta", "back":"After thinking it over for a few days, I decided to <span style=\"color:#8C0327;\">take up</span> the offer", "speak":["After thinking it over for a few days, I decided to take up the offer"] },
+
+{ "front":"Ho fatto tutto il possibile per convincerli, ma è stato tutto <span style=\"color:#8C0327;\">inutile</span>", "back":"I did everything possible to convince them, but it was all <span style=\"color:#8C0327;\">to no avail</span>", "speak":["I did everything possible to convince them, but it was all to no avail"] },
+
+{ "front":"Lui non ha mostrato <span style=\"color:#8C0327;\">il minimo</span> interesse per quello che stavo dicendo", "back":"He showed no interest <span style=\"color:#8C0327;\">whatsoever</span> in what I was saying", "speak":["He showed no interest whatsoever in what I was saying"] },
+
+{ "front":"Lascia lo spazio <span style=\"color:#8C0327;\">vuoto</span> in modo da poter inserire il tuo nome", "back":"Leave the space <span style=\"color:#8C0327;\">blank</span> so that you can insert your name", "speak":["Leave the space blank so that you can insert your name"] },
+
+{ "front":"La nostra vacanza è stata <span style=\"color:#8C0327;\">rovinata</span> da sette giorni consecutivi di pioggia", "back":"Our holiday was <span style=\"color:#8C0327;\">ruined</span> by seven consecutive days of rain", "speak":["Our holiday was ruined by seven consecutive days of rain"] },
+
+{ "front":"Dopo una carriera di <span style=\"color:#8C0327;\">discreto successo</span> come cantante, ha <span style=\"color:#8C0327;\">iniziato</span> a dipingere", "back":"After a <span style=\"color:#8C0327;\">moderately successful</span> career as a singer, she <span style=\"color:#8C0327;\">took up</span> painting", "speak":["After a moderately successful career as a singer, she took up painting"] },
+
+{ "front":"Questo biglietto ti <span style=\"color:#8C0327;\">dà diritto</span> a uno sconto del 20% sul tuo prossimo acquisto", "back":"This ticket <span style=\"color:#8C0327;\">entitles</span> you to a 20% discount on your next purchase.", "speak":["This ticket entitles you to a 20% discount on your next purchase."] },
+
+{ "front":"<span style=\"color:#8C0327;\">Meno male</span> che avevo con me la chiave di scorta", "back":"<span style=\"color:#8C0327;\">Just as well</span> I had the spare key with me", "speak":["Just as well I had the spare key with me"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Sono indeciso</span> se <span style=\"color:#8C0327;\">accettare</span> questa nuova offerta di lavoro o restare dove sono", "back":"<span style=\"color:#8C0327;\">I'm in two minds</span> about whether to <span style=\"color:#8C0327;\">take up</span> this new job offer or stay where I am", "speak":["I'm in two minds about whether to take up this new job offer or stay where I am"] }
+
 ],
 
- "pvie2.4": [
-  {front:"Tutto sommato", back:"All in all"},
-  {front:"Autorizzato", back:"At liberty"},
-  {front:"Ostacolare / Mettersi in mezzo", back:"Be / Get in one’s way"},
-  {front:"Recuperare (distanza)", back:"Catch up with"},
-  {front:"Giorno dopo giorno", back:"Day in and day out"},
-  {front:"Girare / Andare in giro", back:"Go around"},
-  {front:"Sul punto di / Sull’orlo di", back:"On the brink of / On the verge of"},
-  {front:"Svenire / Perdere i sensi", back:"Pass out"},
-  {front:"Ospitare", back:"Put up"},
-  {front:"Costruire", back:"Put up"},
-  {front:"Sopportare / Tollerare", back:"Put up with"},
-  {front:"Distinguere", back:"Tell apart / Tell one from another"},
-  {front:"Qual è la fregatura?", back:"What’s the catch?"},
-  {front:"Se tutto va bene / Incrociando le dita", back:"All being well"},
-  {front:"Qual è il problema? / Che hai?", back:"What’s the matter?"},
-  {front:"Sollevare / Accennare", back:"Bring up"},
-  {front:"Crescere", back:"Bring up"},
-  {front:"Di gran lunga", back:"By far"},
-  {front:"Lungi da me", back:"Far be it from me"},
-  {front:"Tutt’altro! / Anzi!", back:"Far from it!"},
-  {front:"Aggiornarsi", back:"Catch up with"},
-  {front:"Sparisci!", back:"Get lost!"},
-  {front:"Rimanere fermo", back:"Hold still"},
-  {front:"Bastare per tutti", back:"Go around"},
-  {front:"Trattenere / Bloccare", back:"Hold up"},
-  {front:"Conoscere di vista", back:"Know by sight"},
-  {front:"Non c’è da stupirsi", back:"No wonder"},
-  {front:"Escludere / Scartare", back:"Rule out"},
-  {front:"A due passi / Vicinissimo", back:"A stone’s throw"},
-  {front:"Rampa di scale", back:"Flight of stairs"},
-  {front:"Fare un salto da", back:"Go around"},
-  {front:"In breve", back:"For short"},
-  {front:"Quasi", back:"Nigh on"},
-  {front:"Va detto", back:"It has to be said"},
-  {front:"In tutto", back:"All up"},
-  {front:"A cavallo di", back:"On either side of"},
-  {front:"Estroverso / Socievole", back:"Outgoing"},
-  {front:"Da solo / Con le proprie forze", back:"Single-handedly"},
-  {front:"Sobrio / Contenuto / Calmo", back:"Subdued"},
-  {front:"Non farsi scrupoli", back:"Think nothing of"},
-  {front:"C’è qualche possibilità di (fare)?", back:"Any chance of (doing)?"},
-  {front:"Far impazzire qualcuno", back:"Drive someone mad"},
-  {front:"Lamentele / Reclami", back:"Grievances"},
-  {front:"Sfocato / Offuscato", back:"Blurred"},
-  {front:"Suonare familiare", back:"Ring a bell"},
-  {front:"Se posso permettermi di dirlo", back:"If you don’t mind me saying so"},
-  {front:"Cosa ti è preso?", back:"What’s got into you?"},
-  {front:"Prima volta in assoluto", back:"First ever time"},
-  {front:"Solo a pensarci! / Ma pensa!", back:"Just think!"}
+
+"pvie2.4": [
+{ "front": "A portata di mano", "back": "At hand", "speak": ["At hand"] },
+{ "front": "Tenere a mente / Ricordarsi", "back": "Bear in mind", "speak": ["Bear in mind"] },
+{ "front": "A mano", "back": "By hand", "speak": ["By hand"] },
+{ "front": "Interrompere", "back": "Cut off", "speak": ["Cut off"] },
+{ "front": "Isolato", "back": "Cut off", "speak": ["Cut off"] },
+{ "front": "Eliminare", "back": "Cut out", "speak": ["Cut out"] },
+{ "front": "Ritagliare", "back": "Cut out", "speak": ["Cut out"] },
+{ "front": "Spegnersi (motore)", "back": "Cut out", "speak": ["Cut out"] },
+{ "front": "Per una volta", "back": "For once", "speak": ["For once"] },
+{ "front": "Tenere in mente / Considerare", "back": "Have in mind / Keep in mind", "speak": ["Have in mind", "Keep in mind"] },
+{ "front": "Sfruttare al meglio", "back": "Make the best of / Make the most of", "speak": ["Make the best of", "Make the most of"] },
+{ "front": "Da una parte", "back": "On one hand", "speak": ["On one hand"] },
+{ "front": "Dall’altra parte", "back": "On the other hand", "speak": ["On the other hand"] },
+{ "front": "Andare fuori controllo / Sfuggire di mano", "back": "Get out of hand", "speak": ["Get out of hand"] },
+{ "front": "Vedere le cose allo stesso modo", "back": "See eye to eye", "speak": ["See eye to eye"] },
+{ "front": "Il più delle volte", "back": "More often than not", "speak": ["More often than not"] },
+{ "front": "Febbre da fieno", "back": "Hay fever", "speak": ["<speak><phoneme alphabet=\"ipa\" ph=\"heɪ\">hay</phoneme> fever</speak>"] },
+{ "front": "Salire alle stelle", "back": "Go through the roof!", "speak": ["Go through the roof!"] },
+{ "front": "Non dire gatto se non l'hai nel sacco", "back": "Don't count your chickens before they hatch", "speak": ["Don't count your chickens before they hatch"] },
+{ "front": "Occuparsi dei fatti propri / Non immischiarsi", "back": "Mind one’s own business", "speak": ["Mind one's own business"] },
+{ "front": "Vigilia / Giorno prima", "back": "Eve", "speak": ["Eve"] },
+{ "front": "Sapere benissimo", "back": "Know full well", "speak": ["Know full well"] },
+{ "front": "Accendere (una sigaretta)", "back": "Light up", "speak": ["Light up"] },
+{ "front": "Mettere i bastoni tra le ruote / Scherzare con", "back": "Mess with", "speak": ["Mess with"] },
+{ "front": "Non si può tornare indietro", "back": "There's no going back", "speak": ["There's no going back"] },
+{ "front": "Ultimamente / Di recente", "back": "Of late", "speak": ["Of late"] },
+{ "front": "Ripensamenti / Dubbi", "back": "Second thoughts", "speak": ["Second thoughts"] },
+{ "front": "Partire / Mettersi in viaggio", "back": "Set off", "speak": ["Set off"] },
+{ "front": "Restare fermo / Non muoversi", "back": "Stay put", "speak": ["Stay put"] },
+{ "front": "Essere solito fare", "back": "Be wont to do", "speak": ["Be wont to do"] },
+{ "front": "Starnutire", "back": "Sneeze", "speak": ["Sneeze"] },
+{ "front": "Privo di", "back": "Devoid of", "speak": ["Devoid of"] },
+{ "front": "Giorno dello stipendio", "back": "Pay day", "speak": ["Pay day"] },
+{ "front": "Gridare / Urlare", "back": "Yell", "speak": ["Yell"] },
+{ "front": "Diminuire / Placarsi", "back": "Subside", "speak": ["Subside"] },
+{ "front": "Corsia d’emergenza", "back": "Hard shoulder", "speak": ["Hard shoulder"] },
+{ "front": "Sterzare / Guidare", "back": "Steer", "speak": ["Steer"] },
+
+{ "front":"La scadenza si avvicinava rapidamente e avevamo bisogno di tutti i documenti pertinenti <span style=\"color:#8C0327;\">a portata di mano</span>", "back":"The deadline was fast approaching, and we needed all the relevant documents <span style=\"color:#8C0327;\">at hand</span>", "speak":["The deadline was fast approaching, and we needed all the relevant documents at hand"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Tieni presente</span> che questa decisione potrebbe avere gravi conseguenze a lungo andare", "back":"<span style=\"color:#8C0327;\">Bear in mind</span> that this decision could have serious consequences in the long run", "speak":["Bear in mind that this decision could have serious consequences in the long run"] },
+
+{ "front":"Ha preferito scrivere l'intero discorso <span style=\"color:#8C0327;\">a mano</span> piuttosto che usare il computer", "back":"She preferred to write the entire speech <span style=\"color:#8C0327;\">by hand</span> rather than use the computer", "speak":["She preferred to write the entire speech by hand rather than use the computer"] },
+
+{ "front":"Durante la chiamata, <span style=\"color:#8C0327;\">mi è caduta la linea</span> proprio mentre mi stava dicendo una cosa importante", "back":"During the call, <span style=\"color:#8C0327;\">I was cut off</span> just as she was telling me something important", "speak":["During the call, I was cut off just as she was telling me something important"] },
+
+{ "front":"Dopo la frana, il paese è rimasto completamente <span style=\"color:#8C0327;\">isolato</span> per diversi giorni", "back":"After the landslide, the village was completely <span style=\"color:#8C0327;\">cut off</span> for several days", "speak":["After the landslide, the village was completely cut off for several days"] },
+
+{ "front":"Hanno deciso di <span style=\"color:#8C0327;\">eliminare</span> tutte le spese quotidiane non essenziali fino alla fine del mese", "back":"They agreed to <span style=\"color:#8C0327;\">cut out</span> all non-essential daily expenses until the end of the month", "speak":["They agreed to cut out all non-essential daily expenses until the end of the month"] },
+
+{ "front":"Ha <span style=\"color:#8C0327;\">ritagliato</span> dalla rivista una sua foto che voleva incorniciare", "back":"She <span style=\"color:#8C0327;\">cut out</span> a photo of herself from the magazine that she wanted to frame", "speak":["She cut out a photo of herself from the magazine that she wanted to frame"] },
+
+{ "front":"Mi è andata bene. Il motore <span style=\"color:#8C0327;\">si è spento</span> proprio prima che stessi per entrare in autostrada", "back":"I was lucky. The engine <span style=\"color:#8C0327;\">cut out</span> just before I was about to join the motorway", "speak":["I was lucky. The engine cut out just before I was about to join the motorway"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Per una volta</span> nella nostra vita, ci siamo concessi dei biglietti di prima classe", "back":"<span style=\"color:#8C0327;\">For once</span> in our lives, we treated ourselves to first-class tickets", "speak":["For once in our lives, we treated ourselves to first-class tickets"] },
+
+{ "front":"L'allarme è <span style=\"color:#8C0327;\">scattato</span> nel cuore della notte, svegliando tutto il vicinato", "back":"The alarm <span style=\"color:#8C0327;\">went off</span> in the middle of the night, waking the whole neighbourhood", "speak":["The alarm went off in the middle of the night, waking the whole neighbourhood"] },
+
+{ "front":"Non appena ho aperto il frigorifero, ho capito subito che il pesce era <span style=\"color:#8C0327;\">andato a male</span>", "back":"As soon as I opened the fridge, I knew straight away that the fish had <span style=\"color:#8C0327;\">gone off</span>", "speak":["As soon as I opened the fridge, I knew straight away that the fish had gone off"] },
+
+{ "front":"Le luci sono programmate per <span style=\"color:#8C0327;\">spegnersi</span> cinque minuti dopo che chiudiamo a chiave la porta", "back":"The lights are timed to <span style=\"color:#8C0327;\">go off</span> five minutes after we lock the door", "speak":["The lights are timed to go off five minutes after we lock the door"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Avevo in mente</span> di fare un viaggio in Scozia quest'estate", "back":"I <span style=\"color:#8C0327;\">had it in mind</span> to take a trip to Scotland this summer", "speak":["I had it in mind to take a trip to Scotland this summer"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Tieni presente</span> che non tutti <span style=\"color:#8C0327;\">saranno della stessa opinione</span> su quale sia la strada migliore da fare da qui in avanti", "back":"<span style=\"color:#8C0327;\">Keep in mind / Bear in mind</span> that not everyone will <span style=\"color:#8C0327;\">see eye to eye on</span> what the best way forward from here is", "speak":["Keep in mind,","Bear in mind, that not everyone will see eye to eye on what the best way forward from here is"] },
+
+{ "front":"Cerchiamo di <span style=\"color:#8C0327;\">sfruttare al meglio questa situazione</span>, anche se non è quella che avevamo previsto", "back":"Let's try to <span style=\"color:#8C0327;\">make the most of / make the best of</span> this situation, even though it's not what we had foreseen", "speak":["Let's try to make the most of","Let's try to make the best of this situation, even though it's not what we had foreseen"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Da una parte</span> sarebbe più economico, ma <span style=\"color:#8C0327;\">dall'altra</span> ci vorrebbe molto più tempo", "back":"<span style=\"color:#8C0327;\">On one hand</span>, it would be cheaper, but <span style=\"color:#8C0327;\">on the other hand</span>, it would take much longer", "speak":["On one hand, it would be cheaper, but on the other hand, it would take much longer"] },
+
+{ "front":"La situazione ci è <span style=\"color:#8C0327;\">sfuggita di mano</span> prima che ce ne rendessimo conto", "back":"The situation <span style=\"color:#8C0327;\">got out of hand</span> before we realised it", "speak":["The situation got out of hand before we realised it"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Il più delle volte</span>, quello che sembra essere un problema si rivela essere nulla di cui preoccuparsi", "back":"<span style=\"color:#8C0327;\">More often than not</span>, what seems to be a problem turns out to be nothing to worry about", "speak":["More often than not, what seems to be a problem turns out to be nothing to worry about"] },
+
+{ "front":"A causa della guerra, i prezzi dell'energia sono davvero <span style=\"color:#8C0327;\">andati alle stelle</span>", "back":"Due to the war, energy prices have really <span style=\"color:#8C0327;\">gone through the roof</span>", "speak":["Due to the war, energy prices have really gone through the roof"] },
+
+{ "front":"Gli ho detto di <span style=\"color:#8C0327;\">farsi gli affari suoi</span> e di smettere di fare così tante domande", "back":"I told him to <span style=\"color:#8C0327;\">mind his own business</span> and stop asking so many questions", "speak":["I told him to mind his own business and stop asking so many questions"] },
+
+{ "front":"Spero che ti renda conto che, una volta presa questa decisione, <span style=\"color:#8C0327;\">non si può tornare indietro</span>", "back":"I hope you realise that once we've made this decision, <span style=\"color:#8C0327;\">there's no going back</span>", "speak":["I hope you realise that once we've made this decision, there's no going back"] },
+
+{ "front":"Ho cominciato ad avere dei <span style=\"color:#8C0327;\">ripensamenti</span> quando ho capito che avrei dovuto rinunciare ai miei fine settimana", "back":"I started having <span style=\"color:#8C0327;\">second thoughts</span> when I realised I would have to give up my weekends", "speak":["I started having second thoughts when I realised I would have to give up my weekends"] },
+
+{ "front":"Lui <span style=\"color:#8C0327;\">è solito</span> perdere la pazienza quando le cose non vanno come vuole", "back":"He <span style=\"color:#8C0327;\">is wont to</span> lose his temper when things don't go the way he wants", "speak":["He is wont to lose his temper when things don't go the way he wants"] },
+
+{ "front":"Non <span style=\"color:#8C0327;\">scherzare con</span> lui, perché non è così innocuo come sembra", "back":"Don't <span style=\"color:#8C0327;\">mess with</span> him, because he's not as harmless as he looks", "speak":["Don't mess with him, because he's not as harmless as he looks"] }
+
 ],
 
- "pvie2.5": [
-  {front:"Stare meglio/peggio di …", back:"Be better off / Be worse off"},
-  {front:"Benestante / Agiato", back:"Be well-off"},
-  {front:"Abbassare (prezzi)", back:"Bring down"},
-  {front:"Scendere / Diminuire", back:"Come down"},
-  {front:"Avvicinarsi", back:"Come up to / Go up to"},
-  {front:"Salire / Aumentare", back:"Go up"},
-  {front:"Consegnare", back:"Hand in"},
-  {front:"Distribuire", back:"Hand out"},
-  {front:"Cedere (il potere)", back:"Hand over"},
-  {front:"Mantenere i contatti", back:"Keep in touch / Stay in touch"},
-  {front:"In servizio / Fuori servizio", back:"On duty / Off duty"},
-  {front:"Alzare (prezzi)", back:"Put up"},
-  {front:"Fare un giro di telefonate", back:"Ring around"},
-  {front:"Fare un giro dei negozi", back:"Shop around"},
-  {front:"Cogliere di sorpresa", back:"Take by surprise / Catch by surprise"},
-  {front:"Passare a trovare / Fare un salto", back:"Call by / Drop by / Stop by"},
-  {front:"Imbattersi in", back:"Come across"},
-  {front:"Dare l’impressione", back:"Come across"},
-  {front:"Servirebbe / Sarebbe utile", back:"Could do with"},
-  {front:"Disprezzare", back:"Look down on"},
-  {front:"Osservare / Assistere", back:"Look on"},
-  {front:"Separarsi / Dividersi", back:"Part ways with"},
-  {front:"Riuscire / Portare a termine", back:"Pull off"},
-  {front:"Avere possibilità", back:"Stand a chance"},
-  {front:"Rappresentare / Stare per", back:"Stand for"},
-  {front:"Tollerare", back:"Stand for"},
-  {front:"Decollare", back:"Take off"},
-  {front:"Imitare / Mimare", back:"Take off"},
-  {front:"Ahimè!", back:"Alas!"},
-  {front:"Avviare (computer)", back:"Boot up"},
-  {front:"Lasciare intendere", back:"To intimate"},
-  {front:"Canile", back:"Kennels"},
-  {front:"Che capita una volta nella vita", back:"Once-in-a-lifetime"},
-  {front:"Situazione difficile", back:"Predicament"},
-  {front:"Raggio", back:"Radius"},
-  {front:"Vizio", back:"Vice"},
-  {front:"Innocuo", back:"Harmless"},
-  {front:"Gioco d'azzardo", back:"Gambling"},
-  {front:"Mettersi a fare", back:"Set about"},
-  {front:"Magari!", back:"If only!"},
-  {front:"Significa molto / Conta moltissimo", back:"It means the world"},
-  {front:"Per il bene di / Per amore di", back:"For the sake of"},
-  {front:"Dimettersi", back:"Resign"},
-  {front:"In reperibilità", back:"On stand-by"},
-  {front:"Figurati!", back:"No trouble at all!"},
-  {front:"Spietato / Senza pietà", back:"Unforgiving"},
-  {front:"Chi l’avrebbe mai detto!", back:"Fancy that!"},
-  {front:"Zero possibilità / Non c'è santo che tenga", back:"Not a cat in hell’s chance"},
-  {front:"Pericolo / Rischio", back:"Jeopardy"}
+
+"pvie2.5": [
+
+   { "front": "Soprattutto", "back": "Above all", "speak": ["Above all"] },
+  { "front": "Che fine ha fatto …?", "back": "What’s become of …?", "speak": ["What's become of?"] },
+  { "front": "A detta di tutti", "back": "By all accounts", "speak": ["By all accounts"] },
+  { "front": "Per un pelo", "back": "In the nick of time", "speak": ["In the nick of time"] },
+  { "front": "Va da sé / È inutile dire", "back": "It goes without saying", "speak": ["It goes without saying"] },
+{ "front": "Fermo nelle mie convinzioni", "back": "Firm in my belief", "speak": ["Firm in my belief"] },
+  { "front": "Per quanto mi sforzi", "back": "For the life of me", "speak": ["For the life of me"] },
+  { "front": "Ero convinto", "back": "I could have sworn", "speak": ["I could have sworn"] },
+  { "front": "Per citarne solo alcuni", "back": "To name but a few", "speak": ["To name but a few"] },
+  { "front": "Per i miei gusti", "back": "For my liking", "speak": ["For my liking"] },
+  { "front": "Ricominciare da zero", "back": "Start from scratch", "speak": ["Start from scratch"] },  { "front": "Per caso, sai…?", "back": "You don't happen (know)…, do you?", "speak": ["you don't happen to know..., do you?"] },
+  { "front": "Giorno e notte", "back": "Around the clock", "speak": ["Around the clock"] },
+  { "front": "Fuggire con / Scappare con", "back": "Run off with", "speak": ["Run off with"] },
+  { "front": "Tenersi al passo con / Stare al passo", "back": "Keep up with", "speak": ["Keep up with"] },
+{ "front": "Trovare il tempo per (fare)", "back": "Get round to (doing)", "speak": ["Get round to doing"] },
+{ "front": "Nel complesso", "back": "Overall", "speak": ["Overall"] },
+{ "front": "Rilassarsi / Prendersela comoda", "back": "Take it easy", "speak": ["Take it easy"] },
+{ "front": "Rifiutare (un invito)", "back": "Turn down", "speak": ["Turn down"] },
+{ "front": "Abbassare (la radio)", "back": "Turn down", "speak": ["Turn down"] },
+{ "front": "Arrivare (al lavoro)", "back": "Turn up", "speak": ["Turn up"] },
+{ "front": "Alzare (il volume)", "back": "Turn up", "speak": ["Turn up"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Più di ogni altra cosa</span>, voglio che tu sia completamente sincero con me", "back":"<span style=\"color:#8C0327;\">Above all else</span>, I want you to be totally frank with me", "speak":["Above all else, I want you to be totally frank with me"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Che fine hanno fatto</span> tutti quei soldi che avevamo messo da parte?", "back":"<span style=\"color:#8C0327;\">What became of</span> all that money we had put aside?", "speak":["What became of all that money we had put aside?"] },
+
+{ "front":"<span style=\"color:#8C0327;\">A detta di tutti</span>, è un ristorante che vale davvero la pena provare", "back":"<span style=\"color:#8C0327;\">By all accounts</span>, it's a restaurant that's really worth trying", "speak":["By all accounts, it's a restaurant that's really worth trying"] },
+
+{ "front":"Solo Dio sa quando <span style=\"color:#8C0327;\">troverò il tempo di</span> sgomberare il garage!", "back":"Heaven knows when I’ll <span style=\"color:#8C0327;\">get round to</span> clearing out the garage!", "speak":["Heaven knows when I’ll get round to clearing out the garage!"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Per un pelo</span> la polizia è arrivata in tempo per evitare che la situazione sfuggisse di mano", "back":"The police arrived <span style=\"color:#8C0327;\">in the nick of time</span> to prevent the situation from getting out of hand", "speak":["The police arrived in the nick of time to prevent the situation from getting out of hand"] },
+
+
+{ "front":"Dopo quello che è successo l'ultima volta, <span style=\"color:#8C0327;\">è inutile dire</span> che non possiamo più fidarci di lui", "back":"After what happened last time, <span style=\"color:#8C0327;\">it goes without saying</span> that we can no longer trust him", "speak":["After what happened last time, it goes without saying that we can no longer trust him"] },
+
+{ "front":"Non riesco a <span style=\"color:#8C0327;\">tenere il passo</span> con tutti questi cambiamenti", "back":"I can't <span style=\"color:#8C0327;\">keep up with</span> all these changes", "speak":["I can't keep up with all these changes"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Nel complesso</span>, il progetto è stato un successo, nonostante alcune difficoltà iniziali", "back":"<span style=\"color:#8C0327;\">Overall</span>, the project was a success despite some initial difficulties", "speak":["Overall, the project was a success despite some initial difficulties"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Prenditela comoda</span>, abbiamo tutto il tempo che ci serve", "back":"<span style=\"color:#8C0327;\">Take it easy</span>, we've got all the time we need", "speak":["Take it easy, we've got all the time we need"] },
+
+{ "front":"Ho dovuto <span style=\"color:#8C0327;\">rifiutare</span> il suo invito perché avevo già un altro impegno", "back":"I had to <span style=\"color:#8C0327;\">turn down</span> her invitation as I already had a prior engagement", "speak":["I had to turn down her invitation as I already had a prior engagement"] },
+
+{ "front":"È <span style=\"color:#8C0327;\">scappata con</span> tutti i gioielli di famiglia prima che qualcuno si accorgesse della sua assenza", "back":"She <span style=\"color:#8C0327;\">ran off with</span> all the family jewellery before anyone realised she was gone", "speak":["She ran off with all the family jewellery before anyone realised she was gone"] },
+
+{ "front":"Vuoi <span style=\"color:#8C0327;\">abbassare</span> il volume, per favore?! Non riesco a sentire quello che stanno dicendo", "back":"Will you please <span style=\"color:#8C0327;\">turn down</span> the volume?! I can't hear what they're saying", "speak":["Will you please turn down the volume?! I can't hear what they're saying"] },
+
+{ "front":"Non <span style=\"color:#8C0327;\">si è presentato</span> al lavoro stamattina, e nessuno sa dove sia", "back":"He didn't <span style=\"color:#8C0327;\">turn up</span> for work this morning, and nobody knows where he is", "speak":["He didn't turn up for work this morning, and nobody knows where he is"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Per quanto mi sforzi</span>, non riesco proprio a ricordare dove ho messo le chiavi", "back":"I just can't <span style=\"color:#8C0327;\">for the life of me</span> remember where I put my keys", "speak":["I just can't for the life of me remember where I put my keys"] },
+
+{ "front":"<span style=\"color:#8C0327;\">Ero convinto</span> che avessimo parcheggiato la macchina da queste parti", "back":"<span style=\"color:#8C0327;\">I could have sworn</span> we had parked the car somewhere around here", "speak":["I could have sworn we had parked the car somewhere around here"] },
+
+{ "front":"Ha molti interessi, tra cui il calcio, la musica e la cucina, <span style=\"color:#8C0327;\">solo per citarne alcuni</span>", "back":"He has many interests, including football, music and cooking, <span style=\"color:#8C0327;\">to name but a few</span>", "speak":["He has many interests, including football, music and cooking, to name but a few"] },
+
+{ "front":"La farmacia è aperta <span style=\"color:#8C0327;\">24 ore su 24</span>, sette giorni su sette", "back":"The pharmacy is open <span style=\"color:#8C0327;\">around the clock</span>, seven days a week", "speak":["The pharmacy is open around the clock, seven days a week"] },
+
+{ "front":"Se fossi in te, starei alla larga da lui. Sta diventando un po' troppo amichevole <span style=\"color:#8C0327;\">per i miei gusti</span>", "back":"If I were you, I would stay away from him. He's getting a little too friendly <span style=\"color:#8C0327;\">for my liking</span>", "speak":["If I were you, I would stay away from him. He's getting a little too friendly for my liking"] },
+
+{ "front":"Penso che l'unico modo in cui riusciremo mai a risolvere questo problema sia <span style='color:#8C0327;'>ricominciare da zero</span>", "back":"I think the only way we will ever be able to resolve this problem is by <span style='color:#8C0327;'>starting from scratch</span>", "speak":["I think the only way we will ever be able to resolve this problem is by starting from scratch"] },
+
+{ "front":"Il ricordo di quella notte continua a <span style='color:#8C0327;'>perseguitarlo</span> ancora oggi", "back":"The memory of that night still <span style='color:#8C0327;'>haunts him</span> to this day", "speak":["The memory of that night still haunts him to this day"] },
+
+{ "front":"Facendo una <span style='color:#8C0327;'>tacca</span> sul mio bastone, potevo tenere il conto di quanti giorni ero rimasto disperso nella giungla", "back":"By making a <span style='color:#8C0327;'>notch</span> in my stick, I could keep count of how many days I had been lost in the jungle", "speak":["By making a notch in my stick, I could keep count of how many days I had been lost in the jungle"] },
+
+{ "front":"Ha sbattuto la testa contro la <span style='color:#8C0327;'>trave</span> sopra la porta entrando nel piccolo negozio sotterraneo", "back":"He banged his head on the <span style='color:#8C0327;'>beam</span> above the door on entering the small underground shop", "speak":["He banged his head on the beam above the door on entering the small underground shop"] },
+
+{ "front":"Sono i campioni <span style='color:#8C0327;'>in carica</span> e puntano a vincere il titolo per il terzo anno consecutivo", "back":"They are the <span style='color:#8C0327;'>reigning</span> champions and are aiming to win the title for the third year in a row", "speak":["They are the reigning champions and are aiming to win the title for the third year in a row"] },
+
+
+{ "front":"Sono stato <span style=\"color:#8C0327;\">trascinato</span> fuori dalla stanza prima di avere la possibilità di spiegarmi", "back":"I was <span style=\"color:#8C0327;\">dragged</span> out of the room before I had a chance to explain myself", "speak":["I was dragged out of the room before I had a chance to explain myself"] },
+
+{ "front":"È <span style=\"color:#8C0327;\">scoppiata</span> a piangere dalla gioia quando ha saputo di aver vinto il premio", "back":"She <span style=\"color:#8C0327;\">burst</span> into tears of joy when she found out she had won the award", "speak":["She burst into tears of joy when she found out she had won the award"] },
+
+{ "front":"Il mio esame è andato così bene che tutti pensavano che avessi <span style=\"color:#8C0327;\">copiato</span>", "back":"My exam went so well that everyone thought I had <span style=\"color:#8C0327;\">cheated</span>", "speak":["My exam went so well that everyone thought I had cheated"] },
+
+{ "front":"Sono tornati da Disneyland la settimana scorsa e da allora non fanno altro che <span style=\"color:#8C0327;\">parlarne entusiasticamente</span>", "back":"They got back from Disneyland last week and have done nothing but <span style=\"color:#8C0327;\">rave about it</span> ever since", "speak":["They got back from Disneyland last week and have done nothing but rave about it ever since"] }
+
+
 ],
 
-  "pvie2.6": [
-  {front:"In anticipo sulla tabella di marcia", back:"Ahead of schedule"},
-  {front:"Ad occhio e croce", back:"At a guess"},
-  {front:"Essere stimolato", back:"Be into"},
-  {front:"In ritardo sulla tabella di marcia", back:"Behind schedule"},
-  {front:"Per un soffio / Rischio scampato", back:"Close call"},
-  {front:"Dare sui nervi", back:"Get on one’s nerves"},
-  {front:"Partorire / Dare origine", back:"Give birth to"},
-  {front:"Essere in vendita / Optare", back:"Go for"},
-  {front:"Accontentarsi di / Farsi bastare", back:"Make do with"},
-  {front:"Nei tempi previsti", back:"On schedule"},
-  {front:"Criticare / Sminuire", back:"Put down"},
-  {front:"Sopprimere", back:"Put down"},
-  {front:"Presentarsi / Arrivare", back:"Show up"},
-  {front:"Mettere in imbarazzo", back:"Show up"},
-  {front:"Restare a casa", back:"Stay in"},
-  {front:"Restare fuori", back:"Stay out"},
-  {front:"Restare in piedi", back:"Stay up"},
-  {front:"Equivalere a", back:"Amount to"},
-  {front:"A lungo", back:"At length"},
-  {front:"Svolgere / Eseguire", back:"Carry out"},
-  {front:"Tirare su di morale", back:"Cheer up"},
-  {front:"Redigere / Stilare", back:"Draw up"},
-  {front:"Ritirarsi da / Abbandonare", back:"Drop out of"},
-  {front:"Avere senso", back:"Make sense"},
-  {front:"In contrasto con / Non in linea con", back:"Out of keeping with"},
-  {front:"Non essere da qualcuno / Incoerente", back:"Out of keeping with"},
-  {front:"Imbattersi in / Incappare in", back:"Run into"},
-  {front:"Partire / Mettersi in viaggio", back:"Set out"},
-  {front:"Proporsi di / Mettersi a", back:"Set out to"},
-  {front:"Esca", back:"Bait"},
-  {front:"A sangue freddo", back:"Cold-blooded"},
-  {front:"Senza cuore", back:"Cold-hearted"},
-  {front:"Venire a sapere / Scoprire", back:"Get wind of"},
-  {front:"Adescare / Attirare", back:"Lure"},
-  {front:"Scoperto da poco", back:"New-found"},
-  {front:"Mettere fine a / Sancire la fine", back:"Put paid to"},
-  {front:"Scrupoli / Rimorsi", back:"Qualms"},
-  {front:"Spietato / Senza scrupoli", back:"Ruthless"},
-  {front:"All’insaputa di", back:"Unbeknown to"},
-  {front:"Dove si trova", back:"Whereabouts"},
-  {front:"Stormo", back:"Flock"},
-  {front:"Branco", back:"Herd"},
-  {front:"Zampa posteriore", back:"Hind leg"},
-  {front:"Dimissioni", back:"Resignation"},
-  {front:"Asta", back:"Auction"},
-  {front:"Punto e basta!", back:"That’s that!"},
-  {front:"La vera entità", back:"The true extent"},
-  {front:"Per l’ennesima volta", back:"For the umpteenth time"},
-  {front:"Darsi una mossa", back:"Get a move on"},
-  {front:"Su per giù", back:"Give or take"},
-  {front:"Essere permaloso", back:"To be touchy"},
-  {front:"Commissioni", back:"Errands"},
-  {front:"Proteste pubbliche", back:"Public outcry"},
-  {front:"Preoccuparsi / Angosciarsi", back:"Fret about"},
-  {front:"Violazione del contratto", back:"Breach of contract"}
+
+
+"pvie2.6": [
+
+  { "front": "Con certezza / Di sicuro", "back": "For certain / For sure", "speak": ["For certain", "For sure"] },
+{ "front": "Fare a meno di", "back": "Do without / Go without", "speak": ["Do without", "Go without"] },
+{ "front": "In linea con / In armonia con", "back": "In keeping with", "speak": ["In keeping with"] },
+{ "front": "Finire / Esaurire", "back": "Run out of", "speak": ["Run out of"] },
+{ "front": "Scarseggiare / Avere poco di", "back": "Run short of", "speak": ["Run short of"] },
+{ "front": "Svignarsela / Sgusciare via", "back": "Slip away", "speak": ["Slip away"] },
+{ "front": "Entrare un attimo", "back": "Slip in", "speak": ["Slip in"] },
+{ "front": "Sfilarsi", "back": "Slip off", "speak": ["Slip off"] },
+{ "front": "Infilarsi", "back": "Slip on", "speak": ["Slip on"] },
+{ "front": "Uscire un attimo", "back": "Slip out", "speak": ["Slip out"] },
+{ "front": "Prendere per", "back": "Take for", "speak": ["Take for"] },
+{ "front": "Sarà anche vero ma …", "back": "That’s all very well but …", "speak": ["that's all very well but"] },
+{ "front": "Siccome siamo fortunati", "back": "Knowing our luck", "speak": ["Knowing our luck"] },
+{ "front": "Costa nulla (fare)", "back": "There’s no harm (doing)", "speak": ["There's no harm doing"] },
+{ "front": "Diamoci da fare!", "back": "Let’s get cracking!", "speak": ["Let's get cracking!"] },
+{ "front": "Col cavolo / ma quando mai!", "back": "Like hell!", "speak": ["Like hell!"] },
+{ "front": "Licenziarsi / Lasciare il lavoro", "back": "Quit one’s job", "speak": ["Quit one's job"] },
+{ "front": "Una boccata d’aria fresca", "back": "A breath of fresh air", "speak": ["A breath of fresh air"] },
+{ "front": "Io, per primo", "back": "I, for one", "speak": ["i, for one"] },
+{ "front": "Punto e basta (rif: noi)", "back": "Won’t we", "speak": ["won't we"] },
+{ "front": "Cosa vogliamo fare?", "back": "What are we going to do about it?", "speak": ["what are we going to do about it?"] },
+{ "front": "Inosservato", "back": "Unnoticed", "speak": ["Unnoticed"] },
+{ "front": "Vicolo / Stradina", "back": "Alley", "speak": ["Alley"] },
+{ "front": "Venire alla luce / Emergere", "back": "Come to light", "speak": ["Come to light"] },
+{ "front": "Spacciato", "back": "Doomed", "speak": ["Doomed"] },
+{ "front": "Sussultare / Ansimi di sorpresa", "back": "Gasp", "speak": ["Gasp"] },
+{ "front": "Bottino / Saccheggio", "back": "Loot", "speak": ["Loot"] },
+{ "front": "Forzare una serratura", "back": "Pick a lock", "speak": ["Pick a lock"] },
+{ "front": "Sospiro di sollievo", "back": "Sigh of relief", "speak": ["Sigh of relief"] },
+{ "front": "Andarsene velocemente", "back": "Speed away", "speak": ["Speed away"] },
+{ "front": "Pila / Mucchio", "back": "Stack", "speak": ["Stack"] },
+{ "front": "Severo", "back": "Stern", "speak": ["Stern"] },
+{ "front": "Ondata / Picco", "back": "Surge", "speak": ["Surge"] },
+{ "front": "Sterzare / Fare zig-zag", "back": "Swerve", "speak": ["Swerve"] },
+{ "front": "Emozione forte / Brivido", "back": "Thrill", "speak": ["Thrill"] },
+
+{ "front":"<span style='color:#8C0327;'>Secondo</span> le ultime previsioni, il tempo dovrebbe migliorare nel corso della giornata", "back":"<span style='color:#8C0327;'>According to</span> the latest forecast, the weather should improve during the day", "speak":["According to the latest forecast, the weather should improve during the day"] },
+{ "front":"Nonostante sembri molto sicuro di sé, <span style='color:#8C0327;'>in fondo</span> è una persona piuttosto insicura", "back":"Although he seems very self-confident, he is rather insecure <span style='color:#8C0327;'>at heart</span>", "speak":["Although he seems very self-confident, he is rather insecure at heart"] },
+{ "front":"Conoscendola, <span style='color:#8C0327;'>è destinata</span> a trovare un modo per trasformare questa situazione a suo vantaggio", "back":"Knowing her, she <span style='color:#8C0327;'>is bound to</span> find a way to turn this situation to her advantage", "speak":["Knowing her, she is bound to find a way to turn this situation to her advantage"] },
+{ "front":"Potrei <span style='color:#8C0327;'>fare a meno</span> del caffè per qualche giorno, ma non della mia tazza di tè mattutina", "back":"I could <span style='color:#8C0327;'>do without</span> coffee for a few days, but not my morning cup of tea", "speak":["I could do without coffee for a few days, but not my morning cup of tea"] },
+{ "front":"Non possiamo sapere <span style='color:#8C0327;'>per certo</span> cosa sia successo prima che arrivassimo", "back":"We cannot know <span style='color:#8C0327;'>for certain</span> / <span style='color:#8C0327;'>for sure</span> what happened before we got here", "speak":["We cannot know for certain","We cannot know for sure what happened before we got here"] },
+{ "front":"Anche se non sono d'accordo con la decisione, è almeno <span style='color:#8C0327;'>in linea con</span> la politica aziendale", "back":"Although I don't agree with the decision, it is at least <span style='color:#8C0327;'>in keeping with</span> company policy", "speak":["Although I don't agree with the decision, it is at least in keeping with company policy"] },
+{ "front":"Abbiamo <span style='color:#8C0327;'>finito</span> la benzina a pochi chilometri dalla frontiera", "back":"We <span style='color:#8C0327;'>ran out of</span> petrol just a few miles from the border", "speak":["We ran out of petrol just a few miles from the border"] },
+{ "front":"Nel periodo che precedeva il Natale, avevamo <span style='color:#8C0327;'>quasi finito</span> i soldi, quindi abbiamo deciso di fare a meno dei regali per l'un l'altro", "back":"In the run-up to Christmas, we were <span style='color:#8C0327;'>running short of</span> money, so we decided to go without presents for each other", "speak":["In the run-up to Christmas, we were running short of money, so we decided to go without presents for each other"] },
+{ "front":"Il tempo era <span style='color:#8C0327;'>scivolato via</span> a tal punto che ho a malapena notato quanto velocemente siano volati via gli anni", "back":"Time had <span style='color:#8C0327;'>slipped away</span> so much that I barely noticed just how quickly the years had flown by", "speak":["Time had slipped away so much that I barely noticed just how quickly the years had flown by"] },
+{ "front":"È <span style='color:#8C0327;'>entrato al volo</span> in negozio per scoprire qualcosa in più sul prodotto esposto in vetrina", "back":"He <span style='color:#8C0327;'>slipped into</span> the shop to find out more about the product in the window", "speak":["He slipped into the shop to find out more about the product in the window"] },
+{ "front":"Era così impaziente di iniziare la riunione che non ho nemmeno avuto il tempo di <span style='color:#8C0327;'>togliermi</span> il cappotto", "back":"He was so impatient to start the meeting that I did not even have time to <span style='color:#8C0327;'>slip off</span> my coat", "speak":["He was so impatient to start the meeting that I did not even have time to slip off my coat"] },
+{ "front":"Dammi un attimo per <span style='color:#8C0327;'>infilarmi</span> le scarpe e sono subito da te", "back":"Give me a moment to <span style='color:#8C0327;'>slip on</span> my shoes and I’ll be right with you", "speak":["Give me a moment to slip on my shoes and I’ll be right with you"] },
+{ "front":"Ero <span style='color:#8C0327;'>uscito un attimo</span> per prendere un caffè al volo, ma il bar era chiuso", "back":"I had <span style='color:#8C0327;'>slipped out</span> to grab a coffee but the bar was closed", "speak":["I had slipped out to grab a coffee but the bar was closed"] },
+{ "front":"Grazie alla nostra determinazione, i dati che avevamo raccolto sono finalmente <span style='color:#8C0327;'>venuti alla luce</span>", "back":"Thanks to our determination, the data we had collected finally <span style='color:#8C0327;'>came to light</span>", "speak":["Thanks to our determination, the data we had collected finally came to light"] },
+{ "front":"Quando ha sentito la porta chiudersi alle sue spalle, ha tirato un enorme <span style='color:#8C0327;'>sospiro di sollievo</span>", "back":"When she heard the door close behind her, she breathed a huge <span style='color:#8C0327;'>sigh of relief</span>", "speak":["When she heard the door close behind her, she breathed a huge sigh of relief"] },
+{ "front":"Il <span style='color:#8C0327;'>brivido</span> che ha sentito quando è saltata era qualcosa di indescrivibile", "back":"The <span style='color:#8C0327;'>thrill</span> she felt when she jumped was something indescribable", "speak":["The thrill she felt when she jumped was something indescribable"] },
+{ "front":"<span style='color:#8C0327;'>Non costa nulla</span> chiedere aiuto quando ne hai bisogno", "back":"<span style='color:#8C0327;'>There's no harm</span> asking for help when you need it", "speak":["There's no harm asking for help when you need it"] },
+{ "front":"Ha <span style='color:#8C0327;'>sterzato</span> bruscamente per evitare il ciclista che le era comparso davanti", "back":"She <span style='color:#8C0327;'>swerved</span> sharply to avoid the cyclist who had appeared in front of her", "speak":["She swerved sharply to avoid the cyclist who had appeared in front of her"] },
+{ "front":"C'era una <span style='color:#8C0327;'>pila</span> di libri sul pavimento che avevo intenzione di mettere via da un po'", "back":"There was a <span style='color:#8C0327;'>stack</span> of books on the floor that I had been meaning to put away for a while", "speak":["There was a stack of books on the floor that I had been meaning to put away for a while"] },
+{ "front":"Un'<span style='color:#8C0327;'>ondata</span> di entusiasmo ha attraversato la folla quando è salito sul palco", "back":"A <span style='color:#8C0327;'>surge</span> of excitement went through the crowd when he walked onto the stage", "speak":["A surge of excitement went through the crowd when he walked onto the stage"] },
+{ "front":"Ho capito che ero <span style='color:#8C0327;'>spacciato</span> quando ho visto l'espressione sulla faccia del mio capo", "back":"I knew I was <span style='color:#8C0327;'>doomed</span> when I saw the look on the boss’s face", "speak":["I knew I was doomed when I saw the look on the boss’s face"] },
+{ "front":"Ha <span style='color:#8C0327;'>sussultato</span> quando ha visto a quanto ammontava il conto", "back":"She <span style='color:#8C0327;'>gasped</span> when she saw how much the bill came to", "speak":["She gasped when she saw how much the bill came to"] },
+{ "front":"All'inizio l'ho <span style='color:#8C0327;'>scambiata per</span> la segretaria, ma poi mi sono accorto che era la direttrice", "back":"At first I <span style='color:#8C0327;'>took her</span> for the secretary, but then I realised she was the manager", "speak":["At first I took her for the secretary, but then I realised she was the manager"] },
+{ "front":"<span style='color:#8C0327;'>Sarà anche vero ma</span> non puoi continuare a rimandare all'infinito", "back":"<span style='color:#8C0327;'>That's all very well</span>, <span style='color:#8C0327;'>but</span> you can't keep putting it off forever", "speak":["That's all very well, but you can't keep putting it off forever"] }
+
 ],
+
 
 "pvie2.7": [
-  {front:"All’istante", back:"On the spot"},
-  {front:"Bravo!", back:"Good for you!"},
-  {front:"Intendiamoci", back:"Mind you"},
-  {front:"Preferisco non pensare", back:"I hate to think"},
-  {front:"Ci farebbe molto piacere!", back:"We would love to!"},
-  {front:"Molto spiritoso!", back:"Very funny!"},
-  {front:"Mi raccomando, chiamami domani", back:"Do call me tomorrow, won’t you?"},
-  {front:"Non potevo mica rifiutare!", back:"I was hardly going to refuse!"},
-  {front:"Essere decisi a fare", back:"Have one’s heart set on doing"},
-  {front:"Facilissimo!", back:"Piece of cake!"},
-  {front:"Molto probabilmente/Molto probabile che io...", back:"I may well ..."},
-  {front:"Meno male", back:"Just as well"},
-  {front:"Sono indeciso", back:"I’m in two minds"},
-  {front:"Il punto/discorso è", back:"The thing is ..."},
-  {front:"Il più delle volte", back:"More often than not"},
-  {front:"Mi dispiace dirlo", back:"I’m sad to say"},
-  {front:"Salire alle stelle", back:"Go through the roof"},
-  {front:"Non dire gatto se non l'hai nel sacco", back:"Don't count your chickens before they hatch"},
-  {front:"Farsi i fatti propri", back:"Mind one's own business"},
-  {front:"Per caso, sai dov'è?", back:"You don't happen to know where it is, do you?"},
-  {front:"Fermo nella mia convinzione", back:"Firm in my belief"},
-  {front:"Per quanto mi sforzi", back:"For the life of me"},
-  {front:"Ero convinto", back:"I could have sworn"},
-  {front:"Per citarne alcuni", back:"To name but a few"},
-  {front:"Per miei gusti", back:"For my liking"},
-  {front:"Ricominciare da zero", back:"Start from scratch"},
-  {front:"24h su 24h/Giorno e notte", back:"Around the clock"},
-  {front:"Siccome (sono) fortunato…!", back:"Knowing my luck"},
-  {front:"Non costa nulla aspettare", back:"There’s no harm waiting"},
-  {front:"Io, per primo", back:"I, for one"},
-  {front:"Mettiamoci al lavoro!", back:"Let's get cracking!"},
-  {front:"Punto e basta (rif: noi)", back:"Won’t we"},
-  {front:"Col cavolo! / Ma quando mai!", back:"Like hell!"},
-  {front:"Cosa vogliamo fare?", back:"What are we going to do about it?"},
-  {front:"Non farsi scrupoli", back:"Think nothing of (doing)"},
-  {front:"Potresti per caso, tornare domani ?", back:"Any chance of coming back tomorrow?"},
-  {front:"Far impazzire", back:"Drive someone mad"},
-  {front:"Suonare familiare", back:"Ring a bell"},
-  {front:"Se posso dirlo/Se posso permettermi", back:"If you don’t mind me saying so"},
-  {front:"Cosa ti è preso?", back:"What’s got into you?"},
-  {front:"La prima volta in assoluto", back:"First ever time"},
-  {front:"Pensa che...! / Solo a pensarci!", back:"Just think!"},
-  {front:"Magari!", back:"If only"},
-  {front:"Significa tutto/Vale un mondo", back:"It means the world"},
-  {front:"In reperibilità", back:"On stand-by"},
-  {front:"Nel momento in cui", back:"By the time"},
-  {front:"Figurati!", back:"No trouble at all!"},
-  {front:"Pensa un po’! / Chi l'avrebbe mai detto!", back:"Fancy that!"},
-  {front:"Zero possibilità/Non c'è santo che tenga", back:"A cat in hell's chance"},
-  {front:"Con loro stupore", back:"Much to their amazement"},
-  {front:"Punto e basta!", back:"That’s that!/That was that!"},
-  {front:"Per l’ennesima volta", back:"For the umpteenth time"},
-  {front:"Qualcuno in più, qualcuno in meno", back:"Give or take"},
-  {front:"Essere permalosi", back:"Be touchy"},
-  {front:"Non ho la più pallida idea", back:"I haven't got a clue"},
-  {front:"All'istante/Con effetto immediato", back:"Right here and now"}
+
+{ "front": "Tutto sommato", "back": "All in all", "speak": ["All in all"] },
+{ "front": "Autorizzato", "back": "At liberty", "speak": ["At liberty"] },
+{ "front": "Ostacolare / Mettersi in mezzo", "back": "Be / Get in one’s way", "speak": ["Be in one’s way", "Get in one’s way"] },
+{ "front": "Recuperare (distanza)", "back": "Catch up with", "speak": ["Catch up with"] },
+{ "front": "Giorno dopo giorno", "back": "Day in and day out", "speak": ["Day in and day out"] },
+{ "front": "Girare", "back": "Go around", "speak": ["Go around"] },
+{ "front": "Sul punto di / Sull’orlo di", "back": "On the brink of / On the verge of", "speak": ["On the brink of", "On the verge of"] },
+{ "front": "Svenire / Perdere i sensi", "back": "Pass out", "speak": ["Pass out"] },
+{ "front": "Ospitare", "back": "Put up", "speak": ["Put up"] },
+{ "front": "Sopportare / Tollerare", "back": "Put up with", "speak": ["Put up with"] },
+{ "front": "Distinguere", "back": "Tell apart / Tell one from another", "speak": ["Tell apart", "Tell one from another"] },
+{ "front": "Aggiornarsi", "back": "Catch up with", "speak": ["Catch up with"] },
+{ "front": "Bastare per tutti", "back": "Go around", "speak": ["Go around"] },
+{ "front": "Fare un salto da", "back": "Go around to", "speak": ["Go around"] },
+{ "front": "In tutto", "back": "All up", "speak": ["All up"] },
+{ "front": "Non farsi scrupoli", "back": "Think nothing of", "speak": ["Think nothing of"] },
+{ "front": "C’è qualche possibilità di (fare)?", "back": "Any chance of (doing)?", "speak": ["Any chance of doing?"] },
+{ "front": "Costruire", "back": "Put up", "speak": ["Put up"] },
+{ "front": "Far impazzire qualcuno", "back": "Drive someone mad", "speak": ["Drive someone mad"] },
+{ "front": "Lamentele / Reclami", "back": "Grievances", "speak": ["Grievances"] },
+{ "front": "Qual è la fregatura?", "back": "What’s the catch?", "speak": ["What's the catch?"] },
+{ "front": "Cosa vogliamo fare?", "back": "What are we going to do about it?", "speak": ["what are we going to do about it?"] },
+
+
+{ "front":"<span style='color:#8C0327;'>Tutto sommato</span>, direi che abbiamo fatto la scelta giusta", "back":"<span style='color:#8C0327;'>All in all</span>, I would say we made the right choice", "speak":["All in all, I would say we made the right choice"] },
+
+{ "front":"Non sono <span style='color:#8C0327;'>autorizzato</span> a divulgare ulteriori dettagli sull'indagine", "back":"I am not <span style='color:#8C0327;'>at liberty</span> to divulge any further details about the investigation", "speak":["I am not at liberty to divulge any further details about the investigation"] },
+
+{ "front":"Ho aspettato che finissi perché non volevo <span style='color:#8C0327;'>esserti d'intralcio</span>", "back":"I waited until you had finished because I didn’t want to <span style='color:#8C0327;'>be in your way</span>", "speak":["I waited until you had finished because I didn’t want to be in your way"] },
+
+{ "front":"Devo <span style='color:#8C0327;'>mettermi in pari</span> con tutte le novità prima della riunione di domani", "back":"I need to <span style='color:#8C0327;'>catch up with</span> all the latest developments before tomorrow's meeting", "speak":["I need to catch up with all the latest developments before tomorrow's meeting"] },
+
+{ "front":"Voi tre andate avanti. Vi <span style='color:#8C0327;'>raggiungeremo</span> quando avremo finito qui", "back":"You three go ahead. We'll <span style='color:#8C0327;'>catch up with</span> you when we've finished here", "speak":["You three go ahead. We'll catch up with you when we've finished here"] },
+
+{ "front":"Sta lavorando davvero sodo <span style='color:#8C0327;'>giorno dopo giorno</span> per ottenere una promozione", "back":"He’s been working really hard <span style='color:#8C0327;'>day in and day out</span> to try and earn himself a promotion", "speak":["He’s been working really hard day in and day out to try and earn himself a promotion"] },
+
+{ "front":"Devi cogliere questa opportunità e non lasciare che la paura di fallire <span style='color:#8C0327;'>ti ostacoli</span>", "back":"You must grab this opportunity and not let your fear of failure <span style='color:#8C0327;'>get in your way</span>", "speak":["You must grab this opportunity and not let your fear of failure get in your way"] },
+
+{ "front":"Ho <span style='color:#8C0327;'>fatto un salto da</span> Peter ieri sera a vedere la partita", "back":"I <span style='color:#8C0327;'>went around to</span> Peter's last night to watch the match", "speak":["I went around to Peter's last night to watch the match"] },
+
+{ "front":"Ho tenuto mio figlio a casa oggi perché c'è un brutto virus che <span style='color:#8C0327;'>gira</span> a scuola", "back":"I kept my son at home today because there's a nasty virus <span style='color:#8C0327;'>going around</span> the school", "speak":["I kept my son at home today because there's a nasty virus going around the school"] },
+
+{ "front":"Sembra <span style='color:#8C0327;'>sul punto di</span> perdere la pazienza con tutti questi ritardi", "back":"He seems to be <span style='color:#8C0327;'>on the verge of</span> / <span style='color:#8C0327;'>on the brink of</span> losing his patience with all these delays", "speak":["He seems to be on the verge of","He seems to be on the brink of losing his patience with all these delays"] },
+
+{ "front":"Secondo me è <span style='color:#8C0327;'>svenuta</span> perché non aveva mangiato niente per tutto il giorno", "back":"I reckon she <span style='color:#8C0327;'>passed out</span> because she hadn't eaten anything all day long", "speak":["I reckon she passed out because she hadn't eaten anything all day long"] },
+
+{ "front":"Stanno progettando di <span style='color:#8C0327;'>costruire</span> un enorme centro commerciale alla periferia della città", "back":"They are planning to <span style='color:#8C0327;'>put up</span> a huge shopping centre on the outskirts of town", "speak":["They are planning to put up a huge shopping centre on the outskirts of town"] },
+
+{ "front":"Per il fine settimana <span style='color:#8C0327;'>ospiteremo</span> mia sorella e la sua famiglia", "back":"We're <span style='color:#8C0327;'>putting up</span> my sister and her family for the weekend", "speak":["We're putting up my sister and her family for the weekend"] },
+
+{ "front":"Non so come faccia a <span style='color:#8C0327;'>sopportare</span> il suo comportamento <span style='color:#8C0327;'>giorno dopo giorno</span>", "back":"I don't know how she <span style='color:#8C0327;'>puts up with</span> his behaviour <span style='color:#8C0327;'>day in and day out</span>", "speak":["I don't know how she puts up with his behaviour day in and day out"] },
+
+{ "front":"Non riesco a <span style='color:#8C0327;'>distinguere</span> i due gemelli quando sono vestiti allo stesso modo", "back":"I can't <span style='color:#8C0327;'>tell</span> the twins <span style='color:#8C0327;'>apart</span> when they're dressed alike", "speak":["I can't tell the twins apart when they're dressed alike"] },
+
+{ "front":"Le due versioni sono così simili che è quasi impossibile <span style='color:#8C0327;'>distinguere l'una dall'altra</span>", "back":"The two versions are so similar that it is almost impossible to <span style='color:#8C0327;'>tell one from the other</span>", "speak":["The two versions are so similar that it is almost impossible to tell one from the other"] },
+
+{ "front":"C'è sicuramente la <span style='color:#8C0327;'>fregatura</span> sotto, tanto nessuno ti regala mai niente per niente", "back":"There must be a <span style='color:#8C0327;'>catch</span> because nobody ever gives you something for nothing", "speak":["There must be a catch because nobody ever gives you something for nothing"] },
+
+{ "front":"<span style='color:#8C0327;'>Non si fa scrupoli</span> a licenziare qualcuno se ritiene che non sia più utile all'azienda", "back":"She <span style='color:#8C0327;'>thinks nothing of</span> firing someone if she considers them no longer useful to the company", "speak":["She thinks nothing of firing someone if she considers them no longer useful to the company"] },
+
+
+{ "front":"Le sue continue <span style='color:#8C0327;'>lamentele</span> sulla struttura retributiva erano più che comprensibili", "back":"His constant <span style='color:#8C0327;'>grievances</span> about the pay structure were more than understandable", "speak":["His constant grievances about the pay structure were more than understandable"] },
+
+{ "front":"<span style='color:#8C0327;'>C'è qualche possibilità di</span> rimandare la riunione a domani?", "back":"<span style='color:#8C0327;'>Any chance of</span> putting the meeting off until tomorrow?", "speak":["Any chance of putting the meeting off until tomorrow?"] },
+
+{ "front":"<span style='color:#8C0327;'>Nel complesso</span>, direi che abbiamo guadagnato circa 800 € dalla vendita", "back":"<span style='color:#8C0327;'>All up</span>, I reckon we made about €800 from the sale", "speak":["All up, I reckon we made about €800 from the sale"] },
+
+{ "front":"Non so te, ma il suo rifiuto di collaborare <span style='color:#8C0327;'>mi sta facendo impazzire</span>!", "back":"I don't know about you, but his refusal to cooperate is <span style='color:#8C0327;'>driving me mad</span>!", "speak":["I don't know about you, but his refusal to cooperate is driving me mad!"] },
+
+{ "front":"Pensi che ci saranno abbastanza <span style='color:#8C0327;'>stuzzichini</span> per tutti?", "back":"Do you think there will be enough <span style='color:#8C0327;'>nibbles</span> to go around?", "speak":["Do you think there will be enough nibbles to go around?"] },
+
+{ "front":"È un <span style='color:#8C0327;'>ceppo</span> di virus particolarmente resistente che gli antibiotici attuali fanno fatica a combattere", "back":"It is a particularly resistant <span style='color:#8C0327;'>strain</span> of the virus that current antibiotics struggle to combat", "speak":["It is a particularly resistant strain of the virus that current antibiotics struggle to combat"] },
+
+{ "front":"Il suo atteggiamento <span style='color:#8C0327;'>menefreghista</span> è uno dei motivi per cui non andiamo d'accordo", "back":"His <span style='color:#8C0327;'>flippant</span> attitude is one of the reasons why we don't get on", "speak":["His flippant attitude is one of the reasons why we don't get on"] },
+
+{ "front":"Sebbene siano passati tre anni dal terremoto, le strade sono ancora piene di <span style='color:#8C0327;'>macerie</span>", "back":"Though it has been three years since the earthquake, the streets are still full of <span style='color:#8C0327;'>rubble</span>", "speak":["Though it has been three years since the earthquake, the streets are still full of rubble"] }
+
+],
+
+"pvie2.8": [
+
+{ "front": "Se tutto va bene / Incrociando le dita", "back": "All being well", "speak": ["All being well"] },
+{ "front": "Qual è il problema? / Che hai?", "back": "What’s the matter?", "speak": ["What's the matter?"] },
+{ "front": "Sollevare / Accennare", "back": "Bring up", "speak": ["Bring up"] },
+{ "front": "Crescere", "back": "Bring up", "speak": ["Bring up"] },
+{ "front": "Di gran lunga", "back": "By far", "speak": ["By far"] },
+{ "front": "Lungi da me", "back": "Far be it from me", "speak": ["Far be it from me"] },
+{ "front": "Tutt’altro! / Anzi!", "back": "Far from it!", "speak": ["Far from it!"] },
+{ "front": "Sparisci!", "back": "Get lost!", "speak": ["Get lost!"] },
+{ "front": "Rimanere fermo", "back": "Hold still", "speak": ["Hold still"] },
+{ "front": "Trattenere / Bloccare", "back": "Hold up", "speak": ["Hold up"] },
+{ "front": "Conoscere di vista", "back": "Know by sight", "speak": ["Know by sight"] },
+{ "front": "Non c’è da stupirsi", "back": "No wonder", "speak": ["No wonder"] },
+{ "front": "Escludere / Scartare", "back": "Rule out", "speak": ["Rule out"] },
+{ "front": "Sfocato / Offuscato", "back": "Blurred", "speak": ["Blurred"] },
+{ "front": "Suonare familiare", "back": "Ring a bell", "speak": ["Ring a bell"] },
+{ "front": "Se posso permettermi di dirlo", "back": "If you don’t mind me saying so", "speak": ["If you don't mind me saying so"] },
+{ "front": "Cosa ti è preso?", "back": "What’s got into you?", "speak": ["What's got into you?"] },
+{ "front": "Prima volta in assoluto", "back": "First ever time", "speak": ["First ever time"] },
+{ "front": "Solo a pensarci! / Ma pensa!", "back": "Just think!", "speak": ["Just think!"] },
+{ "front": "A due passi / Vicinissimo", "back": "A stone’s throw", "speak": ["A stone’s throw"] },
+{ "front": "Rampa di scale", "back": "Flight of stairs", "speak": ["Flight of stairs"] },
+{ "front": "In breve", "back": "For short", "speak": ["For short"] },
+{ "front": "Quasi", "back": "Nigh on", "speak": ["Nigh on"] },
+{ "front": "A cavallo di", "back": "On either side of", "speak": ["On either side of"] },
+{ "front": "Estroverso / Socievole", "back": "Outgoing", "speak": ["Outgoing"] },
+{ "front": "Da solo / Con le proprie forze", "back": "Single-handedly", "speak": ["Single-handedly"] },
+{ "front": "Sobrio / Pacato / Calmo", "back": "Subdued", "speak": ["Subdued"] },
+
+{ "front":"<span style='color:#8C0327;'>Se tutto va bene</span>, dovrei tornare per l'ora di cena", "back":"<span style='color:#8C0327;'>All being well</span>, I should be back by dinner-time", "speak":["All being well, I should be back by dinner-time"] },
+
+{ "front":"<span style='color:#8C0327;'>Che hai?</span> È da stamattina che non dici quasi niente", "back":"<span style='color:#8C0327;'>What’s the matter?</span> You’ve hardly said a word all morning", "speak":["What’s the matter? You’ve hardly said a word all morning"] },
+
+{ "front":"Sono <span style='color:#8C0327;'>cresciuto</span> in un'epoca in cui potevi lasciare la porta di casa aperta senza preoccuparti", "back":"I was <span style='color:#8C0327;'>brought up</span> in an age when you could leave your front door unlocked without worrying", "speak":["I was brought up in an age when you could leave your front door unlocked without worrying"] },
+
+{ "front":"Mentre si parlava, qualcuno ha <span style='color:#8C0327;'>sollevato</span> il problema della mancanza di personale", "back":"During the conversation, someone <span style='color:#8C0327;'>brought up</span> the issue of staff shortages", "speak":["During the conversation, someone brought up the issue of staff shortages"] },
+
+{ "front":"<span style='color:#8C0327;'>Di gran lunga</span>, è il miglior giocatore ad aver mai indossato questa maglia", "back":"He is the best player <span style='color:#8C0327;'>by far</span> to have ever worn this shirt", "speak":["He is the best player by far to have ever worn this shirt"] },
+
+{ "front":"<span style='color:#8C0327;'>Lungi da me</span> mettere in discussione la tua decisione, ma sei sicuro che sia quella giusta?", "back":"<span style='color:#8C0327;'>Far be it from me</span> to question your decision, but are you sure it’s the right one?", "speak":["Far be it from me to question your decision, but are you sure it’s the right one?"] },
+
+{ "front":"<span style='color:#8C0327;'>Tutt'altro che</span> essere arrabbiato, era felicissimo di quello che era successo", "back":"<span style='color:#8C0327;'>Far from</span> being angry, he was overjoyed at what had happened", "speak":["Far from being angry, he was overjoyed at what had happened"] },
+
+{ "front":"<span style='color:#8C0327;'>Sparisci</span> e non farti più vedere qui!", "back":"<span style='color:#8C0327;'>Get lost</span> and don't let me see you here again!", "speak":["Get lost and don't let me see you here again!"] },
+
+{ "front":"Vuoi <span style='color:#8C0327;'>stare fermo</span> un attimo, per favore?! Devo controllare se hai altre schegge nel dito", "back":"Will you please <span style='color:#8C0327;'>hold still</span> for a second?! I need to check if you have any other splinters in your finger", "speak":["Will you please hold still for a second?! I need to check if you have any other splinters in your finger"] },
+
+{ "front":"Ci hanno <span style='color:#8C0327;'>trattenuti</span> quasi un'ora mentre sistemavano un problema con la prenotazione", "back":"We were <span style='color:#8C0327;'>held up</span> for nearly an hour while they sorted out a problem with our booking", "speak":["We were held up for nearly an hour while they sorted out a problem with our booking"] },
+
+{ "front":"Lo conosco <span style='color:#8C0327;'>di vista</span>, ma non credo che ci siamo mai parlati", "back":"I know him <span style='color:#8C0327;'>by sight</span>, but I don't think we've ever spoken to each other", "speak":["I know him by sight, but I don't think we've ever spoken to each other"] },
+
+{ "front":"<span style='color:#8C0327;'>Non c'è da stupirsi</span> che fosse di cattivo umore quando la sua richiesta di aumento di stipendio è stata bocciata", "back":"<span style='color:#8C0327;'>No wonder</span> he was in a bad mood when his request for a pay rise was turned down", "speak":["No wonder he was in a bad mood when his request for a pay rise was turned down"] },
+
+{ "front":"Non possiamo <span style='color:#8C0327;'>escludere</span> la possibilità che il problema possa ripresentarsi", "back":"We can't <span style='color:#8C0327;'>rule out</span> the possibility that the problem might occur again", "speak":["We can't rule out the possibility that the problem might occur again"] },
+
+{ "front":"La collezione vanta <span style='color:#8C0327;'>quasi</span> un migliaio di pezzi, alcuni dei quali risalgono a oltre un secolo fa", "back":"The collection contains <span style='color:#8C0327;'>nigh on</span> a thousand pieces, some of which date back more than a century", "speak":["The collection contains nigh on a thousand pieces, some of which date back more than a century"] },
+
+{ "front":"La foto era talmente <span style='color:#8C0327;'>sfocata</span> che non sono riuscito a distinguere chi fosse seduto accanto a me", "back":"The photo was so <span style='color:#8C0327;'>blurred</span> that I couldn’t make out who was sitting next to me", "speak":["The photo was so blurred that I couldn’t make out who was sitting next to me"] },
+
+{ "front":"Siccome la casa si trova <span style='color:#8C0327;'>a soli due passi</span> dalla stazione, possiamo andarci a piedi", "back":"Since the house is <span style='color:#8C0327;'>only a stone’s throw away</span> from the station, we can walk there", "speak":["Since the house is only a stone’s throw away from the station, we can walk there"] },
+
+{ "front":"È una persona <span style='color:#8C0327;'>solare</span> e fa sempre sentire tutti a loro agio", "back":"She’s very <span style='color:#8C0327;'>outgoing</span> and always puts people at ease", "speak":["She’s very outgoing and always puts people at ease"] },
+
+{ "front":"Ha gestito l'intero progetto <span style='color:#8C0327;'>da sola</span>, senza alcun aiuto da parte dei suoi colleghi", "back":"She managed the entire project <span style='color:#8C0327;'>single-handedly</span>, without any help from her colleagues", "speak":["She managed the entire project single-handedly, without any help from her colleagues"] },
+
+{ "front":"Ha espresso la sua frustrazione con una voce molto <span style='color:#8C0327;'>pacata</span>", "back":"She expressed her frustration in a very <span style='color:#8C0327;'>subdued</span> voice", "speak":["She expressed her frustration in a very subdued voice"] },
+
+{ "front":"La vista dalla cima della montagna era <span style='color:#8C0327;'>mozzafiato</span> e ci ha lasciati tutti senza parole", "back":"The view from the top of the mountain was <span style='color:#8C0327;'>breathtaking</span> and left all of us speechless", "speak":["The view from the top of the mountain was breathtaking and left all of us speechless"] },
+
+{ "front":"Grazie ai finanziamenti pubblici, è stato possibile <span style='color:#8C0327;'>avviare</span> una completa ristrutturazione dello stabile", "back":"Thanks to government funding, it was possible to <span style='color:#8C0327;'>embark on</span> a complete renovation of the building", "speak":["Thanks to government funding, it was possible to embark on a complete renovation of the building"] },
+
+{ "front":"È stata <span style='color:#8C0327;'>la prima volta in assoluto</span> che mi sono trovato a parlare davanti a una folla così numerosa", "back":"It was <span style='color:#8C0327;'>the first ever time</span> I found myself speaking in front of such a large crowd", "speak":["It was the first ever time I found myself speaking in front of such a large crowd"] },
+
+{ "front":"Si chiama Alexander, ma per tutti è sempre stato Alex, <span style='color:#8C0327;'>in breve</span>", "back":"His name is Alexander, but to everyone, he's always been Alex <span style='color:#8C0327;'>for short</span>", "speak":["His name is Alexander, but to everyone, he's always been Alex for short"] },
+
+{ "front":"<span style='color:#8C0327;'>Se posso permettermi di dirlo</span>, potevi gestire meglio la situazione, secondo me", "back":"<span style='color:#8C0327;'>If you don’t mind me saying so</span>, I think you could have handled the situation better", "speak":["If you don’t mind me saying so, I think you could have handled the situation better"] },
+
+{ "front":"<span style='color:#8C0327;'>Ma che ti è preso?</span> Sei stato di cattivissimo umore tutto il giorno", "back":"<span style='color:#8C0327;'>What’s got into you?</span> You’ve been in a terrible mood all day", "speak":["What’s got into you? You’ve been in a terrible mood all day"] },
+
+{ "front":"A essere del tutto sincero, il suo nome <span style='color:#8C0327;'>non mi dice proprio niente</span>", "back":"To be perfectly honest, her name <span style='color:#8C0327;'>doesn't ring a bell</span> at all", "speak":["To be perfectly honest, her name doesn't ring a bell at all"] }
+
+],
+
+"pvie2.9": [
+
+{ "front": "Stare meglio / peggio di …", "back": "Be better off / Be worse off", "speak": ["Be better off", "Be worse off"] },
+{ "front": "Benestante / Agiato", "back": "Be well-off", "speak": ["Be well-off"] },
+{ "front": "Abbassare (prezzi)", "back": "Bring down", "speak": ["Bring down"] },
+{ "front": "Scendere / Diminuire", "back": "Come down", "speak": ["Come down"] },
+{ "front": "Avvicinarsi", "back": "Come up to / Go up to", "speak": ["Come up to", "Go up to"] },
+{ "front": "Salire / Aumentare", "back": "Go up", "speak": ["Go up"] },
+{ "front": "Consegnare", "back": "Hand in", "speak": ["Hand in"] },
+{ "front": "Distribuire", "back": "Hand out", "speak": ["Hand out"] },
+{ "front": "Cedere il potere", "back": "Hand over", "speak": ["Hand over"] },
+{ "front": "Mantenere i contatti", "back": "Keep in touch / Stay in touch", "speak": ["Keep in touch", "Stay in touch"] },
+{ "front": "In servizio / Fuori servizio", "back": "On duty / Off duty", "speak": ["On duty", "Off duty"] },
+{ "front": "Alzare (prezzi)", "back": "Put up", "speak": ["Put up"] },
+{ "front": "Fare un giro di telefonate", "back": "Ring around", "speak": ["Ring around"] },
+{ "front": "Fare un giro dei negozi", "back": "Shop around", "speak": ["Shop around"] },
+{ "front": "Magari!", "back": "If only!", "speak": ["If only!"] },
+{ "front": "Significa moltissimo / Conta moltissimo", "back": "It means the world", "speak": ["It means the world"] },
+{ "front": "Per il bene di", "back": "For the sake of", "speak": ["For the sake of"] },
+{ "front": "Dimettersi", "back": "Resign", "speak": ["Resign"] },
+{ "front": "In reperibilità", "back": "On stand-by", "speak": ["On stand by"] },
+{ "front": "Nel momento in cui", "back": "By the time", "speak": ["by the time"] },
+{ "front": "Cogliere di sorpresa", "back": "Take by surprise / Catch by surprise", "speak": ["Take by surprise", "Catch by surprise"] },
+{ "front": "Venire in mente / Passare per la testa", "back": "Cross one's mind", "speak": ["Cross one's mind"] },
+{ "front": "Nel caso / Casomai / Non si sa mai", "back": "Just in case", "speak": ["Just in case"] },
+{ "front": "Effetto a catena / Effetto domino", "back": "Knock-on effect", "speak": ["Knock-on effect"] },
+{ "front": "A disagio / Imbarazzato", "back": "Self-conscious", "speak": ["Self-conscious"] },
+
+{ "front":"Se accetti quel lavoro, <span style='color:#8C0327;'>starai meglio</span>, ma solo dal punto di vista economico", "back":"If you accept that job, you will definitely <span style='color:#8C0327;'>be better off</span>, but only from a financial point of view", "speak":["If you accept that job, you will definitely be better off, but only from a financial point of view"] },
+
+{ "front":"Ci <span style='color:#8C0327;'>converrebbe</span> aspettare qualche altro giorno prima di fare una prenotazione", "back":"We would <span style='color:#8C0327;'>be better off</span> waiting a few more days before making a booking", "speak":["We would be better off waiting a few more days before making a booking"] },
+
+{ "front":"Da quando le soglie fiscali sono <span style='color:#8C0327;'>aumentate</span> l'anno scorso, mi <span style='color:#8C0327;'>ritrovo con</span> circa 120 € <span style='color:#8C0327;'>in meno</span> al mese", "back":"Ever since the tax thresholds <span style='color:#8C0327;'>went up</span> last year, I've <span style='color:#8C0327;'>been worse off</span> by around €120 a month", "speak":["Ever since the tax thresholds went up last year, I've been worse off by around €120 a month"] },
+
+{ "front":"Sebbene sia cresciuto in una famiglia molto <span style='color:#8C0327;'>benestante</span>, non ha mai dato per scontato il denaro", "back":"Although he was brought up in a very <span style='color:#8C0327;'>well-off</span> family, he has never taken money for granted", "speak":["Although he was brought up in a very well-off family, he has never taken money for granted"] },
+
+{ "front":"Il governo ha promesso di <span style='color:#8C0327;'>abbassare</span> i prezzi dei beni di prima necessità. <span style='color:#8C0327;'>Magari</span> potessi credergli!", "back":"The government has promised to <span style='color:#8C0327;'>bring down</span> the prices of essential goods. <span style='color:#8C0327;'>If only</span> I could believe them!", "speak":["The government has promised to bring down the prices of essential goods. If only I could believe them!"] },
+
+{ "front":"Dopo anni di aumenti, i prezzi delle case stanno finalmente <span style='color:#8C0327;'>diminuendo</span>", "back":"After years of increases, house prices are finally <span style='color:#8C0327;'>coming down</span>", "speak":["After years of increases, house prices are finally coming down"] },
+
+{ "front":"Si è <span style='color:#8C0327;'>avvicinato a</span> me alla fine della serata per chiedermi se potevamo parlare in privato", "back":"He <span style='color:#8C0327;'>came up to</span> me at the end of the evening to ask if we could talk in private", "speak":["He came up to me at the end of the evening to ask if we could talk in private"] },
+
+
+{ "front":"Non <span style='color:#8C0327;'>mi</span> <span style='color:#0E065C;'>è</span> <span style='color:#8C0327;'>passato per la mente</span> che potessero annullare tutto l’evento", "back":"It never <span style='color:#8C0327;'>crossed my mind</span> that they might call off the whole event", "speak":["It never crossed my mind that they might call off the whole event"] },
+
+
+{ "front":"Non appena ho <span style='color:#8C0327;'>consegnato</span> il modulo, mi sono accorto di aver dimenticato di firmarlo", "back":"As soon as I <span style='color:#8C0327;'>handed in</span> the form, I realised I had forgotten to sign it", "speak":["As soon as I handed in the form, I realised I had forgotten to sign it"] },
+
+{ "front":"Il Comune è alla ricerca di volontari per <span style='color:#8C0327;'>distribuire</span> bottiglie d'acqua gratuite a tutti coloro che dovrebbero partecipare all'evento all'aperto", "back":"The Council are looking for volunteers to <span style='color:#8C0327;'>hand out</span> free bottles of water to all those due to participate at the open-air event", "speak":["The Council are looking for volunteers to hand out free bottles of water to all those due to participate at the open-air event"] },
+
+{ "front":"Ha tirato un profondo sospiro di sollievo quando ha <span style='color:#8C0327;'>consegnato</span> le chiavi ai nuovi proprietari dell'appartamento", "back":"She breathed a huge sigh of relief when she <span style='color:#8C0327;'>handed over</span> the keys to the new owners of the apartment", "speak":["She breathed a huge sigh of relief when she handed over the keys to the new owners of the apartment"] },
+
+{ "front":"Porta con te una copia del documento, <span style='color:#8C0327;'>non si sa mai</span>. Potrebbero chiedertela", "back":"Take a copy of the document with you, <span style='color:#8C0327;'>just in case</span>. They might ask you for it", "speak":["Take a copy of the document with you, just in case. They might ask you for it"] },
+
+{ "front":"Ho sempre rimpianto di non essere <span style='color:#8C0327;'>rimasto in contatto</span> con i nostri ex vicini. Chissà che fine hanno fatto?", "back":"I've always regretted not <span style='color:#8C0327;'>keeping in touch</span> with our ex-neighbours. I wonder what became of them?", "speak":["I've always regretted not keeping in touch with our ex-neighbours. I wonder what became of them?"] },
+
+{ "front":"Dovresti lasciarlo in pace mentre è <span style='color:#8C0327;'>fuori servizio</span>. Si merita un po' di tranquillità", "back":"You should leave him alone while he’s <span style='color:#8C0327;'>off duty</span>. He deserves some peace and quiet", "speak":["You should leave him alone while he’s off duty. He deserves some peace and quiet"] },
+
+{ "front":"I prezzi sono <span style='color:#8C0327;'>aumentati</span> così tanto che sarà proprio necessario <span style='color:#8C0327;'>fare un giro dei negozi</span> per trovare le offerte migliori", "back":"Prices have <span style='color:#8C0327;'>gone up</span> so much that we will really need to <span style='color:#8C0327;'>shop around</span> to find the best deals", "speak":["Prices have gone up so much that we will really need to shop around to find the best deals"] },
+
+{ "front":"La notizia ci ha <span style='color:#8C0327;'>colti</span> completamente <span style='color:#8C0327;'>di sorpresa</span>, soprattutto perché nessuno ci aveva avvertito", "back":"The news <span style='color:#8C0327;'>took</span> us <span style='color:#0E065C;'>completely</span> <span style='color:#8C0327;'>by surprise</span>, especially as nobody had warned us", "speak":["The news took us completely by surprise, especially as nobody had warned us"] },
+
+
+{ "front":"Sapere che eravamo lì al suo fianco in quel momento ha <span style='color:#8C0327;'>significato tantissimo</span> per lei", "back":"Knowing that we were there by her side at that moment <span style='color:#8C0327;'>meant the world</span> to her", "speak":["Knowing that we were there by her side at that moment meant the world to her"] },
+
+{ "front":"<span style='color:#8C0327;'>Per il bene dei</span> bambini, hanno deciso di non divorziare, ma solo di separarsi", "back":"<span style='color:#8C0327;'>For the sake of</span> the children, they decided not to get a divorce but just to separate", "speak":["For the sake of the children, they decided not to get a divorce but just to separate"] },
+
+{ "front":"È <span style='color:#8C0327;'>in reperibilità</span> stasera, quindi deve tenere il telefono acceso, <span style='color:#8C0327;'>casomai</span> gli venga chiesto di aiutare", "back":"He’s <span style='color:#8C0327;'>on standby</span> tonight, so he has to keep his phone on <span style='color:#8C0327;'>just in case</span> he is called on to help", "speak":["He’s on standby tonight, so he has to keep his phone on just in case he is called on to help"] },
+
+{ "front":"Dopo vent'anni in azienda, ha deciso di <span style='color:#8C0327;'>dimettersi</span> e accettare un'altra offerta di lavoro", "back":"After twenty years with the company, she decided to <span style='color:#8C0327;'>resign</span> and take up another job offer", "speak":["After twenty years with the company, she decided to resign and take up another job offer"] },
+
+{ "front":"Le cancellazioni dei voli hanno avuto un <span style='color:#8C0327;'>effetto a catena</span>, causando ritardi in diversi aeroporti", "back":"Flight cancellations had a <span style='color:#8C0327;'>knock-on effect</span>, causing delays at several airports", "speak":["Flight cancellations had a knock-on effect, causing delays at several airports"] },
+
+{ "front":"<span style='color:#8C0327;'>Prova un</span> forte <span style='color:#8C0327;'>imbarazzo</span> quando deve parlare di se stessa", "back":"She <span style='color:#8C0327;'>feels</span> very <span style='color:#8C0327;'>self-conscious</span> when she has to talk about herself", "speak":["She feels very self-conscious when she has to talk about herself"] }
+
+
+],
+
+"pvie2.10": [
+
+{ "front": "Passare a trovare / Fare un salto", "back": "Call by / Drop by / Stop by", "speak": ["Call by", "Drop by", "Stop by"] },
+{ "front": "Imbattersi in", "back": "Come across", "speak": ["Come across"] },
+{ "front": "Dare l’impressione", "back": "Come across", "speak": ["Come across"] },
+{ "front": "Servirebbe / Sarebbe utile", "back": "Could do with", "speak": ["Could do with"] },
+{ "front": "Disprezzare", "back": "Look down on", "speak": ["Look down on"] },
+{ "front": "Osservare / Assistere", "back": "Look on", "speak": ["Look on"] },
+{ "front": "Ritenere", "back": "Look on", "speak": ["Look on"] },
+{ "front": "Separarsi / Dividersi", "back": "Part ways with", "speak": ["Part ways with"] },
+{ "front": "Vizio", "back": "Vice", "speak": ["Vice"] },
+{ "front": "Innocuo", "back": "Harmless", "speak": ["Harmless"] },
+{ "front": "Gioco d'azzardo", "back": "Gambling", "speak": ["Gambling"] },
+{ "front": "Riuscire / Portare a termine", "back": "Pull off", "speak": ["Pull off"] },
+{ "front": "Avere possibilità", "back": "Stand a chance", "speak": ["Stand a chance"] },
+{ "front": "Rappresentare / Stare per", "back": "Stand for", "speak": ["Stand for"] },
+{ "front": "Tollerare", "back": "Stand for", "speak": ["Stand for"] },
+{ "front": "Decollare", "back": "Take off", "speak": ["Take off"] },
+{ "front": "Imitare / Mimare", "back": "Take off", "speak": ["Take off"] },
+{ "front": "Fare scalo / Pernottare", "back": "Stop over", "speak": ["Stop over"] },
+{ "front": "Figurati!", "back": "No trouble at all!", "speak": ["No trouble at all!"] },
+{ "front": "Spietato / Senza pietà", "back": "Unforgiving", "speak": ["Unforgiving"] },
+{ "front": "Chi l’avrebbe mai detto!", "back": "Fancy that!", "speak": ["Fancy that!"] },
+{ "front": "Zero possibilità / Non c'è santo che tenga", "back": "Not a cat in hell’s chance", "speak": ["Not a cat in hell's chance"] },
+{ "front": "Pericolo / Rischio", "back": "Jeopardy", "speak": ["Jeopardy"] },
+{ "front": "Ahimè!", "back": "Alas!", "speak": ["Alas!"] },
+{ "front": "Avviare (computer)", "back": "Boot up", "speak": ["Boot up"] },
+{ "front": "Lasciare intendere", "back": "To intimate", "speak": ["To intimate"] },
+{ "front": "Canile", "back": "Kennels", "speak": ["Kennels"] },
+{ "front": "Che capita una volta nella vita", "back": "Once-in-a-lifetime", "speak": ["Once in a lifetime"] },
+{ "front": "Situazione difficile", "back": "Predicament", "speak": ["Predicament"] },
+{ "front": "Raggio", "back": "Radius", "speak": ["Radius"] },
+{ "front": "Mettersi a fare", "back": "Set about", "speak": ["Set about"] },
+{ "front": "Lavanderia a secco / Tintoria", "back": "Dry-cleaner's", "speak": ["Dry-cleaner's"] },
+{ "front": "Disturbare / Creare disagio", "back": "Inconvenience", "speak": ["Inconvenience"] },
+{ "front": "Sgomberare", "back": "Clear out", "speak": ["Clear out"] },
+{ "front": "Striscia / Riga", "back": "Stripe", "speak": ["Stripe"] },
+{ "front": "In modo impotente", "back": "Helplessly", "speak": ["Helplessly"] },
+{ "front": "In pieno giorno", "back": "In broad daylight", "speak": ["In broad daylight"] },
+{ "front": "Coraggiosamente", "back": "Valiantly", "speak": ["Valiantly"] },
+{ "front": "Contro ogni previsione", "back": "Against all the odds", "speak": ["Against all the odds"] },
+
+{
+"front":"<span style='color:#8C0327;'>Passo da</span> te più tardi, a meno che tu non abbia già qualcosa in programma questo pomeriggio", "back":"I'll <span style='color:#8C0327;'>drop by</span> your place later, unless you're up to anything in particular this afternoon", "speak":["I'll drop by your place later, unless you're up to anything in particular this afternoon"] },
+
+{
+"front":"A giudicare dal suo modo di parlare, <span style='color:#8C0327;'>dà l'impressione</span> di essere molto sicuro di sé", "back":"Judging by the way he speaks, he <span style='color:#8C0327;'>comes across</span> as very self-confident", "speak":["Judging by the way he speaks, he comes across as very self-confident"] },
+
+{
+"front":"L'altro giorno mi sono <span style='color:#8C0327;'>imbattuto</span> in una vecchia foto di mio padre mentre sgomberavo la sua soffitta", "back":"I <span style='color:#8C0327;'>came across</span> an old photograph of my father the other day while I was clearing out his attic", "speak":["I came across an old photograph of my father the other day while I was clearing out his attic"] },
+
+{ "front":"<span style='color:#8C0327;'>Ci vorrebbe proprio</span> un caffè adesso. Ti va di venire con me?", "back":"<span style='color:#8C0327;'>I could really do with</span> a coffee right now. Do you fancy coming with me?", "speak":["I could really do with a coffee right now. Do you fancy coming with me?"] },
+
+{
+"front":"Non sopporto chi <span style='color:#8C0327;'>disprezza</span> gli altri solo perché guadagna più di loro", "back":"I can't stand people who <span style='color:#8C0327;'>look down on</span> others just because they earn more than them.", "speak":["I can't stand people who look down on others just because they earn more than them."] },
+
+{
+"front":"È semplicemente <span style='color:#8C0327;'>rimasto</span> lì <span style='color:#8C0327;'>a guardare</span> mentre gli altri facevano fatica a spostare le pesanti casse", "back":"He just <span style='color:#8C0327;'>looked on</span> while the others struggled to move the heavy crates", "speak":["He just looked on while the others struggled to move the heavy crates"] },
+
+{
+"front":"Lei ha sempre <span style='color:#8C0327;'>considerato</span> quell'esperienza come una preziosa lezione", "back":"She has always <span style='color:#8C0327;'>looked on</span> that experience as a valuable lesson", "speak":["She has always looked on that experience as a valuable lesson"] },
+
+{
+"front":"Dopo 20 anni di matrimonio, abbiamo concordato entrambi che la cosa migliore sarebbe stata <span style='color:#8C0327;'>separarci</span>", "back":"After 20 years of marriage, we both agreed it would be best if we <span style='color:#8C0327;'>parted ways</span>", "speak":["After 20 years of marriage, we both agreed it would be best if we parted ways"] },
+
+{
+"front":"Non so come ci sia <span style='color:#8C0327;'>riuscito</span>, ma in qualche modo li ha convinti a cambiare idea", "back":"I don’t know how he <span style='color:#8C0327;'>pulled</span> it <span style='color:#8C0327;'>off</span>, but he somehow persuaded them to change their minds", "speak":["I don’t know how he pulled it off, but he somehow persuaded them to change their minds"] },
+
+{
+"front":"Sono riuscito a <span style='color:#8C0327;'>uscire</span> dall'autostrada appena in tempo perché la strada più avanti era completamente bloccata", "back":"I managed to <span style='color:#8C0327;'>pull off</span> the highway in the nick of time because the road ahead was totally blocked", "speak":["I managed to pull off the highway in the nick of time because the road ahead was totally blocked"] },
+
+{
+"front":"Non <span style='color:#8C0327;'>abbiamo</span> molte <span style='color:#8C0327;'>possibilità</span> di concludere l'affare se non riusciamo a metterci d'accordo sul prezzo", "back":"We don’t <span style='color:#8C0327;'>stand</span> much of <span style='color:#8C0327;'>a chance</span> of closing the deal if we can’t agree on the price", "speak":["We don’t stand much of a chance of closing the deal if we can’t agree on the price"] },
+
+{
+"front":"Non <span style='color:#8C0327;'>tollero</span> che la gente mi parli in questo modo", "back":"I won't <span style='color:#8C0327;'>stand for</span> people talking to me like that", "speak":["I won't stand for people talking to me like that"] },
+
+{
+"front":"L'acronimo UNESCO <span style='color:#8C0327;'>sta per</span> “United Nations Educational, Scientific and Cultural Organization”", "back":"The acronym UNESCO <span style='color:#8C0327;'>stands for</span> “United Nations Educational, Scientific and Cultural Organization”", "speak":["The acronym UNESCO stands for “United Nations Educational, Scientific and Cultural Organization”"] },
+
+{
+"front":"A causa di imprevisti, abbiamo dovuto <span style='color:#8C0327;'>fare una sosta</span> a Parigi per una notte prima di proseguire il viaggio", "back":"Because of unforeseen circumstances, we had to <span style='color:#8C0327;'>stop over</span> in Paris for one night before continuing our journey", "speak":["Because of unforeseen circumstances, we had to stop over in Paris for one night before continuing our journey"] },
+
+{
+"front":"Gli piace <span style='color:#8C0327;'>imitare</span> la voce del nostro ex insegnante quando vuole farci ridere tutti", "back":"He likes <span style='color:#8C0327;'>taking off</span> our former teacher when he wants to make us all laugh", "speak":["He likes taking off our former teacher when he wants to make us all laugh"] },
+
+{
+"front":"L'aereo non è potuto <span style='color:#8C0327;'>decollare</span> perché c'era ancora troppa neve sulla pista", "back":"The plane was unable to <span style='color:#8C0327;'>take off</span> as there was still too much snow on the runway", "speak":["The plane was unable to take off as there was still too much snow on the runway"] },
+
+{ "front":"<span style='color:#8C0327;'>Figurati!</span> È stato un piacere esserti stato d'aiuto", "back":"<span style='color:#8C0327;'>No trouble at all!</span> It was a pleasure to have been of assistance", "speak":["No trouble at all! It was a pleasure to have been of assistance"] },
+
+{
+"front":"È decisamente <span style='color:#8C0327;'>spietato</span> quando si tratta degli errori altrui", "back":"He's extremely <span style='color:#8C0327;'>unforgiving</span> when it comes to other people's mistakes", "speak":["He's extremely unforgiving when it comes to other people's mistakes"] },
+
+{
+"front":"Vincere una finale di Coppa del Mondo davanti al proprio pubblico sarebbe un'esperienza <span style='color:#8C0327;'>irripetibile</span>", "back":"Winning a World Cup final in front of your home crowd would be a <span style='color:#8C0327;'>once-in-a-lifetime</span> experience", "speak":["Winning a World Cup final in front of your home crowd would be a once-in-a-lifetime experience"] },
+
+{
+"front":"È finito in una <span style='color:#8C0327;'>situazione difficile</span> senza sapere come uscirne", "back":"He found himself in a <span style='color:#8C0327;'>predicament</span> without knowing how to get out of it", "speak":["He found himself in a predicament without knowing how to get out of it"] },
+
+{
+"front":"Ha <span style='color:#8C0327;'>lasciato intendere</span> che non era del tutto soddisfatto del risultato", "back":"He <span style='color:#8C0327;'>intimated</span> that he wasn't entirely satisfied with the result", "speak":["He intimated that he wasn't entirely satisfied with the result"] },
+
+{
+"front":"Non voglio <span style='color:#8C0327;'>disturbarti</span>, ma ti dispiacerebbe venirmi a prendere alla stazione?", "back":"I don’t want to <span style='color:#8C0327;'>inconvenience</span> you, but would you mind picking me up from the station?", "speak":["I don’t want to inconvenience you, but would you mind picking me up from the station?"] },
+
+{
+"front":"È successo <span style='color:#8C0327;'>in pieno giorno</span>, davanti a decine di testimoni", "back":"It happened <span style='color:#8C0327;'>in broad daylight</span>, in front of dozens of witnesses", "speak":["It happened in broad daylight, in front of dozens of witnesses"] },
+
+{
+"front":"Ha combattuto <span style='color:#8C0327;'>coraggiosamente</span> fino alla fine, nonostante fosse gravemente ferito", "back":"He fought <span style='color:#8C0327;'>valiantly</span> until the end, despite being seriously wounded.", "speak":["He fought valiantly until the end, despite being seriously wounded."] },
+
+{ "front":"Penso che il cioccolato sia il mio unico vero <span style='color:#8C0327;'>vizio</span>. Non potrei farne a meno!", "back":"I think my only real <span style='color:#8C0327;'>vice</span> is chocolate. I couldn't do without it!", "speak":["I think my only real vice is chocolate. I couldn't do without it!"] },
+
+{
+"front":"<span style='color:#8C0327;'>Contro ogni previsione</span>, è riuscito ad arrivare in finale", "back":"<span style='color:#8C0327;'>Against all the odds</span>, he managed to make it to the final", "speak":["Against all the odds, he managed to make it to the final"] },
+
+{
+"front":"È completamente <span style='color:#8C0327;'>innocuo</span> e non rappresenta assolutamente alcun pericolo", "back":"It's completely <span style='color:#8C0327;'>harmless</span> and poses no danger whatsoever", "speak":["It's completely harmless and poses no danger whatsoever"] },
+
+{
+"front":"Ha <span style='color:#8C0327;'>messo a rischio</span> i risparmi di una vita quando ha deciso di investirli tutti in una start-up", "back":"He <span style='color:#8C0327;'>put</span> his life savings <span style='color:#8C0327;'>in jeopardy</span> when he decided to invest them all in a start-up company", "speak":["He put his life savings in jeopardy when he decided to invest them all in a start-up company"] },
+
+{
+"front":"Dopo aver rimandato per settimane, <span style='color:#8C0327;'>si è</span> finalmente <span style='color:#8C0327;'>messo</span> a compilare tutti i moduli", "back":"After putting it off for weeks, he finally <span style='color:#8C0327;'>set about</span> filling in all the forms", "speak":["After putting it off for weeks, he finally set about filling in all the forms"] },
+
+],
+
+"pvie2.11": [
+
+{ "front": "In anticipo sulla tabella di marcia", "back": "Ahead of schedule", "speak": ["Ahead of schedule"] },
+{ "front": "Ad occhio e croce", "back": "At a guess", "speak": ["At a guess"] },
+{ "front": "Essere stimolato", "back": "Be into", "speak": ["Be into"] },
+{ "front": "In ritardo sulla tabella di marcia", "back": "Behind schedule", "speak": ["Behind schedule"] },
+{ "front": "Per un soffio / Rischio scampato", "back": "Close call", "speak": ["Close call"] },
+{ "front": "Dare sui nervi", "back": "Get on one’s nerves", "speak": ["Get on one's nerves"] },
+{ "front": "Partorire / Dare origine", "back": "Give birth to", "speak": ["Give birth to"] },
+{ "front": "Essere in vendita / Optare", "back": "Go for", "speak": ["Go for"] },
+{ "front": "Accontentarsi di / Farsi bastare", "back": "Make do with", "speak": ["Make do with"] },
+{ "front": "Nei tempi previsti", "back": "On schedule", "speak": ["On schedule"] },
+{ "front": "Criticare / Sminuire", "back": "Put down", "speak": ["Put down"] },
+{ "front": "Sopprimere", "back": "Put down", "speak": ["Put down"] },
+{ "front": "Presentarsi / Arrivare", "back": "Show up", "speak": ["Show up"] },
+{ "front": "Mettere in imbarazzo", "back": "Show up", "speak": ["Show up"] },
+{ "front": "Restare a casa", "back": "Stay in", "speak": ["Stay in"] },
+{ "front": "Stormo", "back": "Flock", "speak": ["Flock"] },
+{ "front": "Branco", "back": "Herd", "speak": ["Herd"] },
+{ "front": "Zampa posteriore", "back": "Hind leg", "speak": ["Hind leg"] },
+{ "front": "Dimissioni", "back": "Resignation", "speak": ["Resignation"] },
+{ "front": "Asta", "back": "Auction", "speak": ["Auction"] },
+{ "front": "Barista", "back": "Bartender", "speak": ["Bartender"] },
+{ "front": "Punto e basta!", "back": "That’s that!", "speak": ["That's that!"] },
+{ "front": "La vera entità", "back": "The true extent", "speak": ["The true extent"] },
+{ "front": "Chi frequenta l’ippodromo / il teatro / il cinema", "back": "Racegoers / Theatregoers / Cinemagoers", "speak": ["Racegoers", "Theatregoers", "Cinemagoers"] },
+{ "front": "Per l’ennesima volta", "back": "For the umpteenth time", "speak": ["For the umpteenth time"] },
+{ "front": "Darsi una mossa", "back": "Get a move on", "speak": ["Get a move on"] },
+{ "front": "Su per giù", "back": "Give or take", "speak": ["Give or take"] },
+{ "front": "Con loro grande stupore", "back": "Much to their amazement", "speak": ["much to their amazement"] },
+{ "front": "Restare fuori", "back": "Stay out", "speak": ["Stay out"] },
+{ "front": "Restare in piedi", "back": "Stay up", "speak": ["Stay up"] },
+
+{
+"front":"Era così <span style='color:#8C0327;'>in anticipo rispetto alla tabella</span> di marcia che poteva permettersi di fare una lunga pausa pranzo",
+"back":"He was so far <span style='color:#8C0327;'>ahead of schedule</span> that he could afford to take a long lunch break", "speak":["He was so far ahead of schedule that he could afford to take a long lunch break"] },
+
+{
+"front":"<span style='color:#8C0327;'>Ad occhio e croce</span>, direi che ci vorranno una ventina di minuti per scaricare il software", "back":"<span style='color:#8C0327;'>At a guess</span>, I’d say it’ll take around twenty minutes to download the software", "speak":["At a guess, I’d say it’ll take around twenty minutes to download the software"] },
+
+{
+"front":"Da quando <span style='color:#8C0327;'>è appassionata di</span> fitness, si alza alle sei ogni mattina e va a correre", "back":"Ever since she’s <span style='color:#8C0327;'>been into</span> fitness, she’s been getting up at six every morning and going for a run", "speak":["Ever since she’s been into fitness, she’s been getting up at six every morning and going for a run"] },
+
+{
+"front":"A causa di alcuni problemi tecnici, il progetto è ormai <span style='color:#8C0327;'>in ritardo</span> di un paio di settimane <span style='color:#8C0327;'>rispetto alla tabella di marcia</span>",
+"back":"Due to a few technical problems, the project is now a couple of weeks <span style='color:#8C0327;'>behind schedule</span>", "speak":["Due to a few technical problems, the project is now a couple of weeks behind schedule"] },
+
+{
+"front":"<span style='color:#8C0327;'>È mancato poco</span> e, per fortuna, nessuno si è fatto male quando l'auto ha colpito l'albero", "back":"<span style='color:#8C0327;'>It was a close call</span>, and luckily nobody was hurt when the car hit the tree", "speak":["It was a close call, and luckily nobody was hurt when the car hit the tree"] },
+
+{
+"front":"Quel rumore continuo <span style='color:#8C0327;'>mi</span> <span style='color:#8C0327;'>dava</span> davvero <span style='color:#8C0327;'>sui nervi</span>, soprattutto quando ero sotto pressione per consegnare la mia relazione", "back":"That constant noise really <span style='color:#8C0327;'>got on my nerves</span>, especially when I was under pressure to hand in my report",
+"speak":["That constant noise really got on my nerves, especially when I was under pressure to hand in my report"] },
+
+{
+"front":"Dopo un travaglio durato quasi ventiquattro ore, ha finalmente <span style='color:#8C0327;'>dato alla luce</span> una bambina sana",
+"back":"After a labour that lasted almost twenty-four hours, she finally <span style='color:#8C0327;'>gave birth</span> <span style='color:#8C0327;'>to</span> a healthy baby girl",
+"speak":["After a labour that lasted almost twenty-four hours, she finally gave birth to a healthy baby girl"] },
+
+{
+"front":"La collaborazione tra i due scienziati ha <span style='color:#8C0327;'>dato origine</span> <span style='color:#8C0327;'>a</span> una teoria che ha cambiato il modo in cui pensiamo all'universo", "back":"The collaboration between the two scientists <span style='color:#8C0327;'>gave birth to</span> a theory that changed the way we think about the universe", "speak":["The collaboration between the two scientists gave birth to a theory that changed the way we think about the universe"] },
+
+{
+"front":"Dopo aver confrontato le due offerte, alla fine abbiamo <span style='color:#8C0327;'>optato</span> <span style='color:#8C0327;'>per</span> quella che offriva maggiore flessibilità",
+"back":"After comparing the two offers, we eventually <span style='color:#8C0327;'>went for</span> the one that offered greater flexibility",
+"speak":["After comparing the two offers, we eventually went for the one that offered greater flexibility"] },
+
+{
+"front":"I quadri di questo artista <span style='color:#8C0327;'>vengono</span> spesso <span style='color:#8C0327;'>venduti</span> a prezzi sorprendentemente bassi nelle aste locali",
+"back":"Paintings by this artist often <span style='color:#8C0327;'>go for</span> surprisingly low prices at local auctions",
+"speak":["Paintings by this artist often go for surprisingly low prices at local auctions"] },
+
+{
+"front":"Non potevamo permetterci di comprare altri mobili, quindi per qualche mese ci siamo dovuti <span style='color:#8C0327;'>arrangiare</span> <span style='color:#8C0327;'>con</span> quello che avevamo", "back":"We couldn’t afford to buy any more furniture, so we had to <span style='color:#8C0327;'>make do with</span> what we had for a few months",
+"speak":["We couldn’t afford to buy any more furniture, so we had to make do with what we had for a few months"] },
+
+{
+"front":"Contro ogni previsione, il progetto sta procedendo esattamente <span style='color:#8C0327;'>secondo i tempi previsti</span>",
+"back":"Against all the odds, the project is progressing exactly <span style='color:#8C0327;'>on schedule</span>", "speak":["Against all the odds, the project is progressing exactly on schedule"] },
+
+{
+"front":"Dopo un focolaio di peste suina, l'allevatore ha dovuto <span style='color:#8C0327;'>abbattere</span> l'intero gruppo di maiali", "back":"After an outbreak of swine fever, the farmer had to <span style='color:#8C0327;'>put down</span> his entire herd of pigs", "speak":["After an outbreak of swine fever, the farmer had to put down his entire herd of pigs"] },
+
+{
+"front":"La sua tendenza di <span style='color:#8C0327;'>sminuire</span> continuamente i risultati degli altri finisce per demotivarli", "back":"His tendency to continually <span style='color:#8C0327;'>put down</span> other people's achievements ends up demotivating them", "speak":["His tendency to continually put down other people's achievements ends up demotivating them"] },
+
+{
+"front":"<span style='color:#8C0327;'>Mettere per iscritto</span> i termini dell'accordo ci avrebbe risparmiato un sacco di problemi in seguito",
+"back":"<span style='color:#8C0327;'>Putting</span> the terms of the agreement <span style='color:#8C0327;'>down</span> <span style='color:#8C0327;'>in writing</span> would have saved us a lot of trouble later on",
+"speak":["Putting the terms of the agreement down in writing would have saved us a lot of trouble later on"] },
+
+{
+"front":"Se <span style='color:#8C0327;'>si presenta</span> di nuovo senza preavviso, non credo che saranno così indulgenti", "back":"If he <span style='color:#8C0327;'>shows up</span> again without any warning, I don't think they will be so forgiving", "speak":["If he shows up again without any warning, I don't think they will be so forgiving"] },
+
+{
+"front":"La microfrattura non <span style='color:#8C0327;'>si vedeva</span> sulla radiografia iniziale, quindi il medico ha consigliato di fare una risonanza magnetica", "back":"The hairline fracture didn't <span style='color:#8C0327;'>show up</span> on the initial X-ray, so the doctor recommended having an MRI scan",
+"speak":["The hairline fracture didn't show up on the initial X-ray, so the doctor recommended having an MRI scan"] },
+
+{
+"front":"Non volevo <span style='color:#8C0327;'>metterlo in imbarazzo</span> davanti ai suoi colleghi, quindi ho tenuto la bocca chiusa", "back":"I didn't want to <span style='color:#8C0327;'>show him up</span> in front of his colleagues, so I kept my mouth shut", "speak":["I didn't want to show him up in front of his colleagues, so I kept my mouth shut"] },
+
+{ "front":"Stasera preferirei <span style='color:#8C0327;'>restare a casa</span>. Il mio ginocchio mi dà ancora problemi",
+"back":"I'd rather <span style='color:#8C0327;'>stay in</span> tonight. My knee is still giving me trouble", "speak":["I'd rather stay in tonight. My knee is still giving me trouble"] },
+
+{
+"front":"Non so cosa sia successo, ma sono <span style='color:#8C0327;'>rimasto fuori</span> fino alle quattro del mattino!", "back":"I don't know what happened, but I <span style='color:#8C0327;'>stayed out</span> until four in the morning!",
+"speak":["I don't know what happened, but I stayed out until four in the morning!"] },
+
+{
+"front":"Anche se la mattina dopo dovevo alzarmi presto, ho deciso di <span style='color:#8C0327;'>rimanere sveglio</span> e guardare la fine della partita",
+"back":"Although I had an early start the next morning, I decided to <span style='color:#8C0327;'>stay up</span> and watch the end of the match",
+"speak":["Although I had an early start the next morning, I decided to stay up and watch the end of the match"] },
+
+{
+"front":"<span style='color:#8C0327;'>Con mio grande stupore</span>, è riuscito a convincerli a cambiare idea", "back":"<span style='color:#8C0327;'>Much to my amazement</span>, he managed to persuade them to change their minds",
+"speak":["Much to my amazement, he managed to persuade them to change their minds"] },
+
+{
+"front":"Dobbiamo <span style='color:#8C0327;'>darci una mossa</span>, altrimenti non arriveremo mai prima che faccia buio", "back":"We need to <span style='color:#8C0327;'>get a move on</span>, or else we’ll never get there before dark",
+"speak":["We need to get a move on, or else we’ll never get there before dark"] },
+
+{
+"front":"<span style='color:#8C0327;'>Per l'ennesima volta</span>, lasciami spiegare con parole molto semplici perché la mia strategia funziona e la tua no",
+"back":"<span style='color:#8C0327;'>For the umpteenth time</span>, let me explain in very simple words why my strategy works and yours doesn't",
+"speak":["For the umpteenth time, let me explain in very simple words why my strategy works and yours doesn't"] },
+
+{
+"front":"Non mi ero reso conto della <span style='color:#8C0327;'>vera entità</span> della devastazione finché non ho visto il telegiornale",
+"back":"I hadn't realised the <span style='color:#8C0327;'>true extent</span> of the devastation until I watched the news", "speak":["I hadn't realised the true extent of the devastation until I watched the news"] },
+
+{
+"front":"Questa notizia <span style='color:#8C0327;'>dimostra quanto</span> possa essere difficile prevedere come andranno le cose", "back":"This piece of news <span style='color:#8C0327;'>just goes to show</span> <span style='color:#8C0327;'>how</span> difficult it can be to predict how things will turn out", "speak":["This piece of news just goes to show how difficult it can be to predict how things will turn out"] },
+
+{
+"front":"<span style='color:#8C0327;'>È un peccato</span> che non abbiano colto l'occasione quando ne avevano la possibilità", "back":"<span style='color:#8C0327;'>It’s a shame</span> they didn't take the opportunity when they had the chance",
+"speak":["It’s a shame they didn't take the opportunity when they had the chance"] },
+
+{ "front":"Dovrei aver finito tra un'ora, <span style='color:#8C0327;'>minuto più</span>, <span style='color:#8C0327;'>minuto meno</span>", "back":"I should be finished in an hour, <span style='color:#8C0327;'>give or take</span> five minutes", "speak":["I should be finished in an hour, give or take five minutes"] }
+
+],
+
+"pvie2.12": [
+
+{ "front": "Equivalere a", "back": "Amount to", "speak": ["Amount to"] },
+{ "front": "A lungo", "back": "At length", "speak": ["At length"] },
+{ "front": "Svolgere / Eseguire", "back": "Carry out", "speak": ["Carry out"] },
+{ "front": "Tirare su di morale", "back": "Cheer up", "speak": ["Cheer up"] },
+{ "front": "Redigere / Stilare", "back": "Draw up", "speak": ["Draw up"] },
+{ "front": "Fermarsi (in macchina)", "back": "Draw up", "speak": ["Draw up"] },
+{ "front": "Ritirarsi da / Abbandonare", "back": "Drop out of", "speak": ["Drop out of"] },
+{ "front": "Avere senso", "back": "Make sense", "speak": ["Make sense"] },
+{ "front": "In contrasto con / Non in linea con", "back": "Out of keeping with", "speak": ["Out of keeping with"] },
+{ "front": "Non essere da qualcuno / Incoerente", "back": "Out of keeping with", "speak": ["Out of keeping with"] },
+{ "front": "Imbattersi in / Incappare in", "back": "Run into", "speak": ["Run into"] },
+{ "front": "Partire / Mettersi in viaggio", "back": "Set out", "speak": ["Set out"] },
+{ "front": "Prefissato di fare", "back": "Set out to do", "speak": ["Set out to do"] },
+{ "front": "Essere permaloso", "back": "To be touchy", "speak": ["To be touchy"] },
+{ "front": "Commissioni", "back": "Errands", "speak": ["Errands"] },
+{ "front": "Proteste pubbliche", "back": "Public outcry", "speak": ["Public outcry"] },
+{ "front": "Non avere la minima idea", "back": "Haven't got a clue", "speak": ["haven't got a clue"] },
+{ "front": "All’istante", "back": "Right here and now", "speak": ["right here and now"] },
+{ "front": "Preoccuparsi / Angosciarsi", "back": "Fret about", "speak": ["Fret about"] },
+{ "front": "Violazione del contratto", "back": "Breach of contract", "speak": ["Breach of contract"] },
+{ "front": "Esca", "back": "Bait", "speak": ["Bait"] },
+{ "front": "A sangue freddo", "back": "Cold-blooded", "speak": ["Cold-blooded"] },
+{ "front": "Senza cuore", "back": "Cold-hearted", "speak": ["Cold-hearted"] },
+{ "front": "Venire a sapere / Avere fiuto per", "back": "Get wind of", "speak": ["Get wind of"] },
+{ "front": "Adescare / Attirare", "back": "Lure", "speak": ["Lure"] },
+{ "front": "Scoperto da poco / Ritrovato", "back": "New-found", "speak": ["New-found"] },
+{ "front": "Mettere fine a / Mandare in fumo", "back": "Put paid to", "speak": ["Put paid to"] },
+{ "front": "Scrupoli / Rimorsi", "back": "Qualms", "speak": ["Qualms"] },
+{ "front": "Spietato / Senza scrupoli", "back": "Ruthless", "speak": ["Ruthless"] },
+{ "front": "All’insaputa di", "back": "Unbeknown to", "speak": ["Unbeknown to"] },
+{ "front": "Dove si trova", "back": "Whereabouts", "speak": ["Whereabouts"] },
+{ "front": "Lavorare a maglia", "back": "Knit", "speak": ["Knit"] },
+{ "front": "Maglione", "back": "Sweater", "speak": ["Sweater"] },
+{ "front": "Bottino", "back": "Haul", "speak": ["Haul"] },
+{ "front": "Per la propria incolumità", "back": "For one’s safety", "speak": ["For one's safety"] },
+
+{
+"front":"Non appena l'auto si è <span style='color:#8C0327;'>fermata</span>, tutti i presenti si sono girati per vedere chi fosse",
+"back":"As soon as the car <span style='color:#8C0327;'>drew up</span>, all the bystanders turned round to see who it was", "speak":["As soon as the car drew up, all the bystanders turned round to see who it was"] },
+
+{ "front":"L'avvocato ha <span style='color:#8C0327;'>stilato</span> il contratto in modo da tutelare entrambe le parti",
+"back":"The lawyer <span style='color:#8C0327;'>drew up</span> the contract so as to protect both parties", "speak":["The lawyer drew up the contract so as to protect both parties"] },
+
+{ "front":"Ha <span style='color:#8C0327;'>abbandonato</span> l'università al secondo anno, quando si è reso conto che quel corso non faceva per lui", "back":"He <span style='color:#8C0327;'>dropped out of</span> university in his second year when he realised that course wasn't for him",
+"speak":["He dropped out of university in his second year when he realised that course wasn't for him"] },
+
+{ "front":"Non <span style='color:#8C0327;'>ha senso</span> continuare a investire tempo e denaro in un progetto che non dà risultati",
+"back":"It <span style='color:#8C0327;'>makes</span> no <span style='color:#8C0327;'>sense</span> to keep investing time and money in a project that isn’t producing results",
+"speak":["It makes no sense to keep investing time and money in a project that isn’t producing results"] },
+
+{ "front":"Il suo abito a righe verdi e gialle era completamente <span style='color:#8C0327;'>in contrasto con</span> l'atmosfera elegante dell'evento", "back":"His green and yellow striped suit was completely <span style='color:#8C0327;'>out of keeping with</span> the elegant atmosphere of the event", "speak":["His green and yellow striped suit was completely out of keeping with the elegant atmosphere of the event"] },
+
+{ "front":"Un gesto del genere è completamente <span style='color:#8C0327;'>incoerente con</span> il suo comportamento abituale, considerando quanto sia solitamente disponibile con gli altri",
+"back":"A gesture like that is completely <span style='color:#8C0327;'>out of keeping with</span> her usual behaviour, considering how helpful she usually is",
+"speak":["A gesture like that is completely out of keeping with her usual behaviour, considering how helpful she usually is"] },
+
+{ "front":"Non avevo alcuna intenzione di accettare un no come risposta, ma gliel'ho chiesto lo stesso, puramente <span style='color:#8C0327;'>per cortesia</span>", "back":"I had no intention of accepting no as an answer, but I asked anyway, simply <span style='color:#8C0327;'>out of courtesy</span>",
+"speak":["I had no intention of accepting no as an answer, but I asked anyway, simply out of courtesy"] },
+
+{ "front":"Ho preso le strade secondarie per arrivarci perché non volevo <span style='color:#8C0327;'>imbattermi</span> in nessuno che conoscessi",
+"back":"I took the backstreets to get there as I didn't want to <span style='color:#8C0327;'>run into</span> anyone I know", "speak":["I took the backstreets to get there as I didn't want to run into anyone I know"] },
+
+{ "front":"Siamo <span style='color:#8C0327;'>partiti</span> alle prime luci dell'alba per sfruttare al massimo la giornata",
+"back":"We <span style='color:#8C0327;'>set out</span> at the crack of dawn to make the most of the day", "speak":["We set out at the crack of dawn to make the most of the day"] },
+
+{ "front":"Si è <span style='color:#8C0327;'>prefissata</span> <span style='color:#8C0327;'>di</span> dimostrare che tutti si sbagliavano, ma ben presto si è resa conto di quanto sarebbe stato difficile", "back":"She <span style='color:#8C0327;'>set out to</span> prove everyone wrong, but soon realised how hard it was going to be",
+"speak":["She set out to prove everyone wrong, but soon realised how hard it was going to be"] },
+
+{ "front":"Devo sbrigare un paio di <span style='color:#8C0327;'>commissioni</span> prima di andare a prenderla alla stazione", "back":"I need to run a couple of <span style='color:#8C0327;'>errands</span> before I go and pick her up from the station", "speak":["I need to run a couple of errands before I go and pick her up from the station"] },
+
+{
+"front":"La decisione ha suscitato una forte <span style='color:#8C0327;'>protesta</span> <span style='color:#8C0327;'>da parte dell'opinione pubblica</span>", "back":"The decision sparked a strong <span style='color:#8C0327;'>public outcry</span>", "speak":["The decision sparked a strong public outcry"] },
+
+{ "front":"L'azienda sta affrontando una causa legale per <span style='color:#8C0327;'>inadempimento contrattuale</span>, per non aver rispettato i termini dell'accordo", "back":"The company is facing a lawsuit for <span style='color:#8C0327;'>breach of contract</span> after failing to honour the terms of the agreement", "speak":["The company is facing a lawsuit for breach of contract after failing to honour the terms of the agreement"] },
+
+{ "front":"Non serve a niente <span style='color:#8C0327;'>preoccuparsi di</span> cose che non puoi controllare", "back":"There's no point <span style='color:#8C0327;'>fretting about</span> things you can't control",
+"speak":["There's no point fretting about things you can't control"] },
+
+{ "front":"Hanno fatto di tutto per <span style='color:#8C0327;'>attirare</span> il leone di nuovo nella sua gabbia, ma è stato tutto inutile",
+"back":"They did everything possible to <span style='color:#8C0327;'>lure</span> the lion back into his cage, but it was all to no avail",
+"speak":["They did everything possible to lure the lion back into his cage, but it was all to no avail"] },
+
+{ "front":"<span style='color:#8C0327;'>All'insaputa dei</span> suoi colleghi, aveva già deciso di accettare un'offerta di lavoro presso un'altra azienda", "back":"<span style='color:#8C0327;'>Unbeknown to</span> his colleagues, he had already decided to take up a job offer with another company",
+"speak":["Unbeknown to his colleagues, he had already decided to take up a job offer with another company"] },
+
+{ "front":"Quando <span style='color:#8C0327;'>sono venuti a sapere</span> che il capo stava per dimettersi, tutti hanno iniziato a fare congetture su chi lo avrebbe sostituito", "back":"When they <span style='color:#8C0327;'>got wind of</span> the fact that the boss was about to resign, everyone started speculating about his replacement", "speak":["When they got wind of the fact that the boss was about to resign, everyone started speculating about his replacement"] },
+
+{ "front":"Non ho alcun <span style='color:#8C0327;'>scrupolo</span> a chiedergli un rimborso dopo il modo in cui mi ha trattato",
+"back":"I have no <span style='color:#8C0327;'>qualms</span> about asking him for a refund after the way he treated me", "speak":["I have no qualms about asking him for a refund after the way he treated me"] },
+
+{ "front":"La sua <span style='color:#8C0327;'>ritrovata</span> fiducia in se stesso gli ha dato il coraggio di candidarsi per quel posto",
+"back":"His <span style='color:#8C0327;'>new-found</span> confidence gave him the courage to apply for that position", "speak":["His new-found confidence gave him the courage to apply for that position"] },
+
+{ "front":"Mia nonna mi ha insegnato a <span style='color:#8C0327;'>lavorare a maglia</span> quando ero bambino, e da allora non ho mai smesso",
+"back":"My grandmother taught me to <span style='color:#8C0327;'>knit</span> when I was a child, and I've never stopped since", "speak":["My grandmother taught me to knit when I was a child, and I've never stopped since"] },
+
+{ "front":"Il <span style='color:#8C0327;'>bottino</span> della rapina era molto più grande di quanto si aspettassero", "back":"The <span style='color:#8C0327;'>haul</span> from the robbery was much bigger than they had expected",
+"speak":["The haul from the robbery was much bigger than they had expected"] },
+
+{ "front":"Quando sono scoppiati i disordini, alcuni passanti hanno temuto <span style='color:#8C0327;'>per</span> <span style='color:#8C0327;'>la propria incolumità</span>",
+"back":"When the riots broke out, some passers-by feared <span style='color:#8C0327;'>for their own safety</span>", "speak":["When the riots broke out, some passers-by feared for their own safety"] },
+
+{ "front":"Non hanno idea di <span style='color:#8C0327;'>dove si trovi</span> al momento, ma stanno cercando di rintracciarlo",
+"back":"They have no idea of his <span style='color:#8C0327;'>whereabouts</span> at the moment, but they are trying to track him down",
+"speak":["They have no idea of his whereabouts at the moment, but they are trying to track him down"] }
+
 ]
 
 };
+
 
 /* ================= CORE ENGINE ================= */
 
@@ -593,19 +1413,154 @@ let cards=[];
 let index=0;
 let activeMode=null;
 let activeFolder=null;
+let selectedFolder = null;
+let selectedMode = null;
 
 const flashcard=document.getElementById("flashcard");
 const frontText=document.getElementById("front-text");
 const backText=document.getElementById("back-text");
+const lessonLabel=document.getElementById("lesson-label");
 const counter=document.getElementById("counter-display");
 const speakBtn=document.getElementById("speakBtn");
 
+window.closeStartPopup = function(){
+
+  document.getElementById("startPopup").style.display = "none";
+
+}
+
+
+window.openStartPopup = function(folder, mode){
+
+  selectedFolder = folder;
+  selectedMode = mode;
+
+  let totalCards = 0;
+  let selectedCards = 12;
+
+    if(mode === "single"){
+
+    totalCards = sets[folder].length;
+    selectedCards = 12;
+
+  }else if(mode === "global13to18"){
+
+  ["pvie2.1","pvie2.2","pvie2.3","pvie2.4","pvie2.5","pvie2.6"].forEach(key=>{
+    if(sets[key]) totalCards += sets[key].length;
+  });
+
+  selectedCards = 20;
+
+}else if(mode === "global19to24"){
+
+  ["pvie2.7","pvie2.8","pvie2.9","pvie2.10","pvie2.11","pvie2.12"].forEach(key=>{
+    if(sets[key]) totalCards += sets[key].length;
+  });
+
+  selectedCards = 20;
+
+}else if(mode === "global13to24"){
+
+  Object.keys(sets).forEach(key=>{
+    if(sets[key]) totalCards += sets[key].length;
+  });
+
+  selectedCards = 20;
+
+}
+
+   if(mode === "single"){
+
+  const lessonNo = parseInt(folder.split(".")[1]);
+
+  const lessonNames = [
+    "",
+    "THIRTEEN","FOURTEEN","FIFTEEN","SIXTEEN","SEVENTEEN","EIGHTEEN",
+    "NINETEEN","TWENTY","TWENTY-ONE","TWENTY-TWO","TWENTY-THREE","TWENTY-FOUR"
+  ];
+
+      const exerciseNames = {
+    2:"EXERCISE 7A",
+    4:"EXERCISE 8A",
+    6:"EXERCISE 9A",
+    8:"EXERCISE 10A",
+    10:"EXERCISE 11A",
+    12:"EXERCISE 12A"
+  };
+
+  if(lessonNo % 2){
+
+    document.getElementById("popupText").innerHTML =
+      `<span style="color:#0E065C;">THIS LESSON CONTAINS EXPRESSIONS FROM <strong style="color:#8C0327;">LESSON ${lessonNames[lessonNo]}</strong></span>
+      <br><br>
+      <span style="color:#0E065C;">THERE ARE A TOTAL OF <strong style="color:#8C0327;">${totalCards}</strong> CARDS</span>
+      <br><br>
+      <span style="color:#0E065C;">OF WHICH</span>
+      <br>
+      <span style="color:#0E065C;"><strong style="color:#8C0327;">${selectedCards}</strong> ARE SELECTED RANDOMLY</span>`;
+
+  }else{
+
+    document.getElementById("popupText").innerHTML =
+      `<span style="color:#0E065C;">THIS LESSON CONTAINS EXPRESSIONS FROM <strong style="color:#8C0327;">LESSON ${lessonNames[lessonNo]}</strong></span>
+      <br><br>
+      <span style="color:#0E065C;">AS WELL AS VOCABULARY FROM <strong style="color:#22c55e;">${exerciseNames[lessonNo]}</strong></span>
+      <br><br>
+      <span style="color:#0E065C;">THERE ARE A TOTAL OF <strong style="color:#8C0327;">${totalCards}</strong> CARDS</span>
+      <br><br>
+      <span style="color:#0E065C;">OF WHICH</span>
+      <br>
+      <span style="color:#0E065C;"><strong style="color:#8C0327;">${selectedCards}</strong> ARE SELECTED RANDOMLY</span>`;
+
+  }
+
+}else{
+
+  document.getElementById("popupText").innerHTML =
+    `THIS SET CONTAINS A TOTAL OF
+    <br><strong style="color:#8C0327;">${totalCards}</strong> CARDS
+    <br><br>
+    OF WHICH
+    <br><strong style="color:#8C0327;">${selectedCards}</strong> ARE SELECTED RANDOMLY`;
+
+}
+
+document.getElementById("startPopup").style.display = "flex";
+
+}
+
+window.startSelectedSet = function(){
+
+  closeStartPopup();
+
+  if(selectedMode === "single"){
+
+      loadSet(selectedFolder);
+
+  }else if(selectedMode === "global13to18"){
+
+      loadGlobal13to18();
+
+  }else if(selectedMode === "global19to24"){
+
+      loadGlobal19to24();
+
+  }else if(selectedMode === "global13to24"){
+
+      loadGlobal13to24();
+
+  }
+
+}
+
 function shuffle(arr){
   const a=[...arr];
+
   for(let i=a.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
     [a[i],a[j]]=[a[j],a[i]];
   }
+
   return a;
 }
 
@@ -621,88 +1576,238 @@ window.loadSet = function(folder){
   activeMode="single";
   activeFolder=folder;
   index=0;
+
   const fullPool=prepareSet(folder);
-  cards=shuffle(fullPool).slice(0,15);
+  cards=shuffle(fullPool).slice(0,12);
+
   updateCard();
   activateButton(folder);
 }
 
-window.loadGlobal = function(){
-  activeMode="global";
+window.loadGlobal13to18 = function(){
+
+  activeMode="global13to18";
+  activeFolder=null;
   index=0;
+
   let combined=[];
+
+  ["pvie2.1","pvie2.2","pvie2.3","pvie2.4","pvie2.5","pvie2.6"].forEach(folder=>{
+    if(sets[folder]){
+      combined.push(...prepareSet(folder));
+    }
+  });
+
+  cards=shuffle(combined).slice(0,20);
+
+  updateCard();
+  activateButton("GLOBAL13TO18");
+
+}
+
+window.loadGlobal19to24 = function(){
+
+  activeMode="global19to24";
+  activeFolder=null;
+  index=0;
+
+  let combined=[];
+
+  ["pvie2.7","pvie2.8","pvie2.9","pvie2.10","pvie2.11","pvie2.12"].forEach(folder=>{
+    if(sets[folder]){
+      combined.push(...prepareSet(folder));
+    }
+  });
+
+  cards=shuffle(combined).slice(0,20);
+
+  updateCard();
+  activateButton("GLOBAL19TO24");
+
+}
+
+window.loadGlobal13to24 = function(){
+
+  activeMode="global13to24";
+  activeFolder=null;
+  index=0;
+
+  let combined=[];
+
   Object.keys(sets).forEach(folder=>{
     combined.push(...prepareSet(folder));
   });
-  cards=shuffle(combined).slice(0,30);
+
+  cards=shuffle(combined).slice(0,20);
+
   updateCard();
-  activateButton("GLOBAL");
+  activateButton("GLOBAL13TO24");
+
 }
+
 
 window.refreshCurrentSet = function(){
-  if(activeMode==="single"){
-    loadSet(activeFolder);
-  }else if(activeMode==="global"){
-    loadGlobal();
-  }
-}
 
+  if(activeMode==="single"){
+
+    loadSet(activeFolder);
+
+  }else if(activeMode==="global13to18"){
+
+    loadGlobal13to18();
+
+  }else if(activeMode==="global19to24"){
+
+    loadGlobal19to24();
+
+  }else if(activeMode==="global13to24"){
+
+    loadGlobal13to24();
+
+  }
+
+}
 function updateCard(){
   flashcard.classList.remove("flipped");
+
   const c=cards[index];
-  frontText.innerText=c.front.toUpperCase();
-  backText.innerText=c.back.toUpperCase();
+
+  frontText.innerHTML=c.front.toUpperCase();
+  backText.innerHTML=c.back.toUpperCase();
+
+  const lessonNumber = Number(c.folder.split(".")[1]) + 12;
+  lessonLabel.innerText = `LESSON ${lessonNumber}`;
+
   counter.innerText=`${index+1} / ${cards.length}`;
 }
 
 window.nextCard=function(e){
+
   if(e) e.stopPropagation();
+
+  if(cards.length===0) return;
+
   index=(index+1)%cards.length;
+
   updateCard();
+
 };
 
 window.prevCard=function(e){
+
   if(e) e.stopPropagation();
+
+  if(cards.length===0) return;
+
   index=(index-1+cards.length)%cards.length;
+
   updateCard();
+
 };
 
 flashcard.addEventListener("click",()=>{
+
+  if(cards.length===0) return;
+
   flashcard.classList.toggle("flipped");
+
 });
+
 
 speakBtn.addEventListener("click",(e)=>{
   e.stopPropagation();
+
   const c=cards[index];
   const audio=new Audio(`audio/${c.folder}/${c.id}.mp3`);
+
   audio.play();
 });
 
 function activateButton(folder){
-  document.querySelectorAll(".set-btn").forEach(btn=>btn.classList.remove("active"));
-  const buttons=document.querySelectorAll(".set-btn");
-  const map={
-    "pvie2.1":0,
-    "pvie2.2":1,
-    "pvie2.3":2,
-    "pvie2.4":3,
-    "pvie2.5":4,
-    "pvie2.6":5,
-    "pvie2.7":6,
-    "GLOBAL":7
-  };
+  document.querySelectorAll(".set-btn").forEach(btn=>
+    btn.classList.remove("active")
+  );
 
+  const buttons = document.querySelectorAll(".set-grid .set-btn");
+console.log(buttons);
+
+ const map={
+  "pvie2.1":0,
+  "pvie2.2":1,
+  "pvie2.3":2,
+  "pvie2.4":3,
+  "pvie2.5":4,
+  "pvie2.6":5,
+  "pvie2.7":6,
+  "pvie2.8":7,
+  "pvie2.9":8,
+  "pvie2.10":9,
+  "pvie2.11":10,
+  "pvie2.12":11,
+  "GLOBAL13TO18":12,
+  "GLOBAL19TO24":13,
+  "GLOBAL13TO24":14
+};
+
+
+  if (buttons[map[folder]]) {
   buttons[map[folder]].classList.add("active");
+}
 }
 
 document.getElementById("libraryBackBtn").addEventListener("click", function () {
   window.location.href = "https://www.acceleratedlanguagesystems.com/idiomatic-expressions-booster";
 });
 
-/* INITIAL LOAD */
-loadSet("pvie2.1");
+/* INITIAL SCREEN */
+
+cards = [];
+
+index = 0;
+
+flashcard.classList.remove("flipped");
+
+frontText.innerText = "CHOOSE YOUR LESSON";
+
+backText.innerText = "";
+
+lessonLabel.innerText = "";
+
+counter.innerText = "0 / 0";
 
 });
+
+
 </script>
+
+<!-- START POPUP -->
+
+<div id="startPopup" class="popup">
+
+  <div class="popup-box">
+
+    <div id="popupText"></div>
+
+    <div class="popup-buttons">
+
+      <button type="button"
+              class="popup-close"
+              onclick="closeStartPopup()">
+        CLOSE
+      </button>
+
+      <button type="button"
+              class="popup-start"
+              onclick="startSelectedSet()">
+        START
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
 </body>
 </html>
+
