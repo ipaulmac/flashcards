@@ -157,13 +157,13 @@ max-width:380px;
 margin-top:14px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:14px;
+gap:8px;
 }
 
 .category-btn{
 border:none;
 border-radius:8px;
-padding:7px 10px;
+padding:10px 12px;
 font-size:.95rem;
 font-weight:900;
 cursor:pointer;
@@ -181,13 +181,13 @@ width:90vw;
 max-width:380px;
 display:flex;
 justify-content:center;
-margin-top:14px;
+margin-top:8px;
 }
 
 .test-btn{
 border:none;
 border-radius:8px;
-padding:7px 32px;
+padding:10px 50px;
 font-size:.95rem;
 font-weight:900;
 cursor:pointer;
@@ -238,29 +238,6 @@ color:darkgreen;
 cursor:pointer;
 }
 
-/* BACK BUTTON */
-
-.back-header-btn{
-background:#1F7A4D;
-color:white;
-border:2px solid white;
-border-radius:8px;
-padding:4px 10px;
-font-size:.78rem;
-font-weight:900;
-cursor:pointer;
-transition:.2s;
-white-space:nowrap;
-}
-
-.back-header-btn:hover{
-background:#FFF3A3;
-color:darkred;
-border-color:darkred;
-}
-
-
-
 /* MOBILE */
 
 @media (max-width:480px){
@@ -284,13 +261,9 @@ font-size:.95rem;
 
 <div class="top-bar">
 
-<button id="libraryBackBtn" class="back-header-btn">
-◀ BACK
-</button>
-
-<h1 class="top-title">
-COME TI SEMBRA? (B1)
-</h1>
+<div class="top-title">
+HOW DOES IT SEEM? <span style="color:#FFF3A3;">(B1)</span>
+</div>
 
 <div id="readMeBtn" class="readme-text">
 READ ME
@@ -309,7 +282,7 @@ HERE, WE LOOK AT THE VERB <span class="highlight">SEMBRARE</span> AND ITS VARIOU
 <br><br>
 
 WE SUGGEST THAT YOU
-
+<br><span style="display:block;height:6px;"></span>
 <span style="color:#E60073;font-weight:900;">A)</span>
 
 FIRST READ
@@ -1113,18 +1086,11 @@ document
 
 });
 
-/* BACK BUTTON */
-
-document.getElementById("libraryBackBtn").onclick = function(){
-
-window.location.href = "https://www.acceleratedlanguagesystems.com/virtual-classroom-booster";
-
-};
-
-
 /* START */
 
 cards = shuffle(sets.LOOK).slice(0,8);
+
+document.getElementById("popupOverlay").style.display = "flex";
 
 loadCard();
 

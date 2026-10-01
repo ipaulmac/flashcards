@@ -1692,6 +1692,14 @@ PER FISSARLO IN MEMORIA!
 
 window.addEventListener("DOMContentLoaded", function(){
 
+  document.getElementById("popupText").innerHTML = readmeEnglish;
+
+  currentLanguage = "EN";
+
+  document.getElementById("toggleLanguage").innerText = "ITALIANO";
+
+  document.getElementById("popupOverlay").style.display = "flex";
+
   document.getElementById("readme-btn").onclick = function(){
 
   document.getElementById("popupText").innerHTML = readmeEnglish;
