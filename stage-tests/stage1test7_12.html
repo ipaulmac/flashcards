@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STAGE 1 TEST (7-12)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root{
+--bg:#061247;
+--purple:#561386;
+--red:#8C0327;
+--blue:#0E065C;
+--cyan:#00cfd5;
+--green:#22c55e;
+--gold:#FFD700;
+}
+
+body{
+margin:0;
+padding:12px;
+background:var(--bg);
+font-family:system-ui,Arial,sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+/* TOP BAR */
+
+.top-bar{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:60px minmax(0,1fr) 60px;
+align-items:center;
+margin-bottom:10px;
+}
+
+.top-title{
+color:#fff;
+font-weight:900;
+font-size:.9rem;
+letter-spacing:.05em;
+text-align:center;
+white-space:nowrap;
+}
+
+.timer-display{
+color:#fff;
+font-weight:900;
+font-size:.8rem;
+text-align:left;
+visibility:hidden;
+white-space:nowrap;
+}
+
+.sound-btn{
+background:#fff;
+border:none;
+border-radius:10px;
+padding:4px 7px;
+font-weight:900;
+font-size:.72rem;
+white-space:nowrap;
+width:auto;
+min-width:0;
+justify-self:end;
+}
+
+.back-btn{
+background:#C46A1A;
+color:#fff;
+border:none;
+border-radius:10px;
+padding:6px 10px;
+font-weight:900;
+font-size:.8rem;
+cursor:pointer;
+transition:.2s;
+}
+
+.back-btn:hover{
+background:#FFF3A3;
+color:#8C0327;
+}
+
+
+
+/* CARD */
+
+.card{
+position:relative;
+width:92vw;
+max-width:380px;
+height:230px;
+background:#fff;
+border:4px solid var(--red);
+border-radius:1rem;
+padding:12px 18px 18px 18px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+text-align:center;
+}
+
+.lesson-tag{
+position:absolute;
+top:6px;
+right:10px;
+font-size:.65rem;
+font-weight:900;
+color:#14532D;
+letter-spacing:.05em;
+}
+
+.sentence{
+font-size:1.08rem;
+font-weight:900;
+color:var(--blue);
+line-height:1.35;
+text-transform:uppercase;
+max-width:100%;
+box-sizing:border-box;
+}
+
+.highlight{
+color:#8C0327;
+font-weight:900;
+}
+
+/* INFO */
+
+ .info-row{
+  position:relative;
+  width:92vw;
+  max-width:380px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:12px 0 10px;
+  color:#fff;
+  font-weight:900;
+  font-size:.95rem;
+  min-height:18px;
+}
+
+.info-row div:first-child{position:relative;z-index:2;text-align:left;}
+
+.info-row .right{position:relative;z-index:2;text-align:right;color:var(--gold);}
+
+/* INPUT */
+
+.label{
+width:92vw;
+max-width:380px;
+color:#fff;
+font-weight:900;
+font-size:.92rem;
+line-height:1.25;
+margin:16px 0 6px;
+}
+
+input{
+width:92vw;
+max-width:380px;
+height:46px;
+padding-left:22px !important;
+padding-right:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:900 !important;
+font-family:Arial, Helvetica, sans-serif;
+box-sizing:border-box;
+outline:none;
+appearance:none;
+-webkit-appearance:none;
+text-transform:uppercase;
+color:#061247;
+letter-spacing:.02em;
+}
+
+
+details summary::-webkit-details-marker{
+display:none;
+}
+
+details summary{
+list-style:none;
+}
+
+
+/* FEEDBACK */
+
+.feedback{
+width:92vw;
+max-width:380px;
+min-height:20px;
+margin:6px 0;
+font-weight:900;
+text-align:center;
+color:#ef4444;
+}
+
+
+/* BUTTONS */
+
+button{
+border:none;
+border-radius:10px;
+padding:8px 14px;
+font-size:.8rem;
+font-weight:900;
+text-transform:uppercase;
+width:auto;
+}
+
+
+.buttons{
+width:92vw;
+max-width:380px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:0;
+margin-top:8px;
+}
+
+.buttons button{
+width:90px;               /* reduced size */
+height:34px;              /* slightly smaller height */
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:10px;
+font-weight:900;
+}
+
+
+#checkBtn, #skipBtn, #nextBtn{
+  box-sizing:border-box;
+  width:90px;
+  min-width:0;
+  margin:0;
+  flex:0 0 90px;
+}
+
+.set-btn.purple{
+background:#FA73EB;
+color:#061247;
+}
+
+.set-btn{
+background:#fff;
+color:#0E065C;
+border-radius:999px;
+padding:6px 0; /* smaller button */
+font-size:1.1rem; /* bigger number */
+font-weight:900;
+text-align:center;
+}
+
+.skip-btn{
+background:#FFEB3B;
+color:#061247;
+font-weight:900;
+border-radius:10px;   /* same rounded rectangle */
+}
+
+
+.check-btn{background:var(--purple);color:#fff;}
+.next-btn{background:var(--cyan);color:#061247;}
+
+
+button:disabled{opacity:.5;}
+button:active{transform:scale(.97);}
+
+/* DIVIDER */
+
+.divider{
+width:92vw;
+max-width:380px;
+height:3px;
+background:#ffffff66;
+margin:10px 0;
+}
+
+/* TEST MENU BUTTONS */
+
+.set-grid{
+width:92vw;
+max-width:380px;
+display:grid;
+grid-template-columns:minmax(0,1fr);
+gap:8px;
+margin-top:0;
+}
+
+.set-btn{
+width:100%;
+min-width:0;
+min-height:50px;
+white-space:nowrap;
+background:#eef2f8;
+color:#0E065C;
+border:2px solid #d4dce8;
+border-radius:10px;
+padding:10px 12px;
+font-size:1rem !important;
+line-height:1.2;
+font-weight:900;
+text-align:left;
+}
+
+.menu-back-btn{
+margin:18px auto 12px;
+display:block;
+background:#8C0327;
+color:#fff;
+border:3px solid #fff;
+border-radius:10px;
+min-width:90px;
+padding:9px 18px;
+font-size:.9rem;
+font-weight:900;
+}
+
+/* GREEN GROUP BUTTONS */
+.set-btn.green{
+background:#A8E6A3;
+color:#061247;
+}
+
+/* CYAN TEST BUTTON */
+.set-btn.cyan{
+background:#00cfd5;
+color:#061247;
+}
+
+/* Stage test menu buttons stay white until final colour selection */
+#testMenu .set-btn,
+#testMenu .set-btn.cyan,
+#testMenu .set-btn.green,
+#testMenu .set-btn.purple {
+  background:#fff !important;
+  color:#0E065C !important;
+  border:2px solid #fff;
+  border-radius:999px;
+  min-height:54px;
+  font-size:1rem !important;
+}
+
+/* ACTIVE STATE (OVERRIDES ALL) */
+.set-btn.active{
+background:#8C0327 !important;
+color:#ffffff !important;
+}
+
+
+/* POPUPS */
+
+.popup{
+position:fixed;
+top:30%;
+left:50%;
+transform:translate(-50%,-50%);
+width:calc(90vw - 32px);
+max-width:600px;
+display:none;
+justify-content:center;
+z-index:9999;
+align-items:stretch;
+}
+
+.popup-box{
+background:#eef6ff;
+border:3px solid var(--red);
+border-radius:14px;
+padding:18px;
+width:100%;
+box-sizing:border-box;
+text-align:center;
+font-weight:900;
+}
+
+
+
+/* MENU LAYOUT ADJUSTMENTS — compact reference proportions */
+.set-grid{
+  width:92vw !important;
+  max-width:380px !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  gap:6px !important;
+  margin-top:30px !important;
+}
+#testMenu .set-btn,
+#testMenu .set-btn.cyan,
+#testMenu .set-btn.green,
+#testMenu .set-btn.purple{
+  box-sizing:border-box !important;
+  width:100% !important;
+  height:34px !important;
+  min-height:34px !important;
+  max-height:34px !important;
+  padding:0 8px !important;
+  background:#fff !important;
+  color:#0E065C !important;
+  border:2px solid #d4dce8 !important;
+  border-radius:999px !important;
+  font-size:12px !important;
+  line-height:1 !important;
+  font-weight:800 !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+}
+#menuBackBtn{
+  box-sizing:border-box !important;
+  width:92vw !important;
+  max-width:380px !important;
+  height:34px !important;
+  min-height:34px !important;
+  max-height:34px !important;
+  margin:14px auto 12px !important;
+  padding:0 8px !important;
+  background:#C46A1A !important;
+  color:#fff !important;
+  border:2px solid #d4dce8 !important;
+  border-radius:999px !important;
+  font-size:12px !important;
+  line-height:1 !important;
+  font-weight:800 !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+}
+
+
+/* Quiz action buttons: CHECK left, SKIP centre, NEXT right */
+#checkBtn, #skipBtn, #nextBtn{
+  box-sizing:border-box;
+  width:100%;
+  margin:0;
+  justify-self:stretch;
+}
+
+
+/* BACK TO MENU: bright green, slightly smaller, centred independently */
+#quizBackToMenu{
+  display:none;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  margin:0;
+  padding:0;
+  color:#00C853 !important;
+  font-size:12px !important;
+  line-height:1;
+  font-weight:900;
+  white-space:nowrap;
+  cursor:pointer;
+  text-align:center;
+  z-index:3;
+}
+
+/* Final title styling */
+#topTitle{
+  color:#FFF2A6 !important;
+}
+
+
+/* Test menu buttons: uniform solid blue, clearly differentiated shades */
+#testMenu .set-btn.cyan{
+  background:#DCEBFF !important;
+  background-image:none !important;
+}
+#testMenu .set-btn.green{
+  background:#A9C8EE !important;
+  background-image:none !important;
+}
+#testMenu .set-btn.purple{
+  background:#78A8DD !important;
+  background-image:none !important;
+}
+
+
+/* Full-size test popup: match the main flashcard footprint */
+#startPopup .popup-box{
+  width:100% !important;
+  max-width:none !important;
+  min-height:230px;
+  height:230px;
+  box-sizing:border-box !important;
+  padding:24px 10px 16px !important;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+#startPopup #popupText{
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+  text-align:center;
+  padding-top:4px;
+  box-sizing:border-box;
+}
+/* Keep MENU and START QUIZ near the bottom edge of the popup card. */
+#startPopup .popup-box > div:last-child{
+  margin-top:auto !important;
+  padding-bottom:2px;
+  flex-shrink:0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="correctSound"><source src="audio/correct.mp3"></audio>
+<audio id="wrongSound"><source src="audio/wrong.mp3"></audio>
+<audio id="passSound"><source src="audio/pass.mp3"></audio>
+<audio id="failSound"><source src="audio/fail.mp3"></audio>
+
+<!-- TOP -->
+<div class="top-bar">
+
+<div class="timer-display" id="timerDisplay">10:00</div>
+
+<div class="top-title" id="topTitle">STAGE 1 TEST (7-12)</div>
+
+<button id="soundToggle" class="sound-btn">
+🔊 ON
+</button>
+
+</div>
+
+<!-- CARD -->
+<div class="card" id="card" style="gap:10px;">
+  <div style="color:#8C0327;font-size:.94rem;line-height:1.25;font-weight:800;">
+    HOW WELL DO YOU KNOW STAGE ONE?
+  </div>
+  <div style="color:#0E2D68;font-size:.80rem;line-height:1.4;font-weight:800;">
+    THESE FLASHCARDS TEST YOUR PRECISE KNOWLEDGE OF <span style="color:darkgreen;">LESSONS 7 TO 12</span>
+  </div>
+  <div style="color:#0E2D68;font-size:.80rem;line-height:1.5;font-weight:800;">
+    SUBSTITUTE THE WORDS <span style="color:#8C0327;">IN RED</span> WITH THE<br>
+    <span style="color:#8C0327;">EXACT WORDS</span> WHICH APPEAR IN THE STAGE ONE EXAMPLES
+  </div>
+  <div style="color:#0E2D68;font-size:.80rem;line-height:1.4;font-weight:800;">
+    CHOOSE THE TEST YOU WOULD LIKE TO ATTEMPT – <span style="color:#8C0327;">A</span>, <span style="color:#8C0327;">B</span> <span style="color:#0E065C;">OR</span> <span style="color:#8C0327;">C</span>
+  </div>
+</div>
+
+<!-- INFO -->
+<div class="info-row" id="quizInfoRow" style="display:none;">
+<div id="progress">0 / 0</div>
+<div id="quizBackToMenu" role="button" tabindex="0" style="display:none;">← BACK TO MENU</div>
+
+
+
+
+<div id="score" class="right">0 / 0</div>
+</div>
+<div id="progressTrack" style="display:none !important; width:92vw; max-width:380px; height:5px; background:#ffffff55; border-radius:99px; overflow:hidden; margin:0 0 14px;">
+  <div id="progressFill" style="height:100%;width:0%;background:#FFD700;border-radius:99px;"></div>
+</div>
+
+<div class="label" id="answerLabel" style="display:none;">Enter your answer here:</div>
+<input id="answerInput" autocomplete="off" style="display:none; background:#ffffff; color:#0E065C; opacity:1; pointer-events:auto;">
+
+<div id="feedback" class="feedback" style="display:none;"></div>
+
+<div class="buttons" id="answerButtons" style="display:none;">
+<button id="checkBtn" class="check-btn">CHECK</button>
+
+<button id="skipBtn" class="skip-btn">SKIP</button>
+
+<button id="nextBtn" class="next-btn" disabled>NEXT</button>
+</div>
+
+<div class="divider" id="answerDivider" style="display:none !important;"></div>
+
+<!-- TEST SELECTION -->
+<div class="set-grid" id="testMenu">
+<button class="set-btn cyan" onclick="selectStageTest('A', 10, event)"><span style="color:#8C0327;">TEST A</span><span style="color:#0E065C;"> — 10 QUESTIONS</span></button>
+<button class="set-btn green" onclick="selectStageTest('B', 15, event)"><span style="color:#8C0327;">TEST B</span><span style="color:#0E065C;"> — 15 QUESTIONS</span></button>
+<button class="set-btn purple" onclick="selectStageTest('C', 20, event)"><span style="color:#8C0327;">TEST C</span><span style="color:#0E065C;"> — 20 QUESTIONS</span></button>
+</div>
+
+<button id="menuBackBtn" class="menu-back-btn" onclick="window.location.href='https://www.acceleratedlanguagesystems.com/idiomatic-expressions-booster'">BACK TO IDIOMATIC EXPRESSIONS</button>
+
+<!-- START POPUP -->
+<div id="startPopup" class="popup">
+  <div class="popup-box">
+
+    <div id="popupText"></div>
+
+    <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;">
+
+      <div onclick="closeStartPopup()" style="
+      color:#0E065C;
+      font-weight:900;
+      cursor:pointer;
+      ">
+      <span style="color:darkgreen;">← MENU</span>
+      </div>
+
+      <div onclick="startQuiz()" style="
+      color:#FF1493;
+      font-weight:900;
+      cursor:pointer;
+      ">
+      START QUIZ ▶
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- CORRECT POPUP -->
+<div id="correctPopup" class="popup">
+<div class="popup-box" style="max-width:260px;padding:14px;">
+
+<div style="
+color:#16a34a;
+font-size:1rem;
+font-weight:900;
+margin-bottom:8px;
+text-align:left;
+">
+CORRECT
+</div>
+
+<div onclick="nextFromPopup()" style="
+text-align:right;
+color:#8C0327;
+font-size:.8rem;
+font-weight:900;
+cursor:pointer;
+text-transform:uppercase;
+">
+NEXT QUESTION ▶
+</div>
+
+</div>
+</div>
+
+<script>
+
+/* DATA */
+
+const sets = {
+stage1:[
+{"sentence": "In the dressing room, the coach <span style='color:#8C0327;'>highlighted</span> at least five tactical errors his team had made during the first half (7,3)", "answer": ["pointed out"], "lesson": "LESSONS 7-12"},
+{"sentence": "Come on! Hurry up! Our three hours are almost <span style='color:#8C0327;'>finished</span>. We need to return these bikes, otherwise they&#x27;ll charge us for an extra hour (2)", "answer": ["up"], "lesson": "LESSONS 7-12"},
+{"sentence": "Will you be <span style='color:#8C0327;'>out of bed</span> if I call you at six o&#x27;clock tomorrow morning? – Six? You must be joking! (2)", "answer": ["up"], "lesson": "LESSONS 7-12"},
+{"sentence": "After the film was <span style='color:#8C0327;'>finished</span>, we all went to try out the new restaurant opposite the Town Hall (4)", "answer": ["over"], "lesson": "LESSONS 7-12"},
+{"sentence": "Well, if the train leaves <span style='color:#8C0327;'>as scheduled</span>, we&#x27;ll be there before midday (2,4)", "answer": ["on time"], "lesson": "LESSONS 7-12"},
+{"sentence": "The truck was unable to stop <span style='color:#8C0327;'>soon enough</span> and ran into the back of the car in front. Fortunately, no one involved in the accident was seriously injured (2,4)", "answer": ["in time"], "lesson": "LESSONS 7-12"},
+{"sentence": "The situation is slowly <span style='color:#8C0327;'>improving</span>, but there is still a long way to go, I&#x27;m afraid (7,6)", "answer": ["getting better"], "lesson": "LESSONS 7-12"},
+{"sentence": "Would you <span style='color:#8C0327;'>prefer to</span> fix the appointment for this coming Friday or for the first Monday in April? (6)", "answer": ["rather"], "lesson": "LESSONS 7-12"},
+{"sentence": "I think we&#x27;d better <span style='color:#8C0327;'>stop</span> now and come back again tomorrow. We&#x27;re all too tired now (4,2,1,3)", "answer": ["call it a day"], "lesson": "LESSONS 7-12"},
+{"sentence": "Some gifted students are able to <span style='color:#8C0327;'>solve</span> mathematical problems in their heads (6,3)", "answer": ["figure out"], "lesson": "LESSONS 7-12"},
+{"sentence": "Historians have tried but have never been able to <span style='color:#8C0327;'>understand</span> why Hitler did what he did (6,3)", "answer": ["figure out"], "lesson": "LESSONS 7-12"},
+{"sentence": "Look, Mr. Turner, I don&#x27;t want to <span style='color:#8C0327;'>argue</span> with you over this. Can&#x27;t we reach a compromise? (4,3)", "answer": ["fall out"], "lesson": "LESSONS 7-12"},
+{"sentence": "Occasionally, good friends fall out with each other but they nearly always <span style='color:#8C0327;'>reconcile</span> with each other later (4,2)", "answer": ["make up"], "lesson": "LESSONS 7-12"},
+{"sentence": "Oh, hi John! We&#x27;re just <span style='color:#8C0327;'>preparing to</span> eat dinner. Would you like to join us? – Thanks, but I&#x27;d rather not (5,2)", "answer": ["about to"], "lesson": "LESSONS 7-12"},
+{"sentence": "During the long trip, my wife and I <span style='color:#8C0327;'>alternated</span> driving so that neither of us would get too tired (4,5)", "answer": ["took turns"], "lesson": "LESSONS 7-12"},
+{"sentence": "You need to <span style='color:#8C0327;'>stay alert</span> to the roads when driving in bad weather conditions (3,9)", "answer": ["pay attention"], "lesson": "LESSONS 7-12"},
+{"sentence": "Before travelling to Mexico, I will need to <span style='color:#8C0327;'>refresh</span> my Spanish; I haven&#x27;t practiced it since I left university (5,2,2)", "answer": ["brush up on"], "lesson": "LESSONS 7-12"},
+{"sentence": "Nicholas went through his presentation <span style='color:#8C0327;'>repeatedly</span> until he could repeat it word for word (4,3,4,5)", "answer": ["over and over again"], "lesson": "LESSONS 7-12"},
+{"sentence": "I know these shoes are expensive, but remember, my dear, quality shoes last forever while cheap shoes <span style='color:#8C0327;'>get consumed</span> immediately (4,3)", "answer": ["wear out"], "lesson": "LESSONS 7-12"},
+{"sentence": "The things we <span style='color:#8C0327;'>dispose of</span> ought to be separated so that they can be recycled (5,4)", "answer": ["throw away"], "lesson": "LESSONS 7-12"},
+{"sentence": "When Margaret <span style='color:#8C0327;'>became enamoured</span> with Derek, never could she have imagined that one day she would become Prime Minister! (4,2,4)", "answer": ["fell in love"], "lesson": "LESSONS 7-12"},
+{"sentence": "Sue and Michael have been <span style='color:#8C0327;'>dating</span> ever since they first met at my party four months ago. They get along like a house on fire! – I know, it wouldn&#x27;t surprise me if they got married (5,3)", "answer": ["going out"], "lesson": "LESSONS 7-12"},
+{"sentence": "Luckily, I had already planned to <span style='color:#8C0327;'>leave the house</span> at 3 pm because all of a sudden, at around 2.45, there was a huge hailstorm (2,3)", "answer": ["go out"], "lesson": "LESSONS 7-12"},
+{"sentence": "Did you just say that you wanted me to go to Pakistan for two years to represent the company? Sorry, but that is <span style='color:#8C0327;'>simply not an option</span>! (3,2,3,8)", "answer": ["out of the question"], "lesson": "LESSONS 7-12"},
+{"sentence": "I&#x27;m sorry, but what you were saying has got nothing to <span style='color:#8C0327;'>relate to</span> the discussion we are having (2,4)", "answer": ["do with"], "lesson": "LESSONS 7-12"},
+{"sentence": "Personally, I could never go to work <span style='color:#8C0327;'>without eating first</span>! I need something inside me before I can start work (2,2,5,7)", "answer": ["on an empty stomach"], "lesson": "LESSONS 7-12"},
+{"sentence": "Although I <span style='color:#8C0327;'>opened my eyes</span> at 6:30, I didn&#x27;t get up until 7:15. It&#x27;s unlike me to stay in bed! (4,2)", "answer": ["woke up"], "lesson": "LESSONS 7-12"},
+{"sentence": "Only when statistics began to reveal how many people were dying from Covid-19 did people eventually <span style='color:#8C0327;'>realise</span> the risks of catching it (4,2,2)", "answer": ["wake up to"], "lesson": "LESSONS 7-12"},
+{"sentence": "Sorry to bother you, but I&#x27;ve been trying all morning to <span style='color:#8C0327;'>reach</span> Miss Peters, but her line is always busy (3,2,5,4)", "answer": ["get in touch with"], "lesson": "LESSONS 7-12"},
+{"sentence": "Hey, Lucy, did you <span style='color:#8C0327;'>enjoy yourself</span> at the party last night? – No, not in the least bit. It wasn&#x27;t much fun at all (4,1,4,4)", "answer": ["have a good time"], "lesson": "LESSONS 7-12"},
+{"sentence": "There was hardly any traffic this morning; I was at work <span style='color:#8C0327;'>very quickly</span>! (2,2,4)", "answer": ["in no time"], "lesson": "LESSONS 7-12"},
+{"sentence": "In order to lose weight, you will need to <span style='color:#8C0327;'>reduce your intake</span> of fatty foods and sugars (3,4,2)", "answer": ["cut down on"], "lesson": "LESSONS 7-12"},
+{"sentence": "For some reason known only to them, the Government has made the decision to <span style='color:#8C0327;'>reduce</span> expenditure in the health and education sectors (3,4,2)", "answer": ["cut back on"], "lesson": "LESSONS 7-12"},
+{"sentence": "I notice that <span style='color:#8C0327;'>several</span> people are absent today. Do you think it may be due to the strike? (5,1,3)", "answer": ["quite a few"], "lesson": "LESSONS 7-12"},
+{"sentence": "It <span style='color:#8C0327;'>previously took</span> me ages to drive to work. Now, I&#x27;m there in no time at all ever since I&#x27;ve been using my bike (4,2,4)", "answer": ["used to take"], "lesson": "LESSONS 7-12"},
+{"sentence": "Did your boss really say that? I can&#x27;t believe it! – Never mind! I am well <span style='color:#8C0327;'>familiar with</span> receiving criticism for my work (4,2)", "answer": ["used to"], "lesson": "LESSONS 7-12"},
+{"sentence": "She soon <span style='color:#8C0327;'>adjusted</span> to being in charge, but nonetheless, she still gets on very well with all her ex-colleagues (3,4)", "answer": ["got used"], "lesson": "LESSONS 7-12"},
+{"sentence": "Proposals were sent <span style='color:#8C0327;'>repeatedly</span> between the two parties until an agreement was reached (4,3,5)", "answer": ["back and forth"], "lesson": "LESSONS 7-12"},
+{"sentence": "Remember to <span style='color:#8C0327;'>check</span> that all the lights are out and all the plugs are pulled before you leave, ok? (4,4)", "answer": ["make sure", "make certain"], "lesson": "LESSONS 7-12"},
+{"sentence": "We don&#x27;t see each other all that often, but <span style='color:#8C0327;'>occasionally</span>, we arrange to have lunch together (5,3,3,4)", "answer": ["every now and then"], "lesson": "LESSONS 7-12"},
+{"sentence": "Hey Kathy! Have you seen my white shoes? – Sorry, Christopher, but they were so worn-out that I simply had to <span style='color:#8C0327;'>eliminate</span> them (3,3,2)", "answer": ["get rid of"], "lesson": "LESSONS 7-12"},
+{"sentence": "I was chatting to Mary last week, and she told me that because she works part-time now, she only needs to go to the office <span style='color:#8C0327;'>on alternate days</span> (5,5,3)", "answer": ["every other day"], "lesson": "LESSONS 7-12"},
+{"sentence": "Do you think these shoes would <span style='color:#8C0327;'>match</span> that handbag you gave me for my birthday? (2,4)", "answer": ["go with"], "lesson": "LESSONS 7-12"},
+{"sentence": "La Sapienza University in Rome is considered <span style='color:#8C0327;'>excellent</span> for those wishing to study Mechanical Engineering (9)", "answer": ["first-rate"], "lesson": "LESSONS 7-12"},
+{"sentence": "Although he <span style='color:#8C0327;'>originates</span> from Sweden, he has been living in France since he was twelve years old (5)", "answer": ["comes"], "lesson": "LESSONS 7-12"},
+{"sentence": "The journey should take no more than five hours; even four and a half if we <span style='color:#8C0327;'>have no problems travelling</span> (4,4,4)", "answer": ["make good time"], "lesson": "LESSONS 7-12"},
+{"sentence": "It&#x27;s really easy to <span style='color:#8C0327;'>become confused</span> when learning two languages at the same time (3,5,2)", "answer": ["get mixed up"], "lesson": "LESSONS 7-12"},
+{"sentence": "Could you finish putting these shoes away while I <span style='color:#8C0327;'>take care of</span> this customer? (3,2)", "answer": ["see to"], "lesson": "LESSONS 7-12"},
+{"sentence": "Sometimes the background noise in restaurants can be so loud that you can&#x27;t <span style='color:#8C0327;'>hear clearly</span> what the people at the same table are saying! (4,3)", "answer": ["make out"], "lesson": "LESSONS 7-12"},
+{"sentence": "Every child, as we all well remember, is required to learn poetry <span style='color:#8C0327;'>from memory</span> at some point during their schooling (2,5)", "answer": ["by heart"], "lesson": "LESSONS 7-12"},
+{"sentence": "I can remember my parents always telling me to <span style='color:#8C0327;'>avoid</span> strangers. It was good advice (4,4,4)", "answer": ["keep away from", "stay away from"], "lesson": "LESSONS 7-12"},
+{"sentence": "Whenever we eat out, my husband always manages to <span style='color:#8C0327;'>criticise</span> something! He&#x27;s never satisfied (4,5,4)", "answer": ["find fault with"], "lesson": "LESSONS 7-12"},
+{"sentence": "I really don&#x27;t mind if we go out or stay in. It is <span style='color:#8C0327;'>your decision</span>. I&#x27;m not bothered either way – Ok, then, we&#x27;ll stay in (2,2,3)", "answer": ["up to you"], "lesson": "LESSONS 7-12"},
+{"sentence": "Hi kids! What have you been <span style='color:#8C0327;'>doing</span> while we&#x27;ve been out? Is the babysitter still alive?! (2,2)", "answer": ["up to"], "lesson": "LESSONS 7-12"},
+{"sentence": "Hi Jane! Are you <span style='color:#8C0327;'>planning</span> anything special this weekend? – Hi Richard. Not really (2,2)", "answer": ["up to"], "lesson": "LESSONS 7-12"},
+{"sentence": "Hey, Clara, are you <span style='color:#8C0327;'>feeling like</span> going to the theatre this evening? (2,2)", "answer": ["up to"], "lesson": "LESSONS 7-12"},
+{"sentence": "I don&#x27;t know about you, but having to speak in front of a large audience makes me feel extremely <span style='color:#8C0327;'>uncomfortable</span> (3,2,4)", "answer": ["ill at ease"], "lesson": "LESSONS 7-12"},
+{"sentence": "The police are <span style='color:#8C0327;'>investigating</span> the theft of the school&#x27;s computers after a break-in occurred during the night (7,4)", "answer": ["looking into"], "lesson": "LESSONS 7-12"},
+{"sentence": "I&#x27;m sorry, but I can&#x27;t give you an answer now, but if you can give me a couple of days, I&#x27;ll definitely <span style='color:#8C0327;'>examine</span> the matter (4,4)", "answer": ["look into"], "lesson": "LESSONS 7-12"},
+{"sentence": "Don&#x27;t worry, Dad! I promise you. I&#x27;ll stay away from those kids <span style='color:#8C0327;'>in future</span> (4,3,2)", "answer": ["from now on"], "lesson": "LESSONS 7-12"},
+{"sentence": "I do hope you&#x27;re <span style='color:#8C0327;'>monitoring</span> all the money we&#x27;ve been spending! – Why me? That&#x27;s your job, not mine (7,5,2)", "answer": ["keeping track of"], "lesson": "LESSONS 7-12"},
+{"sentence": "Listen, don&#x27;t <span style='color:#8C0327;'>become</span> too <span style='color:#8C0327;'>overexcited</span> by all the compliments you have been receiving! If I were you, I&#x27;d keep my feet on the ground (3,7,4)", "answer": ["get carried away"], "lesson": "LESSONS 7-12"},
+{"sentence": "We will need to hurry if we are to <span style='color:#8C0327;'>compensate</span> for lost time. Can&#x27;t you drive any faster? (4,2)", "answer": ["make up"], "lesson": "LESSONS 7-12"},
+{"sentence": "So, you&#x27;re getting a new laptop, you say? – Yes, the one I&#x27;ve got now is really sluggish; <span style='color:#8C0327;'>occasionally</span>, it suddenly freezes, and I have to keep rebooting it (5,2,5)", "answer": ["every so often"], "lesson": "LESSONS 7-12"},
+{"sentence": "<span style='color:#8C0327;'>Current</span> figures published this morning show that the Economy will grow by 1.7% next year (2,2,4)", "answer": ["up to date"], "lesson": "LESSONS 7-12"},
+{"sentence": "By law, supermarkets cannot sell food which, according to the label, is <span style='color:#8C0327;'>expired</span> (3,2,4)", "answer": ["out of date"], "lesson": "LESSONS 7-12"},
+{"sentence": "God, I&#x27;m worn out! I must have <span style='color:#8C0327;'>inflated</span> at least 50 balloons for my daughter&#x27;s birthday party so far! (5,2)", "answer": ["blown up"], "lesson": "LESSONS 7-12"},
+{"sentence": "Good morning. Excuse me but could you tell me how much it would cost to have this photograph <span style='color:#8C0327;'>enlarged</span>? – Sure. How big do you want it? (5,2)", "answer": ["blown up"], "lesson": "LESSONS 7-12"},
+{"sentence": "Bomb-disposal teams are brought in either to defuse or to <span style='color:#8C0327;'>detonate</span> bombs (4,2)", "answer": ["blow up"], "lesson": "LESSONS 7-12"},
+{"sentence": "I&#x27;d be careful if I were you. If you keep working at this pace and don&#x27;t slow down, then I&#x27;m afraid you are going to <span style='color:#8C0327;'>exhaust yourself</span> (4,8,3)", "answer": ["burn yourself out"], "lesson": "LESSONS 7-12"},
+{"sentence": "<span style='color:#8C0327;'>Occasionally</span>, I like to treat myself to an expensive bottle of red wine, and &quot;why not?&quot;, I ask myself (4,2,1,5)", "answer": ["once in a while"], "lesson": "LESSONS 7-12"},
+{"sentence": "It <span style='color:#8C0327;'>was logical</span> that I remained at home in isolation once I tested positive for Covid (5,2,6)", "answer": ["stood to reason"], "lesson": "LESSONS 7-12"},
+{"sentence": "In all, six prisoners <span style='color:#8C0327;'>escaped from</span> prison and, so far, four have been recaptured. The Police say that they are confident of finding the remaining two prisoners within the next 24–48 hours (5,3,2)", "answer": ["broke out of"], "lesson": "LESSONS 7-12"},
+{"sentence": "Look, you can keep the watch; I don&#x27;t need it. And <span style='color:#8C0327;'>regarding</span> the money, don&#x27;t worry about it (2,3)", "answer": ["as for"], "lesson": "LESSONS 7-12"},
+{"sentence": "I can&#x27;t <span style='color:#8C0327;'>stop</span> thinking that someone is trying to stop us from entering the competition – Mmm, me too (4)", "answer": ["help"], "lesson": "LESSONS 7-12"},
+{"sentence": "I can&#x27;t help <span style='color:#8C0327;'>having compassion</span> for children who grow up in countries struck by war or by famine (7,5)", "answer": ["feeling sorry"], "lesson": "LESSONS 7-12"}
+]
+};
+
+
+let quiz=[],index=0,score=0,attempts=0,retryMode=false,selectedSet=null,soundOn=true;
+
+/* SOUND */
+
+document.getElementById("soundToggle").onclick=function(){
+soundOn=!soundOn;
+this.innerText=soundOn?"🔊 ON":"🔇 OFF";
+};
+
+function playSound(id){
+if(!soundOn)return;
+let a=document.getElementById(id);
+a.currentTime=0;
+a.play();
+}
+
+/* CLEAN INPUT */
+
+function clean(t){
+return t.trim().replace(/\s+/g," ").toUpperCase();
+}
+
+/* TEST MENU */
+function selectStageTest(letter, count, event){
+  // BACK TO MENU is available only while a quiz is actively running.
+  document.getElementById("quizBackToMenu").style.display = "none";
+  window.quizSize = count;
+  window.selectedStageTest = letter;
+  document.getElementById("topTitle").textContent = "STAGE 1 (7-12) TEST " + letter;
+  const allLessons = ['stage1'];
+  openStartPopup(allLessons, event);
+  document.getElementById("testMenu").style.display = "none";
+  document.getElementById("menuBackBtn").style.display = "none";
+  window.quizSize = count;
+  const timeWords = letter === "A" ? "TEN MINUTES" : letter === "B" ? "TWENTY MINUTES" : "TWENTY-FIVE MINUTES";
+  const questionWords = letter === "A" ? "TEN" : letter === "B" ? "FIFTEEN" : "TWENTY";
+  document.getElementById("popupText").innerHTML = `
+    <div style="color:#0E065C;font-size:clamp(11px, 3.2vw, 15px);font-weight:800;line-height:1.35;text-align:center;width:100%;">
+      <div style="white-space:nowrap;"><span style="color:#8C0327;">TEST ${letter}</span> CONTAINS <span style="color:#8C0327;">${questionWords} QUESTIONS</span></div>
+      <div style="margin-top:12px;white-space:nowrap;">SELECTED RANDOMLY FROM A TOTAL OF <span style="color:#8C0327;">76</span></div>
+      <div style="margin-top:12px;"><span style="white-space:nowrap;">YOU HAVE ONLY <span style="color:#8C0327;">${timeWords}</span></span><br><span style="white-space:nowrap;">TO COMPLETE THE TEST</span></div>
+    </div>`;
+
+  // Prepare the quiz layout behind the instructions, without starting the quiz or timer.
+  document.getElementById("card").innerHTML = '<div style="color:#0E065C;font-size:1rem;font-weight:900;">CHOOSE YOUR LESSON</div>';
+  document.getElementById("quizInfoRow").style.display = "flex";
+  document.getElementById("progress").textContent = `0 / ${count}`;
+  document.getElementById("score").textContent = `0 / ${count}`;
+  document.getElementById("progressTrack").style.display = "block";
+  document.getElementById("progressFill").style.width = "0%";
+  document.getElementById("answerLabel").style.display = "block";
+  document.getElementById("answerInput").style.display = "block";
+  document.getElementById("answerInput").value = "";
+  document.getElementById("answerInput").disabled = true;
+  document.getElementById("feedback").style.display = "none";
+  document.getElementById("answerButtons").style.display = "flex";
+  document.getElementById("checkBtn").disabled = true;
+  document.getElementById("skipBtn").disabled = true;
+  document.getElementById("nextBtn").disabled = true;
+  document.getElementById("answerDivider").style.display = "block";
+  positionStartPopupOnCard();
+}
+
+function positionStartPopupOnCard(){
+  const card = document.getElementById("card");
+  const popup = document.getElementById("startPopup");
+  const rect = card.getBoundingClientRect();
+  popup.style.position = "fixed";
+  popup.style.left = `${rect.left + rect.width / 2}px`;
+  popup.style.top = `${rect.top + rect.height / 2}px`;
+  popup.style.transform = "translate(-50%, -50%)";
+  popup.style.width = `${rect.width}px`;
+  popup.style.maxWidth = `${rect.width}px`;
+}
+
+/* POPUP */
+
+function openStartPopup(setName, event){
+
+document.querySelectorAll('.set-btn').forEach(btn=>btn.classList.remove('active'));
+
+if(event){
+event.currentTarget.classList.add('active');
+}
+
+selectedSet = setName;
+
+/* BUILD COMBINED SET */
+let combined = [];
+
+if(Array.isArray(setName)){
+setName.forEach(name=>{
+if(sets[name]){
+combined = combined.concat(sets[name]);
+}
+});
+}else{
+combined = sets[setName] || [];
+}
+
+let total = combined.length;
+
+/* SET QUIZ SIZE */
+window.quizSize = window.selectedStageTest ? ({A:10,B:15,C:20}[window.selectedStageTest]) : (Array.isArray(setName) ? (setName.length === 12 ? 20 : 15) : 10);
+
+/* POPUP TEXT */
+
+document.getElementById("popupText").innerHTML =
+`THIS LESSON CONTAINS A TOTAL OF 
+<span class="highlight">${total} QUESTIONS</span>,<br><br>
+OF WHICH <span class="highlight">${window.quizSize}</span> ARE SELECTED RANDOMLY.`;
+
+/* SHOW POPUP; hide the menu while the instructions are displayed */
+document.getElementById("testMenu").style.display = "none";
+document.getElementById("menuBackBtn").style.display = "none";
+document.getElementById("startPopup").style.display = "flex";
+if (window.selectedStageTest) positionStartPopupOnCard();
+
+/* STORE TEMP */
+window.tempQuiz = combined;
+}
+
+
+// Automatically scale each question so it fits comfortably inside the card.
+function fitQuestionText(){
+  const card = document.getElementById("card");
+  const sentence = card.querySelector(".sentence");
+  if(!card || !sentence) return;
+
+  const rootSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  const maxSize = 1.08 * rootSize;
+  const minSize = 0.76 * rootSize;
+  // Reserve space for the lesson label and comfortable card padding.
+  const availableHeight = card.clientHeight - 12 - 18 - 18 - 8;
+  let size = maxSize;
+  sentence.style.flex = "0 0 auto";
+  sentence.style.fontSize = size + "px";
+  sentence.style.lineHeight = "1.3";
+
+  while(sentence.scrollHeight > availableHeight && size > minSize){
+    size -= 0.5;
+    sentence.style.fontSize = size + "px";
+  }
+}
+
+window.addEventListener("resize", fitQuestionText);
+
+/* SHOW */
+
+function showQuestion(){
+attempts=0;
+retryMode=false;
+
+let q=quiz[index];
+
+document.getElementById("card").innerHTML=`
+<div class="lesson-tag">${q.lesson}</div>
+<div class="sentence">${q.sentence}</div>
+`;
+fitQuestionText();
+
+document.getElementById("progress").innerText=`${index+1} / ${quiz.length}`;
+document.getElementById("score").innerText=`${score} / ${quiz.length}`;
+document.getElementById("progressFill").style.width = `${((index+1)/quiz.length)*100}%`;
+
+document.getElementById("answerInput").value="";
+document.getElementById("answerInput").disabled=false;
+
+document.getElementById("feedback").innerText="";
+
+document.getElementById("checkBtn").disabled=false;
+document.getElementById("checkBtn").style.opacity="1";
+document.getElementById("checkBtn").innerText="CHECK";
+
+document.getElementById("nextBtn").disabled=true;
+document.getElementById("nextBtn").style.opacity=".4";
+
+document.getElementById("skipBtn").disabled=false;
+document.getElementById("skipBtn").style.opacity="1";
+}
+
+function restartQuiz(){
+quiz = [...(window.tempQuiz || [])]
+.sort(()=>Math.random()-0.5)
+.slice(0, window.quizSize || 10);
+
+index=0;
+score=0;
+
+startCountdown();
+showQuestion();
+}
+
+
+
+/* CHECK */
+
+function checkAnswer(){
+
+let q = quiz[index];
+let input = document.getElementById("answerInput");
+
+if(retryMode){
+input.value="";
+retryMode=false;
+document.getElementById("checkBtn").innerText="CHECK";
+document.getElementById("feedback").innerText="";
+return;
+}
+
+let user = clean(input.value);
+if(!user) return;
+
+let correct = q.answer.some(a => clean(a) === user);
+
+if(correct){
+
+playSound("correctSound");
+
+score++;
+input.disabled=true;
+
+document.getElementById("score").innerText=`${score} / ${quiz.length}`;
+document.getElementById("progressFill").style.width = `${((index+1)/quiz.length)*100}%`;
+
+document.getElementById("checkBtn").disabled=true;
+document.getElementById("nextBtn").disabled=true;
+
+document.getElementById("correctPopup").style.display="flex";
+
+
+}else{
+
+attempts++;
+playSound("wrongSound");
+
+if(attempts===1){
+document.getElementById("feedback").innerText="Wrong answer. Try again";
+document.getElementById("checkBtn").innerText="RETRY";
+retryMode=true;
+}else{
+document.getElementById("feedback").innerText="NO ATTEMPTS LEFT";
+input.disabled=true;
+
+document.getElementById("checkBtn").disabled=true;
+document.getElementById("checkBtn").style.opacity=".4";
+
+document.getElementById("skipBtn").disabled=true;
+document.getElementById("skipBtn").style.opacity=".4";
+
+document.getElementById("nextBtn").disabled=false;
+document.getElementById("nextBtn").style.opacity="1";
+}
+}
+}
+
+/* EVENTS */
+
+window.addEventListener("DOMContentLoaded", function(){
+
+document.getElementById("skipBtn").disabled = true;
+
+document.getElementById("checkBtn").onclick = checkAnswer;
+
+document.getElementById("answerInput").addEventListener("keydown", e=>{
+if(e.key==="Enter") checkAnswer();
+});
+
+document.getElementById("nextBtn").onclick=function(){
+if(index<quiz.length-1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+};
+
+document.getElementById("skipBtn").onclick=function(){
+
+if(!quiz.length) return;
+
+if(index<quiz.length-1){index++;
+showQuestion();
+}else{
+endQuiz();
+}
+};
+
+});
+
+
+/* START QUIZ */
+
+let timerInterval = null;
+let remainingSeconds = 0;
+
+function startCountdown(){
+  clearInterval(timerInterval);
+  const minutes = window.selectedStageTest === 'A' ? 10 : window.selectedStageTest === 'B' ? 20 : 25;
+  remainingSeconds = minutes * 60;
+  const display = document.getElementById("timerDisplay");
+  display.style.visibility = "visible";
+  function renderTime(){
+    const mins = Math.floor(remainingSeconds / 60);
+    const secs = remainingSeconds % 60;
+    display.textContent = `${mins}:${String(secs).padStart(2, "0")}`;
+  }
+  renderTime();
+  timerInterval = setInterval(()=>{
+    remainingSeconds--;
+    renderTime();
+    if(remainingSeconds <= 0){
+      clearInterval(timerInterval);
+      timerInterval = null;
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function stopCountdown(){
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function startQuiz(){
+
+document.getElementById("startPopup").style.display="none";
+document.getElementById("testMenu").style.display="none";
+document.getElementById("menuBackBtn").style.display="none";
+document.getElementById("quizInfoRow").style.display="flex";
+document.getElementById("progressTrack").style.display="block";
+document.getElementById("answerLabel").style.display="block";
+document.getElementById("answerInput").style.display="block";
+document.getElementById("answerInput").disabled=false;
+document.getElementById("checkBtn").disabled=false;
+document.getElementById("skipBtn").disabled=false;
+document.getElementById("feedback").style.display="block";
+document.getElementById("answerButtons").style.display="flex";
+document.getElementById("answerDivider").style.display="block";
+document.getElementById("card").style.display="flex";
+
+quiz = [...(window.tempQuiz || [])]
+.sort(()=>Math.random()-0.5)
+.slice(0, window.quizSize || 10);
+
+index=0;
+score=0;
+
+document.getElementById("quizBackToMenu").style.display = "block";
+startCountdown();
+showQuestion();
+}
+
+function closeStartPopup(){
+ document.getElementById("quizBackToMenu").style.display = "none";
+ document.getElementById("timerDisplay").style.visibility = "hidden";
+ document.getElementById("topTitle").textContent = "STAGE 1 TEST (7-12)";
+document.getElementById("startPopup").style.display = "none";
+document.getElementById("testMenu").style.display = "grid";
+document.getElementById("menuBackBtn").style.display = "block";
+document.getElementById("card").innerHTML = `
+<div style="color:#8C0327;font-size:.94rem;line-height:1.25;font-weight:800;">HOW WELL DO YOU KNOW STAGE ONE?</div>
+<div style="color:#0E2D68;font-size:.80rem;line-height:1.4;font-weight:800;">THESE FLASHCARDS TEST YOUR PRECISE KNOWLEDGE OF <span style="color:darkgreen;">LESSONS 7 TO 12</span></div>
+<div style="color:#0E2D68;font-size:.80rem;line-height:1.5;font-weight:800;">SUBSTITUTE THE WORDS <span style="color:#8C0327;">IN RED</span> WITH THE<br><span style="color:#8C0327;">EXACT WORDS</span> WHICH APPEAR IN THE STAGE ONE EXAMPLES</div>
+<div style="color:#0E2D68;font-size:.80rem;line-height:1.4;font-weight:800;">CHOOSE THE TEST YOU WOULD LIKE TO ATTEMPT – <span style="color:#8C0327;">A</span>, <span style="color:#8C0327;">B</span> <span style="color:#0E065C;">OR</span> <span style="color:#8C0327;">C</span></div>`;
+["quizInfoRow","progressTrack","answerLabel","answerInput","answerButtons","answerDivider"].forEach(id=>document.getElementById(id).style.display="none");
+document.getElementById("answerInput").disabled=false;
+document.getElementById("topTitle").textContent = "STAGE 1 TEST (7-12)";
+
+/* Return to the menu without starting the timer */
+document.querySelectorAll('.set-btn').forEach(btn=>btn.classList.remove('active'));
+}
+
+
+/* NEXT FROM POPUP */
+
+function nextFromPopup(){
+
+document.getElementById("correctPopup").style.display="none";
+
+if(index<quiz.length-1){
+index++;
+showQuestion();
+}else{
+endQuiz();
+}
+
+}
+
+/* END QUIZ */
+
+function endQuiz(){
+stopCountdown();
+document.getElementById("timerDisplay").style.visibility = "hidden";
+
+stopCountdown();
+let passMark=Math.ceil(quiz.length*0.7);
+
+if(score>=passMark){
+playSound("passSound");
+}else{
+playSound("failSound");
+}
+
+let message = score>=passMark
+? "WELL DONE! YOU'VE PASSED! 🎉"
+: "BAD LUCK! ❌";
+
+let button = `
+<div style="margin-top:14px;display:flex;justify-content:center;">
+<button onclick="restartQuiz()" style="
+background:#8C0327;
+color:#ffffff;
+font-weight:900;
+padding:8px 16px;
+border-radius:10px;
+">
+TRY AGAIN
+</button>
+</div>`;
+
+
+document.getElementById("card").innerHTML=`
+<div style="font-weight:900;color:#561386;text-align:center;">
+${message}
+${button}
+</div>
+`;
+}
+// Keep quiz-only elements hidden on the menu/instructions screens.
+document.addEventListener("DOMContentLoaded", function(){
+  ["quizInfoRow", "progressTrack", "answerLabel", "quizButtons", "answerDivider"].forEach(function(id){
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+});
+
+// BACK TO MENU control for the active quiz counter row.
+(function(){
+  const link = document.getElementById("quizBackToMenu");
+  if (!link) return;
+  function backToMenuFromQuiz(){
+    if (typeof stopCountdown === "function") stopCountdown();
+    if (typeof returnToMenu === "function") { returnToMenu(); return; }
+    if (typeof showMenu === "function") { showMenu(); return; }
+    if (typeof closeStartPopup === "function") closeStartPopup();
+    const popup=document.getElementById("startPopup");
+    if(popup) popup.style.display="none";
+    ["quizInfoRow","progressTrack","answerLabel","answerInput","answerButtons","answerDivider","feedback"].forEach(function(id){
+      const el=document.getElementById(id); if(el) el.style.display="none";
+    });
+    const menu=document.getElementById("testMenu"); if(menu) menu.style.display="grid";
+    const card=document.getElementById("questionCard"); if(card) card.innerHTML="WELCOME TO STAGE 1 TESTS";
+    const title=document.getElementById("pageTitle"); if(title) title.textContent="STAGE 1 TEST (7-12)";
+  }
+  link.addEventListener("click", backToMenuFromQuiz);
+  link.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){e.preventDefault();backToMenuFromQuiz();} });
+})();
+
+document.addEventListener("DOMContentLoaded", function(){
+ const back=document.getElementById("quizBackToMenu"); if(back) back.style.display="none";
+});
+</script>
+
+</body>
+</html>
