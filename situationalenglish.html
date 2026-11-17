@@ -6756,6 +6756,150 @@ const foodDrinkVegetables = [
 ];
 
 
+const foodDrinkFruits = [
+  {
+    "front": "melograno",
+    "back": "pomegranate",
+    "speak": ["pomegranate"]
+  },
+  {
+    "front": "fragola",
+    "back": "strawberry",
+    "speak": ["strawberry"]
+  },
+  {
+    "front": "uva spina",
+    "back": "gooseberry",
+    "speak": ["gooseberry"]
+  },
+  {
+    "front": "pesca",
+    "back": "peach",
+    "speak": ["peach"]
+  },
+  {
+    "front": "uva nera / uva bianca",
+    "back": "red grapes / white grapes",
+    "speak": ["red grapes", "white grapes"]
+  },
+  {
+    "front": "cocco",
+    "back": "coconut",
+    "speak": ["coconut"]
+  },
+  {
+    "front": "mirtillo",
+    "back": "blueberry",
+    "speak": ["blueberry"]
+  },
+  {
+    "front": "albicocca",
+    "back": "apricot",
+    "speak": ["apricot"]
+  },
+  {
+    "front": "mirtillo rosso",
+    "back": "cranberry",
+    "speak": ["cranberry"]
+  },
+  {
+    "front": "pera",
+    "back": "pear",
+    "speak": ["pear"]
+  },
+  {
+    "front": "nettarina",
+    "back": "nectarine",
+    "speak": ["nectarine"]
+  },
+  {
+    "front": "fico",
+    "back": "fig",
+    "speak": ["fig"]
+  },
+  {
+    "front": "pompelmo",
+    "back": "grapefruit",
+    "speak": ["grapefruit"]
+  },
+  {
+    "front": "lampone",
+    "back": "raspberry",
+    "speak": ["raspberry"]
+  },
+  {
+    "front": "mela",
+    "back": "apple",
+    "speak": ["apple"]
+  },
+  {
+    "front": "ribes rosso",
+    "back": "redcurrant",
+    "speak": ["redcurrant"]
+  },
+  {
+    "front": "anguria / cocomero",
+    "back": "watermelon",
+    "speak": ["watermelon"]
+  },
+  {
+    "front": "uvetta",
+    "back": "raisins",
+    "speak": ["raisins"]
+  },
+  {
+    "front": "ciliegia",
+    "back": "cherry",
+    "speak": ["cherry"]
+  },
+  {
+    "front": "arancia",
+    "back": "orange",
+    "speak": ["orange"]
+  },
+  {
+    "front": "ribes nero",
+    "back": "blackcurrant",
+    "speak": ["blackcurrant"]
+  },
+  {
+    "front": "prugna / susina",
+    "back": "plum",
+    "speak": ["plum"]
+  },
+  {
+    "front": "ananas",
+    "back": "pineapple",
+    "speak": ["pineapple"]
+  },
+  {
+    "front": "mora",
+    "back": "blackberry",
+    "speak": ["blackberry"]
+  },
+  {
+    "front": "limone",
+    "back": "lemon",
+    "speak": ["lemon"]
+  },
+  {
+    "front": "dattero",
+    "back": "date",
+    "speak": ["date"]
+  },
+  {
+    "front": "cachi",
+    "back": "persimmon",
+    "speak": ["persimmon"]
+  },
+  {
+    "front": "frutta di bosco",
+    "back": "wild berries",
+    "speak": ["wild berries"]
+  }
+];
+
+
 const foodDrinkRootsPulses = [
   {
     "front": "cipolla",
@@ -9742,14 +9886,11 @@ function showFoodDrinkNouns() {
     )
   );
 
-    buttonContainer.appendChild(
+  buttonContainer.appendChild(
     makeButton(
-      "VERDURE",
+      "FRUTTA E VERDURA",
       "set-btn",
-      () => startFoodDrinkNounCards(
-        foodDrinkVegetables,
-        "VERDURE"
-      )
+      () => showFoodDrinkFruitVegetableCategories()
     )
   );
 
@@ -9868,7 +10009,49 @@ buttonContainer.appendChild(
   );
 }
 
-function startFoodDrinkNounCards(data, title) {
+function showFoodDrinkFruitVegetableCategories() {
+  appState = "SUBCATEGORY_SELECTION";
+  currentMain = "FOOD & DRINK";
+  currentMode = "NOUNS";
+  currentSub = null;
+  cards = [];
+  index = 0;
+
+  prevBtn.style.visibility = "hidden";
+  nextBtn.style.visibility = "hidden";
+  document.getElementById("front-hint").style.visibility = "hidden";
+
+  flashcard.classList.remove("flipped");
+  frontText.innerHTML = '<div style="line-height:1.15;">SELECT</div><div style="color:#A52A2A; margin-top:8px; line-height:1.15; text-align:center; width:100%;">FRUIT / VEGETABLES</div>';
+  backText.innerText = "";
+  counter.innerText = "";
+  statusNote.innerText = "";
+
+  buttonContainer.className = "vertical-buttons mt-2";
+  buttonContainer.innerHTML = "";
+
+  buttonContainer.appendChild(
+    makeButton(
+      "FRUTTA",
+      "set-btn",
+      () => startFoodDrinkNounCards(foodDrinkFruits, "FRUTTA", showFoodDrinkFruitVegetableCategories)
+    )
+  );
+
+  buttonContainer.appendChild(
+    makeButton(
+      "VERDURA",
+      "set-btn menu-alt",
+      () => startFoodDrinkNounCards(foodDrinkVegetables, "VERDURA", showFoodDrinkFruitVegetableCategories)
+    )
+  );
+
+  buttonContainer.appendChild(
+    makeButton("BACK TO NOUNS", "back-btn", showFoodDrinkNouns)
+  );
+}
+
+function startFoodDrinkNounCards(data, title, backFunction = showFoodDrinkNouns) {
   appState = "FLASHCARD_VIEW";
   currentMode = "NOUNS";
   currentSub = title;
@@ -9888,7 +10071,11 @@ function startFoodDrinkNounCards(data, title) {
   );
 
   buttonContainer.appendChild(
-    makeButton("BACK TO VERBS / NOUNS", "back-btn", showFoodDrinkNouns)
+    makeButton(
+      backFunction === showFoodDrinkFruitVegetableCategories ? "BACK TO FRUTTA E VERDURA" : "BACK TO VERBS / NOUNS",
+      "back-btn",
+      backFunction
+    )
   );
 
   updateCard();
