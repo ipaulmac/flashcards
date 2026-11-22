@@ -119,6 +119,61 @@ color:white;
   font-weight:900;
 }
 
+.start-close-btn{
+  position:absolute;
+  right:20px;
+  bottom:16px;
+  color:darkgreen;
+  font-size:.8rem;
+  font-weight:900;
+  text-transform:uppercase;
+  cursor:pointer;
+  display:none;
+}
+
+/* OPENING INSTRUCTIONS OVERLAY */
+.popup-overlay{
+position:fixed;
+inset:0;
+background:rgba(6,18,71,.88);
+display:none;
+justify-content:center;
+align-items:flex-start;
+padding-top:48px;
+padding-left:12px;
+padding-right:12px;
+box-sizing:border-box;
+z-index:99999;
+}
+.popup{
+width:90vw;
+max-width:380px;
+max-height:92vh;
+overflow-y:auto;
+background:#fff;
+border:4px solid #8C0327;
+border-radius:16px;
+padding:18px;
+box-sizing:border-box;
+}
+.popup-text{
+font-size:.74rem;
+font-weight:900;
+line-height:1.22;
+color:#061247;
+text-align:left;
+}
+.popup-close-text{
+margin-top:18px;
+display:flex;
+justify-content:flex-end;
+font-size:.8rem;
+font-weight:900;
+color:darkgreen;
+cursor:pointer;
+user-select:none;
+}
+
 .test-btn{
 background:#00cfd5;
 color:#061247;
@@ -219,6 +274,29 @@ class="text-white flex items-center gap-2 px-3 py-1.5 border border-white rounde
   <button id="libraryBackBtn" class="library-back-btn">
     ⬅ BACK TO VIRTUAL CLASSROOM MENU
   </button>
+</div>
+
+
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <div class="popup-text">
+      EACH <span style="color:darkred;">DOOR</span> HAS <span style="color:darkred;">30–40</span> EXAMPLES BUT ONLY <span style="color:darkred;">10</span> SHOW EACH TIME<br><br>
+      YOU CAN REFRESH THE CARDS AT ANY MOMENT<br><br>
+      <span style="color:#00B050;">A QUICK REMINDER OF THE DOORS</span><br><br>
+      <span style="color:#C000C0;">1</span> – I (USUALLY) DO<br>
+      <span style="color:#C000C0;">2</span> – I AM DOING<br>
+      <span style="color:#C000C0;">3</span> – I WILL DO/LET’S DO/SHALL WE DO?<br>
+      <span style="color:#C000C0;">4</span> – I HAVE BEEN DOING FOR/SINCE<br>
+      <span style="color:#C000C0;">5</span> – I HAVEN’T DONE FOR/SINCE<br>
+      <span style="color:#C000C0;">6</span> – HOW ... HAS IT BEEN SINCE YOU LAST DID?/WHEN DID YOU LAST DO?<br><br>
+      <span style="color:darkred;">DOOR 6+</span> = ALTERNATIVE FOR <span style="color:darkred;">DOOR 5</span> BASED ON <span style="color:darkred;">DOOR 6</span><br><br>
+      <span style="color:darkgreen;">TEST</span> = ALL <span style="color:darkred;">DOORS</span> MIXED (EXCEPT <span style="color:darkred;">DOOR 6+</span>) OF WHICH <span style="color:darkred;">20</span> ARE SELECTED RANDOMLY FROM <span style="color:darkred;">180</span><br><br>
+      FIRST READ → DECIDE WHICH <span style="color:darkred;">DOOR</span> → FLIP TO CHECK<br><br>
+      <span style="color:darkgreen;">CLICK ANY DOOR TO BEGIN →</span><br><br>
+      YOU CAN REFER TO THIS CARD AT ANY TIME BY SELECTING <span style="color:darkred;">READ ME</span>
+    </div>
+    <div id="closePopup" class="popup-close-text">START / CLOSE →</div>
+  </div>
 </div>
 
 
@@ -430,7 +508,7 @@ const sets = {
   { "front": "Non vedo Marco da sei settimane", "back": "I haven’t seen Marco for six weeks", "speak": "I haven’t seen Marco for six weeks" },
   { "front": "Laura non sente sua sorella da dieci giorni", "back": "Laura hasn’t heard from her sister for ten days", "speak": "Laura hasn’t heard from her sister for ten days" },
   { "front": "Sono dieci giorni che Paolo non parla con il direttore", "back": "He hasn’t spoken to the manager for ten days", "speak": "He hasn’t spoken to the manager for ten days" },
-  { "front": "Paolo e Laura non parlano tra loro da tre settimane", "back": "They haven’t spoken to each other for three weeks", "speak": "They haven’t spoken to each other for three weeks" },
+  { "front": "Paolo e Laura non parlano tra loro da tre settimane", "back": "Paolo and Laura haven’t spoken to each other for three weeks", "speak": "Paolo and Laura haven’t spoken to each other for three weeks" },
   { "front": "È da Natale che i vicini non parlano con noi", "back": "They haven’t spoken to us since Christmas", "speak": "They haven’t spoken to us since Christmas" },
   { "front": "Non bevo alcol da sei mesi", "back": "I haven’t drunk alcohol for six months", "speak": "I haven’t drunk alcohol for six months" },
   { "front": "Non mangio la pizza da tantissimo tempo", "back": "I haven’t eaten pizza for a very long time", "speak": "I haven’t eaten pizza for a very long time" },
@@ -618,6 +696,13 @@ function activateButton(n){
 
 window.loadSet = function(n){
 
+  flashcard.style.height = "64vw";
+  flashcard.style.maxHeight = "310px";
+  const frontFace = flashcard.querySelector(".face:not(.back)");
+  frontFace.style.overflowY = "hidden";
+  frontFace.style.alignItems = "center";
+  frontFace.style.justifyContent = "center";
+
   mode = "floor"
   currentFloor = n
 
@@ -706,6 +791,7 @@ function updateCard(){
   frontText.style.color = "";
   frontText.style.textAlign = "center";
   frontText.style.fontSize = "1.08rem";
+  frontText.style.fontWeight = "";
   frontText.style.lineHeight = "1.28";
   frontText.style.padding = "";
 
@@ -773,46 +859,29 @@ document.getElementById("libraryBackBtn").onclick = function(){
 /* ================= INITIAL LOAD ================= */
 
 window.loadInstructions = function(){
-
-  mode = "instructions";
-
-  frontText.style.color = "#061247";
-  frontText.style.textAlign = "left";
-  frontText.style.fontSize = ".74rem";
-  frontText.style.lineHeight = "1.22";
-  frontText.style.padding = "6px 10px";
-
-  // stop any flip
-  flashcard.classList.remove("flipped");
-
-  // FRONT
-  frontText.innerHTML =
-  'EACH <span style="color:darkred;">DOOR</span> HAS <span style="color:darkred;">30–40</span> EXAMPLES BUT ONLY <span style="color:darkred;">10</span> SHOW EACH TIME<br><br>' +
-
-  'YOU CAN REFRESH THE CARDS AT ANY MOMENT<br><br>' +
-
-  '<span style="color:darkred;">DOOR 6+</span> = ALTERNATIVE FORMS FOR <span style="color:darkred;">DOOR 5</span> BASED ON <span style="color:darkred;">DOOR 6</span><br><br>' +
-
-  '<span style="color:darkgreen;">TEST</span> = ALL <span style="color:darkred;">DOORS</span> MIXED (EXCEPT <span style="color:darkred;">DOOR 6+</span>) OF WHICH <span style="color:darkred;">20</span> ARE SELECTED RANDOMLY FROM <span style="color:darkred;">180</span><br><br>' +
-
-  'FIRST READ → DECIDE WHICH <span style="color:darkred;">DOOR</span> → FLIP TO CHECK<br><br>' +
-
-  '<span style="color:darkgreen;">CLICK ANY DOOR TO BEGIN →</span>';
-
-  backText.innerText = "";
-
-  // label
-  doorLabel.innerText = "INFO";
-
-  // remove counter
-  counter.innerText = "—";
-
-  // clear cards so navigation doesn't interfere
-  cards = [];
+  document.getElementById("popupOverlay").style.display = "flex";
 }
 
+window.startCloseInstructions = function(){
+  document.getElementById("popupOverlay").style.display = "none";
+  // Closing the instructions must not select a door or reset student progress.
+}
 
-loadSet(1)
+document.getElementById("closePopup").onclick = startCloseInstructions;
+
+// Start with no door selected: leave all menu buttons white and wait for the student.
+cards = [];
+index = 0;
+mode = null;
+frontText.innerText = "CHOOSE YOUR DOOR";
+frontText.style.color = "#A00000";
+frontText.style.textAlign = "center";
+frontText.style.fontSize = "1.35rem";
+frontText.style.fontWeight = "bold";
+backText.innerText = "";
+doorLabel.innerText = "";
+counter.innerText = "";
+activateButton();
 loadInstructions()
 
 </script>

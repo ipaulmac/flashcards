@@ -155,7 +155,7 @@ background:rgba(6,18,71,.88);
 display:none;
 justify-content:center;
 align-items:flex-start;
-padding-top:90px;
+padding-top:48px;
 z-index:99999;
 padding-left:12px;
 padding-right:12px;
@@ -163,9 +163,9 @@ box-sizing:border-box;
 }
 
 .popup{
-width:80vw;
-max-width:360px;
-max-height:80vh;
+width:90vw;
+max-width:380px;
+max-height:92vh;
 overflow-y:auto;
 background:#fff;
 border:4px solid #8C0327;
@@ -244,13 +244,28 @@ EACH <span style="color:darkred;">FLOOR</span> HAS <span style="color:darkred;">
 
 YOU CAN REFRESH THE CARDS AT ANY MOMENT<br><br>
 
+<span style="color:darkgreen;">A QUICK REMINDER OF THE FLOORS</span><br><br>
+<span style="color:#C000C0;">1</span> – WAS/WERE DOING<br>
+<span style="color:#C000C0;">2</span> – USED TO DO<br>
+<span style="color:#C000C0;">3</span> – WOULD DO<br>
+<span style="color:#C000C0;">4</span> – I (OFTEN) DID<br>
+<span style="color:#C000C0;">5</span> – HAD BEEN DOING FOR/SINCE<br>
+<span style="color:#C000C0;">6</span> – HAD NOT DONE FOR/SINCE<br>
+<span style="color:#C000C0;">7</span> – HOW LONG HAD IT BEEN SINCE … LAST DID?<br>
+<span style="color:#C000C0;">8</span> – IF I HAD DONE<br>
+<span style="color:#C000C0;">9</span> – IF I HAD BEEN DOING<br>
+<span style="color:#C000C0;">10</span> – I WOULD HAVE DONE<br>
+<span style="color:#C000C0;">11</span> – I WOULD HAVE BEEN DOING<br><br>
+
 <span style="color:darkgreen;">TEST</span> = ALL <span style="color:darkred;">FLOORS</span> MIXED TOGETHER OF WHICH <span style="color:darkred;">30</span> ARE SELECTED RANDOMLY FROM A TOTAL OF <span style="color:darkred;">330</span><br><br>
 
-FIRST READ → DECIDE WHICH <span style="color:darkred;">FLOOR</span> → FLIP TO CHECK
+FIRST READ → DECIDE WHICH <span style="color:darkred;">FLOOR</span> → FLIP TO CHECK<br><br>
+
+YOU CAN REFER TO THIS CARD AT ANY TIME BY SELECTING <span style="color:darkred;">READ ME</span>
 </div>
 
 <div id="closePopup" class="popup-close-text">
-START →
+START / CLOSE
 </div>
 
 </div>
@@ -1033,7 +1048,7 @@ btn.classList.remove("active")
 
 if(mode==="test"){
 document.getElementById("test-btn").classList.add("active")
-}else{
+}else if(mode==="floor" && n){
 document.querySelectorAll(".set-btn")[n-1].classList.add("active")
 }
 }
@@ -1110,6 +1125,7 @@ updateCard()
 /* ================= REFRESH ================= */
 
 window.refreshCurrentSet=function(){
+if(!mode) return;
 if(mode==="floor"){
 loadSet(currentFloor)
 }else{
@@ -1123,6 +1139,11 @@ function updateCard(){
 flashcard.classList.remove("flipped")
 
 const c=cards[index]
+
+/* Reset placeholder styling before displaying the normal card text */
+frontText.style.color=""
+frontText.style.fontWeight=""
+frontText.style.fontSize=""
 
 frontText.innerText=c.front.toUpperCase()
 backText.innerText=c.back.toUpperCase()
@@ -1139,11 +1160,13 @@ counter.innerText=(index+1)+" / "+cards.length
 /* ================= NAVIGATION ================= */
 
 window.nextCard=function(){
+if(!cards.length) return;
 index=(index+1)%cards.length
 updateCard()
 }
 
 window.prevCard=function(){
+if(!cards.length) return;
 index=(index-1+cards.length)%cards.length
 updateCard()
 }
@@ -1151,6 +1174,7 @@ updateCard()
 /* ================= CARD FLIP ================= */
 
 flashcard.addEventListener("click",()=>{
+if(!cards.length) return;
 flashcard.classList.toggle("flipped")
 })
 
@@ -1159,6 +1183,7 @@ flashcard.classList.toggle("flipped")
 speakBtn.addEventListener("click",(e)=>{
 
 e.stopPropagation()
+if(!cards.length) return;
 
 if(currentAudio){
 currentAudio.pause()
@@ -1174,7 +1199,17 @@ currentAudio.play()
 
 document.getElementById("popupOverlay").style.display = "flex";
 
-loadSet(1)
+cards=[];
+index=0;
+mode=null;
+frontText.innerText="CHOOSE YOUR FLOOR";
+frontText.style.color="darkred";
+frontText.style.fontWeight="bold";
+frontText.style.fontSize="1.35rem";
+backText.innerText="";
+floorLabel.innerText="";
+counter.innerText="";
+activateButton();
 
 </script>
 </body>
