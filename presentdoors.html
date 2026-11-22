@@ -825,7 +825,7 @@ window.prevCard = function(){
 
 flashcard.addEventListener("click", ()=>{
 
-  if(mode === "instructions") return
+  if(mode === "instructions" || !cards.length) return
 
   flashcard.classList.toggle("flipped")
 })
